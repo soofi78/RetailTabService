@@ -26,6 +26,10 @@
     <string name="label_back">Back</string>
     <string name="label_tax_invoice">Tax Invoice</string>
     <string name="label_add_to_cart">Add To Cart</string>
+    <string name="label_foc">FOC</string>
+    <string name="label_rent">Rent</string>
+    <string name="label_exchange">Exchange</string>
+    <string name="label_add">Add</string>
 
     <string-array name="term">
         <item>Cash</item>
