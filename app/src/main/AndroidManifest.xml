@@ -13,19 +13,9 @@
         android:theme="@style/Theme.Retail"
         tools:targetApi="31">
         <activity
-            android:name=".ui.taxinvoice.TaxInvoiceActivity"
+            android:name=".ui.forms.FormsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name=".ui.taxinvoice.AddToCartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.taxinvoice.ProductListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.itemdetails.ItemDetails"
-            android:exported="false"
-            android:label="@string/title_activity_item_details" />
         <activity
             android:name=".ui.HomeActivity"
             android:exported="true">

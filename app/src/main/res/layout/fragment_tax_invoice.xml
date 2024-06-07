@@ -333,7 +333,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/rounded_corner_gray_background"
+                        android:background="@drawable/rounded_corner_light_gray_background"
                         android:entries="@array/term"
                         android:textAlignment="center"
                         app:layout_constraintTop_toBottomOf="@+id/lblTerm" />
@@ -450,7 +450,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background"
+                                android:background="@drawable/rounded_corner_light_gray_background"
                                 android:inputType="text"
                                 android:maxLines="1"
                                 android:padding="15dp"
@@ -477,7 +477,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background"
+                                android:background="@drawable/rounded_corner_light_gray_background"
                                 android:inputType="textEmailAddress"
                                 android:padding="15dp" />
 
@@ -511,7 +511,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background"
+                                android:background="@drawable/rounded_corner_light_gray_background"
                                 android:inputType="text"
                                 android:maxLines="1"
                                 android:padding="15dp"
@@ -537,7 +537,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background"
+                                android:background="@drawable/rounded_corner_light_gray_background"
                                 android:inputType="number"
                                 android:padding="15dp" />
 

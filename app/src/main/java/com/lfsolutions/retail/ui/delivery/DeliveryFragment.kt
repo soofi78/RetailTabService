@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
-import com.lfsolutions.retail.ui.itemdetails.ItemDetails
+import com.lfsolutions.retail.ui.forms.FormsActivity
 
 class DeliveryFragment : Fragment() {
 
@@ -84,7 +84,7 @@ class DeliveryFragment : Fragment() {
 
     private fun displayItemDetails(){
 
-        startActivity(ItemDetails.getInstance(context = requireContext()))
+        startActivity(FormsActivity.getInstance(context = requireContext()))
 
     }
 

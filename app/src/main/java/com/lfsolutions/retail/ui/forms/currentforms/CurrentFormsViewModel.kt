@@ -1,9 +1,8 @@
-package com.lfsolutions.retail.ui.itemdetails.currentforms
+package com.lfsolutions.retail.ui.forms.currentforms
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.lfsolutions.retail.ui.itemdetails.FormType
+import com.lfsolutions.retail.ui.forms.FormType
 
 class CurrentFormsViewModel : ViewModel() {
 

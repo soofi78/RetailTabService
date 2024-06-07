@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.itemdetails.history
+package com.lfsolutions.retail.ui.forms.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lfsolutions.retail.databinding.FragmentHistoryBinding
-import com.lfsolutions.retail.ui.itemdetails.FormAdapter
+import com.lfsolutions.retail.ui.forms.FormAdapter
 
 class HistoryFragment : Fragment() {
 
@@ -39,6 +39,8 @@ class HistoryFragment : Fragment() {
 
         addDataObserver()
 
+        addOnClickListener()
+
         mAdapter = FormAdapter()
 
         mBinding.recyclerView.adapter = mAdapter
@@ -50,6 +52,16 @@ class HistoryFragment : Fragment() {
         mViewModel.formTypeLiveData.observe(viewLifecycleOwner) { formType ->
 
             mAdapter.setData(formType)
+
+        }
+
+    }
+
+    private fun addOnClickListener() {
+
+        mBinding.flowBack.setOnClickListener {
+
+            requireActivity().finish()
 
         }
 

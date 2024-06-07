@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.itemdetails
+package com.lfsolutions.retail.ui.forms
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

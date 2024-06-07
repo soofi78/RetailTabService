@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_current_forms">
+
+    <fragment
+        android:id="@+id/navigation_current_forms"
+        android:name="com.lfsolutions.retail.ui.forms.currentforms.CurrentFormsFragment"
+        android:label="@string/title_current_forms"
+        tools:layout="@layout/fragment_current_forms">
+        <action
+            android:id="@+id/action_navigation_current_forms_to_navigation_product_list"
+            app:destination="@id/navigation_product_list" />
+        <action
+            android:id="@+id/action_navigation_current_forms_to_navigation_agreement_memo"
+            app:destination="@id/navigation_agreement_memo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.lfsolutions.retail.ui.forms.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/navigation_product_list"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.ProductListFragment"
+        android:label="Product"
+        tools:layout="@layout/fragment_product_list">
+        <action
+            android:id="@+id/action_navigation_product_list_to_navigation_add_cart"
+            app:destination="@id/navigation_add_cart" />
+        <action
+            android:id="@+id/action_navigation_product_list_to_navigation_tax_invoice"
+            app:destination="@id/navigation_tax_invoice" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_cart"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.AddToCartFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_add_to_cart" />
+
+    <fragment
+        android:id="@+id/navigation_tax_invoice"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceFragment"
+        android:label="Tax Invoice"
+        tools:layout="@layout/fragment_tax_invoice" />
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/fragment_tax_invoice" />
+
+</navigation>

@@ -47,12 +47,36 @@
     <string name="label_discount_given_if_any">Discount given (if any)</string>
     <string name="label_total">Total</string>
     <string name="label_term">Term</string>
+    <string name="label_new_agreement_memo">New Agreement Memo</string>
+    <string name="label_serial_number">Serial Number</string>
+    <string name="label_date">Date</string>
+    <string name="label_company_name">Company Name</string>
+    <string name="label_address">Address</string>
+    <string name="label_equipment">Equipment</string>
+    <string name="label_open_equipment_list">Open Equipment List</string>
+    <string name="label_view_order">View Order</string>
+    <string name="label_terms_and_conditions"><u>Term\'s and Condition</u></string>
+    <string name="terms_and_conditions"> <b>•</b> The user shall bear the cost of the loan equipment in case of loss or misplacement \n\n
+        <b>•</b> In case of out of order, the user is to request for a free replacement \n\n
+        <b>•</b> Free exchange of filter (with ring and bag) is given on a fixed period \n\n
+        <b>•</b> The user must purchase all the products from SIN LEONG LEE PTE LTD \n\n
+        <b>•</b> Termination of agreement within six months, user will have to bear the installation charges\n\n
+        <b>•</b> Cancellation of agreement, one month advance notice must be given from either party
+    </string>
+    <string name="click_check_box_to_accept">Click the checkbox to accept Terms and Conditions</string>
 
     <string-array name="term">
         <item>Cash</item>
         <item>Term (30 Days)</item>
         <item>Cash (60 Days)</item>
         <item>Cash (90 Days)</item>
+    </string-array>
+
+    <string-array name="equipment_type">
+        <item>Loan</item>
+        <item>Return</item>
+        <item>Exchange</item>
+        <item>Rent</item>
     </string-array>
 
 </resources>

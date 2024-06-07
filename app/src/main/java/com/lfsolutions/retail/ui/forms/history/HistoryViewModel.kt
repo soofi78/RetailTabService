@@ -1,9 +1,8 @@
-package com.lfsolutions.retail.ui.itemdetails.history
+package com.lfsolutions.retail.ui.forms.history
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.lfsolutions.retail.ui.itemdetails.FormType
+import com.lfsolutions.retail.ui.forms.FormType
 
 class HistoryViewModel : ViewModel() {
 

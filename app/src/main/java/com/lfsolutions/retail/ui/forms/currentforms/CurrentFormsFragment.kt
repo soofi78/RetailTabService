@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.itemdetails.currentforms
+package com.lfsolutions.retail.ui.forms.currentforms
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentCurrentFormsBinding
-import com.lfsolutions.retail.ui.itemdetails.FormAdapter
-import com.lfsolutions.retail.ui.taxinvoice.ProductListActivity
+import com.lfsolutions.retail.ui.forms.FormAdapter
 
 class CurrentFormsFragment : Fragment() {
 
@@ -40,11 +41,16 @@ class CurrentFormsFragment : Fragment() {
 
         addDataObserver()
 
+        addOnClickListener()
+
         mAdapter = FormAdapter()
 
         mAdapter.setListener(object : FormAdapter.OnFormSelectListener {
 
             override fun onAgreementMemoSelect() {
+
+                mBinding.root.findNavController()
+                    .navigate(R.id.action_navigation_current_forms_to_navigation_agreement_memo)
 
             }
 
@@ -55,13 +61,24 @@ class CurrentFormsFragment : Fragment() {
 
             override fun onTaxInvoiceSelect() {
 
-                startActivity(ProductListActivity.getIntent(requireContext()))
+                mBinding.root.findNavController()
+                    .navigate(R.id.action_navigation_current_forms_to_navigation_product_list)
 
             }
 
         })
 
         mBinding.recyclerView.adapter = mAdapter
+
+    }
+
+    private fun addOnClickListener() {
+
+        mBinding.flowBack.setOnClickListener {
+
+            requireActivity().finish()
+
+        }
 
     }
 
