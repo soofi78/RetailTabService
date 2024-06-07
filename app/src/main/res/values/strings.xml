@@ -30,6 +30,23 @@
     <string name="label_rent">Rent</string>
     <string name="label_exchange">Exchange</string>
     <string name="label_add">Add</string>
+    <string name="label_sale_option">Sale Option</string>
+    <string name="label_sign_on">Sign On</string>
+    <string name="label_sign_off">Sign_Off</string>
+    <string name="label_clear">Clear</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_save">Save</string>
+    <string name="label_upload">Upload</string>
+    <string name="label_print">Print</string>
+    <string name="label_customer_name">Customer Name</string>
+    <string name="label_email">Email</string>
+    <string name="label_designation">Designation</string>
+    <string name="label_mobile_number_optional">Mobile Number (Optional)</string>
+    <string name="label_sub_total">Sub-Total</string>
+    <string name="label_add_gst_7">Add. GST 7%</string>
+    <string name="label_discount_given_if_any">Discount given (if any)</string>
+    <string name="label_total">Total</string>
+    <string name="label_term">Term</string>
 
     <string-array name="term">
         <item>Cash</item>

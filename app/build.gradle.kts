@@ -54,4 +54,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.signature.pad)
+    implementation(libs.coroutines)
 }

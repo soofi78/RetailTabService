@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical"
                 app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
@@ -227,7 +227,7 @@
                         android:id="@+id/lblSubTotal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Sub-Total"
+                        android:text="@string/label_sub_total"
                         android:textSize="16sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -250,7 +250,7 @@
                         android:id="@+id/lblGST"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Add. GST 7%"
+                        android:text="@string/label_add_gst_7"
                         android:textSize="16sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -273,7 +273,7 @@
                         android:id="@+id/lblDiscount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Discount given (if any)"
+                        android:text="@string/label_discount_given_if_any"
                         android:textSize="16sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -296,7 +296,7 @@
                         android:id="@+id/lblTotal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Total"
+                        android:text="@string/label_total"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -323,7 +323,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Term"
+                        android:text="@string/label_term"
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/flowTotal" />
@@ -345,6 +345,7 @@
                         android:layout_marginTop="10dp"
                         android:text="Upload Attachment (PayNow)"
                         android:textSize="16sp"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/spinnerTerm" />
 
@@ -354,6 +355,7 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/slight_rounded_corner_gray_background"
                         android:padding="30dp"
+                        android:visibility="gone"
                         android:src="@drawable/add_black"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/lblUploadAttachment" />
@@ -383,13 +385,25 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnSignOn"
                         android:layout_width="100dp"
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/rounded_corner_yellow_background"
-                        android:text="Sign On"
+                        android:text="@string/label_sign_off"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/signaturePad" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnClearSign"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/rounded_corner_white_background"
+                        android:text="@string/label_clear"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/signaturePad" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -413,6 +427,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:baselineAligned="false"
                         android:orientation="horizontal"
                         android:weightSum="2">
 
@@ -427,15 +442,19 @@
                                 android:id="@+id/lblCustomerName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Customer Name"
+                                android:text="@string/label_customer_name"
                                 android:textSize="16sp" />
 
                             <androidx.appcompat.widget.AppCompatEditText
                                 android:id="@+id/inputCustomerName"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background" />
+                                android:background="@drawable/rounded_corner_gray_background"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:padding="15dp"
+                                android:singleLine="true" />
 
                         </LinearLayout>
 
@@ -450,15 +469,17 @@
                                 android:id="@+id/lblEmail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Email"
+                                android:text="@string/label_email"
                                 android:textSize="16sp" />
 
                             <androidx.appcompat.widget.AppCompatEditText
                                 android:id="@+id/inputEmail"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background" />
+                                android:background="@drawable/rounded_corner_gray_background"
+                                android:inputType="textEmailAddress"
+                                android:padding="15dp" />
 
                         </LinearLayout>
 
@@ -468,6 +489,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:baselineAligned="false"
                         android:orientation="horizontal"
                         android:weightSum="2">
 
@@ -481,15 +503,19 @@
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Designation"
+                                android:text="@string/label_designation"
                                 android:textSize="16sp" />
 
                             <androidx.appcompat.widget.AppCompatEditText
                                 android:id="@+id/inputDesignation"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background" />
+                                android:background="@drawable/rounded_corner_gray_background"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:padding="15dp"
+                                android:singleLine="true" />
 
                         </LinearLayout>
 
@@ -503,26 +529,28 @@
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Mobile Number (Optional)"
+                                android:text="@string/label_mobile_number_optional"
                                 android:textSize="16sp" />
 
                             <androidx.appcompat.widget.AppCompatEditText
                                 android:id="@+id/inputMobileNumber"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/rounded_corner_gray_background" />
+                                android:background="@drawable/rounded_corner_gray_background"
+                                android:inputType="number"
+                                android:padding="15dp" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:weightSum="3">
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="0dp"
@@ -530,15 +558,7 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/rounded_corner_white_background"
-                            android:text="cancel" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/rounded_corner_white_background"
-                            android:text="save" />
+                            android:text="@string/label_cancel" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="0dp"
@@ -546,7 +566,16 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/rounded_corner_yellow_background"
-                            android:text="upload" />
+                            android:text="@string/label_save" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_corner_yellow_background"
+                            android:text="@string/label_upload"
+                            android:visibility="gone" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:layout_width="0dp"
@@ -554,7 +583,7 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/rounded_corner_white_background"
-                            android:text="print" />
+                            android:text="@string/label_print" />
 
                     </LinearLayout>
 

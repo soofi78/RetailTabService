@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lfsolutions.retail.R
@@ -17,6 +19,8 @@ class TaxInvoiceActivity : AppCompatActivity() {
     private val mBinding get() = _binding!!
 
     private lateinit var mAdapter: CartProductAdapter
+
+    private val mViewModel : TaxInvoiceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,6 +41,53 @@ class TaxInvoiceActivity : AppCompatActivity() {
         mAdapter = CartProductAdapter()
 
         mBinding.recyclerView.adapter = mAdapter
+
+        mViewModel.toggleSignaturePad(false)
+
+        addOnClickListener()
+
+        addDataObserver()
+
+    }
+
+    private fun addDataObserver() {
+
+        mViewModel.isSignOn.observe(this){ isSignOn ->
+
+            mBinding.signaturePad.isEnabled = isSignOn
+
+            if(isSignOn) {
+
+                mBinding.btnSignOn.text = getString(R.string.label_sign_off)
+
+                mBinding.btnSignOn.setBackgroundDrawable(AppCompatResources.getDrawable(baseContext,R.drawable.rounded_corner_white_background))
+
+            }
+            else {
+
+                mBinding.btnSignOn.text = getString(R.string.label_sign_on)
+
+                mBinding.btnSignOn.setBackgroundDrawable(AppCompatResources.getDrawable(baseContext,R.drawable.rounded_corner_yellow_background))
+
+            }
+
+        }
+
+    }
+
+    private fun addOnClickListener() {
+
+        mBinding.btnSignOn.setOnClickListener {
+
+            mViewModel.toggleSignaturePad(!mBinding.signaturePad.isEnabled)
+
+        }
+
+        mBinding.btnClearSign.setOnClickListener {
+
+            mBinding.signaturePad.clear()
+
+        }
 
     }
 
