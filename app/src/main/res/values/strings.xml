@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Retail</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_delivery">Delivery</string>
+    <string name="title_Documents">Documents</string>
+    <string name="title_schedule">Schedule</string>
+    <string name="title_all_records">All Records</string>
+    <string name="label_to_visit">To Visit</string>
+    <string name="label_urgent">Urgent</string>
+
+    <string name="prefix_location">Location: %s</string>
+    <string name="prefix_vehicle_no">Vehicle No. %s</string>
+    <string name="prefix_group">Group - %s</string>
+    <string name="prefix_account_no">A/C No. %s</string>
+    <string name="prefix_area">Area - %s</string>
+
+    <string name="label_visitation_schedule">Visitation Schedule</string>
+    <string name="label_all_customer">All Customers</string>
+    <string name="label_documents">Documents</string>
+    <string name="label_outgoing_stock_record">Outgoing Stock Record</string>
+    <string name="label_daily_sales_record">Daily Sales Record</string>
+    <string name="label_driver_memo">Driver\'s Memo</string>
+    <string name="title_activity_item_details">ItemDetails</string>
+    <string name="title_current_forms">Current Forms</string>
+    <string name="title_history">History</string>
+    <string name="label_back">Back</string>
+    <string name="label_tax_invoice">Tax Invoice</string>
+    <string name="label_add_to_cart">Add To Cart</string>
+
+    <string-array name="term">
+        <item>Cash</item>
+        <item>Term (30 Days)</item>
+        <item>Cash (60 Days)</item>
+        <item>Cash (90 Days)</item>
+    </string-array>
+
+</resources>
