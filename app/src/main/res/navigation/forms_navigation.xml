@@ -69,7 +69,7 @@
         android:id="@+id/navigation_agreement_memo"
         android:name="com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoFragment"
         android:label="Agreement Memo"
-        tools:layout="@layout/fragment_tax_invoice">
+        tools:layout="@layout/fragment_new_agreement_memo">
         <action
             android:id="@+id/action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation"
             app:destination="@id/navigation_agreement_memo_bottom_navigation"
@@ -92,6 +92,9 @@
             android:name="IsEquipment"
             android:defaultValue="true"
             app:argType="boolean" />
+        <action
+            android:id="@+id/action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment"
+            app:destination="@id/navigation_add_equipment" />
     </fragment>
 
     <fragment

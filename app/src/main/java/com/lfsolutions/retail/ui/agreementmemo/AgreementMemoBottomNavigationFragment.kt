@@ -40,13 +40,6 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
 
         //mBinding.navView.setupWithNavController(navController)
 
-        val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
-        ft.replace(
-            R.id.nav_host_fragment_activity,
-            EquipmentListFragment(),
-            "NewFragmentTag"
-        )
-        ft.commit()
 
         mBinding.navView.setOnItemSelectedListener {
 
@@ -105,7 +98,7 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
 
             } else {
 
-                mBinding.navView.selectedItemId = R.id.navigation_equipment
+                mBinding.navView.selectedItemId = R.id.navigation_order
 
                 mBinding.txtBack.text = getString(R.string.label_order_summary)
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOrderSummaryBinding
 
@@ -41,8 +42,8 @@ class OrderSummaryFragment : Fragment() {
 
             override fun onOrderSummarySelect() {
 
-                mBinding.root.findNavController()
-                    .navigate(R.id.action_navigation_order_to_navigation_add_equipment)
+               findNavController()
+                    .navigate(R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment)
 
             }
 
