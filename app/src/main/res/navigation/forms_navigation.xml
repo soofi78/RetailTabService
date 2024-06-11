@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation2"
+    android:id="@+id/form_navigation"
     app:startDestination="@+id/navigation_current_forms">
 
     <fragment
@@ -11,9 +11,17 @@
         android:label="@string/title_current_forms"
         tools:layout="@layout/fragment_current_forms">
         <action
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             android:id="@+id/action_navigation_current_forms_to_navigation_product_list"
             app:destination="@id/navigation_product_list" />
         <action
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             android:id="@+id/action_navigation_current_forms_to_navigation_agreement_memo"
             app:destination="@id/navigation_agreement_memo" />
     </fragment>
@@ -30,9 +38,17 @@
         android:label="Product"
         tools:layout="@layout/fragment_product_list">
         <action
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             android:id="@+id/action_navigation_product_list_to_navigation_add_cart"
             app:destination="@id/navigation_add_cart" />
         <action
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             android:id="@+id/action_navigation_product_list_to_navigation_tax_invoice"
             app:destination="@id/navigation_tax_invoice" />
     </fragment>
@@ -53,6 +69,63 @@
         android:id="@+id/navigation_agreement_memo"
         android:name="com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoFragment"
         android:label="Agreement Memo"
-        tools:layout="@layout/fragment_tax_invoice" />
+        tools:layout="@layout/fragment_tax_invoice">
+        <action
+            android:id="@+id/action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation"
+            app:destination="@id/navigation_agreement_memo_bottom_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_bottom_navigation"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoBottomNavigationFragment"
+        android:label="Agreement Memo"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out"
+        tools:layout="@layout/fragment_agreement_memo_bottom_navigation">
+        <argument
+            android:name="IsEquipment"
+            android:defaultValue="true"
+            app:argType="boolean" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_equipment"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.EquipmentListFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/fragment_equipment_list">
+        <action
+            android:id="@+id/action_navigation_equipment_to_navigation_add_equipment"
+            app:destination="@id/navigation_add_equipment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_order"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.OrderSummaryFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/fragment_order_summary">
+        <action
+            android:id="@+id/action_navigation_order_to_navigation_add_equipment"
+            app:destination="@id/navigation_add_equipment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_equipment"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AddEquipmentFragment"
+        android:label="Add Equipment"
+        tools:layout="@layout/fragment_add_equipment" />
 
 </navigation>

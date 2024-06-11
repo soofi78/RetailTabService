@@ -118,7 +118,19 @@
         android:id="@+id/txtPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="$10"
+        android:text="$10 / Pcs"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtQtyAvailable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/qty_black"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Quantity Available : 20"
+        android:textAlignment="center"
         android:textSize="16sp" />
 
     <androidx.constraintlayout.helper.widget.Flow
@@ -128,7 +140,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:orientation="vertical"
-        app:constraint_referenced_ids="txtProductName,txtCategory,txtPrice"
+        app:constraint_referenced_ids="txtProductName,txtCategory,txtPrice,txtQtyAvailable"
         app:flow_horizontalAlign="start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgProduct"
@@ -184,7 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Sale Option"
+        android:text="@string/label_sale_option"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -221,11 +233,13 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSave"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
+        android:layout_margin="15dp"
+        android:background="@drawable/rounded_corner_yellow_background"
         android:text="@string/label_add"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
