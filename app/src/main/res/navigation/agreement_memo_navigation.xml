@@ -16,16 +16,12 @@
         android:name="com.lfsolutions.retail.ui.agreementmemo.OrderSummaryFragment"
         android:label="Agreement Memo"
         tools:layout="@layout/fragment_order_summary">
-        <action
-            android:id="@+id/action_navigation_order_to_navigation_add_equipment"
-            app:destination="@id/navigation_add_equipment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_add_equipment"
-        android:name="com.lfsolutions.retail.ui.agreementmemo.AddEquipmentFragment"
-        android:label="Add Equipment"
-        tools:layout="@layout/fragment_add_equipment" />
-
+    <!--    <fragment
+            android:id="@+id/navigation_add_equipment"
+            android:name="com.lfsolutions.retail.ui.agreementmemo.AddEquipmentFragment"
+            android:label="Add Equipment"
+            tools:layout="@layout/fragment_add_equipment" />-->
 
 </navigation>

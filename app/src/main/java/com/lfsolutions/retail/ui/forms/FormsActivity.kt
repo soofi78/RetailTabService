@@ -4,16 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityFormsBinding
+import com.lfsolutions.retail.ui.agreementmemo.AgreementMemoBottomNavigationActivity
 
 class FormsActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityFormsBinding
+
+    private val mViewModel: FormsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,29 @@ class FormsActivity : AppCompatActivity() {
         }
 
         navView.setupWithNavController(navController)
+
+        addDataObserver()
+
+    }
+
+    private fun addDataObserver() {
+
+        mViewModel.displayEquipmentOrderView.observe(this) {
+
+            if (it.first) {
+
+                startActivity(
+                    AgreementMemoBottomNavigationActivity.getIntent(
+                        this,
+                        it.second
+                    )
+                )
+
+                mViewModel.displayEquipmentOrderView(show = false)
+
+            }
+
+        }
 
     }
 

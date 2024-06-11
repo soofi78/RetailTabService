@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentCurrentFormsBinding
+import com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoActivity
 import com.lfsolutions.retail.ui.forms.FormAdapter
 
 class CurrentFormsFragment : Fragment() {
@@ -49,8 +50,7 @@ class CurrentFormsFragment : Fragment() {
 
             override fun onAgreementMemoSelect() {
 
-                mBinding.root.findNavController()
-                    .navigate(R.id.action_navigation_current_forms_to_navigation_agreement_memo)
+                startActivity(NewAgreementMemoActivity.getIntent(requireContext()))
 
             }
 

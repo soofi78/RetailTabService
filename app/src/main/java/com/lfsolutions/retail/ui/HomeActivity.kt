@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 
@@ -21,6 +19,7 @@ class HomeActivity : AppCompatActivity() {
     private val mBinding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         _binding = ActivityHomeBinding.inflate(layoutInflater)

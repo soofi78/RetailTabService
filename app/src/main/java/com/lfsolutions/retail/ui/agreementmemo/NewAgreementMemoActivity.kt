@@ -1,18 +1,15 @@
 package com.lfsolutions.retail.ui.agreementmemo
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentNewAgreementMemoBinding
 
-class NewAgreementMemoFragment : Fragment() {
+class NewAgreementMemoActivity : AppCompatActivity() {
 
     private var _binding: FragmentNewAgreementMemoBinding? = null
 
@@ -20,24 +17,13 @@ class NewAgreementMemoFragment : Fragment() {
 
     private val mViewModel: NewAgreementMemoViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
 
-        _binding = FragmentNewAgreementMemoBinding.inflate(inflater, container, false)
+        super.onCreate(savedInstanceState)
 
-        return mBinding.root
+        _binding = FragmentNewAgreementMemoBinding.inflate(layoutInflater)
 
-    }
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-
-        super.onViewCreated(view, savedInstanceState)
+        setContentView(mBinding.root)
 
         mViewModel.toggleSignaturePad(false)
 
@@ -49,7 +35,7 @@ class NewAgreementMemoFragment : Fragment() {
 
     private fun addDataObserver() {
 
-        mViewModel.isSignOn.observe(viewLifecycleOwner) { isSignOn ->
+        mViewModel.isSignOn.observe(this) { isSignOn ->
 
             mBinding.signaturePad.isEnabled = isSignOn
 
@@ -59,7 +45,7 @@ class NewAgreementMemoFragment : Fragment() {
 
                 mBinding.btnSignOn.setBackgroundDrawable(
                     AppCompatResources.getDrawable(
-                        requireContext(),
+                        this,
                         R.drawable.rounded_corner_white_background
                     )
                 )
@@ -70,7 +56,7 @@ class NewAgreementMemoFragment : Fragment() {
 
                 mBinding.btnSignOn.setBackgroundDrawable(
                     AppCompatResources.getDrawable(
-                        requireContext(),
+                        this,
                         R.drawable.rounded_corner_yellow_background
                     )
                 )
@@ -95,33 +81,38 @@ class NewAgreementMemoFragment : Fragment() {
 
         }
 
+        mBinding.flowBack.setOnClickListener {
+
+            finish()
+
+        }
+
         mBinding.btnOpenEquipmentList.setOnClickListener {
 
-            val bundle = bundleOf("IsEquipment" to true)
-
-            it.findNavController().navigate(
-                R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
-                bundle
-            )
+            startActivity(AgreementMemoBottomNavigationActivity.getIntent(this, true))
 
         }
 
         mBinding.btnViewOrder.setOnClickListener {
 
-            val bundle = bundleOf("IsEquipment" to false)
-
-            it.findNavController().navigate(
-                R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
-                bundle
-            )
+            startActivity(AgreementMemoBottomNavigationActivity.getIntent(this, false))
 
         }
 
         mBinding.btnSave.setOnClickListener {
 
-            it.findNavController().popBackStack(R.id.navigation_current_forms, false)
+            //it.findNavController().popBackStack(R.id.navigation_current_forms, false)
+
+            finish()
 
         }
+
+    }
+
+    companion object {
+
+        fun getIntent(context: Context): Intent =
+            Intent(context, NewAgreementMemoActivity::class.java)
 
     }
 

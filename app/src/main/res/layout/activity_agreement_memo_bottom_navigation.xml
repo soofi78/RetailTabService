@@ -44,7 +44,7 @@
                 android:id="@+id/txtBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_order_summary"
+                android:text="@string/label_equipment_list"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical"
                 app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
@@ -115,6 +115,7 @@
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/cardHeader"
+        app:navGraph="@navigation/agreement_memo_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

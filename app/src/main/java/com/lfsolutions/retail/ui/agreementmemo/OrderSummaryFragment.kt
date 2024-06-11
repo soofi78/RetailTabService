@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
-import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOrderSummaryBinding
 
 class OrderSummaryFragment : Fragment() {
@@ -41,8 +39,8 @@ class OrderSummaryFragment : Fragment() {
 
             override fun onOrderSummarySelect() {
 
-                mBinding.root.findNavController()
-                    .navigate(R.id.action_navigation_order_to_navigation_add_equipment)
+                /*mBinding.root.findNavController()
+                    .navigate(R.id.action_navigation_order_to_navigation_add_equipment)*/
 
             }
 
@@ -58,7 +56,7 @@ class OrderSummaryFragment : Fragment() {
 
         mBinding.btnComplete.setOnClickListener {
 
-            mViewModel.setOrderCompleted(true)
+            requireActivity().finish()
 
         }
 
