@@ -63,6 +63,7 @@
     <string name="label_order_summary">Order Summary</string>
     <string name="label_order">Order</string>
     <string name="label_total_price">Total price</string>
+    <string name="label_service_form">Service Form</string>
 
     <string name="terms_and_conditions"> <b>•</b> The user shall bear the cost of the loan equipment in case of loss or misplacement \n\n
         <b>•</b> In case of out of order, the user is to request for a free replacement \n\n

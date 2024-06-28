@@ -56,7 +56,8 @@ class CurrentFormsFragment : Fragment() {
             }
 
             override fun onServiceFormSelect() {
-
+                mBinding.root.findNavController()
+                    .navigate(R.id.action_navigation_current_forms_to_serviceFormFragment)
 
             }
 

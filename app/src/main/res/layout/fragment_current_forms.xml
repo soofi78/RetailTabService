@@ -158,8 +158,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:backgroundTint="@color/yellow"
+        android:contentDescription="@string/label_add"
         android:src="@drawable/add_black"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
