@@ -537,33 +537,33 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:padding="10dp"
                         android:id="@+id/lblboilderIdty"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:text="Boiler Identity"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ivIdentity"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvBoilerList"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
                         app:layout_constraintStart_toEndOf="@+id/ivIdentity"
-                        app:layout_constraintTop_toBottomOf="@+id/lblboilderIdty"
+                        android:layout_height="wrap_content"
                         tools:itemCount="3"
+                        app:layout_constraintTop_toBottomOf="@+id/lblboilderIdty"
                         tools:listitem="@layout/boilerlist_item" />
 
                     <TextView
+                        android:padding="10dp"
                         android:id="@+id/txtSelectMore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:text="Tap to select More"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ivIdentity"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/rvBoilerList" />
 
                     <androidx.appcompat.widget.AppCompatImageButton
@@ -581,12 +581,12 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSignature"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:elevation="5dp"
                 app:cardCornerRadius="10dp"
+                android:id="@+id/cardSignature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/boilerCard">
@@ -610,7 +610,7 @@
                         android:layout_height="40dp"
                         android:layout_margin="10dp"
                         android:background="@drawable/rounded_corner_yellow_background"
-                        android:text="@string/label_sig n_on"
+                        android:text="@string/label_sign_on"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/signaturePad" />
@@ -629,15 +629,14 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
             <LinearLayout
+                android:weightSum="4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:weightSum="4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardSignature">
 
                 <androidx.appcompat.widget.AppCompatButton
