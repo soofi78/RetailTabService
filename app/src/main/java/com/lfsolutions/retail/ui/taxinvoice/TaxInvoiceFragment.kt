@@ -1,43 +1,45 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.taxinvoice
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentNewAgreementMemoBinding
+import com.lfsolutions.retail.databinding.FragmentTaxInvoiceBinding
 
-class NewAgreementMemoFragment : Fragment() {
+class TaxInvoiceFragment : Fragment() {
 
-    private var _binding: FragmentNewAgreementMemoBinding? = null
+    private var _binding: FragmentTaxInvoiceBinding? = null
 
     private val mBinding get() = _binding!!
 
-    private val mViewModel: NewAgreementMemoViewModel by viewModels()
+    private lateinit var mAdapter: CartProductAdapter
+
+    private val mViewModel: TaxInvoiceViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
-        _binding = FragmentNewAgreementMemoBinding.inflate(inflater, container, false)
+        _binding = FragmentTaxInvoiceBinding.inflate(inflater, container, false)
 
         return mBinding.root
 
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+
+        mAdapter = CartProductAdapter()
+
+        mBinding.recyclerView.adapter = mAdapter
 
         mViewModel.toggleSignaturePad(false)
 
@@ -95,31 +97,15 @@ class NewAgreementMemoFragment : Fragment() {
 
         }
 
-        mBinding.btnOpenEquipmentList.setOnClickListener {
-
-            val bundle = bundleOf("IsEquipment" to true)
-
-            it.findNavController().navigate(
-                R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
-                bundle
-            )
-
-        }
-
-        mBinding.btnViewOrder.setOnClickListener {
-
-            val bundle = bundleOf("IsEquipment" to false)
-
-            it.findNavController().navigate(
-                R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
-                bundle
-            )
-
-        }
-
         mBinding.btnSave.setOnClickListener {
 
             it.findNavController().popBackStack(R.id.navigation_current_forms, false)
+
+        }
+
+        mBinding.flowBack.setOnClickListener {
+
+            it.findNavController().popBackStack()
 
         }
 

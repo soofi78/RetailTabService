@@ -473,6 +473,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardSignature">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -481,6 +482,7 @@
                     android:text="@string/label_cancel" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -489,6 +491,7 @@
                     android:text="@string/label_save" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpload"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -498,6 +501,7 @@
                     android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPrint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"

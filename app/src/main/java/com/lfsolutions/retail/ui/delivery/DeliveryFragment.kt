@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.ui.delivery
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
 import com.lfsolutions.retail.ui.forms.FormsActivity
 
@@ -21,6 +23,7 @@ class DeliveryFragment : Fragment() {
     private lateinit var mUrgentAdapter : DeliveryItemAdapter
 
     private lateinit var mToVisitAdapter : DeliveryItemAdapter
+    private lateinit var mScheduleAdapter: DeliveryItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,24 +44,18 @@ class DeliveryFragment : Fragment() {
         mUrgentAdapter = DeliveryItemAdapter(1)
 
         mToVisitAdapter = DeliveryItemAdapter(3)
+        mScheduleAdapter = DeliveryItemAdapter(2)
 
         mBinding.recyclerViewUrgent.adapter = mUrgentAdapter
 
         mBinding.recyclerViewToVisit.adapter = mToVisitAdapter
+        mBinding.recyclerViewSchedule.adapter = mScheduleAdapter
 
-        mBinding.recyclerViewUrgent.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
 
-        mBinding.recyclerViewToVisit.addItemDecoration(
-            DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            )
-        )
+        addVerticalItemDecoration(mBinding.recyclerViewToVisit, requireContext())
+        addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
+        addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
+
 
         mUrgentAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener{
 
@@ -96,4 +93,13 @@ class DeliveryFragment : Fragment() {
 
     }
 
+}
+
+fun addVerticalItemDecoration(recyclerView: RecyclerView, context: Context) {
+    recyclerView.addItemDecoration(
+        DividerItemDecoration(
+            context,
+            DividerItemDecoration.VERTICAL
+        )
+    )
 }

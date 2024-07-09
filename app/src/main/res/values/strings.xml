@@ -29,10 +29,12 @@
     <string name="label_foc">FOC</string>
     <string name="label_rent">Rent</string>
     <string name="label_exchange">Exchange</string>
+    <string name="label_return">Return</string>
     <string name="label_add">Add</string>
+    <string name="label_add_to_order">Add to Order</string>
     <string name="label_sale_option">Sale Option</string>
     <string name="label_sign_on">Sign On</string>
-    <string name="label_sign_off">Sign_Off</string>
+    <string name="label_sign_off">Sign Off</string>
     <string name="label_clear">Clear</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_save">Save</string>
@@ -56,6 +58,13 @@
     <string name="label_open_equipment_list">Open Equipment List</string>
     <string name="label_view_order">View Order</string>
     <string name="label_terms_and_conditions"><u>Term\'s and Condition</u></string>
+    <string name="label_equipment_list">Equipment List</string>
+    <string name="label_complete">Complete</string>
+    <string name="label_order_summary">Order Summary</string>
+    <string name="label_order">Order</string>
+    <string name="label_total_price">Total price</string>
+    <string name="label_service_form">Service Form</string>
+
     <string name="terms_and_conditions"> <b>•</b> The user shall bear the cost of the loan equipment in case of loss or misplacement \n\n
         <b>•</b> In case of out of order, the user is to request for a free replacement \n\n
         <b>•</b> Free exchange of filter (with ring and bag) is given on a fixed period \n\n
@@ -78,5 +87,7 @@
         <item>Exchange</item>
         <item>Rent</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
