@@ -7,12 +7,21 @@ android {
     namespace = "com.lfsolutions.retail"
     compileSdk = 34
 
+    signingConfigs {
+        create("releaseConfig") {
+            keyAlias = "retail"
+            keyPassword = "retail"
+            storeFile = file("retail-key")
+            storePassword = "retail"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,6 +33,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("releaseConfig")
         }
     }
     compileOptions {
@@ -57,4 +67,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.signature.pad)
     implementation(libs.coroutines)
+    implementation(libs.square.retrofit)
+    implementation(libs.square.gson)
+    implementation(libs.square.okhttp)
+    implementation(libs.square.okhttp.logging.interceptor)
+
 }

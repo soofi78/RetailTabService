@@ -1,7 +1,5 @@
 package com.lfsolutions.retail.ui.documents
 
-import com.lfsolutions.retail.model.Models
-
 
 sealed class DocumentType {
 

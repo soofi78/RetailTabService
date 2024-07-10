@@ -3,7 +3,6 @@ package com.lfsolutions.retail.ui.documents
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.model.Models
 
 class DocumentsViewModel : ViewModel() {
 

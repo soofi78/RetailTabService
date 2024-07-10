@@ -30,7 +30,8 @@
                     android:id="@+id/inputServerAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Server address" />
+                    android:hint="Server address"
+                    android:text="http://develop.rtlconnect.net/" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,15 +81,16 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonSignin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_corner_yellow_background"
                 android:padding="10dp"
                 android:text="Sign In"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputPasswordLayout" />
 
