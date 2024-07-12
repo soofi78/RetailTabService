@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemDeliveryBinding
+import com.lfsolutions.retail.model.Customer
 
-class DeliveryItemAdapter(private val size: Int) :
+class DeliveryItemAdapter(var customers: ArrayList<Customer>? = ArrayList()) :
+
     RecyclerView.Adapter<DeliveryItemAdapter.ViewHolder>() {
 
     private var mListener: OnItemClickListener? = null
@@ -29,32 +31,35 @@ class DeliveryItemAdapter(private val size: Int) :
             )
         )
 
-    override fun getItemCount(): Int = size
+    override fun getItemCount(): Int = customers?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        val customer = customers?.get(position)
         holder.binding.txtGroup.text =
             makeTextBold(
-                text = holder.itemView.context.getString(R.string.prefix_group, "BKE"),
+                text = holder.itemView.context.getString(R.string.prefix_group, customer?.group),
                 startIndex = 8
             )
-
+        holder.binding.txtName.text = customer?.name
+        holder.binding.txtAddress.text = customer?.address1
         holder.binding.txtAccountNo.text =
             makeTextBold(
                 text = holder.itemView.context.getString(
                     R.string.prefix_account_no,
-                    "AZ0001"
+                    customer?.customerCode
                 ), startIndex = 8
             )
 
         holder.binding.txtArea.text =
             makeTextBold(
-                text = holder.itemView.context.getString(R.string.prefix_area, "W"),
+                text = holder.itemView.context.getString(R.string.prefix_area, customer?.area),
                 startIndex = 7
             )
 
-        holder.binding.root.setOnClickListener { mListener?.onItemClick() }
-
+        holder.binding.root.tag = customer
+        holder.binding.root.setOnClickListener {
+            mListener?.onItemClick(it.tag as Customer)
+        }
     }
 
     private fun makeTextBold(
@@ -74,7 +79,7 @@ class DeliveryItemAdapter(private val size: Int) :
 
         }
 
-    fun setListener(listener: OnItemClickListener){
+    fun setListener(listener: OnItemClickListener) {
 
         mListener = listener
 
@@ -82,7 +87,7 @@ class DeliveryItemAdapter(private val size: Int) :
 
     interface OnItemClickListener {
 
-        fun onItemClick()
+        fun onItemClick(customer: Customer)
 
     }
 

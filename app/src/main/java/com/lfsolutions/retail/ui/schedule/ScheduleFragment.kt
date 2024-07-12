@@ -31,18 +31,14 @@ class ScheduleFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
-
-        mBinding.recyclerViewVisitationSchedule.adapter = DeliveryItemAdapter(3)
-
+        mBinding.recyclerViewVisitationSchedule.adapter = DeliveryItemAdapter(ArrayList())
         mBinding.recyclerViewVisitationSchedule.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
                 DividerItemDecoration.VERTICAL
             )
         )
-
     }
 
     override fun onDestroyView() {

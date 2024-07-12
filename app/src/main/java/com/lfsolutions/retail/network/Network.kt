@@ -1,11 +1,15 @@
 package com.lfsolutions.retail.network
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.model.LoginResponse
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -32,8 +36,20 @@ class Network private constructor() {
         httpClient.readTimeout(60, TimeUnit.SECONDS)
         httpClient.writeTimeout(60, TimeUnit.SECONDS)
         httpClient.addInterceptor(loggingIntercept)
+        httpClient.addInterceptor { chain ->
+            if (Main.app.isLoggedIn().not()) {
+                chain.proceed(chain.request())
+            } else {
+                val newHeaders = chain.request().headers().newBuilder()
+                newHeaders.add("Authorization", "Bearer " + getSession()?.result)
+                val newRequest: Request = chain.request().newBuilder()
+                    .headers(newHeaders.build())
+                    .build()
+                chain.proceed(newRequest)
+            }
+        }
         networkClient = Retrofit.Builder()
-            .baseUrl(AppSession.get(Constants.baseUrl))
+            .baseUrl(Main.app.getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(httpClient.build())
             .build()
@@ -42,6 +58,10 @@ class Network private constructor() {
 
     public fun getApis(): ApiServices? {
         return instance?.apiServices
+    }
+
+    private fun getSession(): LoginResponse? {
+        return Gson().fromJson(AppSession.get(Constants.SESSION), LoginResponse::class.java)
     }
 
 

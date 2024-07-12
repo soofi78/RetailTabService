@@ -25,7 +25,12 @@
         android:id="@+id/navigation_add_equipment"
         android:name="com.lfsolutions.retail.ui.agreementmemo.AddEquipmentFragment"
         android:label="Add Equipment"
-        tools:layout="@layout/fragment_add_equipment" />
+        tools:layout="@layout/fragment_add_equipment">
+        <argument
+            android:name="equipment"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 
 
 </navigation>

@@ -1,10 +1,20 @@
 package com.lfsolutions.retail.ui.forms
 
-sealed class FormType {
+enum class FormType(val typeName: String) {
+    AgreementMemo("Agreement Memo"),
+    ServiceForm("Complaint Service"),
+    InvoiceForm("Sale Invoice");
 
-    data object AgreementMemo : FormType()
+    companion object {
+        fun find(title: String): FormType? {
+            var type: FormType? = null
+            entries.forEach {
+                if (it.typeName == title) {
+                    type = it
+                }
+            }
 
-    data object ServiceForm : FormType()
-
-    data object InvoiceForm : FormType()
+            return type
+        }
+    }
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.navigation.args)
 }
 
 android {
@@ -69,7 +70,9 @@ dependencies {
     implementation(libs.coroutines)
     implementation(libs.square.retrofit)
     implementation(libs.square.gson)
+    implementation(libs.square.scaler)
     implementation(libs.square.okhttp)
     implementation(libs.square.okhttp.logging.interceptor)
+    implementation(libs.bumptech.glide)
 
 }

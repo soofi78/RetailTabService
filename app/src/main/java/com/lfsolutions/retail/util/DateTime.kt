@@ -153,7 +153,7 @@ object DateTime {
         }
     }
 
-    fun showDatePicker(activity: Activity?, callback: pickerCallback?) {
+    fun showDatePicker(activity: Activity?, callback: OnDatePickedCallback?) {
         val yy: Int
         val mm: Int
         val dd: Int
@@ -180,7 +180,7 @@ object DateTime {
         dialog.show()
     }
 
-    fun showTimePicker(activity: Activity?, callback: pickerCallback?) {
+    fun showTimePicker(activity: Activity?, callback: OnDatePickedCallback?) {
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
         val minute = mcurrentTime[Calendar.MINUTE]
@@ -283,7 +283,7 @@ object DateTime {
         }
     }
 
-    interface pickerCallback {
-        fun onSelected(arg1: String?)
+    interface OnDatePickedCallback {
+        fun onSelected(date: String?)
     }
 }

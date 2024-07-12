@@ -5,16 +5,37 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.view.View.OnClickListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
+import com.lfsolutions.retail.model.LoginResponse
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.Dialogs
+import com.lfsolutions.retail.util.OnOptionDialogItemClicked
 
 class HomeActivity : AppCompatActivity() {
+
+    private var optionsClick = OnClickListener {
+        Dialogs.optionsDialog(context = this@HomeActivity,
+            options = arrayOf(Constants.Logout, Constants.ViewProfile),
+            onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
+                override fun onClick(option: String) {
+                    when (option) {
+                        Constants.Logout -> {
+                            Main.app.logout()
+                            finishAffinity()
+                        }
+                    }
+                }
+            })
+    }
 
     private var _binding: ActivityHomeBinding? = null
 
@@ -31,45 +52,49 @@ class HomeActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
 
-       /* val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_delivery, R.id.navigation_documents, R.id.navigation_schedule, R.id.navigation_all_records
-            )
-        )*/
+        /* val appBarConfiguration = AppBarConfiguration(
+             setOf(
+                 R.id.navigation_delivery, R.id.navigation_documents, R.id.navigation_schedule, R.id.navigation_all_records
+             )
+         )*/
 
         //setupActionBarWithNavController(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
 
-        mBinding.txtLocation.text =
-            makeTextBold(
-                text = getString(R.string.prefix_location, "WH"),
-                startIndex = 10
-            )
-
-        mBinding.txtVehicleNo.text =
-            makeTextBold(
-                text = getString(R.string.prefix_vehicle_no, "SBC 1234"),
-                startIndex = 12
-            )
+        setData()
+        setClickListener()
 
     }
 
+    private fun setClickListener() {
+        mBinding.icoAccount.setOnClickListener(optionsClick)
+        mBinding.detailsFlow.setOnClickListener(optionsClick)
+    }
+
+    private fun setData() {
+        val loginResponse = Gson().fromJson(AppSession.get(Constants.SESSION), LoginResponse::class.java)
+
+        mBinding.txtLocation.text = makeTextBold(
+            text = getString(R.string.prefix_location, loginResponse.locationCode.toString()),
+            startIndex = 10
+        )
+
+        mBinding.txtVehicleNo.text = makeTextBold(
+            text = getString(R.string.prefix_vehicle_no, "SBC 1234"), startIndex = 12
+        )
+    }
+
     private fun makeTextBold(
-        text: String,
-        startIndex: Int
-    ): SpannableStringBuilder =
-        SpannableStringBuilder(text).let { spannable ->
+        text: String, startIndex: Int
+    ): SpannableStringBuilder = SpannableStringBuilder(text).let { spannable ->
 
-            spannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                startIndex,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD), startIndex, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-            spannable
+        spannable
 
-        }
+    }
 
 }

@@ -7,6 +7,7 @@ import com.lfsolutions.retail.util.Loading
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 import java.net.ConnectException
@@ -47,7 +48,9 @@ class NetworkCall private constructor() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = request?.execute()
-                cancelLoading()
+                withContext(Dispatchers.Main) {
+                    cancelLoading()
+                }
                 if (response?.isSuccessful == true) {
                     CoroutineScope(Dispatchers.Main).launch {
                         callback!!.onSuccess(request, response, taggedObject)
@@ -56,7 +59,15 @@ class NetworkCall private constructor() {
                     onFailure(response)
                 }
             } catch (ex: Exception) {
+                withContext(Dispatchers.Main) {
+                    cancelLoading()
+                }
                 onException(ex)
+                ex.printStackTrace()
+            } finally {
+                withContext(Dispatchers.Main) {
+                    cancelLoading()
+                }
             }
         }
         return this
@@ -89,7 +100,6 @@ class NetworkCall private constructor() {
     }
 
     private fun onFailure(response: Response<out Any>?) {
-        cancelLoading()
         if (response?.code() == ResponseCode.UN_AUTHORIZED) {
             //  MainApplication.resetApplication();
             //                    MainApplication.startErrorActivity(string(R.string.title_sessionExpired), string(R.string.desc_sessionExpired));
@@ -121,9 +131,7 @@ class NetworkCall private constructor() {
     }
 
     private fun cancelLoading() {
-        CoroutineScope(Dispatchers.Main).launch {
-            if (loading != null && loading!!.isVisible) loading!!.cancel()
-        }
+        if (loading != null && loading!!.isVisible) loading!!.cancel()
     }
 
     fun isCause(

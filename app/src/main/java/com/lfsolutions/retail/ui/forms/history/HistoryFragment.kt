@@ -41,20 +41,16 @@ class HistoryFragment : Fragment() {
 
         addOnClickListener()
 
-        mAdapter = FormAdapter()
+        mAdapter = FormAdapter(null)
 
         mBinding.recyclerView.adapter = mAdapter
 
     }
 
     private fun addDataObserver() {
-
         mViewModel.formTypeLiveData.observe(viewLifecycleOwner) { formType ->
 
-            mAdapter.setData(formType)
-
         }
-
     }
 
     private fun addOnClickListener() {

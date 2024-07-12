@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.gson.Gson
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.LoginResponse
@@ -44,6 +44,9 @@ class LoginActivity : AppCompatActivity(), OnNetworkResponse {
             prepareNetworkLayer()
             login()
         }
+
+        if (AppSession.getBoolean(Constants.IS_LOGGED_IN)) goToHome()
+
     }
 
     private fun prepareNetworkLayer() {
@@ -98,8 +101,14 @@ class LoginActivity : AppCompatActivity(), OnNetworkResponse {
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
         val loginResponse = response?.body() as LoginResponse
+        AppSession.put(Constants.SESSION, Gson().toJson(loginResponse))
+        AppSession.put(Constants.IS_LOGGED_IN, true)
         Notify.toastLong("Login Success")
-        startActivity(Intent(this,HomeActivity::class.java))
+        goToHome()
+    }
+
+    private fun goToHome() {
+        startActivity(Intent(this, HomeActivity::class.java))
         this.finish()
     }
 

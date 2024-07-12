@@ -1,24 +1,16 @@
 package com.lfsolutions.retail.ui.forms
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemFormBinding
+import com.lfsolutions.retail.model.Form
 
-class FormAdapter : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
-
-    private var mFormType = listOf<FormType>()
+class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
 
     private var mListener: OnFormSelectListener? = null
-
-    fun setData(formType: List<FormType>) {
-
-        mFormType = formType
-
-        notifyDataSetChanged()
-
-    }
 
     class ViewHolder(val binding: ItemFormBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,68 +18,39 @@ class FormAdapter : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
         ItemFormBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun getItemCount(): Int = mFormType.size
+    override fun getItemCount(): Int = forms?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        val form = forms?.get(position)
         holder.binding.let { binding ->
-
-            when (mFormType[position]) {
-
-                FormType.AgreementMemo -> {
-
-                    binding.txtName.text = "Agreement Memo"
-
-                    binding.icoItem.setImageResource(R.drawable.agreement_memo)
-
-                }
-
-                FormType.InvoiceForm -> {
-
-                    binding.txtName.text = "Tax Invoice"
-
-                    binding.icoItem.setImageResource(R.drawable.service_form)
-
-                }
-
-                FormType.ServiceForm -> {
-
-                    binding.txtName.text = "Service Form"
-
-                    binding.icoItem.setImageResource(R.drawable.service_form)
-
-                }
-
+            binding.txtName.text = form?.title ?: "N/A"
+            binding.txtSerialNo.visibility = if (form?.serialNo == null) View.GONE else View.VISIBLE
+            binding.txtSerialNo.text = "Serial no. " + form?.serialNo
+            binding.txtEditedDate.visibility =
+                if (form?.lastModificationTime == null) View.GONE else View.VISIBLE
+            binding.txtEditedDate.text = "Edited on: " + form?.lastModificationTime
+            binding.txtDate.visibility =
+                if (form?.date == null) View.GONE else View.VISIBLE
+            binding.txtDate.text = form?.date.toString()
+            when (form?.getType()) {
+                FormType.AgreementMemo -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
+                FormType.InvoiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)
+                FormType.ServiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)
+                null -> {}
             }
-
         }
-
+        holder.itemView.tag = form
         holder.itemView.setOnClickListener {
-
-            when (mFormType[position]) {
-                FormType.AgreementMemo -> mListener?.onAgreementMemoSelect()
-                FormType.InvoiceForm -> mListener?.onTaxInvoiceSelect()
-                FormType.ServiceForm -> mListener?.onServiceFormSelect()
-            }
-
+            mListener?.onFormSelected(holder.itemView.tag as Form)
         }
-
     }
 
     fun setListener(listener: OnFormSelectListener) {
-
         mListener = listener
-
     }
 
     interface OnFormSelectListener {
-
-        fun onAgreementMemoSelect()
-
-        fun onServiceFormSelect()
-
-        fun onTaxInvoiceSelect()
-
+        fun onFormSelected(form: Form)
     }
 
 }

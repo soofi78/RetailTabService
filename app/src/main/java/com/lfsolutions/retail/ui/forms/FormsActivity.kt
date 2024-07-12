@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityFormsBinding
+import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.util.Constants
 
 class FormsActivity : AppCompatActivity() {
 
@@ -19,11 +22,8 @@ class FormsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivityFormsBinding.inflate(layoutInflater)
-
         setContentView(mBinding.root)
-
         val navView: BottomNavigationView = mBinding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_item_details)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -40,10 +40,11 @@ class FormsActivity : AppCompatActivity() {
                 else -> hideBottomNavigationBar()
             }
         }
-
         navView.setupWithNavController(navController)
 
     }
+
+
 
     private fun showBottomNavigationBar() {
 
@@ -58,9 +59,7 @@ class FormsActivity : AppCompatActivity() {
     }
 
     companion object {
-
         fun getInstance(context: Context): Intent = Intent(context, FormsActivity::class.java)
-
     }
 
 }

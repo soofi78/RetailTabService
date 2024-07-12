@@ -17,6 +17,7 @@ data class LoginResponse(
     @SerializedName("dashboard") var dashboard: Boolean? = null,
     @SerializedName("posInvoiceRounded") var posInvoiceRounded: Int? = null,
     @SerializedName("defaultLocationId") var defaultLocationId: Int? = null,
+    @SerializedName("locationCode") var locationCode: String? = null,
     @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("vendorId") var vendorId: String? = null,
     @SerializedName("result") var result: String? = null,
