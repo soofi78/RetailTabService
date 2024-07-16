@@ -3,7 +3,8 @@ package com.lfsolutions.retail.ui.forms
 enum class FormType(val typeName: String) {
     AgreementMemo("Agreement Memo"),
     ServiceForm("Complaint Service"),
-    InvoiceForm("Sale Invoice");
+    InvoiceForm("Sale Invoice"),
+    TaxForm("Tax Invoice");
 
     companion object {
         fun find(title: String): FormType? {

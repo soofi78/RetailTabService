@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.lfsolutions.retail.ui.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        app:cardBackgroundColor="@color/sandal"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -14,8 +23,7 @@
         android:layout_marginBottom="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/cardPriceInfo"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/header"
         tools:listitem="@layout/item_equipment" />
 
     <androidx.cardview.widget.CardView
@@ -31,17 +39,17 @@
             android:padding="15dp">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lblSubTotal"
+                android:id="@+id/lblQTY"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/label_sub_total"
+                android:text="@string/label_quantity"
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtSubTotal"
+                android:id="@+id/txtQTY"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="$ 100.00"
+                android:text="0"
                 android:textAlignment="textEnd"
                 android:textSize="16sp" />
 
@@ -49,13 +57,14 @@
                 android:id="@+id/flowSubTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="lblSubTotal,txtSubTotal"
+                app:constraint_referenced_ids="lblQTY,txtQTY"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lblGST"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:text="@string/label_add_gst_7"
                 android:textSize="16sp" />
@@ -65,6 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="$ 23.45"
+                android:visibility="gone"
                 android:textAlignment="textEnd"
                 android:textSize="16sp" />
 

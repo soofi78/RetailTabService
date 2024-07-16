@@ -24,6 +24,15 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_current_forms_to_navigation_tax_invoice"
+            app:destination="@id/navigation_tax_invoice"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
         <action
             android:id="@+id/action_navigation_current_forms_to_serviceFormFragment"
             app:destination="@id/serviceFormFragment"
@@ -154,12 +163,11 @@
         android:id="@+id/navigation_add_equipment"
         android:name="com.lfsolutions.retail.ui.agreementmemo.AddEquipmentFragment"
         android:label="Add Equipment"
-        tools:layout="@layout/fragment_add_equipment" >
+        tools:layout="@layout/fragment_add_equipment">
         <argument
             android:name="equipment"
             app:argType="string"
-            app:nullable="false"
-            />
+            app:nullable="false" />
     </fragment>
     <fragment
         android:id="@+id/serviceFormFragment"

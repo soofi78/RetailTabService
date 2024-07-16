@@ -1,9 +1,10 @@
 package com.lfsolutions.retail.network
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.model.LoginResponse
+import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import okhttp3.Credentials
@@ -29,7 +30,7 @@ class Network private constructor() {
     private var apiServices: ApiServices? = null
 
     fun init() {
-        val gson = GsonBuilder().create()
+        val gson = GsonBuilder().serializeNulls().create()
         val httpClient = OkHttpClient.Builder()
         httpClient.retryOnConnectionFailure(true)
         httpClient.connectTimeout(60, TimeUnit.SECONDS)
@@ -45,6 +46,7 @@ class Network private constructor() {
                 val newRequest: Request = chain.request().newBuilder()
                     .headers(newHeaders.build())
                     .build()
+                Log.d("Token", newHeaders.toString())
                 chain.proceed(newRequest)
             }
         }
@@ -60,8 +62,8 @@ class Network private constructor() {
         return instance?.apiServices
     }
 
-    private fun getSession(): LoginResponse? {
-        return Gson().fromJson(AppSession.get(Constants.SESSION), LoginResponse::class.java)
+    private fun getSession(): UserSession? {
+        return Gson().fromJson(AppSession.get(Constants.SESSION), UserSession::class.java)
     }
 
 

@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="@color/black"
-        app:itemActiveIndicatorStyle="@style/Indicator"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardLocation"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
@@ -35,23 +18,27 @@
             android:padding="10dp">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoLocation"
+                android:id="@+id/icoBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/location_black" />
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground"
+                android:src="@drawable/arrow_back_black" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtLocation"
+                android:id="@+id/txtBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/prefix_location"
-                android:textSize="18sp" />
+                android:text="@string/label_back"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowLocation"
+                android:id="@+id/flowBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="icoLocation,txtLocation"
+                app:constraint_referenced_ids="icoBack,txtBack"
                 app:flow_horizontalGap="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +78,6 @@
                 android:visibility="gone" />
 
             <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/detailsFlow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -108,16 +94,4 @@
 
     </androidx.cardview.widget.CardView>
 
-    <fragment
-        android:id="@+id/nav_host_fragment_activity_home"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardLocation"
-        app:navGraph="@navigation/mobile_navigation" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

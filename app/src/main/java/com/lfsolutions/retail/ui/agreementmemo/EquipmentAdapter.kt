@@ -33,7 +33,7 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
         holder.binding.txtCategory.text =
             """${equipment?.categoryName} | QTY Available: ${equipment?.qtyOnHand}"""
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + equipment?.price.toString()
+            Main.app.getSession().currencySymbol + equipment?.cost.toString()
 
         Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)

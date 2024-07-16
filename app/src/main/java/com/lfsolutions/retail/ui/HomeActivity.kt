@@ -14,7 +14,7 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
-import com.lfsolutions.retail.model.LoginResponse
+import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Dialogs
@@ -73,10 +73,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        val loginResponse = Gson().fromJson(AppSession.get(Constants.SESSION), LoginResponse::class.java)
-
+        val userSession =
+            Gson().fromJson(AppSession[Constants.SESSION], UserSession::class.java)
+        mBinding.txtName.text = userSession.name
         mBinding.txtLocation.text = makeTextBold(
-            text = getString(R.string.prefix_location, loginResponse.locationCode.toString()),
+            text = getString(R.string.prefix_location, userSession.locationCode.toString()),
             startIndex = 10
         )
 

@@ -15,6 +15,7 @@ import java.util.TimeZone
  */
 object DateTime {
     const val DateFormat = "MMM dd, yyyy"
+    const val DateFormatRetail = "yyyy-MM-dd"
     const val PinFormate = "MMddyy"
     const val TimeFormat = "hh:mm a"
     const val DateTimeFormat = "MMM dd, yyyy - hh:mm a"
@@ -132,6 +133,7 @@ object DateTime {
 
     val timeStamp: String
         get() = System.currentTimeMillis().toString() + ""
+
     @JvmStatic
     val timeStampForKey: String
         get() = (System.currentTimeMillis() / 1000).toString() + ""
@@ -171,33 +173,33 @@ object DateTime {
             } else if (dayOfMonth + "".length == 1) {
                 d = "0$dayOfMonth"
             }
-            callback?.onSelected("$d-$m-$year")
+            callback?.onSelected(year.toString(), m, d)
         }, yy, mm, dd)
         dialog.setOnCancelListener { dialog ->
             dialog.dismiss()
-            callback?.onSelected("")
+            callback?.onSelected("", "", "")
         }
         dialog.show()
     }
 
-    fun showTimePicker(activity: Activity?, callback: OnDatePickedCallback?) {
-        val mcurrentTime = Calendar.getInstance()
-        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
-        val minute = mcurrentTime[Calendar.MINUTE]
-        val mTimePicker = TimePickerDialog(
-            activity,
-            { timePicker, selectedHour, selectedMinute -> callback?.onSelected("$selectedHour:$selectedMinute:00") },
-            hour,
-            minute,
-            true
-        )
-        mTimePicker.setOnCancelListener { dialog ->
-            dialog.dismiss()
-            callback?.onSelected("")
-        }
-        mTimePicker.show()
-        //Yes 24 hour time
-    }
+//    fun showTimePicker(activity: Activity?, callback: OnDatePickedCallback?) {
+//        val mcurrentTime = Calendar.getInstance()
+//        val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+//        val minute = mcurrentTime[Calendar.MINUTE]
+//        val mTimePicker = TimePickerDialog(
+//            activity,
+//            { timePicker, selectedHour, selectedMinute -> callback?.onSelected("$selectedHour:$selectedMinute:00") },
+//            hour,
+//            minute,
+//            true
+//        )
+//        mTimePicker.setOnCancelListener { dialog ->
+//            dialog.dismiss()
+//            callback?.onSelected("")
+//        }
+//        mTimePicker.show()
+//        //Yes 24 hour time
+//    }
 
     fun convertServerTimeToCalender(stamp: String?): Calendar {
         val sdf = SimpleDateFormat(ServerDateTimeFormat)
@@ -284,6 +286,6 @@ object DateTime {
     }
 
     interface OnDatePickedCallback {
-        fun onSelected(date: String?)
+        fun onSelected(year: String, month: String, day: String)
     }
 }

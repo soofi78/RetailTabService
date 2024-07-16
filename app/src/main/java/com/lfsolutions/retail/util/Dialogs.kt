@@ -2,6 +2,8 @@ package com.lfsolutions.retail.util
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.DialogInterface.OnMultiChoiceClickListener
 
 object Dialogs {
     fun optionsDialog(
@@ -18,6 +20,8 @@ object Dialogs {
         }
         builder.show();
     }
+
+
 }
 
 interface OnOptionDialogItemClicked {

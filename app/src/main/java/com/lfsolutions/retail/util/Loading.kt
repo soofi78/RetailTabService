@@ -10,7 +10,12 @@ class Loading {
 
 
     fun forApi(context: Activity): Loading {
-        show(context, false, "Please wait...")
+        forApi(context, "Please wait...")
+        return this
+    }
+
+    fun forApi(context: Activity, message: String): Loading {
+        show(context, false, message)
         return this
     }
 

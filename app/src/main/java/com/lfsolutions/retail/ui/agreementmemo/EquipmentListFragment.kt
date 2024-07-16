@@ -50,8 +50,17 @@ class EquipmentListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setData()
         getEquipmentList()
         updateEquipmentListView()
+    }
+
+    private fun setData() {
+        mBinding.header.setBackText("Equipment List")
+        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        mBinding.header.setOnBackClick {
+            findNavController().popBackStack()
+        }
     }
 
     private fun getEquipmentList() {
@@ -78,9 +87,9 @@ class EquipmentListFragment : Fragment() {
         mAdapter.setListener(object : EquipmentAdapter.OnEquipmentClickListener {
             override fun onEquipmentClick(equipment: Equipment) {
                 findNavController().navigate(
-                        R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment,
-                        bundleOf(Constants.Equipment to Gson().toJson(equipment))
-                    )
+                    R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment,
+                    bundleOf(Constants.Equipment to Gson().toJson(equipment))
+                )
             }
         })
         mBinding.recyclerView.adapter = mAdapter

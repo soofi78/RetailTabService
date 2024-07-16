@@ -2,7 +2,7 @@ package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
+data class UserSession(
     @SerializedName("userId") var userId: Int? = null,
     @SerializedName("tenantId") var tenantId: Int? = null,
     @SerializedName("timeZoneUtc") var timeZoneUtc: String? = null,
@@ -21,4 +21,5 @@ data class LoginResponse(
     @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("vendorId") var vendorId: String? = null,
     @SerializedName("result") var result: String? = null,
+    @SerializedName("name") var name: String? = "",
 )

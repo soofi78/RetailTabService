@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardHeader"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:elevation="20dp"
         app:cardBackgroundColor="@color/sandal"
-        app:layout_constraintTop_toBottomOf="@+id/cardHeader">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -224,14 +224,14 @@
                     android:padding="15dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblSubTotal"
+                        android:id="@+id/lblQTY"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/label_sub_total"
                         android:textSize="16sp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txtSubTotal"
+                        android:id="@+id/txtQTY"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="$ 100.00"
@@ -242,7 +242,7 @@
                         android:id="@+id/flowSubTotal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="lblSubTotal,txtSubTotal"
+                        app:constraint_referenced_ids="lblQTY,txtQTY"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintTop_toTopOf="parent" />
 

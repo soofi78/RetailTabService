@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentCurrentFormsBinding
 import com.lfsolutions.retail.model.Customer
@@ -19,10 +20,12 @@ import com.lfsolutions.retail.network.ErrorResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormAdapter
 import com.lfsolutions.retail.ui.forms.FormType
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
+import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
@@ -58,30 +61,56 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         getFormsData()
         addOnClickListener()
         setAdapter(null)
+        setupHeader()
 
+    }
+
+    private fun setupHeader() {
+        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        mBinding.header.setOnBackClick { requireActivity().finish() }
+        mBinding.header.setBackText("Current Forms")
+    }
+
+    private fun openSelectedForm(form: Form?, formType: FormType?) {
+        when (formType) {
+            FormType.AgreementMemo -> openAgreementMemo(form)
+            FormType.ServiceForm -> openServiceForm()
+            FormType.InvoiceForm -> openInvoiceForm()
+            FormType.TaxForm -> openTaxForm()
+            null -> Notify.toastLong("Invalid form requested")
+        }
+    }
+
+    private fun openTaxForm() {
+        mBinding.root.findNavController()
+            .navigate(R.id.action_navigation_current_forms_to_navigation_tax_invoice)
+    }
+
+    private fun openInvoiceForm() {
+        mBinding.root.findNavController()
+            .navigate(R.id.action_navigation_current_forms_to_navigation_product_list)
+    }
+
+    private fun openServiceForm() {
+        mBinding.root.findNavController()
+            .navigate(R.id.action_navigation_current_forms_to_serviceFormFragment)
+    }
+
+    private fun openAgreementMemo(form: Form?) {
+        findNavController()
+            .navigate(
+                R.id.action_navigation_current_forms_to_navigation_agreement_memo,
+                Bundle().apply {
+                    putString(Constants.Form, Gson().toJson(form))
+                    putString(Constants.Customer, Gson().toJson(customer))
+                })
     }
 
     private fun setAdapter(forms: ArrayList<Form>?) {
         mAdapter = FormAdapter(forms)
         mAdapter.setListener(object : FormAdapter.OnFormSelectListener {
             override fun onFormSelected(form: Form) {
-                when (form.getType()) {
-                    FormType.AgreementMemo -> findNavController()
-                        .navigate(
-                            R.id.action_navigation_current_forms_to_navigation_agreement_memo,
-                            Bundle().apply {
-                                putString(Constants.Form, Gson().toJson(form))
-                                putString(Constants.Customer,Gson().toJson(customer))
-                            })
-
-                    FormType.ServiceForm -> mBinding.root.findNavController()
-                        .navigate(R.id.action_navigation_current_forms_to_serviceFormFragment)
-
-                    FormType.InvoiceForm -> mBinding.root.findNavController()
-                        .navigate(R.id.action_navigation_current_forms_to_navigation_product_list)
-
-                    null -> {}
-                }
+                openSelectedForm(form, form.getType())
             }
         })
         mBinding.recyclerView.adapter = mAdapter
@@ -102,15 +131,17 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun addOnClickListener() {
-        mBinding.flowBack.setOnClickListener {
-            requireActivity().finish()
+        mBinding.addNewForms.setOnClickListener {
+            val modal = NewFormsBottomSheet()
+            modal.setOnClickListener {
+                openSelectedForm(null, FormType.find(it.tag.toString()))
+            }
+            requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
         }
     }
 
     override fun onDestroyView() {
-
         super.onDestroyView()
-
         _binding = null
 
     }

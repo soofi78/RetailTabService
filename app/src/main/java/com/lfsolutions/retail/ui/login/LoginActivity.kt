@@ -11,7 +11,7 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
 import com.lfsolutions.retail.model.LoginRequest
-import com.lfsolutions.retail.model.LoginResponse
+import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.network.ErrorResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -100,8 +100,8 @@ class LoginActivity : AppCompatActivity(), OnNetworkResponse {
     }
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-        val loginResponse = response?.body() as LoginResponse
-        AppSession.put(Constants.SESSION, Gson().toJson(loginResponse))
+        val userSession = response?.body() as UserSession
+        AppSession.put(Constants.SESSION, Gson().toJson(userSession))
         AppSession.put(Constants.IS_LOGGED_IN, true)
         Notify.toastLong("Login Success")
         goToHome()

@@ -2,4 +2,6 @@
 <resources>
     <string name="key">klmcldksmcklsdmlkcmlsdmclcdlkcmdsklmcklsdmclsdmkcmdsklmclkdmlc</string>
     <string name="salt">lsdmfklsdmkldmclksdmckjdnvhjkfnsvkjndvjkdnkjsmcd</string>
+    <string name="lbl_add_serial_number">Add Serial#</string>
+    <string name="label_view_agreement_memo">View Agreement Memo</string>
 </resources>
