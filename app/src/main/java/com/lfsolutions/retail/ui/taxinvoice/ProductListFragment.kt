@@ -24,52 +24,34 @@ class ProductListFragment : Fragment() {
     ): View? {
 
         _binding = FragmentProductListBinding.inflate(layoutInflater)
-
         return mBinding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
-
         mAdapter = ProductAdapter()
-
         mAdapter.setListener(object : ProductAdapter.OnProductSelectListener {
 
             override fun onProductSelect() {
-
-                //startActivity(AddToCartActivity.getIntent(requireContext()))
-
                 mBinding.root.findNavController()
                     .navigate(R.id.action_navigation_product_list_to_navigation_add_cart)
-
             }
-
         })
 
         mBinding.recyclerView.adapter = mAdapter
-
         addOnClickListener()
-
     }
 
     private fun addOnClickListener() {
 
         mBinding.btnCart.setOnClickListener {
-
-            //startActivity(TaxInvoiceActivity.getIntent(baseContext))
-
-
             it.findNavController()
                 .navigate(R.id.action_navigation_product_list_to_navigation_tax_invoice)
-
         }
 
         mBinding.flowBack.setOnClickListener {
-
             it.findNavController().popBackStack()
-
         }
 
     }

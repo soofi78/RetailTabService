@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui
+package com.lfsolutions.retail.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet

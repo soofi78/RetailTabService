@@ -93,7 +93,9 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun openServiceForm() {
         mBinding.root.findNavController()
-            .navigate(R.id.action_navigation_current_forms_to_serviceFormFragment)
+            .navigate(R.id.action_navigation_current_forms_to_serviceFormFragment, Bundle().apply {
+                putString(Constants.Customer, Gson().toJson(customer))
+            })
     }
 
     private fun openAgreementMemo(form: Form?) {
@@ -101,7 +103,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
             .navigate(
                 R.id.action_navigation_current_forms_to_navigation_agreement_memo,
                 Bundle().apply {
-                    putString(Constants.Form, Gson().toJson(form))
+                    form?.let { putString(Constants.Form, Gson().toJson(it)) }
                     putString(Constants.Customer, Gson().toJson(customer))
                 })
     }
@@ -110,7 +112,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         mAdapter = FormAdapter(forms)
         mAdapter.setListener(object : FormAdapter.OnFormSelectListener {
             override fun onFormSelected(form: Form) {
-                openSelectedForm(form, form.getType())
+
             }
         })
         mBinding.recyclerView.adapter = mAdapter

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_service_form_equipment"
+        android:icon="@drawable/equipment"
+        android:title="@string/label_equipment" />
+    <item
+        android:id="@+id/navigation_service_form_summary"
+        android:icon="@drawable/order"
+        android:title="@string/label_order" />
+
+</menu>

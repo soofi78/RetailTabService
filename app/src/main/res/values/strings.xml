@@ -92,6 +92,7 @@
     <string name="key">klmcldksmcklsdmlkcmlsdmclcdlkcmdsklmcklsdmclsdmkcmdsklmclkdmlc</string>
     <string name="salt">lsdmfklsdmkldmclksdmckjdnvhjkfnsvkjndvjkdnkjsmcd</string>
     <string name="lbl_add_serial_number">Add Serial#</string>
+    <string name="lbl_add_complaint">Add Complaint</string>
     <string name="dialog_done_text">DONE</string>
     <string name="dialog_cancel_text">CANCEL</string>
     <string name="list_empty">No items to display</string>
@@ -105,5 +106,10 @@
     <string name="de_select_all">deselect all</string>
     <string name="label_view_agreement_memo">View Agreement Memo</string>
     <string name="label_quantity">Quantity</string>
+    <string name="label_view_service_from">View Service Form</string>
+    <string name="label_complainant_name">Complainant Name</string>
+    <string name="label_mobile_number">Mobile Number</string>
+    <string name="label_action_type">Action Type</string>
+    <string name="label_complaint_types">Complaint Type</string>
 
 </resources>

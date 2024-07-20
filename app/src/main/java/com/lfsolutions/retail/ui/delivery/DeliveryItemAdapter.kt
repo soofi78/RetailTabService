@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemDeliveryBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.util.makeTextBold
 
 class DeliveryItemAdapter(var customers: ArrayList<Customer>? = ArrayList()) :
 
@@ -61,23 +62,6 @@ class DeliveryItemAdapter(var customers: ArrayList<Customer>? = ArrayList()) :
             mListener?.onItemClick(it.tag as Customer)
         }
     }
-
-    private fun makeTextBold(
-        text: String,
-        startIndex: Int
-    ): SpannableStringBuilder =
-        SpannableStringBuilder(text).let { spannable ->
-
-            spannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                startIndex,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            spannable
-
-        }
 
     fun setListener(listener: OnItemClickListener) {
 

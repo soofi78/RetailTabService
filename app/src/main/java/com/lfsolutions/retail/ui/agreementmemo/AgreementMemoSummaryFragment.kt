@@ -6,35 +6,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.databinding.FragmentOrderSummaryBinding
+import com.lfsolutions.retail.databinding.FragmentAgreementMemoSummaryBinding
+
 import com.videotel.digital.util.Notify
 
 
-class OrderSummaryFragment : Fragment() {
+class AgreementMemoSummaryFragment : Fragment() {
 
     private var itemSwipeHelper: ItemTouchHelper? = null
-    private var _binding: FragmentOrderSummaryBinding? = null
+    private var _binding: FragmentAgreementMemoSummaryBinding? = null
     private val mBinding get() = _binding!!
-    private lateinit var mAdapter: OrderSummaryAdapter
-    private val mViewModel: AgreementMemoBottomNavigationViewModel by activityViewModels()
+    private lateinit var mAdapter: AgreementMemoSummaryAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOrderSummaryBinding.inflate(inflater, container, false)
+        _binding = FragmentAgreementMemoSummaryBinding.inflate(inflater, container, false)
         return mBinding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = OrderSummaryAdapter(Main.app.getAgreementMemo()?.AgreementMemoDetail)
-        mAdapter.setListener(object : OrderSummaryAdapter.OnOrderSummarySelectListener {
+        mAdapter = AgreementMemoSummaryAdapter(Main.app.getAgreementMemo()?.AgreementMemoDetail)
+        mAdapter.setListener(object : AgreementMemoSummaryAdapter.OnOrderSummarySelectListener {
             override fun onOrderSummarySelect() {
 //                findNavController()
 //                    .navigate(R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment)
@@ -85,7 +84,7 @@ class OrderSummaryFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
-                if (viewHolder is OrderSummaryAdapter.ViewHolder) {
+                if (viewHolder is AgreementMemoSummaryAdapter.ViewHolder) {
                     val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
                     return makeMovementFlags(0, swipeFlags)
                 } else return 0
@@ -95,12 +94,12 @@ class OrderSummaryFragment : Fragment() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ) {
-                getDefaultUIUtil().clearView((viewHolder as OrderSummaryAdapter.ViewHolder).getSwipableView())
+                getDefaultUIUtil().clearView((viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView())
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 if (viewHolder != null) {
-                    getDefaultUIUtil().onSelected((viewHolder as OrderSummaryAdapter.ViewHolder).getSwipableView())
+                    getDefaultUIUtil().onSelected((viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView())
                 }
             }
 
@@ -116,7 +115,7 @@ class OrderSummaryFragment : Fragment() {
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
-                    (viewHolder as OrderSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -136,7 +135,7 @@ class OrderSummaryFragment : Fragment() {
                 getDefaultUIUtil().onDrawOver(
                     c,
                     recyclerView,
-                    (viewHolder as OrderSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,

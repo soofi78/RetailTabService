@@ -10,12 +10,11 @@ import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentEquipmentListBinding
+import com.lfsolutions.retail.databinding.FragmentAgreementMemoEquipmentListBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.Equipment
 import com.lfsolutions.retail.model.EquipmentListRequest
 import com.lfsolutions.retail.model.EquipmentListResult
-import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.ErrorResponse
 import com.lfsolutions.retail.network.Network
@@ -27,12 +26,11 @@ import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class EquipmentListFragment : Fragment() {
+class AgreementMemoEquipmentListFragment : Fragment() {
 
     private var equipmentlist: List<Equipment>? = null
-    private lateinit var form: Form
     private lateinit var customer: Customer
-    private lateinit var _binding: FragmentEquipmentListBinding
+    private lateinit var _binding: FragmentAgreementMemoEquipmentListBinding
     private val mBinding get() = _binding!!
     private lateinit var mAdapter: EquipmentAdapter
 
@@ -40,8 +38,7 @@ class EquipmentListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         if (::_binding.isInitialized.not()) {
-            _binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
-            form = Gson().fromJson(arguments?.getString(Constants.Form), Form::class.java)
+            _binding = FragmentAgreementMemoEquipmentListBinding.inflate(inflater, container, false)
             customer =
                 Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }

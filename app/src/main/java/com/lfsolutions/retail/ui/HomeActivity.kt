@@ -80,7 +80,6 @@ class HomeActivity : AppCompatActivity() {
             text = getString(R.string.prefix_location, userSession.locationCode.toString()),
             startIndex = 10
         )
-
         mBinding.txtVehicleNo.text = makeTextBold(
             text = getString(R.string.prefix_vehicle_no, "SBC 1234"), startIndex = 12
         )

@@ -1,7 +1,6 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.serviceform
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +12,23 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentAddEquipmentBinding
+import com.lfsolutions.retail.databinding.FragmentServiceFormAddEquipmentBinding
 import com.lfsolutions.retail.model.Equipment
 import com.lfsolutions.retail.model.EquipmentType
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
-import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.model.service.ActionType
+import com.lfsolutions.retail.model.service.ActionTypeResult
+import com.lfsolutions.retail.model.service.ComplaintServiceDetails
+import com.lfsolutions.retail.model.service.ComplaintTypeResult
+import com.lfsolutions.retail.model.service.ComplaintTypes
 import com.lfsolutions.retail.network.ErrorResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -34,23 +38,27 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class AddEquipmentFragment : Fragment() {
+class AddServiceFormEquipmentFragment : Fragment() {
 
     private var equipment: Equipment? = null
-    private lateinit var _binding: FragmentAddEquipmentBinding
+    private lateinit var _binding: FragmentServiceFormAddEquipmentBinding
     private val mBinding get() = _binding!!
-    private lateinit var mAdapter: SerialNumberAdapter
-    private val args by navArgs<AddEquipmentFragmentArgs>()
+    private lateinit var serialNumberAdapter: MultiSelectListAdapter
+    private lateinit var complaintTypeAdapter: MultiSelectListAdapter
+    private val args by navArgs<AddServiceFormEquipmentFragmentArgs>()
     private var equipmentTypes: List<EquipmentType>? = null
+    private var actionType: List<ActionType>? = null
     private var serialNumbers = ArrayList<SerialNumber>()
     private var selectedSerialNumbers = ArrayList<MultiSelectModelInterface>()
+    private var complaintTypes = ArrayList<ComplaintTypes>()
+    private var selectedComplaintTypes = ArrayList<MultiSelectModelInterface>()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         if (::_binding.isInitialized.not()) {
-            _binding = FragmentAddEquipmentBinding.inflate(inflater, container, false)
+            _binding = FragmentServiceFormAddEquipmentBinding.inflate(inflater, container, false)
             equipment = Gson().fromJson(args.equipment, Equipment::class.java)
         }
         return mBinding.root
@@ -60,19 +68,41 @@ class AddEquipmentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addOnClickListener()
-        addOnCheckedChangeListener()
         updateSerialNumbersAdapter()
+        updateComplaintTypeAdapter()
         setData()
         updateTotal()
         updateEquipmentTypeList()
+        updateActionTypeList()
         addSerialNumberClick()
+        addComplaintTypeClick()
 
-        //addKeyListener()
+    }
+
+    private fun updateActionTypeList() {
+        if (actionType == null) NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity()))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    actionType =
+                        (response?.body() as RetailResponse<ActionTypeResult>)?.result?.items
+                    setActionTypesAdapter()
+                }
+
+                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                    Notify.toastLong("Unable to get equipment list")
+                }
+            }).enque(Network.api()?.getActionTypes()).execute()
     }
 
     private fun updateSerialNumbersAdapter() {
-        mAdapter = SerialNumberAdapter(selectedSerialNumbers)
-        mBinding.recyclerView.adapter = mAdapter
+        serialNumberAdapter = MultiSelectListAdapter(selectedSerialNumbers)
+        mBinding.serialNumberRecyclerView.adapter = serialNumberAdapter
+    }
+
+    private fun updateComplaintTypeAdapter() {
+        complaintTypeAdapter = MultiSelectListAdapter(selectedComplaintTypes)
+        mBinding.complainTypesRecyclerView.adapter = complaintTypeAdapter
     }
 
     private fun addSerialNumberClick() {
@@ -81,8 +111,15 @@ class AddEquipmentFragment : Fragment() {
         }
     }
 
+    private fun addComplaintTypeClick() {
+        mBinding.addComplaintTypes.setOnClickListener {
+            if (complaintTypes == null || complaintTypes.isEmpty()) getComplaintTypeList() else showComplaintTypes()
+        }
+    }
+
     private fun getSerialNumbersList() {
-        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity()))
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading serial numbers"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     (response?.body() as RetailResponse<ArrayList<SerialNumber>>).result?.let {
@@ -101,16 +138,33 @@ class AddEquipmentFragment : Fragment() {
             ).execute()
     }
 
+    private fun getComplaintTypeList() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading complaint types"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as RetailResponse<ComplaintTypeResult>).result?.items?.let {
+                        complaintTypes = it
+                    }
+                    showComplaintTypes()
+                }
+
+                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                    Notify.toastLong("Unable to get complaint type list")
+                }
+            }).enque(
+                Network.api()?.getComplaintTypes()
+            ).execute()
+    }
+
     private fun showSerialNumbersList() {
         val multiSelectDialog =
-            MultiSelectDialog().title("Select serial numbers") //setting title for dialog
+            MultiSelectDialog().title("Select serial numbers")
                 .titleSize(25f).positiveText("Done").negativeText("Cancel")
-                .setMinSelectionLimit(1) //you can set minimum checkbox selection limit (Optional)
-                .setMaxSelectionLimit(
-                    serialNumbers?.size ?: 0
-                ) //you can set maximum checkbox selection limit (Optional)
-                .preSelectIDsList(selectedSerialNumbers) //List of ids that you need to be selected
-                .multiSelectList(serialNumbers) // the multi select model list with ids and name
+                .setMinSelectionLimit(1)
+                .setMaxSelectionLimit(serialNumbers.size)
+                .preSelectIDsList(selectedSerialNumbers)
+                .multiSelectList(serialNumbers)
                 .onSubmit(object : SubmitCallbackListener {
                     override fun onSelected(
                         selectedIds: ArrayList<MultiSelectModelInterface>?,
@@ -120,6 +174,8 @@ class AddEquipmentFragment : Fragment() {
                         selectedSerialNumbers.clear()
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
+                        mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        updateTotal()
 
                     }
 
@@ -127,7 +183,33 @@ class AddEquipmentFragment : Fragment() {
 
                     }
                 })
-        multiSelectDialog.show(requireActivity().supportFragmentManager, "multiSelectDialog")
+        multiSelectDialog.show(requireActivity().supportFragmentManager, "serialNumber")
+    }
+
+    private fun showComplaintTypes() {
+        val multiSelectDialog =
+            MultiSelectDialog().title("Select complaint types")
+                .titleSize(25f).positiveText("Done").negativeText("Cancel")
+                .setMinSelectionLimit(1)
+                .setMaxSelectionLimit(complaintTypes.size)
+                .preSelectIDsList(selectedComplaintTypes)
+                .multiSelectList(complaintTypes)
+                .onSubmit(object : SubmitCallbackListener {
+                    override fun onSelected(
+                        selectedIds: ArrayList<MultiSelectModelInterface>?,
+                        selectedNames: ArrayList<String>?,
+                        commonSeperatedData: String?
+                    ) {
+                        selectedComplaintTypes.clear()
+                        selectedIds?.let { selectedComplaintTypes.addAll(it) }
+                        updateComplaintTypeAdapter()
+                    }
+
+                    override fun onCancel() {
+
+                    }
+                })
+        multiSelectDialog.show(requireActivity().supportFragmentManager, "complaintType")
     }
 
     private fun updateEquipmentTypeList() {
@@ -155,12 +237,22 @@ class AddEquipmentFragment : Fragment() {
         mBinding.spinnerEquipmentType.adapter = adapter
     }
 
+    private fun setActionTypesAdapter() {
+        val adapter = actionType?.let {
+            ArrayAdapter(
+                requireActivity(), R.layout.simple_text_item, it
+            )
+        }
+        mBinding.spinnerActionType.adapter = adapter
+    }
+
 
     private fun setData() {
         mBinding.txtQty.text = if (equipment?.qtyOnHand == 0) "0" else "1"
         mBinding.txtProductName.text = equipment?.productName
         mBinding.txtCategory.text = equipment?.categoryName
-        mBinding.txtPrice.text = Main.app.getSession().currencySymbol + equipment?.cost.toString()
+        mBinding.txtPrice.text =
+            Main.app.getSession().currencySymbol + equipment?.cost.toString() + "/ Pcs"
         Glide.with(this).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
@@ -169,38 +261,13 @@ class AddEquipmentFragment : Fragment() {
         equipment?.productName?.let { mBinding.header.setBackText(it) }
     }
 
-    private fun addOnCheckedChangeListener() {
-
-        mBinding.checkboxFOC.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                mBinding.checkboxRent.isChecked = false
-                mBinding.checkboxExchange.isChecked = false
-            }
-        }
-
-        mBinding.checkboxRent.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                mBinding.checkboxFOC.isChecked = false
-                mBinding.checkboxExchange.isChecked = false
-            }
-        }
-
-        mBinding.checkboxExchange.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                mBinding.checkboxRent.isChecked = false
-                mBinding.checkboxFOC.isChecked = false
-            }
-        }
-    }
 
     private fun addOnClickListener() {
         mBinding.btnSub.setOnClickListener {
             mBinding.txtQty.text.toString().toInt().let { qty ->
                 if (qty > 1) mBinding.txtQty.text = (qty - 1).toString()
-
                 updateTotal()
             }
-
         }
 
         mBinding.btnAdd.setOnClickListener {
@@ -210,27 +277,12 @@ class AddEquipmentFragment : Fragment() {
             }
         }
 
-        mBinding.btnFOCSub.setOnClickListener {
-            mBinding.txtFOCQty.text.toString().toInt().let { qty ->
-                if (qty > 1) mBinding.txtFOCQty.text = (qty - 1).toString()
-
-            }
-
-        }
-
-        mBinding.btnFOCAdd.setOnClickListener {
-            mBinding.txtFOCQty.text.toString().toInt().let { qty ->
-                mBinding.txtFOCQty.text = (qty + 1).toString()
-            }
-
-        }
-
         mBinding.header.setOnBackClick {
             mBinding.root.findNavController().popBackStack()
         }
 
         mBinding.btnSave.setOnClickListener {
-            if (mBinding.txtQty.text.toString().equals("0")) {
+            if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
                 return@setOnClickListener
             }
@@ -244,6 +296,11 @@ class AddEquipmentFragment : Fragment() {
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
+                return@setOnClickListener
+            }
+
+            if (selectedComplaintTypes.isEmpty()) {
+                Notify.toastLong("Please select complaint types")
                 return@setOnClickListener
             }
 
@@ -265,32 +322,45 @@ class AddEquipmentFragment : Fragment() {
             }
         }
 
+        val complaintTypes = arrayListOf<ComplaintTypes>()
+        if (selectedComplaintTypes.size > 0) {
+            selectedComplaintTypes.forEach {
+                complaintTypes.add(it as ComplaintTypes)
+            }
+        }
+
         val qty = mBinding.txtQty.text.toString().toInt()
         val cost = equipment?.cost ?: 0
-        Main.app.getAgreementMemo()?.addEquipment(
-            AgreementMemoDetail(
-                ProductId = equipment?.productId?.toInt() ?: 0,
-                ProductName = equipment?.productName,
-                UnitName = equipment?.unitName,
-                UnitId = equipment?.unitId,
-                Qty = qty,
-                QtyOnHand = equipment?.qtyOnHand,
-                Cost = cost,
-                TotalCost = qty * cost,
-                Type = equipment?.type,
-                AgreementType = getAgreementType(),
-                AgreementTypeDisplayText = getAgreementTypeDisplayText(),
-                ProductBatchList = batchList
+        Main.app.getComplaintService()?.addEquipment(
+            ComplaintServiceDetails(
+                productId = equipment?.productId?.toInt() ?: 0,
+                productName = equipment?.productName,
+                unitName = equipment?.unitName,
+                unitId = equipment?.unitId,
+                qty = qty.toString(),
+                qtyOnHand = equipment?.qtyOnHand,
+                unitPrice = cost,
+                price = qty * cost,
+                type = equipment?.type,
+                transType = getEquipmentType(),
+                transTypeDisplayText = getEquipmentTypeDisplayText(),
+                productBatchList = batchList,
+                actionType = getComplaintServiceActionType(),
+                complaintTypes = complaintTypes
             )
         )
     }
 
-    private fun getAgreementTypeDisplayText(): String {
+    private fun getComplaintServiceActionType(): String? {
+        return actionType?.get(mBinding.spinnerActionType.selectedItemPosition)?.value ?: ""
+    }
+
+    private fun getEquipmentTypeDisplayText(): String {
         return equipmentTypes?.get(mBinding.spinnerEquipmentType.selectedItemPosition)?.displayText
             ?: ""
     }
 
-    private fun getAgreementType(): String {
+    private fun getEquipmentType(): String {
         return equipmentTypes?.get(mBinding.spinnerEquipmentType.selectedItemPosition)?.value ?: ""
     }
 
@@ -298,16 +368,4 @@ class AddEquipmentFragment : Fragment() {
         mBinding.txtTotalPrice.text =
             equipment?.cost?.let { (mBinding.txtQty.text.toString().toInt() * it).toString() }
     }
-
-    private fun addKeyListener() {
-        view?.setFocusableInTouchMode(true)
-        view?.requestFocus()
-        view?.setOnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                v.findNavController().popBackStack()
-            }
-            return@setOnKeyListener true;
-        }
-    }
-
 }

@@ -2,7 +2,6 @@ package com.lfsolutions.retail.model.memo
 
 import com.google.gson.annotations.SerializedName
 
-
 data class AgreementMemo(
     @SerializedName("Id") var Id: String? = null,
     @SerializedName("AgreementNo") var AgreementNo: String? = null,
@@ -22,5 +21,4 @@ data class AgreementMemo(
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: String? = null,
     @SerializedName("Signature") var Signature: String? = null
-
 )

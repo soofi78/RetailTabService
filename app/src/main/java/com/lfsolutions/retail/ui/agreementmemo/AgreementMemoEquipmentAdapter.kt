@@ -50,5 +50,4 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
     interface OnEquipmentClickListener {
         fun onEquipmentClick(equipment: Equipment)
     }
-
 }

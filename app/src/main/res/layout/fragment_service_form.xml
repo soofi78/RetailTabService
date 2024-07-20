@@ -3,96 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.serviceform.ServiceFormFragment">
+    android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
+    <com.lfsolutions.retail.ui.widgets.HeaderView
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
-        app:layout_constraintBottom_toTopOf="@+id/scrollContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_back_black" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_service_form"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="icoBack,txtBack"
-                app:flow_horizontalGap="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/account_circle_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Area Supervisor"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtVehicleNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/prefix_vehicle_no"
-                android:textSize="14sp" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
-                app:flow_horizontalAlign="end"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/icoAccount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:cardBackgroundColor="@color/sandal"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollContainer"
@@ -229,87 +148,107 @@
                         android:layout_height="wrap_content"
                         android:text="Date and Time"
                         android:textSize="16sp"
+                        android:layout_marginStart="5dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:id="@+id/ivDate"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/checkInChecoutDateTimeViewHolder"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_calendar"
-                        app:layout_constraintBottom_toBottomOf="@+id/btnCheckIn"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/btnCheckIn" />
+                        app:layout_constraintTop_toBottomOf="@+id/lblDateTime">
 
-                    <TextView
-                        android:id="@+id/checkinTime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="21 Mar 2024, 3:30pm"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/btnCheckIn"
-                        app:layout_constraintStart_toEndOf="@+id/ivDate"
-                        app:layout_constraintTop_toTopOf="@+id/ivDate" />
+                        <ImageView
+                            android:id="@+id/calendarIconCheckInCheckout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_calendar" />
 
-                    <TextView
-                        android:id="@+id/checkoutTime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="21 Mar 2024, 3:30pm"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDate"
-                        app:layout_constraintEnd_toStartOf="@+id/btnCheckIn"
-                        app:layout_constraintStart_toEndOf="@+id/ivDate"
-                        app:layout_constraintTop_toBottomOf="@+id/checkinTime" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCheckOut"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:backgroundTint="@color/gray"
-                        android:drawableTop="@drawable/ic_globe"
-                        android:drawablePadding="5dp"
-                        android:text="Check Out"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:cornerRadius="10dp"
-                        app:elevation="5dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/lblDateTime" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="2dp"
+                            android:layout_toEndOf="@+id/calendarIconCheckInCheckout"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCheckIn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:backgroundTint="@color/yellow"
-                        android:drawableTop="@drawable/ic_globe"
-                        android:drawablePadding="5dp"
-                        android:text="Check In"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:cornerRadius="10dp"
-                        app:elevation="5dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btnCheckOut"
-                        app:layout_constraintTop_toBottomOf="@+id/lblDateTime" />
+                            <TextView
+                                android:id="@+id/checkinTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:text="01 Jan 2024, 00:00 PM"
+                                android:textSize="14sp" />
 
+                            <TextView
+                                android:id="@+id/checkoutTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="01 Jan 2024, 00:00 PM"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCheckIn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:backgroundTint="@color/yellow"
+                                android:drawableTop="@drawable/ic_globe"
+                                android:drawablePadding="2dp"
+                                android:text="Check In"
+                                android:textColor="@color/black"
+                                android:textSize="10sp"
+                                app:cornerRadius="5dp"
+                                app:elevation="5dp" />
+
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCheckOut"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:backgroundTint="@color/gray"
+                                android:drawableTop="@drawable/ic_globe"
+                                android:drawablePadding="2dp"
+                                android:text="Check Out"
+                                android:textColor="@color/black"
+                                android:textSize="10sp"
+                                app:cornerRadius="5dp"
+                                app:elevation="5dp" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
 
                     <ImageView
                         android:id="@+id/ivDate1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
+                        android:padding="2dp"
                         android:src="@drawable/ic_calendar"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivDate" />
+                        app:layout_constraintTop_toBottomOf="@+id/checkInChecoutDateTimeViewHolder" />
 
                     <TextView
                         android:id="@+id/lblInterval"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
                         android:text="Interval of Visit"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/ivDate1"
@@ -320,6 +259,7 @@
                         android:id="@+id/txtDays"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
                         android:text="90 days"
                         app:layout_constraintBottom_toBottomOf="@+id/ivDate1"
                         app:layout_constraintEnd_toStartOf="@+id/icoArrow"
@@ -330,6 +270,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/arrow_right_gray"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toTopOf="@id/view1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/ivDate1" />
@@ -338,6 +279,7 @@
                         android:id="@+id/view1"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/gray"
                         app:layout_constraintTop_toBottomOf="@+id/ivDate1" />
 
@@ -345,6 +287,7 @@
                         android:id="@+id/lbCmplDateandTime"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
                         android:text="Complaint Date and Time"
                         android:textStyle="bold"
@@ -353,12 +296,12 @@
                         app:layout_constraintTop_toBottomOf="@+id/view1" />
 
                     <TextView
-                        android:id="@+id/cmplntTime"
+                        android:id="@+id/complaintDateTimeText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:drawablePadding="5dp"
-                        android:text="21 Mar 2024, 3:30pm"
+                        android:text="01 Jan 2024, 00:00 PM"
                         android:textSize="14sp"
                         app:drawableStartCompat="@drawable/ic_compliant"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -371,7 +314,7 @@
                         android:layout_height="1dp"
                         android:layout_marginVertical="10dp"
                         android:background="@color/gray"
-                        app:layout_constraintTop_toBottomOf="@+id/cmplntTime" />
+                        app:layout_constraintTop_toBottomOf="@+id/complaintDateTimeText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -382,6 +325,7 @@
                 android:id="@+id/complainantCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:cardBackgroundColor="@color/yellow"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -397,6 +341,7 @@
                         android:id="@+id/lblCmplnant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:text="Complainant"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -407,6 +352,7 @@
                         android:id="@+id/icoComplainant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:src="@drawable/person_black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -465,6 +411,7 @@
                         android:id="@+id/lblRecepient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:text="Recipient"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -475,6 +422,7 @@
                         android:id="@+id/icoRecepient"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:src="@drawable/person_black"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -518,6 +466,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -537,33 +486,33 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:padding="10dp"
                         android:id="@+id/lblboilderIdty"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:text="Boiler Identity"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvBoilerList"
                         android:layout_width="0dp"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         android:layout_height="wrap_content"
-                        tools:itemCount="3"
+                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         app:layout_constraintTop_toBottomOf="@+id/lblboilderIdty"
+                        tools:itemCount="3"
                         tools:listitem="@layout/boilerlist_item" />
 
                     <TextView
-                        android:padding="10dp"
                         android:id="@+id/txtSelectMore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:text="Tap to select More"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
                         app:layout_constraintTop_toBottomOf="@+id/rvBoilerList" />
 
                     <androidx.appcompat.widget.AppCompatImageButton
@@ -580,16 +529,85 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_margin="5dp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/boilerCard">
+
+                <LinearLayout
+                    android:id="@+id/feedbackViewHandler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/labelFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="Customer Feedback"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/carButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
                 android:elevation="5dp"
                 app:cardCornerRadius="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardFeedback">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnOpenEquipmentList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/rounded_corner_yellow_background"
+                        android:text="@string/label_open_equipment_list"
+                        tools:ignore="MissingConstraints" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnViewOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/rounded_corner_yellow_background"
+                        android:text="@string/label_view_service_from"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btnOpenEquipmentList" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSignature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:elevation="5dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/boilerCard">
+                app:layout_constraintTop_toBottomOf="@+id/carButtons">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -611,6 +629,7 @@
                         android:layout_margin="10dp"
                         android:background="@drawable/rounded_corner_yellow_background"
                         android:text="@string/label_sign_on"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/signaturePad" />
@@ -629,14 +648,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
-                android:weightSum="4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:weightSum="4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardSignature">
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -658,6 +679,7 @@
                     android:text="Follow Up" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/printAndSend"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"

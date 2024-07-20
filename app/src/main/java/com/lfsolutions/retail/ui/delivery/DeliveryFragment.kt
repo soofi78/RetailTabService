@@ -49,13 +49,10 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-
-
         setAdapters(null)
         addVerticalItemDecoration(mBinding.recyclerViewToVisit, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
-
         getCustomerDetails()
 
     }
@@ -74,9 +71,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onDestroyView() {
-
         super.onDestroyView()
-
         _binding = null
 
     }

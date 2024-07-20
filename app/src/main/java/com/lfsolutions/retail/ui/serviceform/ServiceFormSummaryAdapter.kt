@@ -1,14 +1,14 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.serviceform
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
-import com.lfsolutions.retail.model.memo.AgreementMemoDetail
+import com.lfsolutions.retail.model.service.ComplaintServiceDetails
 
-class OrderSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMemoDetail>?) :
-    RecyclerView.Adapter<OrderSummaryAdapter.ViewHolder>() {
+class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDetails>?) :
+    RecyclerView.Adapter<ServiceFormSummaryAdapter.ViewHolder>() {
 
     private var mListener: OnOrderSummarySelectListener? = null
 
@@ -27,14 +27,14 @@ class OrderSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMemoDetail
         )
     )
 
-    override fun getItemCount(): Int = agreementMemoDetail?.size ?: 0
+    override fun getItemCount(): Int = serviceDetails?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.txtQty.text = agreementMemoDetail?.get(position)?.Qty.toString()
-        holder.binding.txtPrice.text = agreementMemoDetail?.get(position)?.TotalCost.toString()
-        holder.binding.txtProductName.text = agreementMemoDetail?.get(position)?.ProductName
-        holder.binding.txtSerials.text = agreementMemoDetail?.get(position)?.getSerialNumbers()
-        holder.binding.txtTag.text = agreementMemoDetail?.get(position)?.AgreementTypeDisplayText
+        holder.binding.txtQty.text = serviceDetails?.get(position)?.qty.toString()
+        holder.binding.txtPrice.text = serviceDetails?.get(position)?.price.toString()
+        holder.binding.txtProductName.text = serviceDetails?.get(position)?.productName
+        holder.binding.txtSerials.text = serviceDetails?.get(position)?.getSerialNumbers()
+        holder.binding.txtTag.text = serviceDetails?.get(position)?.transTypeDisplayText
         holder.itemView.setOnClickListener {
             mListener?.onOrderSummarySelect()
         }
@@ -46,7 +46,7 @@ class OrderSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMemoDetail
     }
 
     fun remove(position: Int) {
-        agreementMemoDetail?.removeAt(position)
+        serviceDetails?.removeAt(position)
         notifyItemRemoved(position)
     }
 

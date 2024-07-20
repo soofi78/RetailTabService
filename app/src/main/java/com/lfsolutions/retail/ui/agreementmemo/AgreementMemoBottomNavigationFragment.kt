@@ -1,15 +1,12 @@
 package com.lfsolutions.retail.ui.agreementmemo
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoBottomNavigationBinding
@@ -21,8 +18,6 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
     private var _binding: FragmentAgreementMemoBottomNavigationBinding? = null
     private val args by navArgs<AgreementMemoBottomNavigationFragmentArgs>()
     private val mBinding get() = _binding!!
-
-    private val mViewModel: AgreementMemoBottomNavigationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,13 +32,14 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.navView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.navigation_equipment -> {
+                R.id.navigation_agreement_memo_equipment -> {
                     val ft: FragmentTransaction =
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
-                        R.id.nav_host_fragment_activity, EquipmentListFragment().apply {
+                        R.id.nav_host_fragment_activity, AgreementMemoEquipmentListFragment().apply {
                             arguments = bundleOf(
-                                Constants.Form to args.form, Constants.Customer to args.customer
+                                Constants.IsServiceForm to args.IsEquipment,
+                                Constants.Customer to args.customer
                             )
                         }, "NewFragmentTag"
                     )
@@ -52,11 +48,11 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
 
                 }
 
-                R.id.navigation_order -> {
+                R.id.navigation_agreement_memo_summary -> {
                     val ft: FragmentTransaction =
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
-                        R.id.nav_host_fragment_activity, OrderSummaryFragment(), "NewFragmentTag"
+                        R.id.nav_host_fragment_activity, AgreementMemoSummaryFragment(), "NewFragmentTag"
                     )
                     ft.commit()
                     return@setOnItemSelectedListener true
@@ -70,20 +66,9 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
         arguments?.let {
 
             if (it.getBoolean("IsEquipment")) {
-                mBinding.navView.selectedItemId = R.id.navigation_equipment
+                mBinding.navView.selectedItemId = R.id.navigation_agreement_memo_equipment
             } else {
-                mBinding.navView.selectedItemId = R.id.navigation_order
-            }
-        }
-        addDataObserver()
-    }
-
-
-    private fun addDataObserver() {
-        mViewModel.isOrderCompleted.observe(viewLifecycleOwner) { isOrderCompleted ->
-            if (isOrderCompleted) {
-                mBinding.root.findNavController().popBackStack()
-                mViewModel.setOrderCompleted(false)
+                mBinding.navView.selectedItemId = R.id.navigation_agreement_memo_summary
             }
         }
     }

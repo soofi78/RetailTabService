@@ -4,11 +4,13 @@ import android.app.Application
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 
 class Main : Application() {
 
+    private var complaintService: ComplaintServiceRequest? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
 
     override fun onCreate() {
@@ -33,13 +35,21 @@ class Main : Application() {
     }
 
     fun getAgreementMemo(): CreateUpdateAgreementMemoRequestBody? {
-        if (memo == null)
-            memo = CreateUpdateAgreementMemoRequestBody()
+        if (memo == null) memo = CreateUpdateAgreementMemoRequestBody()
         return memo
+    }
+
+    fun getComplaintService(): ComplaintServiceRequest? {
+        if (complaintService == null) complaintService = ComplaintServiceRequest()
+        return complaintService
     }
 
     fun clearAgreementMemo() {
         memo = null
+    }
+
+    fun clearComplaintService() {
+        complaintService = null
     }
 
 

@@ -6,23 +6,24 @@ import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentListRequest
 import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.service.ActionTypeResult
+import com.lfsolutions.retail.model.service.ComplaintServiceRequest
+import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Path
 import retrofit2.http.Query
-import java.io.File
 
 interface ApiServices {
     @POST(Api.Base.plus(Api.Name.AUTHENTICATE))
@@ -34,9 +35,18 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
     fun getCustomerForm(@Body formRequest: FormsRequest): Call<RetailResponse<FormResult>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT_LIST))
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_EQUIPMENT_TYPE))
     fun getEquipmentType(): Call<RetailResponse<EquipmentTypeResult>>
 
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ACTION_TYPES))
+    fun getActionTypes(): Call<RetailResponse<ActionTypeResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
+    fun getComplaintTypes(): Call<RetailResponse<ComplaintTypeResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
+    fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
     fun getEquipmentList(@Body equipmentListRequest: EquipmentListRequest): Call<RetailResponse<EquipmentListResult>>
@@ -50,6 +60,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_MEMO))
     fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
+    fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<RetailResponse<Any>>?
 
     @Multipart
     @POST(Api.Name.UPLOAD_SIGNATURE)

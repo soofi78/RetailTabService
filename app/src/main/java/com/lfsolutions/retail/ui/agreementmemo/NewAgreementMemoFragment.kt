@@ -41,8 +41,6 @@ import java.util.Date
 class NewAgreementMemoFragment : Fragment() {
 
     private var customer: Customer? = null
-    private var form: Form? = null
-    private var isSignOn: Boolean = true
     private lateinit var _binding: FragmentNewAgreementMemoBinding
     private val args by navArgs<NewAgreementMemoFragmentArgs>()
 
@@ -63,7 +61,6 @@ class NewAgreementMemoFragment : Fragment() {
             Main.app.getAgreementMemo()?.AgreementMemo?.CreationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
-            Log.d("DATE", Main.app.getAgreementMemo()?.AgreementMemo?.CreationTime!!)
         }
         return mBinding.root
 
@@ -74,7 +71,6 @@ class NewAgreementMemoFragment : Fragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        form = Gson().fromJson(args.form, Form::class.java)
         customer = Gson().fromJson(args.customer, Customer::class.java)
         Main.app.getAgreementMemo()?.AgreementMemo?.CustomerId = customer?.id
         addOnClickListener()
@@ -83,14 +79,12 @@ class NewAgreementMemoFragment : Fragment() {
 
 
     private fun setData() {
-        mBinding.serialViewHolder.visibility =
-            if (form?.serialNumberAvailable() == true) View.VISIBLE else View.GONE
         val today = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         mBinding.dateText.text = today
         Main.app.getAgreementMemo()?.AgreementMemo?.AgreementDate = today + "T00:00:00Z"
         mBinding.dateText.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
-                override fun onSelected(year: String, month: String, day: String) {
+                override fun onDateSelected(year: String, month: String, day: String) {
                     mBinding.dateText.setText(day + "-" + month + "-" + year)
                     Main.app.getAgreementMemo()?.AgreementMemo?.AgreementDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
@@ -116,7 +110,7 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.btnOpenEquipmentList.setOnClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to true,
-                Constants.Form to args.form, Constants.Customer to args.customer
+                Constants.Customer to args.customer
             )
             it.findNavController().navigate(
                 R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
@@ -131,7 +125,6 @@ class NewAgreementMemoFragment : Fragment() {
                 R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
                 bundle
             )
-
         }
 
         mBinding.btnSave.setOnClickListener {
