@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.model.sale.invoice
+package com.lfsolutions.retail.model.sale
 
 import com.google.gson.annotations.SerializedName
 

@@ -2,6 +2,7 @@ package com.lfsolutions.retail.model.service
 
 import android.util.Log
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.model.ApplicableTaxes
 import com.lfsolutions.retail.model.memo.ProductBatchList
 
 

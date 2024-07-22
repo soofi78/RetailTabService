@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.model.service
+package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
 

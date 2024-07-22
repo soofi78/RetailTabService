@@ -1,7 +1,8 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
-import com.lfsolutions.retail.model.service.ApplicableTaxes
+import com.lfsolutions.retail.model.sale.TaxForProduct
+import com.lfsolutions.retail.model.ApplicableTaxes
 
 
 data class SalesInvoiceDetail(
