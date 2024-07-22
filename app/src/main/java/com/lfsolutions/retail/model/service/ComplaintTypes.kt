@@ -8,7 +8,7 @@ data class ComplaintTypes(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("isSelected") @Transient var isSelected: Boolean? = false,
-    @SerializedName("productId") var productId: Int? = null,
+    @SerializedName("productId") var productId: Int = 0,
 ) : MultiSelectModelInterface {
     override fun getId(): Long {
         return id?.toLong() ?: 0

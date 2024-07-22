@@ -74,20 +74,20 @@ class NetworkCall private constructor() {
     }
 
     private fun onException(ex: Exception) {
-        val response: ErrorResponse
+        val response: BaseResponse<String>
         response = if (isCause(SocketTimeoutException::class.java, ex)) {
-            ErrorResponse(success = false, error = Error(details = "Socket timemout"))
+            BaseResponse(success = false, error = Error(details = "Socket timemout"))
         } else if (isCause(ConnectException::class.java, ex)) {
-            ErrorResponse(success = false, error = Error(details = "Connect Error"))
+            BaseResponse(success = false, error = Error(details = "Connect Error"))
         } else if (isCause(MalformedJsonException::class.java, ex)) {
-            ErrorResponse(
+            BaseResponse(
                 success = false,
                 error = Error(details = "Application Error, invalid data")
             )
         } else if (ex is SSLHandshakeException || ex is SSLException) {
-            ErrorResponse(success = false, error = Error(details = "SSL Handeshake error"))
+            BaseResponse(success = false, error = Error(details = "SSL Handeshake error"))
         } else {
-            ErrorResponse(
+            BaseResponse(
                 success = false, error = Error(
                     details =
                     (if (Configurations.isDevelopment()) ex.message else "Something went wrong")!!
@@ -117,7 +117,7 @@ class NetworkCall private constructor() {
                     callback!!.onFailure(
                         request,
                         response?.code()?.let {
-                            ErrorResponse(
+                            BaseResponse<String>(
                                 success = false,
                                 error = Error(details = "Invalid data received")
                             )

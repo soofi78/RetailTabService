@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.network.serializers.Error
 
 
-data class ErrorResponse(
+data class BaseResponse<T>(
 
-    @SerializedName("result") var result: String? = null,
+    @SerializedName("result") var result: T? = null,
     @SerializedName("targetUrl") var targetUrl: String? = null,
     @SerializedName("success") var success: Boolean? = null,
     @SerializedName("error") var error: Error? = Error(),

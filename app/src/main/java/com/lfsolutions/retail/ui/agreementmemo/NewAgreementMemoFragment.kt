@@ -2,11 +2,9 @@ package com.lfsolutions.retail.ui.agreementmemo
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -17,10 +15,9 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentNewAgreementMemoBinding
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -152,7 +149,7 @@ class NewAgreementMemoFragment : Fragment() {
 
                         override fun onFailure(
                             call: Call<*>?,
-                            response: ErrorResponse?,
+                            response: BaseResponse<*>?,
                             tag: Any?
                         ) {
                             Notify.toastLong("Unable to upload signature")
@@ -175,7 +172,7 @@ class NewAgreementMemoFragment : Fragment() {
 
                     override fun onFailure(
                         call: Call<*>?,
-                        response: ErrorResponse?,
+                        response: BaseResponse<*>?,
                         tag: Any?
                     ) {
                         Notify.toastLong("Unable create or update memo")

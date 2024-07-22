@@ -16,7 +16,7 @@ import com.lfsolutions.retail.model.Equipment
 import com.lfsolutions.retail.model.EquipmentListRequest
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -70,7 +70,7 @@ class ServiceFormEquipmentListFragment : Fragment() {
                     updateEquipmentListView()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get equipment list")
                 }
             }).enque(

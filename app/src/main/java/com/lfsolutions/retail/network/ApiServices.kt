@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.network
 
+import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
 import com.lfsolutions.retail.model.CustomerResult
@@ -62,7 +63,7 @@ interface ApiServices {
     fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
-    fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<RetailResponse<Any>>?
+    fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<BaseResponse<ComplaintServiceResponse>>?
 
     @Multipart
     @POST(Api.Name.UPLOAD_SIGNATURE)

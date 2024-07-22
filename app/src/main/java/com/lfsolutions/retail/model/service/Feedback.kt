@@ -3,7 +3,6 @@ package com.lfsolutions.retail.model.service
 import com.google.gson.annotations.SerializedName
 
 data class Feedback(
-
     @SerializedName("id") var id: String? = null,
     @SerializedName("title") var title: String? = null,
     @SerializedName("values") var values: String? = null,
@@ -17,5 +16,4 @@ data class Feedback(
     @SerializedName("lastModifierUserId") var lastModifierUserId: String? = null,
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null
-
 )

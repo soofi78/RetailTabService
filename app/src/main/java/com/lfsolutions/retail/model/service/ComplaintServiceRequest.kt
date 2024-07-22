@@ -17,12 +17,12 @@ data class ComplaintServiceRequest(
         var totalPrice = 0
         var qty = 0
         complaintServiceDetails.forEach {
-            totalPrice += it.price ?: 0
+            totalPrice += it.price
             qty += it.qty?.toInt() ?: 0
         }
 
-        complaintService?.totalQty = qty.toString()
-        complaintService?.totalPrice = totalPrice.toString()
+        complaintService?.totalQty = qty
+        complaintService?.totalPrice = totalPrice
     }
 
     fun serializeItems() {

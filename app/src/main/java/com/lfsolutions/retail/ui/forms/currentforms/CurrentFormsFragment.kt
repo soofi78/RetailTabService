@@ -16,7 +16,7 @@ import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -37,9 +37,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     private lateinit var mAdapter: FormAdapter
     private var customer: Customer? = null
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentCurrentFormsBinding.inflate(inflater, container, false)
@@ -50,8 +48,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun setCustomer() {
         customer = Gson().fromJson(
-            requireActivity().intent.getStringExtra(Constants.Customer),
-            Customer::class.java
+            requireActivity().intent.getStringExtra(Constants.Customer), Customer::class.java
         )
     }
 
@@ -71,9 +68,9 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         mBinding.header.setBackText("Current Forms")
     }
 
-    private fun openSelectedForm(form: Form?, formType: FormType?) {
+    private fun openSelectedForm(formType: FormType?) {
         when (formType) {
-            FormType.AgreementMemo -> openAgreementMemo(form)
+            FormType.AgreementMemo -> openAgreementMemo()
             FormType.ServiceForm -> openServiceForm()
             FormType.InvoiceForm -> openInvoiceForm()
             FormType.TaxForm -> openTaxForm()
@@ -98,12 +95,9 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
             })
     }
 
-    private fun openAgreementMemo(form: Form?) {
-        findNavController()
-            .navigate(
-                R.id.action_navigation_current_forms_to_navigation_agreement_memo,
+    private fun openAgreementMemo() {
+        findNavController().navigate(R.id.action_navigation_current_forms_to_navigation_agreement_memo,
                 Bundle().apply {
-                    form?.let { putString(Constants.Form, Gson().toJson(it)) }
                     putString(Constants.Customer, Gson().toJson(customer))
                 })
     }
@@ -112,7 +106,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         mAdapter = FormAdapter(forms)
         mAdapter.setListener(object : FormAdapter.OnFormSelectListener {
             override fun onFormSelected(form: Form) {
-
+                openSelectedForm(form.getType())
             }
         })
         mBinding.recyclerView.adapter = mAdapter
@@ -120,10 +114,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun getFormsData() {
         val loading = Loading().forApi(requireActivity())
-        NetworkCall.make()
-            .setCallback(this)
-            .setTag("FROMS")
-            .autoLoadigCancel(loading)
+        NetworkCall.make().setCallback(this).setTag("FROMS").autoLoadigCancel(loading)
             .enque(Network.api()?.getCustomerForm(FormsRequest(customer?.id))).execute()
     }
 
@@ -136,7 +127,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         mBinding.addNewForms.setOnClickListener {
             val modal = NewFormsBottomSheet()
             modal.setOnClickListener {
-                openSelectedForm(null, FormType.find(it.tag.toString()))
+                openSelectedForm(FormType.find(it.tag.toString()))
             }
             requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
         }
@@ -153,7 +144,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         setAdapter(forms.result?.items)
     }
 
-    override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
     }
 

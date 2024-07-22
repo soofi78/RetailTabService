@@ -1,7 +1,6 @@
 package com.lfsolutions.retail.ui.agreementmemo
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +20,7 @@ import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 import com.lfsolutions.retail.model.memo.ProductBatchList
-import com.lfsolutions.retail.model.service.ComplaintServiceDetails
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -92,7 +90,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                     showSerialNumbersList()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get serial numbers list")
                 }
             }).enque(
@@ -142,7 +140,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                     setEquipmentTypesAdapter()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get equipment list")
                 }
             }).enque(Network.api()?.getEquipmentType()).execute()

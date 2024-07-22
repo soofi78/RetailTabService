@@ -13,7 +13,7 @@ import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -104,7 +104,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     }
 
-    override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
     }
 

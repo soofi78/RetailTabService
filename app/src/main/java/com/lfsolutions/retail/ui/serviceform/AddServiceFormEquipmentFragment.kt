@@ -24,7 +24,7 @@ import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceDetails
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.ComplaintTypes
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -89,7 +89,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                     setActionTypesAdapter()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get equipment list")
                 }
             }).enque(Network.api()?.getActionTypes()).execute()
@@ -128,7 +128,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                     showSerialNumbersList()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get serial numbers list")
                 }
             }).enque(
@@ -149,7 +149,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                     showComplaintTypes()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get complaint type list")
                 }
             }).enque(
@@ -222,7 +222,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                     setEquipmentTypesAdapter()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get equipment list")
                 }
             }).enque(Network.api()?.getEquipmentType()).execute()

@@ -142,25 +142,25 @@ class Network private constructor() {
         }
 
         @JvmStatic
-        fun parseErrorResponsee(response: retrofit2.Response<*>): ErrorResponse? {
-            var errorResponsee: ErrorResponse? = null
+        fun parseErrorResponsee(response: retrofit2.Response<*>): BaseResponse<String> {
+            var baseResponsee: BaseResponse<String>? = null
 
             try {
                 if (ResponseCode.isBetweenSuccessRange(response.code())) {
-                    return response.body() as ErrorResponse?
+                    return response.body() as BaseResponse<String>
                 } else {
                     val errorConverter =
-                        getNetworkClient()!!.responseBodyConverter<ErrorResponse>(
-                            ErrorResponse::class.java, arrayOfNulls(0)
+                        getNetworkClient()!!.responseBodyConverter<BaseResponse<String>>(
+                            BaseResponse::class.java, arrayOfNulls(0)
                         )
-                    errorResponsee = errorConverter.convert(response.errorBody())
-                    checkNotNull(errorResponsee)
-                    errorResponsee.error?.code = response.code()
-                    return errorResponsee
+                    baseResponsee = errorConverter.convert(response.errorBody())
+                    checkNotNull(baseResponsee)
+                    baseResponsee.error?.code = response.code()
+                    return baseResponsee
                 }
             } catch (e: Exception) {
-                errorResponsee = ErrorResponse()
-                errorResponsee.error?.code = response.code()
+                baseResponsee = BaseResponse()
+                baseResponsee.error?.code = response.code()
                 var errorString: String?
                 errorString = try {
                     response.errorBody()!!.string()
@@ -171,8 +171,8 @@ class Network private constructor() {
                         .equals("", ignoreCase = true)) {
                     errorString = "Something went wrong"
                 }
-                errorResponsee.error?.message = errorString
-                return errorResponsee
+                baseResponsee.error?.message = errorString
+                return baseResponsee
             }
         }
     }

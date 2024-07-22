@@ -14,11 +14,12 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentServiceFormBinding
+import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -65,14 +66,15 @@ class ServiceFormFragment : Fragment() {
             Main.app.getComplaintService()?.complaintService?.creatorUserId =
                 Main.app.getSession().userId.toString()
 
-            Main.app.getComplaintService()?.complaintService?.csDate=Main.app.getComplaintService()?.complaintService?.creationTime
+            Main.app.getComplaintService()?.complaintService?.csDate =
+                Main.app.getComplaintService()?.complaintService?.creationTime
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Main.app.getComplaintService()?.complaintService?.customerId = customer.id.toString()
+        Main.app.getComplaintService()?.complaintService?.customerId = customer.id
         setData()
         setClickListener()
         getFeedbackData()
@@ -136,6 +138,8 @@ class ServiceFormFragment : Fragment() {
 
         binding.printAndSend.setOnClickListener { onPrintAndSave() }
 
+        binding.btnClearSign.setOnClickListener { binding.signaturePad.clear() }
+
         binding.btnOpenEquipmentList.setOnClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to true,
@@ -197,7 +201,7 @@ class ServiceFormFragment : Fragment() {
 
                     override fun onFailure(
                         call: Call<*>?,
-                        response: ErrorResponse?,
+                        response: BaseResponse<*>?,
                         tag: Any?
                     ) {
                         Notify.toastLong("Unable to upload signature")
@@ -214,12 +218,18 @@ class ServiceFormFragment : Fragment() {
             .setCallback(
                 object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        Notify.toastLong("success")
+                        val result = response?.body() as BaseResponse<ComplaintServiceResponse>
+                        if (result.success == true) {
+                            Notify.toastLong("Complaint Service Created: ${result.result?.id}")
+                            findNavController().popBackStack()
+                        } else {
+                            Notify.toastLong("Unable create or update memo")
+                        }
                     }
 
                     override fun onFailure(
                         call: Call<*>?,
-                        response: ErrorResponse?,
+                        response: BaseResponse<*>?,
                         tag: Any?
                     ) {
                         Notify.toastLong("Unable create or update memo")
@@ -302,7 +312,7 @@ class ServiceFormFragment : Fragment() {
                     setFeedbackData()
                 }
 
-                override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                 }
             })

@@ -18,25 +18,26 @@ data class ComplaintServiceDetails(
     @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList> = arrayListOf(),
     @SerializedName("type") var type: String? = null,
     @SerializedName("serviceTypes") var serviceTypes: ArrayList<String> = arrayListOf(),
-    @SerializedName("price") var price: Int? = null,
+    @SerializedName("price") var price: Int = 0,
     @SerializedName("unitPrice") var unitPrice: Int? = null,
-    @SerializedName("averageCost") var averageCost: Int? = null,
+    @SerializedName("averageCost") var averageCost: Int = 0,
     @SerializedName("unitName") var unitName: String? = null,
     @SerializedName("qtyOnHand") var qtyOnHand: Int? = null,
-    @SerializedName("lastSellingPrice") var lastSellingPrice: Int? = null,
-    @SerializedName("lastPurchasePrice") var lastPurchasePrice: Int? = null,
+    @SerializedName("lastSellingPrice") var lastSellingPrice: Int = 0,
+    @SerializedName("lastPurchasePrice") var lastPurchasePrice: Int = 0,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
-    @SerializedName("changeunitflag") var changeunitflag: Boolean? = null,
+    @SerializedName("changeunitflag") var changeunitflag: Boolean = false,
     @SerializedName("actionType") var actionType: String? = null,
     @SerializedName("transType") var transType: String? = null,
     @SerializedName("transTypeDisplayText") @Transient var transTypeDisplayText: String? = null,
-) {
+
+    ) {
     fun getSerialNumbers(): CharSequence? {
         var serials = ""
-        productBatchList?.forEach {
+        productBatchList.forEach {
             Log.d("Serial", it.SerialNumber.toString())
             serials +=
-                if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber
+                if (serials == "") it.SerialNumber.toString() else " / " + it.SerialNumber
         }
         return serials
     }

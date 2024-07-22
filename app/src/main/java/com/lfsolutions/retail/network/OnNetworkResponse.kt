@@ -10,5 +10,5 @@ import retrofit2.Response
 interface OnNetworkResponse {
     fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?)
 
-    fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?)
+    fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?)
 }

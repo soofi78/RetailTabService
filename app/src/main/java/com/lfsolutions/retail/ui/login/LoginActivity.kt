@@ -12,7 +12,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.UserSession
-import com.lfsolutions.retail.network.ErrorResponse
+import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity(), OnNetworkResponse {
         this.finish()
     }
 
-    override fun onFailure(call: Call<*>?, response: ErrorResponse?, tag: Any?) {
+    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
         Notify.toastLong(response?.error?.details.toString())
     }
 

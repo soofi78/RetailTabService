@@ -15,3 +15,15 @@ data class ProductBatchList(
     @SerializedName("MfgDate") var MfgDate: String? = null,
     @SerializedName("TenantId") var TenantId: Int? = null
 )
+
+
+//    "BatchCode": null,
+//    "ExpiryDate": null,
+//    "Id": 1555,
+//    "MfgDate": null,
+//    "Price": null,
+//    "ProductId": null,
+//    "Qty": 1,
+//    "SerialNumber": "A-1234566",
+//    "TenantId": null,
+//    "UnitCost": null
