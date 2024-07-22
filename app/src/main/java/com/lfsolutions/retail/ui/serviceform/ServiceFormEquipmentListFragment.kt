@@ -13,7 +13,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentServiceFormEquipmentListBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.Equipment
-import com.lfsolutions.retail.model.EquipmentListRequest
+import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
@@ -75,7 +75,7 @@ class ServiceFormEquipmentListFragment : Fragment() {
                 }
             }).enque(
                 Network.api()
-                    ?.getEquipmentList(EquipmentListRequest(Main.app.getSession().defaultLocationId))
+                    ?.getEquipmentList(LocationIdRequestObject(Main.app.getSession().defaultLocationId))
             ).execute()
     }
 

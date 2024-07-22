@@ -5,7 +5,7 @@ import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.EquipmentListResult
-import com.lfsolutions.retail.model.EquipmentListRequest
+import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
@@ -14,6 +14,8 @@ import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
+import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
@@ -50,7 +52,7 @@ interface ApiServices {
     fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
-    fun getEquipmentList(@Body equipmentListRequest: EquipmentListRequest): Call<RetailResponse<EquipmentListResult>>
+    fun getEquipmentList(@Body locationIdRequestObject: LocationIdRequestObject): Call<RetailResponse<EquipmentListResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS))
     fun getSerialNumbers(
@@ -65,9 +67,22 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
     fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<BaseResponse<ComplaintServiceResponse>>?
 
+    @POST(
+        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
+    )
+    fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<*>>?
+
+    @POST(
+        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
+    )
+    fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<*>>?
+
     @Multipart
     @POST(Api.Name.UPLOAD_SIGNATURE)
     fun uploadSignature(@Part file: MultipartBody.Part): Call<RetailResponse<SignatureUploadResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
+    fun getApiServiceProduct(@Body locationIdRequestObject: LocationIdRequestObject)
 }
 
 
