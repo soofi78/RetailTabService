@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.network
 
 import com.google.gson.stream.MalformedJsonException
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.network.serializers.Error
 import com.lfsolutions.retail.util.Configurations
 import com.lfsolutions.retail.util.Loading
@@ -55,6 +56,8 @@ class NetworkCall private constructor() {
                     CoroutineScope(Dispatchers.Main).launch {
                         callback!!.onSuccess(request, response, taggedObject)
                     }
+                } else if (response?.code()==401) {
+                    Main.app.sessionExpired()
                 } else {
                     onFailure(response)
                 }

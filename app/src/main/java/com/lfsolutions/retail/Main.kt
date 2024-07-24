@@ -1,13 +1,16 @@
 package com.lfsolutions.retail
 
 import android.app.Application
+import android.content.Intent
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
+import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
+
 
 class Main : Application() {
 
@@ -64,6 +67,14 @@ class Main : Application() {
 
     fun cleaStockTransfer() {
         stockTransferRequest = null
+    }
+
+    fun sessionExpired() {
+        AppSession.clearSharedPref()
+        startActivity(Intent(app, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        })
     }
 
 

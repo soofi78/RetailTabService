@@ -146,9 +146,9 @@
                         android:id="@+id/lblDateTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:text="Date and Time"
                         android:textSize="16sp"
-                        android:layout_marginStart="5dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -685,7 +685,9 @@
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corner_yellow_background"
-                    android:text="Print and Send"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:text="Print &amp; Save"
                     android:visibility="visible" />
 
                 <androidx.appcompat.widget.AppCompatButton

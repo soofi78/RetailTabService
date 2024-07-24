@@ -148,7 +148,7 @@ class ServiceFormSummaryFragment : Fragment() {
     private fun addOnClickListener() {
         mBinding.btnCancel.setOnClickListener {
             Notify.toastLong("Cleared all items")
-            Main.app.getAgreementMemo()?.AgreementMemoDetail?.clear()
+            Main.app.getComplaintService()?.complaintServiceDetails?.clear()
             findNavController().popBackStack()
         }
 

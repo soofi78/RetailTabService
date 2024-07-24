@@ -2,7 +2,11 @@ package com.lfsolutions.retail.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -39,14 +43,25 @@ class LoginActivity : AppCompatActivity(), OnNetworkResponse {
             insets
         }
         _binding?.buttonSignin?.setOnClickListener {
-            if (validated().not())
-                return@setOnClickListener
-            prepareNetworkLayer()
-            login()
+            signIn()
+        }
+
+        _binding?.inputPassword?.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                signIn()
+            }
+            true
         }
 
         if (AppSession.getBoolean(Constants.IS_LOGGED_IN)) goToHome()
 
+    }
+
+    private fun signIn() {
+        if (validated().not())
+            return
+        prepareNetworkLayer()
+        login()
     }
 
     private fun prepareNetworkLayer() {

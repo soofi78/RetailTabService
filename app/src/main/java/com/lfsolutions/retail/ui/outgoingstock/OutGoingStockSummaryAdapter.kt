@@ -92,13 +92,11 @@ class OutGoingStockSummaryAdapter(
         holder.binding.btnAddSerial.setOnClickListener {
             getSerialNumbersList(holder.binding.btnAddSerial.tag as Int)
         }
-//
-//        holder.binding.txtQty.text =
-//            if ((outGoingProducts?.get(position)?.productBatchList?.size ?: 0) > 0) {
-//                outGoingProducts?.get(position)?.productBatchList?.size.toString()
-//            } else outGoingProducts?.get(position)?.qty.toString()
 
-
+        holder.binding.btnAddSerial.setBackgroundResource(
+            if ((outGoingProducts?.get(position)?.productBatchList?.size ?: 0) > 0)
+                R.drawable.round_green_background else R.drawable.round_red_background
+        )
     }
 
     private fun getSerialNumbersList(position: Int) {

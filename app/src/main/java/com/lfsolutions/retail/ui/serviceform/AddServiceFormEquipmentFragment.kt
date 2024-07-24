@@ -176,7 +176,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
                         updateTotal()
-
+                        updateAddButtonForSerialNumber()
                     }
 
                     override fun onCancel() {
@@ -184,6 +184,14 @@ class AddServiceFormEquipmentFragment : Fragment() {
                     }
                 })
         multiSelectDialog.show(requireActivity().supportFragmentManager, "serialNumber")
+    }
+
+    private fun updateAddButtonForSerialNumber() {
+        mBinding.addSerialNumber.setBackgroundResource(if (selectedSerialNumbers.size > 0) R.drawable.round_green_background else R.drawable.round_red_background)
+    }
+
+    private fun updateButtonForComplaint() {
+        mBinding.addComplaintTypes.setBackgroundResource(if (selectedSerialNumbers.size > 0) R.drawable.round_green_background else R.drawable.round_red_background)
     }
 
     private fun showComplaintTypes() {
@@ -203,6 +211,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
                         selectedComplaintTypes.clear()
                         selectedIds?.let { selectedComplaintTypes.addAll(it) }
                         updateComplaintTypeAdapter()
+                        updateButtonForComplaint()
                     }
 
                     override fun onCancel() {

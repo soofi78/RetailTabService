@@ -121,6 +121,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
                         updateTotal()
+                        updateAddButtonForSerialNumber()
                     }
 
                     override fun onCancel() {
@@ -128,6 +129,10 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                     }
                 })
         multiSelectDialog.show(requireActivity().supportFragmentManager, "multiSelectDialog")
+    }
+
+    private fun updateAddButtonForSerialNumber() {
+        mBinding.addSerialNumber.setBackgroundResource(if (selectedSerialNumbers.size > 0) R.drawable.round_green_background else R.drawable.round_red_background)
     }
 
     private fun updateEquipmentTypeList() {
