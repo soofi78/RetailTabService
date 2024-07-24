@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui
+package com.lfsolutions.retail.ui.forms
 
 import android.app.Dialog
 import android.os.Bundle

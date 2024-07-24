@@ -1,67 +1,133 @@
 package com.lfsolutions.retail.ui.delivery
 
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemDeliveryBinding
+import com.lfsolutions.retail.databinding.ItemScheduledBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.util.makeTextBold
 
-class DeliveryItemAdapter(var customers: ArrayList<Customer>? = ArrayList()) :
+class DeliveryItemAdapter(
+    var customers: ArrayList<Customer>? = ArrayList(),
+    val type: CustomerItemType
+) :
 
-    RecyclerView.Adapter<DeliveryItemAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mListener: OnItemClickListener? = null
 
-    class ViewHolder(val binding: ItemDeliveryBinding) : RecyclerView.ViewHolder(binding.root)
+    class SimpleCustomerHolder(val binding: ItemDeliveryBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    class ViewHolderScheduled(val binding: ItemScheduledBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder =
-        ViewHolder(
-            ItemDeliveryBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+    ): RecyclerView.ViewHolder =
+        if (type == CustomerItemType.Scheduled) {
+            ViewHolderScheduled(
+                ItemScheduledBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
-        )
+        } else {
+            SimpleCustomerHolder(
+                ItemDeliveryBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
 
-    override fun getItemCount(): Int = customers?.size ?: 0
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val customer = customers?.get(position)
-        holder.binding.txtGroup.text =
+        if (type == CustomerItemType.Scheduled) {
+            val binding = (holder as ViewHolderScheduled).binding
+            setScheduleData(binding, customer)
+        } else {
+            val binding = (holder as SimpleCustomerHolder).binding
+            setUergentToVisitData(binding, customer)
+        }
+    }
+
+    private fun setScheduleData(binding: ItemScheduledBinding, customer: Customer?) {
+        binding.txtGroup.text =
             makeTextBold(
-                text = holder.itemView.context.getString(R.string.prefix_group, customer?.group),
-                startIndex = 8
+                text = binding.txtGroup.context.getString(
+                    R.string.prefix_group,
+                    customer?.group
+                ), startIndex = 8
             )
-        holder.binding.txtName.text = customer?.name
-        holder.binding.txtAddress.text = customer?.address1
-        holder.binding.txtAccountNo.text =
+        binding.txtName.text = customer?.name
+        binding.txtAddress.text = customer?.address1
+        binding.txtAccountNo.text =
             makeTextBold(
-                text = holder.itemView.context.getString(
+                text = binding.txtAccountNo.context.getString(
                     R.string.prefix_account_no,
                     customer?.customerCode
                 ), startIndex = 8
             )
 
-        holder.binding.txtArea.text =
+        binding.txtArea.text =
             makeTextBold(
-                text = holder.itemView.context.getString(R.string.prefix_area, customer?.area),
+                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
                 startIndex = 7
             )
 
-        holder.binding.root.tag = customer
-        holder.binding.root.setOnClickListener {
+        binding.root.tag = customer
+        binding.root.setOnClickListener {
+            binding.selected.isChecked = customer?.isSelected?.not() == true
+        }
+        binding.selected.isChecked = customer?.isSelected == true
+        binding.selected.setOnCheckedChangeListener { _, isChecked ->
+            customer?.isSelected = isChecked
+        }
+    }
+
+    fun getCheckedItemList(): ArrayList<Customer> {
+        val items = arrayListOf<Customer>()
+        customers?.forEach {
+            if (it.isSelected) items.add(it)
+        }
+        return items
+    }
+
+    private fun setUergentToVisitData(binding: ItemDeliveryBinding, customer: Customer?) {
+        binding.txtGroup.text =
+            makeTextBold(
+                text = binding.txtGroup.context.getString(
+                    R.string.prefix_group,
+                    customer?.group
+                ), startIndex = 8
+            )
+        binding.txtName.text = customer?.name
+        binding.txtAddress.text = customer?.address1
+        binding.txtAccountNo.text =
+            makeTextBold(
+                text = binding.txtAccountNo.context.getString(
+                    R.string.prefix_account_no,
+                    customer?.customerCode
+                ), startIndex = 8
+            )
+
+        binding.txtArea.text =
+            makeTextBold(
+                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
+                startIndex = 7
+            )
+
+        binding.root.tag = customer
+        binding.root.setOnClickListener {
             mListener?.onItemClick(it.tag as Customer)
         }
     }
+
+
+    override fun getItemCount(): Int = customers?.size ?: 0
+
 
     fun setListener(listener: OnItemClickListener) {
 
@@ -73,6 +139,13 @@ class DeliveryItemAdapter(var customers: ArrayList<Customer>? = ArrayList()) :
 
         fun onItemClick(customer: Customer)
 
+    }
+
+    enum class CustomerItemType {
+        Scheduled,
+        ToVisit,
+        Urgent,
+        All
     }
 
 }

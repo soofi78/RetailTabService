@@ -20,7 +20,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
-import com.lfsolutions.retail.ui.NewFormsBottomSheet
+import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormAdapter
 import com.lfsolutions.retail.ui.forms.FormType
 import com.lfsolutions.retail.util.Constants

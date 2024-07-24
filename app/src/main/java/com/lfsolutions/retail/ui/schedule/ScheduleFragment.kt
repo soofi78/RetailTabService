@@ -16,7 +16,7 @@ class ScheduleFragment : Fragment() {
 
     private val mBinding get() = _binding!!
 
-    private val mViewModel : ScheduleViewModel by viewModels()
+    private val mViewModel: ScheduleViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +32,8 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.recyclerViewVisitationSchedule.adapter = DeliveryItemAdapter(ArrayList())
+        mBinding.recyclerViewVisitationSchedule.adapter =
+            DeliveryItemAdapter(ArrayList(), DeliveryItemAdapter.CustomerItemType.Scheduled)
         mBinding.recyclerViewVisitationSchedule.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),

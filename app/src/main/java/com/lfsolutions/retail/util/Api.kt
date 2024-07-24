@@ -5,11 +5,12 @@ object Api {
     const val ServicesApp = "services/app/"
     const val CommonLookup = "CommonLookup/"
     const val Feedback = "Feedback/"
-    const val SaleInvoice = "salesInvoice//"
+    const val SaleInvoice = "salesInvoice/"
 
     object Name {
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"
         const val CREATE_UPDATE_SALE_INVOICE = "CreateOrUpdateSalesInvoice"
+        const val CREATE_UPDATE_STOCK_TRANSFER = "service/CreateOutGoingStockTransfer"
         const val UPLOAD_SIGNATURE = "File/UploadAgreementMemoSignature"
         const val AUTHENTICATE = "Account/Authenticate"
         const val GET_CUSTOMERS = "Service/ApiGetCustomers"
@@ -19,6 +20,7 @@ object Api {
         const val GET_COMPLAINT_TYPES = "getComplaintTypesforCombobox"
         const val GET_FEEDBACK = "GetAllActiveFeedBack"
         const val GET_EQUIPMENT = "Service/GetApiServiceProduct"
+        const val GET_OUT_GOING_PRODUCT = "Service/GetOutGoingStockTransferProduct"
         const val GET_SERIAL_NUMBERS = "product/GetProductSerialNumbers"
         const val CREATE_UPDATE_MEMO = "agreementMemo/CreateOrUpdateAgreementMemo"
         const val CREATE_UPDATE_COMPLAINT_SERVICE =

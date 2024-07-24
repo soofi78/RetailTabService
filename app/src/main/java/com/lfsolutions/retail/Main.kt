@@ -4,12 +4,14 @@ import android.app.Application
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 
 class Main : Application() {
 
+    private var stockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ComplaintServiceRequest? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
 
@@ -50,6 +52,18 @@ class Main : Application() {
 
     fun clearComplaintService() {
         complaintService = null
+    }
+
+    fun getStockTransferRequestObject(): StockTransferRequestBody {
+        if (stockTransferRequest == null) {
+            stockTransferRequest = StockTransferRequestBody()
+            stockTransferRequest?.locationId = getSession().defaultLocationId
+        }
+        return stockTransferRequest!!
+    }
+
+    fun cleaStockTransfer() {
+        stockTransferRequest = null
     }
 
 

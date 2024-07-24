@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.network
 
 import com.lfsolutions.retail.model.ComplaintServiceResponse
+import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
 import com.lfsolutions.retail.model.CustomerResult
@@ -14,6 +15,8 @@ import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
+import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ActionTypeResult
@@ -54,6 +57,10 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
     fun getEquipmentList(@Body locationIdRequestObject: LocationIdRequestObject): Call<RetailResponse<EquipmentListResult>>
 
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_OUT_GOING_PRODUCT))
+    fun getOutGoingStockTransferProductList(@Body customerIdsList: CustomerIdsList): Call<RetailResponse<OutGoingStockProductsResults>>
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS))
     fun getSerialNumbers(
         @Query("productId") productId: Long?,
@@ -73,9 +80,13 @@ interface ApiServices {
     fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<*>>?
 
     @POST(
-        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
+        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
+            .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
     )
     fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<*>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_STOCK_TRANSFER))
+    fun createUpdateStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?
 
     @Multipart
     @POST(Api.Name.UPLOAD_SIGNATURE)
