@@ -264,8 +264,11 @@ class ServiceFormFragment : Fragment() {
     private fun setData() {
         setHeaderData()
         setCustomerData()
-        binding.complaintDateTimeText.text =
-            DateTime.getCurrentDateTime(DateTime.DateTimeRetailFrontEndFormate)
+        val currentDateTime = DateTime.getCurrentDateTime(DateTime.DateTimeRetailFrontEndFormate)
+        binding.checkinTime.text = currentDateTime
+        binding.checkoutTime.text = currentDateTime
+        binding.complaintDateTimeText.text = currentDateTime
+
     }
 
     private fun setFeedbackData() {

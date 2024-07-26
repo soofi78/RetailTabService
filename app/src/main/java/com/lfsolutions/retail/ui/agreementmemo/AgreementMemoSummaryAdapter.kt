@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
+import com.lfsolutions.retail.util.formatDecimalSeparator
+import kotlinx.coroutines.MainScope
 
 class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMemoDetail>?) :
     RecyclerView.Adapter<AgreementMemoSummaryAdapter.ViewHolder>() {
@@ -31,7 +34,8 @@ class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMe
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.txtQty.text = agreementMemoDetail?.get(position)?.Qty.toString()
-        holder.binding.txtPrice.text = agreementMemoDetail?.get(position)?.TotalCost.toString()
+        holder.binding.txtPrice.text =
+            Main.app.getSession().currencySymbol + agreementMemoDetail?.get(position)?.TotalCost?.formatDecimalSeparator()
         holder.binding.txtProductName.text = agreementMemoDetail?.get(position)?.ProductName
         holder.binding.txtSerials.text = agreementMemoDetail?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text = agreementMemoDetail?.get(position)?.AgreementTypeDisplayText

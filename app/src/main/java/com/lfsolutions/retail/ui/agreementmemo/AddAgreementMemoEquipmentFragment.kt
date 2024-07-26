@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoAddEquipmentBinding
+import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.Equipment
 import com.lfsolutions.retail.model.EquipmentType
 import com.lfsolutions.retail.model.EquipmentTypeResult
@@ -25,7 +26,9 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
+import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
@@ -65,8 +68,6 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
         updateTotal()
         updateEquipmentTypeList()
         addSerialNumberClick()
-
-        //addKeyListener()
     }
 
     private fun updateSerialNumbersAdapter() {
@@ -141,7 +142,12 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     equipmentTypes =
-                        (response?.body() as RetailResponse<EquipmentTypeResult>).result?.items?.toList()
+                        (response?.body() as RetailResponse<EquipmentTypeResult>).result?.items?.filter {
+                            it.value.equals(
+                                "F",
+                                true
+                            ).not()
+                        }
                     setEquipmentTypesAdapter()
                 }
 
@@ -165,7 +171,8 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
         mBinding.txtQty.text = if (equipment?.qtyOnHand == 0) "0" else "1"
         mBinding.txtProductName.text = equipment?.productName
         mBinding.txtCategory.text = equipment?.categoryName
-        mBinding.txtPrice.text = Main.app.getSession().currencySymbol + equipment?.cost.toString()
+        mBinding.txtPrice.text =
+            Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
@@ -263,7 +270,10 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     private fun updateTotal() {
         mBinding.txtTotalPrice.text =
-            equipment?.cost?.let { (mBinding.txtQty.text.toString().toInt() * it).toString() }
+            equipment?.cost?.let {
+                Main.app.getSession().currencyCode + (mBinding.txtQty.text.toString()
+                    .toInt() * it).formatDecimalSeparator()
+            }
     }
 
 }

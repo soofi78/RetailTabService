@@ -8,6 +8,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemEquipmentBinding
 import com.lfsolutions.retail.model.Equipment
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 class EquipmentAdapter(val equipmentList: List<Equipment>?) :
     RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
@@ -33,7 +34,7 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
         holder.binding.txtCategory.text =
             """${equipment?.categoryName} | QTY Available: ${equipment?.qtyOnHand}"""
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + equipment?.cost.toString()
+            Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
 
         Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)

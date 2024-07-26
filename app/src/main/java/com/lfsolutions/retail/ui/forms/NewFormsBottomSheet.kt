@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.BottomSheetNewFormsBinding
 
 class NewFormsBottomSheet : BottomSheetDialogFragment() {
@@ -24,6 +25,12 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (Main.app.getSession().isSupervisor?.not() == true) {
+            binding.newServiceForm.visibility = View.GONE
+            binding.newAgreementMemo.visibility = View.GONE
+        }
+
         binding.newServiceForm.setOnClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newServiceForm)

@@ -88,7 +88,7 @@
                         android:drawablePadding="10dp"
                         android:gravity="start|center_vertical"
                         android:padding="10dp"
-                        android:text="Quantity Available : 20"
+                        android:text="Qty Available : 20"
                         android:textAlignment="textStart"
                         android:textSize="16sp" />
 

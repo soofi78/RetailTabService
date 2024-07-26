@@ -51,17 +51,11 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = mBinding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
-
-        /* val appBarConfiguration = AppBarConfiguration(
-             setOf(
-                 R.id.navigation_delivery, R.id.navigation_documents, R.id.navigation_schedule, R.id.navigation_all_records
-             )
-         )*/
-
-        //setupActionBarWithNavController(navController, appBarConfiguration)
-
         navView.setupWithNavController(navController)
-
+        Main.app.getSession().isSupervisor?.let {
+            navView.menu.findItem(R.id.navigation_all_records)
+                .setVisible(it)
+        }
         setData()
         setClickListener()
 

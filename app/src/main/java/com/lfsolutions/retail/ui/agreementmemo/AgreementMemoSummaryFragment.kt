@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoSummaryBinding
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 import com.videotel.digital.util.Notify
 
@@ -52,11 +53,12 @@ class AgreementMemoSummaryFragment : Fragment() {
     private fun updateSummaryAmountAndQty() {
         Main.app.getAgreementMemo()?.updatePriceAndQty()
         Main.app.getAgreementMemo()?.serializeItems()
-        val total = Main.app.getAgreementMemo()?.AgreementMemo?.AgreementTotal
+        val total =
+            Main.app.getAgreementMemo()?.AgreementMemo?.AgreementTotal?.formatDecimalSeparator()
         val totalQty = Main.app.getAgreementMemo()?.AgreementMemo?.AgreementQty
         mBinding.txtQTY.text = totalQty.toString()
-        mBinding.txtTotal.text = total.toString()
-        mBinding.btnComplete.isEnabled=totalQty!=0
+        mBinding.txtTotal.text = Main.app.getSession().currencySymbol + total.toString()
+        mBinding.btnComplete.isEnabled = totalQty != 0
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentServiceFormSummaryBinding
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 
 
@@ -52,10 +53,11 @@ class ServiceFormSummaryFragment : Fragment() {
     private fun updateSummaryAmountAndQty() {
         Main.app.getComplaintService()?.updatePriceAndQty()
         Main.app.getComplaintService()?.serializeItems()
-        val total = Main.app.getComplaintService()?.complaintService?.totalPrice
+        val total =
+            Main.app.getComplaintService()?.complaintService?.totalPrice?.formatDecimalSeparator()
         val totalQty = Main.app.getComplaintService()?.complaintService?.totalQty
         mBinding.txtQTY.text = totalQty.toString()
-        mBinding.txtTotal.text = total.toString()
+        mBinding.txtTotal.text = Main.app.getSession().currencySymbol + total.toString()
         mBinding.btnComplete.isEnabled = totalQty?.toInt() != 0
     }
 

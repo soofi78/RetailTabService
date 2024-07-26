@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemFormBinding
 import com.lfsolutions.retail.model.Form
+import com.lfsolutions.retail.util.formatToDate
+import com.videotel.digital.util.DateTime
+import java.util.Date
 
 class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
 
@@ -23,15 +26,25 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val form = forms?.get(position)
         holder.binding.let { binding ->
+            if (form?.serialNo == null) {
+
+            }
             binding.txtName.text = form?.title ?: "N/A"
-            binding.txtSerialNo.visibility = if (form?.serialNo == null) View.GONE else View.VISIBLE
-            binding.txtSerialNo.text = "Serial no. " + form?.serialNo
+            binding.txtSerialNo.visibility =
+                if (form?.serialNo.isNullOrEmpty() || form?.serialNo?.isBlank() == true || form?.serialNo.equals(
+                        "N/A",
+                        true
+                    )
+                ) View.GONE else View.VISIBLE
+            val serialNumberText =
+                if (form?.serialNo?.startsWith("VAN") == true) form?.serialNo else "VAN-" + form?.serialNo
+            binding.txtSerialNo.text = "Serial no. $serialNumberText"
             binding.txtEditedDate.visibility =
                 if (form?.lastModificationTime == null) View.GONE else View.VISIBLE
             binding.txtEditedDate.text = "Edited on: " + form?.lastModificationTime
             binding.txtDate.visibility =
                 if (form?.date == null) View.GONE else View.VISIBLE
-            binding.txtDate.text = form?.date.toString()
+            binding.txtDate.text = form?.date.formatToDate()
             when (form?.getType()) {
                 FormType.AgreementMemo -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
                 FormType.InvoiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)

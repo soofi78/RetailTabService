@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -72,10 +73,13 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
         mBinding.header.setBackText("Back")
         Main.app.getSession().name?.let { mBinding.header.setName(it) }
         addOnClickListener()
+        mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
+        Main.app.getStockTransferRequestObject()?.date =
+            mBinding.date.text.toString() + "T00:00:00Z"
         mBinding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(this, object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    mBinding.date.setText(day + "-" + month + "-" + year)
+                    mBinding.date.setText("$day-$month-$year")
                     Main.app.getStockTransferRequestObject()?.date =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -86,7 +90,8 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
 
     private fun updateSummaryAmountAndQty() {
         mBinding.txtQTY.text = getQty().toString()
-        mBinding.txtTotal.text = getTotal().toString()
+        mBinding.txtTotal.text =
+            Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
         mBinding.btnComplete.isEnabled = getQty() != 0
     }
 

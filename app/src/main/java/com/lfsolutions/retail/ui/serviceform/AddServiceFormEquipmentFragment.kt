@@ -30,6 +30,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
@@ -261,7 +262,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
         mBinding.txtProductName.text = equipment?.productName
         mBinding.txtCategory.text = equipment?.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + equipment?.cost.toString() + "/ Pcs"
+            Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator() + "/ Pcs"
         Glide.with(this).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
@@ -375,6 +376,9 @@ class AddServiceFormEquipmentFragment : Fragment() {
 
     private fun updateTotal() {
         mBinding.txtTotalPrice.text =
-            equipment?.cost?.let { (mBinding.txtQty.text.toString().toInt() * it).toString() }
+            equipment?.cost?.let {
+                Main.app.getSession().currencySymbol + (mBinding.txtQty.text.toString()
+                    .toInt() * it).formatDecimalSeparator()
+            }
     }
 }

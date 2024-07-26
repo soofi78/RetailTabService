@@ -18,6 +18,7 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
@@ -60,7 +61,7 @@ class OutGoingStockSummaryAdapter(
 
         holder.binding.txtQty.text = outGoingProducts?.get(position)?.qty.toString()
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + outGoingProducts?.get(position)?.price.toString()
+            Main.app.getSession().currencySymbol + outGoingProducts?.get(position)?.price?.formatDecimalSeparator()
         holder.binding.txtProductName.text = outGoingProducts?.get(position)?.productName
         holder.binding.txtSerials.text = outGoingProducts?.get(position)?.getSerialNumbers()
         holder.itemView.setOnClickListener {

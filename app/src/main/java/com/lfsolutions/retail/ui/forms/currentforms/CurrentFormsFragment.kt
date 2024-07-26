@@ -97,13 +97,20 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun openAgreementMemo() {
         findNavController().navigate(R.id.action_navigation_current_forms_to_navigation_agreement_memo,
-                Bundle().apply {
-                    putString(Constants.Customer, Gson().toJson(customer))
-                })
+            Bundle().apply {
+                putString(Constants.Customer, Gson().toJson(customer))
+            })
     }
 
     private fun setAdapter(forms: ArrayList<Form>?) {
-        mAdapter = FormAdapter(forms)
+        var filtered = arrayListOf<Form>()
+        if (Main.app.getSession().isSupervisor == true) {
+            forms?.let { filtered.addAll(it) }
+        } else {
+            forms?.filter { (it.getType() != FormType.AgreementMemo || it.getType() != FormType.ServiceForm) }
+                ?.let { filtered.addAll(it) }
+        }
+        mAdapter = FormAdapter(filtered)
         mAdapter.setListener(object : FormAdapter.OnFormSelectListener {
             override fun onFormSelected(form: Form) {
                 openSelectedForm(form.getType())
@@ -145,7 +152,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-
+        Notify.toastLong("Unable to load forms")
     }
 
 }

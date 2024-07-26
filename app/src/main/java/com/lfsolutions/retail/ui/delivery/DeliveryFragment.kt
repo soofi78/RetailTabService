@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdsList
@@ -56,6 +57,10 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
         super.onViewCreated(view, savedInstanceState)
         setAdapters(null)
+        if (Main.app.getSession().isSupervisor == false) {
+            mBinding.recyclerViewUrgent.visibility = View.GONE
+            mBinding.cardUrgent.visibility = View.GONE
+        }
         addVerticalItemDecoration(mBinding.recyclerViewToVisit, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())

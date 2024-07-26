@@ -1,5 +1,7 @@
 package com.lfsolutions.retail.network
 
+import com.lfsolutions.retail.model.CategoryItem
+import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.FormResult
@@ -60,6 +62,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_OUT_GOING_PRODUCT))
     fun getOutGoingStockTransferProductList(@Body customerIdsList: CustomerIdsList): Call<RetailResponse<OutGoingStockProductsResults>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CATEGORIES))
+    fun getProductCategories(): Call<BaseResponse<CategoryResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS))
     fun getSerialNumbers(

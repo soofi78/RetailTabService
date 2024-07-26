@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.service.ComplaintServiceDetails
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDetails>?) :
     RecyclerView.Adapter<ServiceFormSummaryAdapter.ViewHolder>() {
@@ -31,7 +33,8 @@ class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDe
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.txtQty.text = serviceDetails?.get(position)?.qty.toString()
-        holder.binding.txtPrice.text = serviceDetails?.get(position)?.price.toString()
+        holder.binding.txtPrice.text =
+            Main.app.getSession().currencySymbol + serviceDetails?.get(position)?.price?.formatDecimalSeparator()
         holder.binding.txtProductName.text = serviceDetails?.get(position)?.productName
         holder.binding.txtSerials.text = serviceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text = serviceDetails?.get(position)?.transTypeDisplayText
