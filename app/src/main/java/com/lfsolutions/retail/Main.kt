@@ -31,10 +31,6 @@ class Main : Application() {
         return AppSession[Constants.baseUrl]
     }
 
-    fun logout() {
-        AppSession.clearSharedPref()
-    }
-
     fun isLoggedIn(): Boolean {
         return AppSession.getBoolean(Constants.IS_LOGGED_IN)
     }

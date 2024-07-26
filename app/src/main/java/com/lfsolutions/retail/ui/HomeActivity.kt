@@ -28,10 +28,7 @@ class HomeActivity : AppCompatActivity() {
             onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
                 override fun onClick(option: String) {
                     when (option) {
-                        Constants.Logout -> {
-                            Main.app.logout()
-                            finishAffinity()
-                        }
+                        Constants.Logout -> Main.app.sessionExpired()
                     }
                 }
             })
