@@ -1,114 +1,197 @@
 package com.lfsolutions.retail.ui.taxinvoice
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentTaxInvoiceBinding
+import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
+import com.lfsolutions.retail.model.ComplaintServiceResponse
+import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.network.BaseResponse
+import com.lfsolutions.retail.network.Network
+import com.lfsolutions.retail.network.NetworkCall
+import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.makeTextBold
+import com.videotel.digital.util.DateTime
+import com.videotel.digital.util.Notify
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.util.Date
 
 class TaxInvoiceFragment : Fragment() {
 
-    private var _binding: FragmentTaxInvoiceBinding? = null
+    private lateinit var binding: FragmentSaleOrderTaxInvoiceBinding
+    private val args by navArgs<TaxInvoiceFragmentArgs>()
+    private lateinit var customer: Customer
 
-    private val mBinding get() = _binding!!
-
-    private lateinit var mAdapter: CartProductAdapter
-
-    private val mViewModel: TaxInvoiceViewModel by viewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        customer = Gson().fromJson(args.customer, Customer::class.java)
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        _binding = FragmentTaxInvoiceBinding.inflate(inflater, container, false)
-
-        return mBinding.root
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        if (::binding.isInitialized.not()) {
+            binding = FragmentSaleOrderTaxInvoiceBinding.inflate(inflater, container, false)
+            Main.app.clearTaxInvoice()
+            Main.app.getTaxInvoice()
+            Main.app.getTaxInvoice()?.SalesInvoice?.CreatorUserId = Main.app.getSession().userId
+            Main.app.getTaxInvoice()?.SalesInvoice?.CustomerId = customer.id
+            Main.app.getTaxInvoice()?.SalesInvoice?.LocationId =
+                Main.app.getSession().defaultLocationId
+            Main.app.getTaxInvoice()?.SalesInvoice?.CreationTime =
+                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                    .plus("Z")
+            Main.app.getTaxInvoice()?.SalesInvoice?.DeliveryOrderDate =
+                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                    .plus("Z")
+            Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDate =
+                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                    .plus("Z")
+            Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDueDate =
+                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                    .plus("Z")
+        }
+        return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
-
-        mAdapter = CartProductAdapter()
-
-        mBinding.recyclerView.adapter = mAdapter
-
-        mViewModel.toggleSignaturePad(false)
-
         addOnClickListener()
-
-        addDataObserver()
-
+        setHeaderData()
+        setCustomerData()
     }
 
-    private fun addDataObserver() {
-
-        mViewModel.isSignOn.observe(viewLifecycleOwner) { isSignOn ->
-
-            mBinding.signaturePad.isEnabled = isSignOn
-
-            if (isSignOn) {
-
-                mBinding.btnSignOn.text = getString(R.string.label_sign_off)
-
-                mBinding.btnSignOn.setBackgroundDrawable(
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.rounded_corner_white_background
-                    )
-                )
-
-            } else {
-
-                mBinding.btnSignOn.text = getString(R.string.label_sign_on)
-
-                mBinding.btnSignOn.setBackgroundDrawable(
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.rounded_corner_yellow_background
-                    )
-                )
-
-            }
-
+    private fun setHeaderData() {
+        binding.header.setBackText("Tax Invoice")
+        Main.app.getSession().name?.let { binding.header.setName(it) }
+        binding.header.setOnBackClick {
+            findNavController().popBackStack()
         }
+    }
+
+    private fun setCustomerData() {
+        binding.txtGroup.text = makeTextBold(
+            text = getString(R.string.prefix_group, customer.group), startIndex = 8
+        )
+        binding.txtCustomerName.text = customer.name
+        binding.txtAddress.text = customer.address1
+        binding.txtAccountNo.text = makeTextBold(
+            text = getString(R.string.prefix_account_no, customer.customerCode), startIndex = 8
+        )
+
+        binding.txtArea.text =
+            makeTextBold(text = getString(R.string.prefix_area, customer.area), startIndex = 7)
 
     }
 
     private fun addOnClickListener() {
-
-        mBinding.btnSignOn.setOnClickListener {
-
-            mViewModel.toggleSignaturePad(!mBinding.signaturePad.isEnabled)
-
+        binding.btnOpenEquipmentList.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_navigation_tax_invoice_to_open_tax_invoice_product_list,
+                bundleOf(Constants.Customer to Gson().toJson(customer))
+            )
         }
 
-        mBinding.btnClearSign.setOnClickListener {
-
-            mBinding.signaturePad.clear()
-
+        binding.btnViewOrder.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_navigation_tax_invoice_to_open_products_summary
+            )
         }
 
-        mBinding.btnSave.setOnClickListener {
-
-            it.findNavController().popBackStack(R.id.navigation_current_forms, false)
-
+        binding.btnClearSign.setOnClickListener {
+            binding.signaturePad.clear()
         }
 
-        mBinding.flowBack.setOnClickListener {
+        binding.btnSave.setOnClickListener {
+            if (binding.inputCustomerName.text.toString().isEmpty()) {
+                Notify.toastLong("Please enter customer name")
+                return@setOnClickListener
+            }
 
-            it.findNavController().popBackStack()
+            if (Main.app.getTaxInvoice()?.SalesInvoiceDetail?.size == 0) {
+                Notify.toastLong("Please add products")
+                return@setOnClickListener
+            }
 
+            Main.app.getTaxInvoice()?.serializeItems()
+            Main.app.getTaxInvoice()?.SalesInvoice?.CustomerName =
+                binding.inputCustomerName.text.toString()
+            uploadSignature()
         }
+    }
 
+
+    private fun uploadSignature() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Uploading Signature..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val result = (response?.body() as RetailResponse<SignatureUploadResult>)
+                    val signature = result.result
+                    Main.app.getTaxInvoice()?.SalesInvoice?.Signature = signature?.filePath
+                    saveTaxInvoice()
+                }
+
+                override fun onFailure(
+                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
+                ) {
+                    Notify.toastLong("Unable to upload signature")
+                }
+            }).enque(Network.api()?.uploadSignature(getMultipartSignatureFile())).execute()
+    }
+
+    private fun saveTaxInvoice() {
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val result = response?.body() as BaseResponse<Any>
+                    if (result.success == true) {
+                        Notify.toastLong("Tax Invoice Created")
+                        findNavController().popBackStack()
+                    } else {
+                        Notify.toastLong("Unable create tax invoice: ${result.result}")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
+                ) {
+                    Notify.toastLong("Unable create tax invoice")
+                }
+            }).enque(Network.api()?.createUpdateSaleInvoice(Main.app.getTaxInvoice()!!)).execute()
+    }
+
+    private fun getMultipartSignatureFile(): MultipartBody.Part {
+        val file = File(requireActivity().cacheDir, Date().toString() + "Signature.jpeg")
+        val fos = FileOutputStream(file)
+        binding.signaturePad.signatureBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        val filePart = MultipartBody.Part.createFormData(
+            "file", file.getName(), RequestBody.create(
+                MediaType.parse("image/jpeg"), file
+            )
+        )
+        return filePart
     }
 
 }

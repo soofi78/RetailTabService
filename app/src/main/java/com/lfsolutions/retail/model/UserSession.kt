@@ -23,7 +23,4 @@ data class UserSession(
     @SerializedName("result") var result: String? = null,
     @SerializedName("name") var name: String? = "",
     @SerializedName("isSuperVisor") var isSupervisor: Boolean? = true
-) {
-
-
-}
+)

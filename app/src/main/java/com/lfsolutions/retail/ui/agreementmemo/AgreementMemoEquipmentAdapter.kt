@@ -7,10 +7,10 @@ import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemEquipmentBinding
-import com.lfsolutions.retail.model.Equipment
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
 
-class EquipmentAdapter(val equipmentList: List<Equipment>?) :
+class EquipmentAdapter(val productList: List<Product>?) :
     RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
 
     private var mListener: OnEquipmentClickListener? = null
@@ -25,10 +25,10 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
         )
     )
 
-    override fun getItemCount(): Int = equipmentList?.size ?: 0
+    override fun getItemCount(): Int = productList?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val equipment = equipmentList?.get(position)
+        val equipment = productList?.get(position)
         holder.itemView.tag = equipment
         holder.binding.txtProductName.text = equipment?.productName
         holder.binding.txtCategory.text =
@@ -40,7 +40,7 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
         holder.itemView.setOnClickListener {
-            mListener?.onEquipmentClick(it.tag as Equipment)
+            mListener?.onEquipmentClick(it.tag as Product)
         }
     }
 
@@ -49,6 +49,6 @@ class EquipmentAdapter(val equipmentList: List<Equipment>?) :
     }
 
     interface OnEquipmentClickListener {
-        fun onEquipmentClick(equipment: Equipment)
+        fun onEquipmentClick(product: Product)
     }
 }

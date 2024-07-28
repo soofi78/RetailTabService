@@ -1,6 +1,5 @@
 package com.lfsolutions.retail.ui.serviceform
 
-import android.media.audiofx.DynamicsProcessing.Eq
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,7 @@ import com.lfsolutions.retail.databinding.FragmentServiceFormEquipmentListBindin
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.Equipment
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.RetailResponse
@@ -35,7 +34,7 @@ class ServiceFormEquipmentListFragment : Fragment() {
 
     private lateinit var categoryAdapter: ProductCategoryAdapter
     private var categories: ArrayList<CategoryItem> = arrayListOf()
-    private var equipmentlist: List<Equipment> = arrayListOf()
+    private var equipmentlist: List<Product> = arrayListOf()
     private lateinit var customer: Customer
     private lateinit var _binding: FragmentServiceFormEquipmentListBinding
     private val mBinding get() = _binding!!
@@ -56,7 +55,6 @@ class ServiceFormEquipmentListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setData()
         updateEquipmentListView(arrayListOf())
-
         if (categories.isEmpty()) {
             getProductCategory()
             return
@@ -131,14 +129,14 @@ class ServiceFormEquipmentListFragment : Fragment() {
             ).execute()
     }
 
-    private fun updateEquipmentListView(equipments: List<Equipment>) {
-        mAdapter = EquipmentAdapter(equipments)
+    private fun updateEquipmentListView(products: List<Product>) {
+        mAdapter = EquipmentAdapter(products)
         mAdapter.setListener(object : EquipmentAdapter.OnEquipmentClickListener {
-            override fun onEquipmentClick(equipment: Equipment) {
+            override fun onEquipmentClick(product: Product) {
                 findNavController().navigate(
                     R.id.action_navigation_service_form_bottom_navigation_to_navigation_service_form_add_equipment,
                     bundleOf(
-                        Constants.Equipment to Gson().toJson(equipment)
+                        Constants.Product to Gson().toJson(product)
                     )
                 )
             }

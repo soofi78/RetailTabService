@@ -111,5 +111,6 @@
     <string name="label_mobile_number">Mobile Number</string>
     <string name="label_action_type">Action Type</string>
     <string name="label_complaint_types">Complaint Type</string>
+    <string name="label_expired">Expired</string>
 
 </resources>

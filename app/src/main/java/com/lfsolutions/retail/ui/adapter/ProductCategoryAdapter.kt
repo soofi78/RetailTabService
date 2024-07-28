@@ -49,11 +49,14 @@ class ProductCategoryAdapter(
                 (buttonView.tag as CategoryItem).isSelected = true
                 lastCheckedButton = buttonView as ToggleButton?
                 onCategoryItemClicked.onCategoryItemClicked(buttonView.tag as CategoryItem)
-                notifyDataSetChanged()
+                try {
+                    notifyDataSetChanged()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
-
 }
 
 interface OnCategoryItemClicked {

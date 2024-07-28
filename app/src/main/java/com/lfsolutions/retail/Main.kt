@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
@@ -14,6 +15,7 @@ import com.lfsolutions.retail.util.Constants
 
 class Main : Application() {
 
+    private var taxInvoice: SaleInvoiceRequest? = null
     private var stockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ComplaintServiceRequest? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
@@ -40,12 +42,21 @@ class Main : Application() {
         return memo
     }
 
+    fun getTaxInvoice(): SaleInvoiceRequest? {
+        if (taxInvoice == null) taxInvoice = SaleInvoiceRequest()
+        return taxInvoice
+    }
+
     fun getComplaintService(): ComplaintServiceRequest? {
         if (complaintService == null) complaintService = ComplaintServiceRequest()
         return complaintService
     }
 
     fun clearAgreementMemo() {
+        memo = null
+    }
+
+    fun clearTaxInvoice() {
         memo = null
     }
 

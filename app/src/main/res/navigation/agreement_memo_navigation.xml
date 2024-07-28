@@ -27,7 +27,7 @@
         android:label="Add Equipment"
         tools:layout="@layout/fragment_agreement_memo_add_equipment">
         <argument
-            android:name="equipment"
+            android:name="product"
             app:argType="string"
             app:nullable="false" />
     </fragment>

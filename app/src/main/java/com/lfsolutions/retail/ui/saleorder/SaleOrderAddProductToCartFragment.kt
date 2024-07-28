@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.taxinvoice
+package com.lfsolutions.retail.ui.saleorder
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.lfsolutions.retail.databinding.FragmentAddToCartBinding
 
-class AddToCartFragment : Fragment() {
+class SaleOrderAddProductToCartFragment : Fragment() {
 
     private var _binding: FragmentAddToCartBinding? = null
 
@@ -42,7 +42,7 @@ class AddToCartFragment : Fragment() {
 
             if (isChecked) {
 
-                mBinding.checkboxRent.isChecked = false
+                mBinding.checkboxIsExpired.isChecked = false
 
                 mBinding.checkboxExchange.isChecked = false
 
@@ -50,7 +50,7 @@ class AddToCartFragment : Fragment() {
 
         }
 
-        mBinding.checkboxRent.setOnCheckedChangeListener { _, isChecked ->
+        mBinding.checkboxIsExpired.setOnCheckedChangeListener { _, isChecked ->
 
             if (isChecked) {
 
@@ -66,7 +66,7 @@ class AddToCartFragment : Fragment() {
 
             if (isChecked) {
 
-                mBinding.checkboxRent.isChecked = false
+                mBinding.checkboxIsExpired.isChecked = false
 
                 mBinding.checkboxFOC.isChecked = false
 
@@ -96,12 +96,6 @@ class AddToCartFragment : Fragment() {
                 mBinding.txtQty.text = (qty + 1).toString()
 
             }
-
-        }
-
-        mBinding.flowBack.setOnClickListener {
-
-            it.findNavController().popBackStack()
 
         }
 

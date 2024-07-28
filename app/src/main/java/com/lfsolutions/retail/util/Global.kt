@@ -5,23 +5,21 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import com.videotel.digital.util.DateTime
+import java.text.NumberFormat
+import java.util.Locale
+
 
 fun makeTextBold(
-    text: String,
-    startIndex: Int
-): SpannableStringBuilder =
-    SpannableStringBuilder(text).let { spannable ->
+    text: String, startIndex: Int
+): SpannableStringBuilder = SpannableStringBuilder(text).let { spannable ->
 
-        spannable.setSpan(
-            StyleSpan(Typeface.BOLD),
-            startIndex,
-            text.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+    spannable.setSpan(
+        StyleSpan(Typeface.BOLD), startIndex, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
 
-        spannable
+    spannable
 
-    }
+}
 
 
 fun String?.formatToDate(): String? {
@@ -32,10 +30,12 @@ fun String?.formatToDate(): String? {
 }
 
 fun String.formatDecimalSeparator(): String {
-    return this.reversed()
-        .chunked(3)
-        .joinToString(",")
-        .reversed()
+    if (this == null) return "0"
+    else {
+        val fmt = NumberFormat.getCurrencyInstance(Locale.getDefault())
+        fmt.maximumFractionDigits = 2
+        return fmt.format(this.toDouble()).replace(fmt.currency.symbol, "")
+    }
 }
 
 fun Int.formatDecimalSeparator(): String {

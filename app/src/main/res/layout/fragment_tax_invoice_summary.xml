@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.lfsolutions.retail.ui.widgets.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        app:cardBackgroundColor="@color/sandal"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/cardPriceInfo"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        tools:listitem="@layout/item_equipment" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPriceInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblQTY"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_quantity"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtQTY"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowQty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:constraint_referenced_ids="lblQTY,txtQTY"
+                app:layout_constraintBaseline_toTopOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread_inside" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblTotalAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Value"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtTotalAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowTotalAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="lblTotalAmount,txtTotalAmount"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowQty" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblDiscounts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Discount"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtDiscounts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="lblDiscounts,txtDiscounts"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowTotalAmount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblSubTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Sub Total"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtSubTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowSubTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="lblSubTotal,txtSubTotal"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowDiscount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblTaxAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Tax Amount"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtTaxAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowTaxAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="lblTaxAmount,txtTaxAmount"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowSubTotal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_total"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:constraint_referenced_ids="lblTotal,txtTotal"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowTaxAmount" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintTop_toBottomOf="@+id/flowTotal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white_background"
+                    android:text="@string/label_clear" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnComplete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_yellow_background"
+                    android:text="@string/label_complete" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

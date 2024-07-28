@@ -80,7 +80,11 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun openTaxForm() {
         mBinding.root.findNavController()
-            .navigate(R.id.action_navigation_current_forms_to_navigation_tax_invoice)
+            .navigate(
+                R.id.action_navigation_current_forms_to_navigation_tax_invoice,
+                Bundle().apply {
+                    putString(Constants.Customer, Gson().toJson(customer))
+                })
     }
 
     private fun openInvoiceForm() {

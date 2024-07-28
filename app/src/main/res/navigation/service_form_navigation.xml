@@ -27,7 +27,7 @@
         android:label="Add Equipment"
         tools:layout="@layout/fragment_service_form_add_equipment">
         <argument
-            android:name="equipment"
+            android:name="product"
             app:argType="string"
             app:nullable="false" />
     </fragment>

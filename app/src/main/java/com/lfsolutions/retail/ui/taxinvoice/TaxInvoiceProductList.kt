@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.taxinvoice
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,50 +6,57 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentAgreementMemoEquipmentListBinding
+import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceEquipmentListBinding
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.Product
-import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
+import com.lfsolutions.retail.ui.adapter.ProductListAdapter
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class AgreementMemoEquipmentListFragment : Fragment() {
+class TaxInvoiceProductList : Fragment() {
 
-    private var equipmentlist: List<Product> = arrayListOf()
+    private lateinit var categorySelected: CategoryItem
     private lateinit var customer: Customer
-    private lateinit var _binding: FragmentAgreementMemoEquipmentListBinding
-    private val mBinding get() = _binding!!
-    private lateinit var mAdapter: EquipmentAdapter
     private lateinit var categoryAdapter: ProductCategoryAdapter
-    private var categories = ArrayList<CategoryItem>()
+    private var productList: List<Product> = arrayListOf()
+    private var categories: ArrayList<CategoryItem> = arrayListOf()
+    private lateinit var binding: FragmentSaleOrderInvoiceEquipmentListBinding
+    private lateinit var mAdapter: ProductListAdapter
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        if (::_binding.isInitialized.not()) {
-            _binding = FragmentAgreementMemoEquipmentListBinding.inflate(inflater, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        if (::binding.isInitialized.not()) {
+            binding = FragmentSaleOrderInvoiceEquipmentListBinding.inflate(layoutInflater)
             customer =
                 Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }
-        return mBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,11 +67,12 @@ class AgreementMemoEquipmentListFragment : Fragment() {
             getProductCategory()
             return
         }
-        if (equipmentlist.isEmpty()) {
+        if (productList.isEmpty()) {
             getEquipmentList()
             return
         }
     }
+
 
     private fun getProductCategory() {
         NetworkCall.make()
@@ -90,20 +98,25 @@ class AgreementMemoEquipmentListFragment : Fragment() {
     private fun updateCategoryAdapter() {
         categoryAdapter = ProductCategoryAdapter(categories, object : OnCategoryItemClicked {
             override fun onCategoryItemClicked(categoryItem: CategoryItem) {
-                if (categoryItem.name.equals("All").not()) {
-                    updateEquipmentListView(equipmentlist.filter { it.categoryName == categoryItem.name })
-                } else {
-                    updateEquipmentListView(equipmentlist.toList())
-                }
+                updateSelectedCategoryProducts(categoryItem)
             }
         })
-        mBinding.categoriesRecyclerView.adapter = categoryAdapter
+        binding.categoriesRecyclerView.adapter = categoryAdapter
+    }
+
+    private fun updateSelectedCategoryProducts(categoryItem: CategoryItem) {
+        if (categoryItem.name.equals("All").not()) {
+            updateEquipmentListView(productList.filter { it.categoryName == categoryItem.name })
+        } else {
+            updateEquipmentListView(productList.toList())
+        }
+        categorySelected = categoryItem
     }
 
     private fun setData() {
-        mBinding.header.setBackText("Equipment List")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
-        mBinding.header.setOnBackClick {
+        binding.header.setBackText("Product List")
+        Main.app.getSession().name?.let { binding.header.setName(it) }
+        binding.header.setOnBackClick {
             findNavController().popBackStack()
         }
     }
@@ -113,10 +126,9 @@ class AgreementMemoEquipmentListFragment : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading products"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-
                     (response?.body() as RetailResponse<EquipmentListResult>).result?.items?.toList()
-                        ?.let { equipmentlist = it }
-                    equipmentlist.toList()?.let { updateEquipmentListView(it) }
+                        ?.let { productList = it }
+                    productList.toList()?.let { updateEquipmentListView(it) }
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -129,16 +141,22 @@ class AgreementMemoEquipmentListFragment : Fragment() {
     }
 
     private fun updateEquipmentListView(products: List<Product>) {
-        mAdapter = EquipmentAdapter(products)
-        mAdapter.setListener(object : EquipmentAdapter.OnEquipmentClickListener {
-            override fun onEquipmentClick(product: Product) {
+        mAdapter = ProductListAdapter(products)
+        mAdapter.setListener(object : ProductListAdapter.OnProductClickListener {
+            override fun onProductClick(product: Product) {
                 findNavController().navigate(
-                    R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment,
+                    R.id.action_navigation_tax_invoice_equipment_list_to_navigation_tax_invoice_add_product_to_cart,
                     bundleOf(Constants.Product to Gson().toJson(product))
                 )
             }
         })
-        mBinding.recyclerView.adapter = mAdapter
+        binding.recyclerView.adapter = mAdapter
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::categorySelected.isInitialized) {
+            updateSelectedCategoryProducts(categorySelected)
+        }
+    }
 }

@@ -6,7 +6,7 @@ object Constants {
     const val IsServiceForm = "IsServiceForm"
     val Logout: CharSequence = "Logout"
     val ViewProfile: CharSequence = "View Profile"
-    const val Equipment: String = "equipment"
+    const val Product: String = "product"
     const val Form: String = "form"
     const val Customer: String = "customer"
     const val SESSION: String = "session"

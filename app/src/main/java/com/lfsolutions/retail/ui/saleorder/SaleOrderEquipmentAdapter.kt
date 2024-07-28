@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.serviceform
+package com.lfsolutions.retail.ui.saleorder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,29 +6,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.ItemEquipmentBinding
+import com.lfsolutions.retail.databinding.ItemProductBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
 
-class EquipmentAdapter(val productList: List<Product>?) :
-    RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
+class SaleOrderEquipmentAdapter(private val products: List<Product>) :
+    RecyclerView.Adapter<SaleOrderEquipmentAdapter.ViewHolder>() {
 
     private var mListener: OnEquipmentClickListener? = null
 
-    class ViewHolder(val binding: ItemEquipmentBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): ViewHolder = ViewHolder(
-        ItemEquipmentBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun getItemCount(): Int = productList?.size ?: 0
+    override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val equipment = productList?.get(position)
+        val equipment = products?.get(position)
         holder.itemView.tag = equipment
         holder.binding.txtProductName.text = equipment?.productName
         holder.binding.txtCategory.text =
@@ -44,9 +40,10 @@ class EquipmentAdapter(val productList: List<Product>?) :
         }
     }
 
-    fun setListener(listener: OnEquipmentClickListener) {
-        mListener = listener
+    fun setListener(onEquipmentClickListener: OnEquipmentClickListener) {
+        this.mListener = onEquipmentClickListener
     }
+
 
     interface OnEquipmentClickListener {
         fun onEquipmentClick(product: Product)

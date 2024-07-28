@@ -1,9 +1,12 @@
 package com.lfsolutions.retail.model
 
+import com.github.gcacace.signaturepad.BuildConfig
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 
 
-data class Equipment(
+data class Product(
     @SerializedName("inventoryCode") var inventoryCode: String? = null,
     @SerializedName("productId") var productId: Long? = null,
     @SerializedName("productName") var productName: String? = null,
@@ -14,6 +17,7 @@ data class Equipment(
     @SerializedName("cost") var cost: Int? = null,
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,
+    @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
     @SerializedName("type") var type: String? = null
 ) {
     fun isSerialEquipment(): Boolean {

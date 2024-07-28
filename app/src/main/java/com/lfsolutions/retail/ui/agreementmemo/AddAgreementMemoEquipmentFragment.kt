@@ -13,8 +13,7 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoAddEquipmentBinding
-import com.lfsolutions.retail.model.CategoryItem
-import com.lfsolutions.retail.model.Equipment
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentType
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.RetailResponse
@@ -26,7 +25,6 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
-import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
@@ -39,9 +37,9 @@ import retrofit2.Response
 
 class AddAgreementMemoEquipmentFragment : Fragment() {
 
-    private var equipment: Equipment? = null
+    private var product: Product? = null
     private lateinit var _binding: FragmentAgreementMemoAddEquipmentBinding
-    private val mBinding get() = _binding!!
+    private val mBinding get() = _binding
     private lateinit var mAdapter: MultiSelectListAdapter
     private val args by navArgs<AddAgreementMemoEquipmentFragmentArgs>()
     private var equipmentTypes: List<EquipmentType>? = null
@@ -51,10 +49,10 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (::_binding.isInitialized.not()) {
             _binding = FragmentAgreementMemoAddEquipmentBinding.inflate(inflater, container, false)
-            equipment = Gson().fromJson(args.equipment, Equipment::class.java)
+            product = Gson().fromJson(args.product, Product::class.java)
         }
         return mBinding.root
 
@@ -96,7 +94,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                 }
             }).enque(
                 Network.api()?.getSerialNumbers(
-                    equipment?.productId, Main.app.getSession().defaultLocationId?.toLong()
+                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
                 )
             ).execute()
     }
@@ -168,17 +166,17 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
 
     private fun setData() {
-        mBinding.txtQty.text = if (equipment?.qtyOnHand == 0) "0" else "1"
-        mBinding.txtProductName.text = equipment?.productName
-        mBinding.txtCategory.text = equipment?.categoryName
+        mBinding.txtQty.text = if (product?.qtyOnHand == 0) "0" else "1"
+        mBinding.txtProductName.text = product?.productName
+        mBinding.txtCategory.text = product?.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
-        Glide.with(this).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
+            Main.app.getSession().currencySymbol + product?.cost?.formatDecimalSeparator()
+        Glide.with(this).load(Main.app.getBaseUrl() + product?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
-            if (equipment?.isSerialEquipment() == true) View.VISIBLE else View.GONE
+            if (product?.isSerialEquipment() == true) View.VISIBLE else View.GONE
         Main.app.getSession().name?.let { mBinding.header.setName(it) }
-        equipment?.productName?.let { mBinding.header.setBackText(it) }
+        product?.productName?.let { mBinding.header.setBackText(it) }
     }
 
 
@@ -209,12 +207,12 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (equipment?.isSerialEquipment() == true && selectedSerialNumbers.isEmpty()) {
+            if (product?.isSerialEquipment() == true && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
                 return@setOnClickListener
             }
 
-            if (equipment?.isSerialEquipment() == true && mBinding.txtQty.text.toString()
+            if (product?.isSerialEquipment() == true && mBinding.txtQty.text.toString()
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
@@ -240,18 +238,18 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
         }
 
         val qty = mBinding.txtQty.text.toString().toInt()
-        val cost = equipment?.cost ?: 0
+        val cost = product?.cost ?: 0
         Main.app.getAgreementMemo()?.addEquipment(
             AgreementMemoDetail(
-                ProductId = equipment?.productId?.toInt() ?: 0,
-                ProductName = equipment?.productName,
-                UnitName = equipment?.unitName,
-                UnitId = equipment?.unitId,
+                ProductId = product?.productId?.toInt() ?: 0,
+                ProductName = product?.productName,
+                UnitName = product?.unitName,
+                UnitId = product?.unitId,
                 Qty = qty,
-                QtyOnHand = equipment?.qtyOnHand,
+                QtyOnHand = product?.qtyOnHand,
                 Cost = cost,
                 TotalCost = qty * cost,
-                Type = equipment?.type,
+                Type = product?.type,
                 AgreementType = getAgreementType(),
                 AgreementTypeDisplayText = getAgreementTypeDisplayText(),
                 ProductBatchList = batchList
@@ -270,7 +268,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     private fun updateTotal() {
         mBinding.txtTotalPrice.text =
-            equipment?.cost?.let {
+            product?.cost?.let {
                 Main.app.getSession().currencyCode + (mBinding.txtQty.text.toString()
                     .toInt() * it).formatDecimalSeparator()
             }

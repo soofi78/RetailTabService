@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.serviceform
+package com.lfsolutions.retail.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,29 +6,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.ItemEquipmentBinding
+import com.lfsolutions.retail.databinding.ItemProductBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
 
-class EquipmentAdapter(val productList: List<Product>?) :
-    RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
+class ProductListAdapter(private val products: List<Product>) :
+    RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
-    private var mListener: OnEquipmentClickListener? = null
+    private var mListener: OnProductClickListener? = null
 
-    class ViewHolder(val binding: ItemEquipmentBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): ViewHolder = ViewHolder(
-        ItemEquipmentBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun getItemCount(): Int = productList?.size ?: 0
+    override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val equipment = productList?.get(position)
+        val equipment = products?.get(position)
         holder.itemView.tag = equipment
         holder.binding.txtProductName.text = equipment?.productName
         holder.binding.txtCategory.text =
@@ -40,15 +36,16 @@ class EquipmentAdapter(val productList: List<Product>?) :
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
         holder.itemView.setOnClickListener {
-            mListener?.onEquipmentClick(it.tag as Product)
+            mListener?.onProductClick(it.tag as Product)
         }
     }
 
-    fun setListener(listener: OnEquipmentClickListener) {
-        mListener = listener
+    fun setListener(onProductClickListener: OnProductClickListener) {
+        this.mListener = onProductClickListener
     }
 
-    interface OnEquipmentClickListener {
-        fun onEquipmentClick(product: Product)
+
+    interface OnProductClickListener {
+        fun onProductClick(product: Product)
     }
 }

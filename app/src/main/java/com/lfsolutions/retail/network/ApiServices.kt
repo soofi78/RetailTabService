@@ -88,7 +88,7 @@ interface ApiServices {
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
             .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
     )
-    fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<*>>?
+    fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<String>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_STOCK_TRANSFER))
     fun createUpdateStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?
