@@ -11,4 +11,11 @@ data class ApplicableTaxes(
     override fun toString(): String {
         return name.toString()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (name.equals((other as ApplicableTaxes).name)) {
+            return true
+        }
+        return super.equals(other)
+    }
 }

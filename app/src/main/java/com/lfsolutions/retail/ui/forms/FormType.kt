@@ -4,7 +4,7 @@ enum class FormType(val typeName: String) {
     AgreementMemo("Agreement Memo"),
     ServiceForm("Complaint Service"),
     InvoiceForm("Sale Invoice"),
-    TaxForm("Tax Invoice");
+    SaleOrder("Sale Order");
 
     companion object {
         fun find(title: String): FormType? {

@@ -112,5 +112,6 @@
     <string name="label_action_type">Action Type</string>
     <string name="label_complaint_types">Complaint Type</string>
     <string name="label_expired">Expired</string>
+    <string name="label_view_sale_invoice">View Sale Invoice</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -16,6 +17,9 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.PaymentTerm
+import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.network.BaseResponse
@@ -38,6 +42,7 @@ import java.util.Date
 
 class TaxInvoiceFragment : Fragment() {
 
+    private lateinit var paymentTerms: ArrayList<PaymentTerm>
     private lateinit var binding: FragmentSaleOrderTaxInvoiceBinding
     private val args by navArgs<TaxInvoiceFragmentArgs>()
     private lateinit var customer: Customer
@@ -58,6 +63,8 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.SalesInvoice?.CustomerId = customer.id
             Main.app.getTaxInvoice()?.SalesInvoice?.LocationId =
                 Main.app.getSession().defaultLocationId
+            Main.app.getTaxInvoice()?.SalesInvoice?.SalespersonId =
+                Main.app.getSession().salesPersonId
             Main.app.getTaxInvoice()?.SalesInvoice?.CreationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
@@ -80,6 +87,18 @@ class TaxInvoiceFragment : Fragment() {
         addOnClickListener()
         setHeaderData()
         setCustomerData()
+        getPaymentTerms()
+        binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
+        binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
+        binding.dateSelectionView.setOnClickListener {
+            DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+                override fun onDateSelected(year: String, month: String, day: String) {
+                    binding.date.setText("$day-$month-$year")
+                    Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDate =
+                        year + "-" + month + "-" + day + "T00:00:00Z"
+                }
+            })
+        }
     }
 
     private fun setHeaderData() {
@@ -103,6 +122,31 @@ class TaxInvoiceFragment : Fragment() {
         binding.txtArea.text =
             makeTextBold(text = getString(R.string.prefix_area, customer.area), startIndex = 7)
 
+    }
+
+    private fun getPaymentTerms() {
+        if (::paymentTerms.isInitialized.not())
+            NetworkCall.make()
+                .autoLoadigCancel(Loading().forApi(requireActivity()))
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                        (response?.body() as RetailResponse<PaymentTermsResult>).result?.items?.let {
+                            paymentTerms = it
+                            setEquipmentTypesAdapter()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                        Notify.toastLong("Unable to get equipment list")
+                    }
+                }).enque(Network.api()?.getPaymentTerms()).execute()
+    }
+
+    private fun setEquipmentTypesAdapter() {
+        val adapter = ArrayAdapter(
+            requireActivity(), R.layout.simple_text_item, paymentTerms
+        )
+        binding.spinnerPaymentTerms.adapter = adapter
     }
 
     private fun addOnClickListener() {
@@ -137,8 +181,15 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.serializeItems()
             Main.app.getTaxInvoice()?.SalesInvoice?.CustomerName =
                 binding.inputCustomerName.text.toString()
+            Main.app.getTaxInvoice()?.SalesInvoice?.PaymentTermName =
+                getSelectedPaymentTerm().displayText
+            Main.app.getTaxInvoice()?.SalesInvoice?.PaymentTermId = getSelectedPaymentTerm().value
             uploadSignature()
         }
+    }
+
+    private fun getSelectedPaymentTerm(): PaymentTerm {
+        return paymentTerms[binding.spinnerPaymentTerms.selectedItemPosition]
     }
 
 

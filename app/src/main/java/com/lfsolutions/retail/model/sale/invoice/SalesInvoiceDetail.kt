@@ -26,7 +26,7 @@ data class SalesInvoiceDetail(
     @SerializedName("HSNCode") var HSNCode: String? = null,
     @SerializedName("SlNo") var SlNo: Int? = null,
     @SerializedName("Remarks") var Remarks: String? = null,
-    @SerializedName("TaxForProduct") var TaxForProduct: ArrayList<String> = arrayListOf(),
+    @SerializedName("TaxForProduct") var TaxForProduct: ArrayList<ApplicableTaxes> = arrayListOf(),
     @SerializedName("ApplicableTaxes") var ApplicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
     @SerializedName("ProductBarcode") var ProductBarcode: String? = null,
     @SerializedName("AverageCost") var AverageCost: Int? = 0,

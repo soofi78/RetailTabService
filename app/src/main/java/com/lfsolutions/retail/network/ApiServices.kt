@@ -13,6 +13,7 @@ import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.LoginRequest
+import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
@@ -52,6 +53,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
     fun getComplaintTypes(): Call<RetailResponse<ComplaintTypeResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_PAYMENT_TERMS))
+    fun getPaymentTerms(): Call<RetailResponse<PaymentTermsResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
     fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>

@@ -89,6 +89,10 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun setApplicableTaxAdapter() {
+
+        if (product?.applicableTaxes?.indexOf(ApplicableTaxes(name = "N/A")) == -1) {
+            product.applicableTaxes?.add(ApplicableTaxes(0, "N/A", 0))
+        }
         val adapter = product?.applicableTaxes?.let {
             ArrayAdapter(
                 requireActivity(), R.layout.simple_text_item, it
@@ -98,6 +102,11 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun getApplicableTax(): ApplicableTaxes? {
+        if (product.applicableTaxes?.get(mBinding.spinnerApplicableTax.selectedItemPosition)?.name.equals(
+                "N/A"
+            )
+        )
+            return null
         return product.applicableTaxes?.get(mBinding.spinnerApplicableTax.selectedItemPosition)
     }
 
@@ -234,6 +243,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         ).apply {
             if (getApplicableTax() != null) {
                 ApplicableTaxes = arrayListOf(getApplicableTax()!!)
+                TaxForProduct = arrayListOf(getApplicableTax()!!)
             }
         })
     }

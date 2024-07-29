@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class UserSession(
     @SerializedName("userId") var userId: Int? = null,
     @SerializedName("tenantId") var tenantId: Int? = null,
+    @SerializedName("salesPersonId") var salesPersonId: Int? = null,
     @SerializedName("timeZoneUtc") var timeZoneUtc: String? = null,
     @SerializedName("currencySymbol") var currencySymbol: String? = null,
     @SerializedName("currencyCode") var currencyCode: String? = null,

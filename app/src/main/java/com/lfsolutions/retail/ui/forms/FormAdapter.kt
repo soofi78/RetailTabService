@@ -49,7 +49,7 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
                 FormType.AgreementMemo -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
                 FormType.InvoiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)
                 FormType.ServiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)
-                FormType.TaxForm -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
+                FormType.SaleOrder -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
                 null -> {}
             }
         }
