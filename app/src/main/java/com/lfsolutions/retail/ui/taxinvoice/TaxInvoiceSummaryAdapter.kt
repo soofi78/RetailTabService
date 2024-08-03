@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.util.formatDecimalSeparator
@@ -36,14 +38,24 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + salveInvoiceDetails?.get(position)?.NetTotal?.formatDecimalSeparator()
         holder.binding.txtProductName.text = salveInvoiceDetails?.get(position)?.ProductName
+        Glide.with(holder.binding.imgProduct.context)
+            .load(Main.app.getBaseUrl() + salveInvoiceDetails?.get(position)?.ProductImage)
+            .centerCrop()
+            .placeholder(R.drawable.no_image)
+            .into(holder.binding.imgProduct)
         holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text =
             if (salveInvoiceDetails?.get(position)?.IsFOC == true) "FOC" else if (salveInvoiceDetails?.get(
                     position
                 )?.IsExchange == true
             ) "Exchange" else if (salveInvoiceDetails?.get(position)?.IsExpire == true) "Expire" else "None"
+
+        holder.binding.txtTag.visibility =
+            if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
+
+        holder.itemView.tag = salveInvoiceDetails?.get(position)
         holder.itemView.setOnClickListener {
-            mListener?.onOrderSummarySelect()
+            mListener?.onOrderSummarySelect(it.tag as SalesInvoiceDetail)
         }
 
     }
@@ -58,7 +70,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
     }
 
     interface OnOrderSummarySelectListener {
-        fun onOrderSummarySelect()
+        fun onOrderSummarySelect(salesInvoiceDetail: SalesInvoiceDetail)
     }
 
 }

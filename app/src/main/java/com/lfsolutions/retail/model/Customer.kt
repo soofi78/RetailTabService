@@ -19,6 +19,7 @@ data class Customer(
     @SerializedName("group") var group: String? = null,
     @SerializedName("area") var area: String? = null,
     @SerializedName("creationTimes") var creationTimes: String? = null,
+    @SerializedName("paymentTermId") var paymentTermId: Int? = null,
     @SerializedName("isDeleted") var isDeleted: Boolean? = null,
     @SerializedName("deleterUserId") var deleterUserId: String? = null,
     @SerializedName("deletionTime") var deletionTime: String? = null,

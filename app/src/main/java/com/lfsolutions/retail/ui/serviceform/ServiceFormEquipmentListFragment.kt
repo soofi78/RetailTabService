@@ -54,13 +54,13 @@ class ServiceFormEquipmentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setData()
-        updateEquipmentListView(arrayListOf())
         if (categories.isEmpty()) {
             getProductCategory()
             return
         }
 
         if (equipmentlist.isEmpty()) {
+            updateEquipmentListView(arrayListOf())
             getEquipmentList()
         }
     }

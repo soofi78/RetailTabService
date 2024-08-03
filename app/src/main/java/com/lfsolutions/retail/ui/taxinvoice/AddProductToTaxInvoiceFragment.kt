@@ -67,7 +67,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun setData() {
-        mBinding.txtQty.text = if (product?.qtyOnHand == 0) "0" else "1"
+        mBinding.txtQty.text = "1"
         mBinding.txtProductName.text = product?.productName
         mBinding.txtCategory.text = product?.categoryName
         mBinding.txtPrice.text =
@@ -78,6 +78,9 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             if (product.isSerialEquipment()) View.VISIBLE else View.GONE
         mBinding.serialNumberRecyclerView.visibility =
             if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+        mBinding.lblTaxAsterik.visibility = View.GONE
+        mBinding.lblApplicableTax.visibility = View.GONE
+        mBinding.spinnerApplicableTax.visibility = View.GONE
     }
 
     private fun setHeaderData() {
@@ -101,13 +104,15 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         mBinding.spinnerApplicableTax.adapter = adapter
     }
 
-    private fun getApplicableTax(): ApplicableTaxes? {
-        if (product.applicableTaxes?.get(mBinding.spinnerApplicableTax.selectedItemPosition)?.name.equals(
-                "N/A"
-            )
-        )
-            return null
-        return product.applicableTaxes?.get(mBinding.spinnerApplicableTax.selectedItemPosition)
+    private fun getApplicableTax(): Int {
+        if (product.applicableTaxes == null || product.applicableTaxes?.isEmpty() == true)
+            return 0
+
+        var tax = 0
+        product.applicableTaxes?.forEach {
+            tax += it.taxRate ?: 0
+        }
+        return tax
     }
 
     private fun addOnCheckedChangeListener() {
@@ -163,17 +168,17 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         }
 
         mBinding.btnSave.setOnClickListener {
-            if (mBinding.txtQty.text.toString().equals("0")) {
+            if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
                 return@setOnClickListener
             }
 
-            if (product?.isSerialEquipment() == true && selectedSerialNumbers.isEmpty()) {
+            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
                 return@setOnClickListener
             }
 
-            if (product?.isSerialEquipment() == true && mBinding.txtQty.text.toString()
+            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
@@ -204,35 +209,37 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         }
 
         val qty = mBinding.txtQty.text.toString().toInt()
-        val totalAmount =
+        val subTotal =
             (mBinding.txtQty.text.toString().toInt() * (product?.cost ?: 0)).toDouble()
         val discount = 0.0
-        val subTotal = totalAmount - discount
-        val taxAmount = subTotal * ((getApplicableTax()?.taxRate ?: 0).toDouble() / 100.0)
+        val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
+        val netTotal = (subTotal - discount) + taxAmount
         val total = (subTotal + taxAmount)
         Main.app.getTaxInvoice()?.addEquipment(SalesInvoiceDetail(
             ProductId = product.productId?.toInt() ?: 0,
             InventoryCode = product.inventoryCode,
             ProductName = product.productName,
+            ProductImage = product.imagePath,
             UnitId = product.unitId,
             UnitName = product.unitName,
             Qty = qty,
             QtyStock = product.qtyOnHand,
-            Price = totalAmount,
+            Price = subTotal,
             NetCost = total,
+            CostWithoutTax = product?.cost?.toDouble() ?: 0.0,
             DepartmentId = 0,
             LastPurchasePrice = 0,
             SellingPrice = 0,
             MRP = 0,
             IsBatch = false,
-            ItemDiscount = discount,
-            ItemDiscountPerc = getApplicableTax()?.taxRate?.toDouble() ?: 0.0,
+            ItemDiscount = 0.0,
+            ItemDiscountPerc = 0.0,
             AverageCost = 0,
-            NetDiscount = discount,
+            NetDiscount = 0.0,
             SubTotal = subTotal,
-            NetTotal = totalAmount,
+            NetTotal = netTotal,
             Tax = taxAmount,
-            TotalValue = total,
+            TotalValue = subTotal,
             IsFOC = mBinding.checkboxFOC.isChecked,
             IsExchange = mBinding.checkboxExchange.isChecked,
             IsExpire = mBinding.checkboxIsExpired.isChecked,
@@ -241,9 +248,9 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             CreatorUserId = Main.app.getSession().userId,
             ProductBatchList = batchList
         ).apply {
-            if (getApplicableTax() != null) {
-                ApplicableTaxes = arrayListOf(getApplicableTax()!!)
-                TaxForProduct = arrayListOf(getApplicableTax()!!)
+            product.applicableTaxes?.let {
+                ApplicableTaxes = it
+                TaxForProduct = it
             }
         })
     }
@@ -291,13 +298,13 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             (mBinding.txtQty.text.toString().toInt() * (product?.cost ?: 0)).toDouble()
         val discount = 0.0
         val subTotal = totalAmount - discount
-        val taxAmount = subTotal * ((getApplicableTax()?.taxRate ?: 0) / 100.0)
+        val taxAmount = subTotal * (getApplicableTax() / 100.0)
         val total = (subTotal + taxAmount)
         mBinding.txtTotalAmount.text =
             currency + " " + totalAmount.toString().formatDecimalSeparator()
         mBinding.txtDiscounts.text = currency + " " + discount.toString().formatDecimalSeparator()
         mBinding.txtSubTotal.text = currency + " " + subTotal.toString().formatDecimalSeparator()
-        mBinding.lblTaxAmount.text = "Tax (" + getApplicableTax()?.name + ")"
+        mBinding.lblTaxAmount.text = "Tax (" + getApplicableTax() + "%)"
         mBinding.txtTaxAmount.text = currency + " " + taxAmount.toString().formatDecimalSeparator()
         mBinding.txtTotal.text = currency + " " + total.toString().formatDecimalSeparator()
     }

@@ -37,7 +37,7 @@ data class SalesInvoice(
     @SerializedName("DeliveryPersonName") var DeliveryPersonName: String? = null,
     @SerializedName("SalesPersonName") var SalesPersonName: String? = null,
     @SerializedName("AmountInWords") var AmountInWords: String? = null,
-    @SerializedName("PaymentTermId") var PaymentTermId: String? = null,
+    @SerializedName("PaymentTermId") var PaymentTermId: Int? = null,
     @SerializedName("BranchId") var BranchId: String? = null,
     @SerializedName("PaymentTermName") var PaymentTermName: String? = null,
     @SerializedName("FromLocationName") var FromLocationName: String? = null,

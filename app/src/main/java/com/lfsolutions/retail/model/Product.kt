@@ -23,4 +23,15 @@ data class Product(
     fun isSerialEquipment(): Boolean {
         return type.equals("S", true)
     }
+
+    fun getApplicableTaxRate(): Int {
+        if (applicableTaxes == null || applicableTaxes?.isEmpty() == true)
+            return 0
+
+        var tax = 0
+        applicableTaxes?.forEach {
+            tax += it.taxRate ?: 0
+        }
+        return tax
+    }
 }

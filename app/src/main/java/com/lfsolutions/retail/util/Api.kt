@@ -21,6 +21,7 @@ object Api {
         const val GET_PAYMENT_TERMS = "GetPaymentTermsForCombobox"
         const val GET_FEEDBACK = "GetAllActiveFeedBack"
         const val GET_EQUIPMENT = "Service/GetApiServiceProduct"
+        const val GET_PRODUCT_FOR_TAX_INVOICE = "Service/GetApiCustomerServiceProduct"
         const val GET_CATEGORIES = "category/GetCategories"
         const val GET_OUT_GOING_PRODUCT = "Service/GetOutGoingStockTransferProduct"
         const val GET_SERIAL_NUMBERS = "product/GetProductSerialNumbers"

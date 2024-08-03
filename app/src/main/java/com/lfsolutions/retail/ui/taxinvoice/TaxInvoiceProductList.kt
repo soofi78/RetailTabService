@@ -62,12 +62,12 @@ class TaxInvoiceProductList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setData()
-        updateEquipmentListView(arrayListOf())
         if (categories.isEmpty()) {
             getProductCategory()
             return
         }
         if (productList.isEmpty()) {
+            updateEquipmentListView(arrayListOf())
             getEquipmentList()
             return
         }
@@ -151,12 +151,5 @@ class TaxInvoiceProductList : Fragment() {
             }
         })
         binding.recyclerView.adapter = mAdapter
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (::categorySelected.isInitialized) {
-            updateSelectedCategoryProducts(categorySelected)
-        }
     }
 }

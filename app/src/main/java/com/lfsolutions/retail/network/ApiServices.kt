@@ -10,6 +10,7 @@ import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.LoginRequest
@@ -63,6 +64,8 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
     fun getEquipmentList(@Body locationIdRequestObject: LocationIdRequestObject): Call<RetailResponse<EquipmentListResult>>
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_FOR_TAX_INVOICE))
+    fun getProductForTaxInvoice(@Body request: LocationIdCustomerIdRequestObject): Call<RetailResponse<EquipmentListResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_OUT_GOING_PRODUCT))
     fun getOutGoingStockTransferProductList(@Body customerIdsList: CustomerIdsList): Call<RetailResponse<OutGoingStockProductsResults>>

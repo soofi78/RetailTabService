@@ -26,6 +26,7 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.outgoingstock.GenerateOutGoingStockBottomSheet
 import com.lfsolutions.retail.ui.outgoingstock.OutGoingStockSummaryActivity
+import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -54,7 +55,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
         setAdapters(null)
         if (Main.app.getSession().isSupervisor == false) {
@@ -66,7 +66,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
         mBinding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
         getCustomerDetails()
-
     }
 
     private fun generateOutStock(scheduledList: ArrayList<Customer>) {

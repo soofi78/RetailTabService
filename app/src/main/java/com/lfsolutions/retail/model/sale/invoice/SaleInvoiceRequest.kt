@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
 
 
 data class SaleInvoiceRequest(
@@ -14,13 +15,13 @@ data class SaleInvoiceRequest(
         updatePriceAndQty()
     }
 
-    fun updatePriceAndQty() {
+    fun updatePriceAndQty(dsc: Double = 0.0) {
         var qty = 0
         var netTotal = 0.0
-        var discount = 0.0
+        var discount = dsc
         var subTotal = 0.0
         var taxAmount = 0.0
-        var grandTotal = 0.0
+        var total = 0.0
 
         SalesInvoiceDetail.forEach {
             qty = qty.plus(it.Qty)
@@ -28,17 +29,23 @@ data class SaleInvoiceRequest(
             discount = discount.plus(it.NetDiscount)
             subTotal = subTotal.plus(it.SubTotal)
             taxAmount = taxAmount.plus(it.Tax)
-            grandTotal = grandTotal.plus(it.TotalValue)
+            total = total.plus(it.TotalValue)
 
         }
         SalesInvoice?.InvoiceQty = qty
-        SalesInvoice?.InvoiceTotalValue = netTotal
-        SalesInvoice?.InvoiceNetDiscount = discount
-        SalesInvoice?.InvoiceNetDiscount = discount
+        SalesInvoice?.InvoiceTotalValue = total
+        SalesInvoice?.InvoiceNetTotal = netTotal
         SalesInvoice?.InvoiceSubTotal = subTotal
         SalesInvoice?.InvoiceTax = taxAmount
-        SalesInvoice?.InvoiceGrandTotal = grandTotal
-        SalesInvoice?.Balance = grandTotal
+        SalesInvoice?.InvoiceGrandTotal = netTotal.minus(discount)
+        SalesInvoice?.Balance = netTotal.minus(discount)
+        SalesInvoice?.NetDiscount = discount
+        SalesInvoice?.InvoiceNetDiscount = discount
+        SalesInvoice?.InvoiceNetDiscountPerc =
+            (SalesInvoice?.InvoiceGrandTotal?.let {
+                discount.div(it)
+            })?.times(100)
+
 
     }
 

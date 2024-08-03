@@ -21,8 +21,8 @@ android {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 34
-        versionCode = 11
-        versionName = "0.0.11"
+        versionCode = 15
+        versionName = "0.0.15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,5 +74,5 @@ dependencies {
     implementation(libs.square.okhttp)
     implementation(libs.square.okhttp.logging.interceptor)
     implementation(libs.bumptech.glide)
-
+    implementation(libs.calculator)
 }

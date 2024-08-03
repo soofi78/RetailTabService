@@ -14,6 +14,7 @@ data class SalesInvoiceDetail(
     @SerializedName("ProductId") var ProductId: Int? = null,
     @SerializedName("InventoryCode") var InventoryCode: String? = null,
     @SerializedName("ProductName") var ProductName: String? = null,
+    @SerializedName("ProductImage") @Transient var ProductImage: String? = null,
     @SerializedName("Qty") var Qty: Int = 0,
     @SerializedName("Price") var Price: Double? = null,
     @SerializedName("UnitId") var UnitId: Int? = null,
@@ -22,6 +23,7 @@ data class SalesInvoiceDetail(
     @SerializedName("ItemDiscount") var ItemDiscount: Double? = null,
     @SerializedName("SubTotal") var SubTotal: Double = 0.0,
     @SerializedName("Tax") var Tax: Double = 0.0,
+    @SerializedName("TaxRate") @Transient var TaxRate: Double = 0.0,
     @SerializedName("NetTotal") var NetTotal: Double = 0.0,
     @SerializedName("HSNCode") var HSNCode: String? = null,
     @SerializedName("SlNo") var SlNo: Int? = null,
@@ -30,7 +32,8 @@ data class SalesInvoiceDetail(
     @SerializedName("ApplicableTaxes") var ApplicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
     @SerializedName("ProductBarcode") var ProductBarcode: String? = null,
     @SerializedName("AverageCost") var AverageCost: Int? = 0,
-    @SerializedName("NetCost") var NetCost: Double? = null,
+    @SerializedName("NetCost") var NetCost: Double? = 0.0,
+    @SerializedName("CostWithoutTax") @Transient var CostWithoutTax: Double = 0.0,
     @SerializedName("DepartmentId") var DepartmentId: Int? = null,
     @SerializedName("SalesAccountId") var SalesAccountId: String? = null,
     @SerializedName("QtyStock") var QtyStock: Int? = 0,
@@ -75,5 +78,11 @@ data class SalesInvoiceDetail(
                 if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber
         }
         return serials
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (ProductId == (other as SalesInvoiceDetail).ProductId)
+            return true
+        return super.equals(other)
     }
 }

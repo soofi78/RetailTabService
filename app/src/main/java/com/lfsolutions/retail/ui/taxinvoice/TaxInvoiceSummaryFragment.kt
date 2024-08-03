@@ -11,13 +11,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentTaxInvoiceSummaryBinding
+import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
+import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
+import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
+import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.maltaisn.calcdialog.CalcDialog
 
 import com.videotel.digital.util.Notify
+import java.math.BigDecimal
 
 
-class TaxInvoiceSummaryFragment : Fragment() {
+class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
+    private var discount: Double = 0.0
     private var itemSwipeHelper: ItemTouchHelper? = null
     private var _binding: FragmentTaxInvoiceSummaryBinding? = null
     private val mBinding get() = _binding!!
@@ -35,9 +42,8 @@ class TaxInvoiceSummaryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mAdapter = TaxInvoiceSummaryAdapter(Main.app.getTaxInvoice()?.SalesInvoiceDetail)
         mAdapter.setListener(object : TaxInvoiceSummaryAdapter.OnOrderSummarySelectListener {
-            override fun onOrderSummarySelect() {
-//                findNavController()
-//                    .navigate(R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment)
+            override fun onOrderSummarySelect(salesInvoiceDetail: SalesInvoiceDetail) {
+                openQuantityUpdateDialog(salesInvoiceDetail)
             }
         })
 
@@ -45,13 +51,73 @@ class TaxInvoiceSummaryFragment : Fragment() {
         itemSwipeHelper?.attachToRecyclerView(mBinding.recyclerView)
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
-        mBinding.header.setBackText("Order Summary")
+        mBinding.header.setBackText("Sale Invoice Summary")
         Main.app.getSession().name?.let { mBinding.header.setName(it) }
         addOnClickListener()
     }
 
+    private fun openQuantityUpdateDialog(salesInvoiceDetail: SalesInvoiceDetail) {
+        val modal = ProductQuantityUpdateSheet()
+        modal.setProductDetails(
+            salesInvoiceDetail.ProductImage.toString(),
+            salesInvoiceDetail.ProductName.toString(),
+            salesInvoiceDetail.Qty,
+            salesInvoiceDetail.NetTotal / salesInvoiceDetail.Qty,
+            salesInvoiceDetail.UnitName.toString()
+        )
+        modal.setOnProductDetailsChangedListener(object :
+            ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
+            override fun onQuantityChanged(quantity: Int) {
+                val index =
+                    Main.app.getTaxInvoice()?.SalesInvoiceDetail?.indexOf(salesInvoiceDetail) ?: -1
+                if (index > -1) {
+                    Main.app.getTaxInvoice()?.SalesInvoiceDetail?.get(index)?.apply {
+                        val subTotal = quantity * CostWithoutTax
+                        val discount = 0.0
+                        val taxAmount = subTotal * (TaxRate / 100.0)
+                        val netTotal = (subTotal - discount) + taxAmount
+                        val total = (subTotal + taxAmount)
+                        Qty = quantity
+                        Price = subTotal
+                        NetCost = total
+                        SubTotal = subTotal
+                        NetTotal = netTotal
+                        Tax = taxAmount
+                        TotalValue = subTotal
+                    }
+                    updateSummaryAmountAndQty()
+                    mAdapter.notifyItemChanged(index)
+                }
+            }
+
+            override fun onPriceChanged(price: Double) {
+                val index =
+                    Main.app.getTaxInvoice()?.SalesInvoiceDetail?.indexOf(salesInvoiceDetail) ?: -1
+                if (index > -1) {
+                    Main.app.getTaxInvoice()?.SalesInvoiceDetail?.get(index)?.apply {
+                        val subTotal = Qty * price
+                        val discount = 0.0
+                        val taxAmount = subTotal * (TaxRate / 100.0)
+                        val netTotal = (subTotal - discount) + taxAmount
+                        val total = (subTotal + taxAmount)
+                        Price = subTotal
+                        CostWithoutTax = price
+                        NetCost = total
+                        SubTotal = subTotal
+                        NetTotal = netTotal
+                        Tax = taxAmount
+                        TotalValue = subTotal
+                    }
+                    updateSummaryAmountAndQty()
+                    mAdapter.notifyItemChanged(index)
+                }
+            }
+        })
+        requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
+    }
+
     private fun updateSummaryAmountAndQty() {
-        Main.app.getTaxInvoice()?.updatePriceAndQty()
+        Main.app.getTaxInvoice()?.updatePriceAndQty(discount)
         Main.app.getTaxInvoice()?.serializeItems()
         val currency = Main.app.getSession().currencySymbol
         mBinding.txtQTY.text = Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceQty.toString()
@@ -59,7 +125,7 @@ class TaxInvoiceSummaryFragment : Fragment() {
                 Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceTotalValue.toString()
                     .formatDecimalSeparator()
         mBinding.txtDiscounts.text = "$currency " +
-                Main.app.getTaxInvoice()?.SalesInvoice?.NetDiscount.toString()
+                Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceNetDiscount.toString()
                     .formatDecimalSeparator()
         mBinding.txtSubTotal.text = "$currency " +
                 Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceSubTotal.toString()
@@ -160,6 +226,12 @@ class TaxInvoiceSummaryFragment : Fragment() {
     }
 
     private fun addOnClickListener() {
+        mBinding.checkboxFOC.setOnCheckedChangeListener { _, isChecked ->
+            Main.app.getTaxInvoice()?.SalesInvoice?.Type = if (isChecked) "F" else "N"
+        }
+        mBinding.flowDiscount.setOnClickListener {
+            Calculator.show(this)
+        }
         mBinding.btnCancel.setOnClickListener {
             Notify.toastLong("Cleared all items")
             Main.app.getTaxInvoice()?.SalesInvoiceDetail?.clear()
@@ -173,5 +245,10 @@ class TaxInvoiceSummaryFragment : Fragment() {
         mBinding.btnComplete.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    override fun onValueEntered(requestCode: Int, value: BigDecimal?) {
+        discount = value?.toDouble() ?: 0.0
+        updateSummaryAmountAndQty()
     }
 }
