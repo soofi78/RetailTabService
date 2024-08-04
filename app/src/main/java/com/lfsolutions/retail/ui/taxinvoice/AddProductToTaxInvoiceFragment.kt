@@ -92,10 +92,6 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun setApplicableTaxAdapter() {
-
-        if (product?.applicableTaxes?.indexOf(ApplicableTaxes(name = "N/A")) == -1) {
-            product.applicableTaxes?.add(ApplicableTaxes(0, "N/A", 0))
-        }
         val adapter = product?.applicableTaxes?.let {
             ArrayAdapter(
                 requireActivity(), R.layout.simple_text_item, it
@@ -227,6 +223,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             Price = subTotal,
             NetCost = total,
             CostWithoutTax = product?.cost?.toDouble() ?: 0.0,
+            TaxRate = product.getApplicableTaxRate().toDouble(),
             DepartmentId = 0,
             LastPurchasePrice = 0,
             SellingPrice = 0,
@@ -295,16 +292,16 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     private fun updateTotal() {
         val currency = Main.app.getSession().currencySymbol
         val totalAmount =
-            (mBinding.txtQty.text.toString().toInt() * (product?.cost ?: 0)).toDouble()
+            (mBinding.txtQty.text.toString().toInt() * (product.cost ?: 0)).toDouble()
         val discount = 0.0
         val subTotal = totalAmount - discount
-        val taxAmount = subTotal * (getApplicableTax() / 100.0)
+        val taxAmount = subTotal * (product.getApplicableTaxRate() / 100.0)
         val total = (subTotal + taxAmount)
         mBinding.txtTotalAmount.text =
             currency + " " + totalAmount.toString().formatDecimalSeparator()
         mBinding.txtDiscounts.text = currency + " " + discount.toString().formatDecimalSeparator()
         mBinding.txtSubTotal.text = currency + " " + subTotal.toString().formatDecimalSeparator()
-        mBinding.lblTaxAmount.text = "Tax (" + getApplicableTax() + "%)"
+        mBinding.lblTaxAmount.text = "Tax (" + product.getApplicableTaxRate() + "%)"
         mBinding.txtTaxAmount.text = currency + " " + taxAmount.toString().formatDecimalSeparator()
         mBinding.txtTotal.text = currency + " " + total.toString().formatDecimalSeparator()
     }

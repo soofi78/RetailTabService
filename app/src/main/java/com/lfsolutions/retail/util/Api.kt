@@ -6,6 +6,7 @@ object Api {
     const val CommonLookup = "CommonLookup/"
     const val Feedback = "Feedback/"
     const val SaleInvoice = "salesInvoice/"
+    const val SaleOrder = "salesOrder/"
 
     object Name {
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"

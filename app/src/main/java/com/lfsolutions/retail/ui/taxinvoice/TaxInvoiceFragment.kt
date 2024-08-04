@@ -124,25 +124,7 @@ class TaxInvoiceFragment : Fragment() {
 
     }
 
-    private fun getPaymentTerms() {
-        if (::paymentTerms.isInitialized.not())
-            NetworkCall.make()
-                .autoLoadigCancel(Loading().forApi(requireActivity()))
-                .setCallback(object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        (response?.body() as RetailResponse<PaymentTermsResult>).result?.items?.let {
-                            paymentTerms = it
-                            setEquipmentTypesAdapter()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                        Notify.toastLong("Unable to get equipment list")
-                    }
-                }).enque(Network.api()?.getPaymentTerms()).execute()
-    }
-
-    private fun setEquipmentTypesAdapter() {
+    private fun setPaymentTermsAdapter() {
         val adapter = ArrayAdapter(
             requireActivity(), R.layout.simple_text_item, paymentTerms
         )
@@ -288,6 +270,7 @@ class TaxInvoiceFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val result = response?.body() as BaseResponse<Any>
                     if (result.success == true) {
+                        Main.app.clearTaxInvoice()
                         Notify.toastLong("Tax Invoice Created")
                         findNavController().popBackStack()
                     } else {

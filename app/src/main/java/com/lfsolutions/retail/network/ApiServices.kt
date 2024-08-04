@@ -86,10 +86,8 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
     fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<BaseResponse<ComplaintServiceResponse>>?
 
-    @POST(
-        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
-    )
-    fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<*>>?
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER))
+    fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Any>>?
 
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)

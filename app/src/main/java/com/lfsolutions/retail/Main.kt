@@ -7,6 +7,8 @@ import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
+import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
+import com.lfsolutions.retail.model.sale.order.SalesOrder
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
@@ -15,6 +17,7 @@ import com.lfsolutions.retail.util.Constants
 
 class Main : Application() {
 
+    private var saleOrder: SaleOrderRequest? = null
     private var taxInvoice: SaleInvoiceRequest? = null
     private var stockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ComplaintServiceRequest? = null
@@ -47,6 +50,11 @@ class Main : Application() {
         return taxInvoice
     }
 
+    fun getSaleOrder(): SaleOrderRequest? {
+        if (saleOrder == null) saleOrder = SaleOrderRequest()
+        return saleOrder
+    }
+
     fun getComplaintService(): ComplaintServiceRequest? {
         if (complaintService == null) complaintService = ComplaintServiceRequest()
         return complaintService
@@ -57,7 +65,11 @@ class Main : Application() {
     }
 
     fun clearTaxInvoice() {
-        memo = null
+        taxInvoice = null
+    }
+
+    fun clearSaleOrder() {
+        saleOrder = null
     }
 
     fun clearComplaintService() {

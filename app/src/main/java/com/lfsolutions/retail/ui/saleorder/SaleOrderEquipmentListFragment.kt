@@ -7,24 +7,37 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceEquipmentListBinding
 import com.lfsolutions.retail.model.CategoryItem
+import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.Product
+import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.network.BaseResponse
+import com.lfsolutions.retail.network.Network
+import com.lfsolutions.retail.network.NetworkCall
+import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
+import com.lfsolutions.retail.ui.adapter.ProductListAdapter
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.Loading
+import com.videotel.digital.util.Notify
+import retrofit2.Call
+import retrofit2.Response
 
 class SaleOrderEquipmentListFragment : Fragment() {
-
     private lateinit var customer: Customer
-    private var _binding: FragmentSaleOrderInvoiceEquipmentListBinding? = null
+    private lateinit var binding: FragmentSaleOrderInvoiceEquipmentListBinding
     private lateinit var categoryAdapter: ProductCategoryAdapter
-    private var equipmentlist: List<Product> = arrayListOf()
     private var categories: ArrayList<CategoryItem> = arrayListOf()
-    private val mBinding get() = _binding!!
-
+    private var productList: List<Product> = arrayListOf()
     private lateinit var mAdapter: SaleOrderEquipmentAdapter
 
     override fun onCreateView(
@@ -32,35 +45,106 @@ class SaleOrderEquipmentListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = FragmentSaleOrderInvoiceEquipmentListBinding.inflate(layoutInflater)
-        customer =
-            Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
-        return mBinding.root
+        if (::binding.isInitialized.not()) {
+            binding = FragmentSaleOrderInvoiceEquipmentListBinding.inflate(layoutInflater)
+            customer =
+                Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
+        }
+        return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = SaleOrderEquipmentAdapter(equipmentlist)
+        setData()
+        if (categories.isEmpty()) {
+            getProductCategory()
+            return
+        }
+        if (productList.isEmpty()) {
+            updateEquipmentListView(arrayListOf())
+            getEquipmentList()
+            return
+        }
+    }
+
+    private fun getProductCategory() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Category List"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as BaseResponse<CategoryResult>).result?.items?.let {
+                        categories = it
+                    }
+                    categories.add(0, CategoryItem("All", isSelected = true))
+                    updateCategoryAdapter()
+                    getEquipmentList()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to category list")
+                }
+            }).enque(
+                Network.api()?.getProductCategories()
+            ).execute()
+    }
+
+    private fun updateCategoryAdapter() {
+        categoryAdapter = ProductCategoryAdapter(categories, object : OnCategoryItemClicked {
+            override fun onCategoryItemClicked(categoryItem: CategoryItem) {
+                updateSelectedCategoryProducts(categoryItem)
+            }
+        })
+        binding.categoriesRecyclerView.adapter = categoryAdapter
+    }
+
+    private fun updateSelectedCategoryProducts(categoryItem: CategoryItem) {
+        if (categoryItem.name.equals("All").not()) {
+            updateEquipmentListView(productList.filter { it.categoryName == categoryItem.name })
+        } else {
+            updateEquipmentListView(productList.toList())
+        }
+    }
+
+    private fun setData() {
+        binding.header.setBackText("Product List")
+        Main.app.getSession().name?.let { binding.header.setName(it) }
+        binding.header.setOnBackClick {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun getEquipmentList() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading products"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as RetailResponse<EquipmentListResult>).result?.items?.toList()
+                        ?.let { productList = it }
+                    productList.toList()?.let { updateEquipmentListView(it) }
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get equipment list")
+                }
+            }).enque(
+                Network.api()
+                    ?.getEquipmentList(LocationIdRequestObject(Main.app.getSession().defaultLocationId))
+            ).execute()
+    }
+
+    private fun updateEquipmentListView(products: List<Product>) {
+        mAdapter = SaleOrderEquipmentAdapter(products)
         mAdapter.setListener(object : SaleOrderEquipmentAdapter.OnEquipmentClickListener {
             override fun onEquipmentClick(product: Product) {
-                mBinding.root.findNavController()
+                findNavController()
                     .navigate(
-                        R.id.action_navigation_tax_invoice_equipment_list_to_navigation_tax_invoice_add_product_to_cart,
+                        R.id.action_navigation_sale_order_product_list_to_add_product_to_sale_order,
                         bundleOf(Constants.Product to Gson().toJson(product))
                     )
             }
         })
-
-        mBinding.recyclerView.adapter = mAdapter
-        addOnClickListener()
+        binding.recyclerView.adapter = mAdapter
     }
 
-    private fun addOnClickListener() {
-        mBinding.btnCart.setOnClickListener {
-//            it.findNavController()
-//                .navigate(R.id.action_navigation_product_list_to_navigation_tax_invoice)
-        }
-    }
 }

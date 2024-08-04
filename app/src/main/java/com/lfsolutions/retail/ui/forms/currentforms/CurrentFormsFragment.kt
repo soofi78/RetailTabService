@@ -73,7 +73,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
             FormType.AgreementMemo -> openAgreementMemo()
             FormType.ServiceForm -> openServiceForm()
             FormType.InvoiceForm -> openSaleInvoice()
-            FormType.SaleOrder -> openSaleInvoice()
+            FormType.SaleOrder -> openSaleOrder()
             null -> Notify.toastLong("Invalid form requested")
         }
     }
@@ -87,10 +87,10 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
                 })
     }
 
-    private fun openInvoiceForm() {
+    private fun openSaleOrder() {
         mBinding.root.findNavController()
             .navigate(
-                R.id.action_navigation_current_forms_to_navigation_product_list,
+                R.id.action_navigation_current_forms_to_sale_order,
                 Bundle().apply {
                     putString(Constants.Customer, Gson().toJson(customer))
                 })
