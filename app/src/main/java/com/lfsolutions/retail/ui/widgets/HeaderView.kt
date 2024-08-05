@@ -8,7 +8,7 @@ import com.lfsolutions.retail.databinding.HeadersBinding
 
 class HeaderView : LinearLayout {
 
-    private var binding: HeadersBinding? = null
+    var binding: HeadersBinding? = null
 
     constructor(context: Context?) : super(context)
 

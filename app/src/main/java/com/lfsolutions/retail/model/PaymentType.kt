@@ -2,7 +2,7 @@ package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PaymentTerm(
+data class PaymentType(
     @SerializedName("value") var value: String? = null,
     @SerializedName("displayText") var displayText: String? = null,
     @SerializedName("isSelected") var isSelected: Boolean? = null

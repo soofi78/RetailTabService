@@ -7,10 +7,13 @@ sealed class DocumentType {
 
     abstract val iconResId: Int
 
-    data class OutGoingStockRecord(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class OutGoingStockRecord(override val label: Int, override val iconResId: Int) :
+        DocumentType()
 
-    data class DailySalesRecord(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class DailySalesRecord(override val label: Int, override val iconResId: Int) :
+        DocumentType()
 
     data class DriverMemo(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class Payment(override val label: Int, override val iconResId: Int) : DocumentType()
 
 }

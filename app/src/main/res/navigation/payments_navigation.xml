@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/agreement_navigation"
+    app:startDestination="@id/navigation_customers_for_payment">
+
+    <fragment
+        android:id="@+id/navigation_customers_for_payment"
+        android:name="com.lfsolutions.retail.ui.documents.payment.CustomerForPaymentsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_customer_for_payment">
+        <action
+            android:id="@+id/action_navigation_customer_for_payments_to_customer_transactions"
+            app:destination="@id/navigation_customers_transactions"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_customers_transactions"
+        android:name="com.lfsolutions.retail.ui.documents.payment.CustomerSaleTransactionsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_customer_sale_transactions">
+
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+    </fragment>
+
+
+</navigation>

@@ -24,6 +24,12 @@
             android:name=".ui.forms.FormsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.documents.payment.PaymentFlowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.HomeActivity"
             android:exported="true" />

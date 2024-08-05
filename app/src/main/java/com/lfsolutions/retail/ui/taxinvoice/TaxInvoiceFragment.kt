@@ -17,8 +17,7 @@ import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
-import com.lfsolutions.retail.model.PaymentTerm
-import com.lfsolutions.retail.model.PaymentTermsResult
+import com.lfsolutions.retail.model.PaymentType
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
@@ -43,7 +42,7 @@ import java.util.Date
 
 class TaxInvoiceFragment : Fragment() {
 
-    private lateinit var paymentTerms: ArrayList<PaymentTerm>
+    private lateinit var paymentTypes: ArrayList<PaymentType>
     private lateinit var binding: FragmentSaleOrderTaxInvoiceBinding
     private val args by navArgs<TaxInvoiceFragmentArgs>()
     private lateinit var customer: Customer
@@ -126,7 +125,7 @@ class TaxInvoiceFragment : Fragment() {
 
     private fun setPaymentTermsAdapter() {
         val adapter = ArrayAdapter(
-            requireActivity(), R.layout.simple_text_item, paymentTerms
+            requireActivity(), R.layout.simple_text_item, paymentTypes
         )
         binding.spinnerPaymentTerms.adapter = adapter
     }

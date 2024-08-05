@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 
 data class PaymentTermsResult (
 
-  @SerializedName("items" ) var items : ArrayList<PaymentTerm> = arrayListOf()
+  @SerializedName("items" ) var items : ArrayList<PaymentType> = arrayListOf()
 
 )

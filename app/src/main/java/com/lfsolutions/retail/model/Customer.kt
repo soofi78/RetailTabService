@@ -28,5 +28,20 @@ data class Customer(
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null,
     @SerializedName("id") var id: Int? = null,
-    @SerializedName("selected") @Transient var isSelected: Boolean = false
+    @SerializedName("selected") @Transient var isSelected: Boolean = false,
+    @SerializedName("salesLimit") var salesLimit: Double? = null,
+    @SerializedName("isTaxExempt") var isTaxExempt: Boolean? = null,
+    @SerializedName("taxRegistrationNo") var taxRegistrationNo: String? = null,
+    @SerializedName("balanceAmount") var balanceAmount: Double? = null,
+    @SerializedName("priceGroupId") var priceGroupId: String? = null,
+    @SerializedName("salespersonId") var salespersonId: String? = null,
+    @SerializedName("salespersonName") var salespersonName: String? = null,
+    @SerializedName("priceGroup") var priceGroup: String? = null,
+    @SerializedName("type") var type: String? = null,
+    @SerializedName("isTaxInclusive") var isTaxInclusive: String? = null,
+    @SerializedName("isWalkIn") var isWalkIn: String? = null,
+    @SerializedName("thirdPartyId") var thirdPartyId: String? = null,
+    @SerializedName("bankDetails") var bankDetails: String? = null,
+    @SerializedName("customerImages") var customerImages: String? = null
 )
+

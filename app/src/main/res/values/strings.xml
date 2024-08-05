@@ -13,6 +13,7 @@
     <string name="prefix_group">Group - %s</string>
     <string name="prefix_account_no">A/C No. %s</string>
     <string name="prefix_area">Area - %s</string>
+    <string name="prefix_balance">Balance. %s</string>
 
     <string name="label_visitation_schedule">Visitation Schedule</string>
     <string name="label_all_customer">All Customers</string>
@@ -113,5 +114,6 @@
     <string name="label_complaint_types">Complaint Type</string>
     <string name="label_expired">Expired</string>
     <string name="label_view_sale_invoice">View Sale Invoice</string>
+    <string name="label_payment">Payment</string>
 
 </resources>

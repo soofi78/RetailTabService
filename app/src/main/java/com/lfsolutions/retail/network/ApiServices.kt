@@ -1,20 +1,22 @@
 package com.lfsolutions.retail.network
 
-import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.CustomerIdsList
+import com.lfsolutions.retail.model.CustomerPaymentsResult
+import com.lfsolutions.retail.model.CustomerResult
+import com.lfsolutions.retail.model.CustomerSaleTransaction
+import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
-import com.lfsolutions.retail.model.CustomerResult
-import com.lfsolutions.retail.model.EquipmentListResult
-import com.lfsolutions.retail.model.LocationIdRequestObject
-import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
-import com.lfsolutions.retail.model.service.Feedback
-import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
+import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
+import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
@@ -26,6 +28,7 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
+import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -55,8 +58,8 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
     fun getComplaintTypes(): Call<RetailResponse<ComplaintTypeResult>>
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_PAYMENT_TERMS))
-    fun getPaymentTerms(): Call<RetailResponse<PaymentTermsResult>>
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_PAYMENTS_TYPES))
+    fun getPaymentTerms(): Call<BaseResponse<PaymentTermsResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
     fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>
@@ -86,7 +89,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
     fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<BaseResponse<ComplaintServiceResponse>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER))
+    @POST(
+        Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
+    )
     fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Any>>?
 
     @POST(
@@ -104,6 +109,15 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
     fun getApiServiceProduct(@Body locationIdRequestObject: LocationIdRequestObject)
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FOR_PAYMENT))
+    fun getCustomersForPayment(): Call<RetailResponse<CustomerPaymentsResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_SALE_RECEIPT))
+    fun createSaleReceipt(@Body paymentRequest: PaymentRequest): Call<BaseResponse<Any>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_TRANSACTIONS))
+    fun getSalesTransactions(@Body saleTransactions: SaleTransactionRequestBody): Call<RetailResponse<ArrayList<CustomerSaleTransaction>>>
 }
 
 

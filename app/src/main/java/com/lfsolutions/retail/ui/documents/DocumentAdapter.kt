@@ -4,20 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.ItemDocumentBinding
+import com.lfsolutions.retail.model.Documents
 
-class DocumentAdapter : RecyclerView.Adapter<DocumentAdapter.ViewHolder>() {
+class DocumentAdapter(
+    val documentList: ArrayList<DocumentType>,
+    val onDocumentClickedListener: OnDocumentClickedListener
+) :
+    RecyclerView.Adapter<DocumentAdapter.ViewHolder>() {
 
-    private var documentList = listOf<DocumentType>()
 
     class ViewHolder(val binding: ItemDocumentBinding) : RecyclerView.ViewHolder(binding.root)
 
-    fun setData(documentList: List<DocumentType>) {
-
-        this.documentList = documentList
-
-        notifyDataSetChanged()
-
-    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,17 +28,16 @@ class DocumentAdapter : RecyclerView.Adapter<DocumentAdapter.ViewHolder>() {
     override fun getItemCount(): Int = documentList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        holder.binding.let { binding ->
-
-            documentList[position].let { document ->
-
-                binding.txtDocumentName.text = holder.itemView.context.getString(document.label)
-
-                binding.icoDocument.setImageResource(document.iconResId)
-            }
-
+        val document = documentList[position]
+        holder.binding.txtDocumentName.text = holder.itemView.context.getString(document.label)
+        holder.binding.icoDocument.setImageResource(document.iconResId)
+        holder.binding.root.tag = document
+        holder.binding.root.setOnClickListener {
+            onDocumentClickedListener.onDocumentClicked(it.tag as DocumentType)
         }
+    }
 
+    interface OnDocumentClickedListener {
+        fun onDocumentClicked(documents: DocumentType)
     }
 }
