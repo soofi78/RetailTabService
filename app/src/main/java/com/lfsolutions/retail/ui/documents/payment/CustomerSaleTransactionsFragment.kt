@@ -186,6 +186,7 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
                 val result = response?.body() as BaseResponse<Any>
                 if (result.success == true) {
                     Notify.toastLong("Payment Successful")
+                    findNavController().popBackStack()
                 } else {
                     Notify.toastLong("Payment Failed")
                 }

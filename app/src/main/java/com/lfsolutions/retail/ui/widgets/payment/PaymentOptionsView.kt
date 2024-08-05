@@ -27,6 +27,7 @@ class PaymentOptionsView : BottomSheetDialogFragment() {
                 object : OnPaymentOptionSelected {
                     override fun onPaymentOptionSelected(paymentType: PaymentType) {
                         onPaymentOptionSelected.onPaymentOptionSelected(paymentType)
+                        this@PaymentOptionsView.dismiss()
                     }
                 })
             binding.options.adapter = paymentOptionAdapter
