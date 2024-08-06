@@ -3,15 +3,11 @@ package com.lfsolutions.retail.ui.documents.payment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemSaleTransactionBinding
-import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.lfsolutions.retail.util.makeTextBold
 
 class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -45,7 +41,7 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
         binding.applied.setOnCheckedChangeListener { _, isChecked ->
             val transaction = binding.root.tag as CustomerSaleTransaction
             transaction.applied = isChecked
-            mListener?.onTransactionSelected(binding.root.tag as CustomerSaleTransaction)
+            mListener?.onTransactionSelected(binding.root.tag as CustomerSaleTransaction, isChecked)
         }
         binding.transactionNumber.text = transaction.transactionNo
         binding.transactionDate.text = transaction.transactionDate
@@ -75,6 +71,6 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
 
     interface OnTransactionCallback {
         fun onAmountEdit(transaction: CustomerSaleTransaction)
-        fun onTransactionSelected(transaction: CustomerSaleTransaction)
+        fun onTransactionSelected(transaction: CustomerSaleTransaction, isChecked: Boolean)
     }
 }

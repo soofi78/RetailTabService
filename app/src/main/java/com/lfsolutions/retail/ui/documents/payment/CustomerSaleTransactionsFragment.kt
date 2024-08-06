@@ -223,7 +223,23 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
                 Calculator.show(this@CustomerSaleTransactionsFragment)
             }
 
-            override fun onTransactionSelected(transaction: CustomerSaleTransaction) {
+            override fun onTransactionSelected(
+                transaction: CustomerSaleTransaction, isChecked: Boolean
+            ) {
+                if (amountEditTransaction != null) {
+                    val index = transactions.indexOf(amountEditTransaction)
+                    if (index > -1) {
+                        if (isChecked) {
+                            transactions[index].appliedAmount =
+                                customer.balanceAmount?.formatDecimalSeparator()?.replace(",", "")
+                                    ?.toDouble()
+                        } else {
+                            transactions[index].appliedAmount = 0.0
+                        }
+                        saleTransactionAdapter.notifyDataSetChanged()
+                    }
+                    amountEditTransaction = null
+                }
                 updateSelectedAmount()
             }
 
@@ -246,9 +262,9 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
         if (amountEditTransaction != null) {
             val index = transactions.indexOf(amountEditTransaction)
             if (index > -1) {
-                amountEditTransaction?.appliedAmount =
+                transactions[index].appliedAmount =
                     value?.toDouble()?.formatDecimalSeparator()?.replace(",", "")?.toDouble()
-                amountEditTransaction?.applied = true
+                transactions[index].applied = true
                 saleTransactionAdapter.notifyDataSetChanged()
             }
             amountEditTransaction = null
