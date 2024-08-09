@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/agreement_navigation"
+    app:startDestination="@id/navigations_histroy_listing">
+
+    <fragment
+        android:id="@+id/navigations_histroy_listing"
+        android:name="com.lfsolutions.retail.ui.documents.history.HistoryFragmentListing"
+        android:label="Customers"
+        tools:layout="@layout/fragment_history_listing">
+
+        <action
+            android:id="@+id/action_navigation_sale_order_invoice_history_fragment_to_invoice_details"
+            app:destination="@id/navigation_invoice_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_sale_order_invoice_history_fragment_to_order_details"
+            app:destination="@id/navigation_order_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_invoice_detail"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.InvoiceDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_invoice_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_order_detail"
+        android:name="com.lfsolutions.retail.ui.saleorder.OrderDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_order_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+</navigation>

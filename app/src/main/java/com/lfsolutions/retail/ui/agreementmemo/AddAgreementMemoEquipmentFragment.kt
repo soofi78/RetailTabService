@@ -167,6 +167,9 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     private fun setData() {
         mBinding.txtQty.text = if (product?.qtyOnHand == 0) "0" else "1"
+        product?.qtyOnHand?.let {
+            mBinding.txtQtyAvailable.text = it.toString()
+        }
         mBinding.txtProductName.text = product?.productName
         mBinding.txtCategory.text = product?.categoryName
         mBinding.txtPrice.text =

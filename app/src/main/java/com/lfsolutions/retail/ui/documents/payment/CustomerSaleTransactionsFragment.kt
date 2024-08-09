@@ -169,6 +169,11 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
     private fun pay(paymentType: PaymentType) {
         val session = Main.app.getSession()
+        transactions.forEach {
+            if (it.appliedAmount == null || it.appliedAmount == 0.0) {
+                it.appliedAmount = it.balanceAmount
+            }
+        }
         val request = PaymentRequest(
             locationId = session.defaultLocationId,
             receiptDate = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
@@ -226,20 +231,6 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
             override fun onTransactionSelected(
                 transaction: CustomerSaleTransaction, isChecked: Boolean
             ) {
-                if (amountEditTransaction != null) {
-                    val index = transactions.indexOf(amountEditTransaction)
-                    if (index > -1) {
-                        if (isChecked) {
-                            transactions[index].appliedAmount =
-                                customer.balanceAmount?.formatDecimalSeparator()?.replace(",", "")
-                                    ?.toDouble()
-                        } else {
-                            transactions[index].appliedAmount = 0.0
-                        }
-                        saleTransactionAdapter.notifyDataSetChanged()
-                    }
-                    amountEditTransaction = null
-                }
                 updateSelectedAmount()
             }
 

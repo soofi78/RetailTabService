@@ -31,6 +31,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.documents.history.HistoryFlowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.HomeActivity"
             android:exported="true" />
         <activity

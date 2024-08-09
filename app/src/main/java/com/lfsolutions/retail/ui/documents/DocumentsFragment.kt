@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentDocumentsBinding
 import com.lfsolutions.retail.model.Documents
+import com.lfsolutions.retail.ui.documents.history.HistoryFlowActivity
 import com.lfsolutions.retail.ui.documents.payment.PaymentFlowActivity
 import java.util.ArrayList
 
@@ -46,6 +47,13 @@ class DocumentsFragment : Fragment() {
         if (document is DocumentType.Payment) {
             openPaymentView()
         }
+        if (document is DocumentType.History) {
+            openHistoryView()
+        }
+    }
+
+    private fun openHistoryView() {
+        startActivity(Intent(requireActivity(), HistoryFlowActivity::class.java))
     }
 
     private fun openPaymentView() {
@@ -69,6 +77,10 @@ class DocumentsFragment : Fragment() {
             DocumentType.Payment(
                 R.string.label_payment,
                 R.drawable.ic_payment
+            ),
+            DocumentType.History(
+                R.string.label_history,
+                R.drawable.ic_history
             )
         )
     }

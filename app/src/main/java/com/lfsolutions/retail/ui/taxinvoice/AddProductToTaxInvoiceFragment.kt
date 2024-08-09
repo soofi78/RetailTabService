@@ -68,6 +68,9 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun setData() {
         mBinding.txtQty.text = "1"
+        product?.qtyOnHand?.let {
+            mBinding.txtQtyAvailable.text = it.toString()
+        }
         mBinding.txtProductName.text = product?.productName
         mBinding.txtCategory.text = product?.categoryName
         mBinding.txtPrice.text =

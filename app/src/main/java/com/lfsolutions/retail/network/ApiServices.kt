@@ -10,6 +10,8 @@ import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
+import com.lfsolutions.retail.model.HistoryRequest
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
@@ -23,8 +25,12 @@ import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
+import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
+import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
+import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
@@ -118,6 +124,18 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_TRANSACTIONS))
     fun getSalesTransactions(@Body saleTransactions: SaleTransactionRequestBody): Call<RetailResponse<ArrayList<CustomerSaleTransaction>>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDERS))
+    fun getSalesOrder(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleOrderListResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_DETAIL))
+    fun getSalesOrderDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleOrderResponse>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_INVOICES))
+    fun getSaleInvoices(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleInvoiceListResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_DETAIL))
+    fun getSaleInvoiceDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
 }
 
 

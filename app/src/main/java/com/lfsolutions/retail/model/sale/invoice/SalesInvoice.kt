@@ -1,6 +1,9 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.videotel.digital.util.DateTime
 
 
 data class SalesInvoice(

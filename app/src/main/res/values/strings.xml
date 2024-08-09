@@ -115,5 +115,6 @@
     <string name="label_expired">Expired</string>
     <string name="label_view_sale_invoice">View Sale Invoice</string>
     <string name="label_payment">Payment</string>
+    <string name="label_history">History</string>
 
 </resources>

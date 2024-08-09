@@ -2,6 +2,7 @@ package com.lfsolutions.retail.util
 
 object Constants {
 
+    const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
     const val IsServiceForm = "IsServiceForm"
     val Logout: CharSequence = "Logout"

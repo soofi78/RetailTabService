@@ -1,15 +1,11 @@
 package com.lfsolutions.retail.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.CategoryItemBinding
-import com.lfsolutions.retail.databinding.MultiSelectRecyclerItemBinding
 import com.lfsolutions.retail.model.CategoryItem
-import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 
 class ProductCategoryAdapter(
     private val categories: ArrayList<CategoryItem>,
