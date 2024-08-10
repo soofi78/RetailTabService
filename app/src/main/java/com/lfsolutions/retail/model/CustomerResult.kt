@@ -25,4 +25,12 @@ data class CustomerResult(
         if (index > -1) return items[index].customers
         return arrayListOf()
     }
+
+    fun getAll(): ArrayList<Customer> {
+        val customers = ArrayList<Customer>()
+        items.forEach {
+            customers.addAll(it.customers)
+        }
+        return customers
+    }
 }

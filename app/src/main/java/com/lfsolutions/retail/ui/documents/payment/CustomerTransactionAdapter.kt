@@ -49,9 +49,10 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
             Main.app.getSession().currencySymbol + transaction.amount?.formatDecimalSeparator()
         binding.appliedAmount.text =
             if (transaction.appliedAmount == null || transaction.appliedAmount == 0.0)
-                binding.transactionAmount.text
+                transaction.balanceAmount.toString()
             else
-                Main.app.getSession().currencySymbol + transaction.appliedAmount?.formatDecimalSeparator()
+                Main.app.getSession().currencySymbol + transaction.balanceAmount?.minus(transaction.appliedAmount!!)
+                    ?.formatDecimalSeparator()
 
         if (transaction.appliedAmount == null || transaction.appliedAmount == 0.0) {
             binding.editIcon.visibility = View.INVISIBLE

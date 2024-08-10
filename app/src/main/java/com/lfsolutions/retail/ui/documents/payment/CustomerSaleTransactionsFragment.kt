@@ -209,12 +209,12 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
         try {
             val customerResponse =
                 response?.body() as RetailResponse<ArrayList<CustomerSaleTransaction>>
-            customerResponse.result?.let {
-                transactions = it
-                setAdapters()
-            }
+            transactions = customerResponse.result?.filter {
+                it.balanceAmount != null && it.balanceAmount!! > 0.0
+            } as ArrayList<CustomerSaleTransaction>
+            setAdapters()
         } catch (ex: Exception) {
-
+            ex.printStackTrace()
         }
     }
 
