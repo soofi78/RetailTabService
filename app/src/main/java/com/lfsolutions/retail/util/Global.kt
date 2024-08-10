@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import com.videotel.digital.util.DateTime
 import java.text.NumberFormat
 import java.util.Locale
 

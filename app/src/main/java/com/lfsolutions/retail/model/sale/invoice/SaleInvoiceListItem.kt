@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 
 
 data class SaleInvoiceListItem(

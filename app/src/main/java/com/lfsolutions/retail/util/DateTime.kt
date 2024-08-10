@@ -1,9 +1,8 @@
-package com.videotel.digital.util
+package com.lfsolutions.retail.util
 
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import com.lfsolutions.retail.util.Logger
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar

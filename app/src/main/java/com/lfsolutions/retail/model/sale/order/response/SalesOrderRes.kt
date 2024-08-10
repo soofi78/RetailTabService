@@ -3,7 +3,7 @@ package com.lfsolutions.retail.model.sale.order.response
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 
 
 data class SalesOrderRes(

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 
 
 data class SaleOrderListItem(
@@ -77,8 +77,8 @@ data class SaleOrderListItem(
 
     private fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
-            soDate,
-            DateTime.DateTimetRetailFormat.replace("T", " ").replace("Z", "")
+            soDate?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
         )
         val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
         return formatted ?: soDate ?: ""

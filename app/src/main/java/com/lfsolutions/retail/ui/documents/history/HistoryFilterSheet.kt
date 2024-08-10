@@ -13,7 +13,6 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.HistoryFilterSheetBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerPaymentsResult
-import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -21,7 +20,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.delivery.DeliveryItemAdapter
 import com.lfsolutions.retail.util.Loading
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response

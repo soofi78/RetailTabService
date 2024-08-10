@@ -22,7 +22,7 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.makeTextBold
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody

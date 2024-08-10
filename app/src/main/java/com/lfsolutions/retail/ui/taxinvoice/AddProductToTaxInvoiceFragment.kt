@@ -16,7 +16,6 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAddToCartBinding
-import com.lfsolutions.retail.model.ApplicableTaxes
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
@@ -32,7 +31,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response

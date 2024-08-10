@@ -8,8 +8,6 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemFormBinding
 import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.util.formatToDate
-import com.videotel.digital.util.DateTime
-import java.util.Date
 
 class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
 

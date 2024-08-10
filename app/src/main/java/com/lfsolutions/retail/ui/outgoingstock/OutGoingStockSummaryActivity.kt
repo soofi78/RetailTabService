@@ -13,8 +13,6 @@ import com.google.gson.reflect.TypeToken
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivitySummaryBinding
-import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.outgoingstock.OutGoingProduct
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -23,7 +21,7 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response

@@ -31,7 +31,7 @@ import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.maltaisn.calcdialog.CalcDialog
-import com.videotel.digital.util.DateTime
+import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
