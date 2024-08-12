@@ -1,6 +1,6 @@
 package com.lfsolutions.retail.ui.documents.history
 
-interface SaleOrderInvoiceItem {
+interface HistoryItemInterface {
     fun getTitle(): String
     fun getDescription(): String
     fun getAmount(): String

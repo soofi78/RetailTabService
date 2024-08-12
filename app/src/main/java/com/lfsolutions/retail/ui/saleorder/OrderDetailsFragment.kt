@@ -19,7 +19,7 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
-import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -63,13 +63,13 @@ class OrderDetailsFragment : Fragment() {
         binding.invoiceAmount.text = order?.salesOrder?.InvoiceNetTotalFromatted()
         binding.balance.text = order?.salesOrder?.BalanceFormatted()
         binding.customer.text = order?.salesOrder?.customerName
-        val items = ArrayList<SaleOrderInvoiceItem>()
+        val items = ArrayList<HistoryItemInterface>()
         order?.salesOrderDetail?.forEach {
             items.add(it)
         }
         binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
-                override fun onItemClickedListener(saleOrderInvoiceItem: SaleOrderInvoiceItem) {
+                override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
             })

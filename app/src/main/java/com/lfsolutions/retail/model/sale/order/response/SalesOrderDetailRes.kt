@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.ApplicableTaxes
 import com.lfsolutions.retail.model.sale.TaxForProduct
-import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
 
 
@@ -58,7 +58,7 @@ data class SalesOrderDetailRes(
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null
 
-) : SaleOrderInvoiceItem {
+) : HistoryItemInterface {
     override fun getTitle(): String {
         return productName.toString()
     }

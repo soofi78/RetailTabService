@@ -2,6 +2,8 @@ package com.lfsolutions.retail.util
 
 object Constants {
 
+    const val Print: String = "Print"
+    const val Delete: String = "Delete"
     const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
     const val IsServiceForm = "IsServiceForm"

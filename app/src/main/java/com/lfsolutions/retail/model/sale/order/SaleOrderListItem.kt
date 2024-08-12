@@ -2,7 +2,7 @@ package com.lfsolutions.retail.model.sale.order
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.DateTime
 
@@ -17,16 +17,16 @@ data class SaleOrderListItem(
     @SerializedName("salesOrderStatusId") var salesOrderStatusId: Int? = null,
     @SerializedName("customerName") var customerName: String? = null,
     @SerializedName("soTotal") var soTotal: Int? = null,
-    @SerializedName("soItemDiscount") var soItemDiscount: Int? = null,
-    @SerializedName("soTotalValue") var soTotalValue: Int? = null,
-    @SerializedName("soNetDiscountPerc") var soNetDiscountPerc: Int? = null,
-    @SerializedName("soNetDiscount") var soNetDiscount: Int? = null,
-    @SerializedName("soTotalAmount") var soTotalAmount: Int? = null,
-    @SerializedName("soSubTotal") var soSubTotal: Int? = null,
-    @SerializedName("soTax") var soTax: Int? = null,
-    @SerializedName("soRoundingAmount") var soRoundingAmount: Int? = null,
-    @SerializedName("soNetTotal") var soNetTotal: Int? = null,
-    @SerializedName("soGrandTotal") var soGrandTotal: Int? = null,
+    @SerializedName("soItemDiscount") var soItemDiscount: Double? = null,
+    @SerializedName("soTotalValue") var soTotalValue: Double? = null,
+    @SerializedName("soNetDiscountPerc") var soNetDiscountPerc: Double? = null,
+    @SerializedName("soNetDiscount") var soNetDiscount: Double? = null,
+    @SerializedName("soTotalAmount") var soTotalAmount: Double? = null,
+    @SerializedName("soSubTotal") var soSubTotal: Double? = null,
+    @SerializedName("soTax") var soTax: Double? = null,
+    @SerializedName("soRoundingAmount") var soRoundingAmount: Double? = null,
+    @SerializedName("soNetTotal") var soNetTotal: Double? = null,
+    @SerializedName("soGrandTotal") var soGrandTotal: Double? = null,
     @SerializedName("fromLocationName") var fromLocationName: String? = null,
     @SerializedName("salesOrderStatus") var salesOrderStatus: String? = null,
     @SerializedName("createdBy") var createdBy: String? = null,
@@ -41,14 +41,14 @@ data class SaleOrderListItem(
     @SerializedName("erpInternalId") var erpInternalId: String? = null,
     @SerializedName("purchaseOrderId") var purchaseOrderId: String? = null,
     @SerializedName("orderStatus") var orderStatus: String? = null,
-    @SerializedName("paidAmount") var paidAmount: Int? = null,
-    @SerializedName("balance") var balance: Int? = null,
+    @SerializedName("paidAmount") var paidAmount: Double? = null,
+    @SerializedName("balance") var balance: Double? = null,
     @SerializedName("employeeName") var employeeName: String? = null,
     @SerializedName("notified") var notified: String? = null,
     @SerializedName("collected") var collected: String? = null,
     @SerializedName("location") var location: String? = null,
     @SerializedName("orderedQty") var orderedQty: Int? = null,
-    @SerializedName("soNetCost") var soNetCost: Int? = null,
+    @SerializedName("soNetCost") var soNetCost: Double? = null,
     @SerializedName("receivedQty") var receivedQty: Int? = null,
     @SerializedName("isBeep") var isBeep: Boolean? = null,
     @SerializedName("module") var module: String? = null,
@@ -70,7 +70,7 @@ data class SaleOrderListItem(
     @SerializedName("creatorUserId") var creatorUserId: Int? = null,
     @SerializedName("id") var id: Int? = null
 
-) : SaleOrderInvoiceItem {
+) : HistoryItemInterface {
     override fun getTitle(): String {
         return (soNo ?: "") + " / " + (getFormattedDate())
     }

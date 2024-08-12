@@ -161,20 +161,20 @@
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/space"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/space"
                 app:layout_constraintTop_toBottomOf="@+id/cardSchedule"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_delivery" />
 
             <View
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerViewSchedule"
                 android:id="@+id/space"
                 android:layout_width="match_parent"
-                android:layout_height="120dp" />
+                android:layout_height="120dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewSchedule" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -187,7 +187,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:backgroundTint="@color/yellow"
-        android:text="Generate Outgoing Stock record"
+        android:text="Stock Transfer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

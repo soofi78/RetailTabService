@@ -84,7 +84,12 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun setAdapters(customer: ArrayList<Customer>) {
-        customersAdapter = CustomerForPaymentAdapter(customer.toList())
+        customersAdapter =
+            CustomerForPaymentAdapter(customer.filter {
+                (it.balanceAmount != null && it.balanceAmount?.equals(
+                    0.0
+                )?.not() == true)
+            })
         binding.customers.adapter = customersAdapter
         customersAdapter.setListener(object : CustomerForPaymentAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {

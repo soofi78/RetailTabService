@@ -13,7 +13,7 @@ object Dialogs {
         onOptionDialogItemClicked: OnOptionDialogItemClicked
     ) {
         val builder = AlertDialog.Builder(context);
-        builder.setTitle("Pick a color");
+        builder.setTitle(name);
         builder.setItems(options) { dialog, which ->
             onOptionDialogItemClicked.onClick(options.get(which).toString())
             dialog.dismiss()

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 
 class SaleOrderInvoiceListAdapter(
-    private val items: ArrayList<SaleOrderInvoiceItem>,
+    private val items: ArrayList<HistoryItemInterface>,
     private val mListener: OnItemClickedListener
 ) :
     RecyclerView.Adapter<SaleOrderInvoiceListAdapter.ViewHolder>() {
@@ -28,12 +28,12 @@ class SaleOrderInvoiceListAdapter(
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
         holder.itemView.setOnClickListener {
-            mListener.onItemClickedListener(it.tag as SaleOrderInvoiceItem)
+            mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }
     }
 
 
     interface OnItemClickedListener {
-        fun onItemClickedListener(saleOrderInvoiceItem: SaleOrderInvoiceItem)
+        fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface)
     }
 }

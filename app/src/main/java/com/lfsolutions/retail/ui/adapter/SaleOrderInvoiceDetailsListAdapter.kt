@@ -3,12 +3,11 @@ package com.lfsolutions.retail.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceProductListItemBinding
-import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 
 class SaleOrderInvoiceDetailsListAdapter(
-    private val items: ArrayList<SaleOrderInvoiceItem>,
+    private val items: ArrayList<HistoryItemInterface>,
     private val mListener: OnItemClickedListener
 ) :
     RecyclerView.Adapter<SaleOrderInvoiceDetailsListAdapter.ViewHolder>() {
@@ -34,12 +33,12 @@ class SaleOrderInvoiceDetailsListAdapter(
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
         holder.itemView.setOnClickListener {
-            mListener.onItemClickedListener(it.tag as SaleOrderInvoiceItem)
+            mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }
     }
 
 
     interface OnItemClickedListener {
-        fun onItemClickedListener(saleOrderInvoiceItem: SaleOrderInvoiceItem)
+        fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface)
     }
 }

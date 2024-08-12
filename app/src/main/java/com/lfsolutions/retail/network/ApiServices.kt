@@ -25,6 +25,7 @@ import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
+import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
@@ -136,6 +137,12 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_DETAIL))
     fun getSaleInvoiceDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_RECEIPT))
+    fun getSaleReceipts(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleReceiptResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_SALE_RECEIPT))
+    fun deleteSaleReceipt(@Body idRequest: IdRequest): Call<BaseResponse<Any>>
 }
 
 

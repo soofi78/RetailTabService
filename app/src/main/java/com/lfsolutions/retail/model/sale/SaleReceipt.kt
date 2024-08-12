@@ -1,0 +1,51 @@
+package com.lfsolutions.retail.model.sale
+
+import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.formatDecimalSeparator
+
+
+data class SaleReceipt(
+
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("receiptNo") var receiptNo: String? = null,
+    @SerializedName("receiptDate") var receiptDate: String? = null,
+    @SerializedName("paymentTypeName") var paymentTypeName: String? = null,
+    @SerializedName("paymentTypeId") var paymentTypeId: Int? = null,
+    @SerializedName("customerName") var customerName: String? = null,
+    @SerializedName("reference") var reference: String? = null,
+    @SerializedName("createdByName") var createdByName: String? = null,
+    @SerializedName("receivedAmount") var receivedAmount: Double? = null,
+    @SerializedName("remarks") var remarks: String? = null,
+    @SerializedName("erpInternalId") var erpInternalId: String? = null,
+    @SerializedName("isPDCPayment") var isPDCPayment: Boolean? = null,
+    @SerializedName("isNetsuite") var isNetsuite: Boolean? = null,
+    @SerializedName("addOn") var addOn: String? = null,
+    @SerializedName("apiThirdPartyResponse") var apiThirdPartyResponse: String? = null,
+    @SerializedName("salesReceiptDetail") var salesReceiptDetail: String? = null
+
+) : HistoryItemInterface {
+    override fun getTitle(): String {
+        return receiptNo + " / " + getFormattedDate()
+    }
+
+    private fun getFormattedDate(): String {
+        val date = DateTime.getDateFromString(
+            receiptDate?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        return formatted ?: receiptDate ?: ""
+    }
+
+    override fun getDescription(): String {
+        return customerName.toString()
+    }
+
+    override fun getAmount(): String {
+        return Main.app.getSession().currencySymbol + receivedAmount?.formatDecimalSeparator()
+    }
+
+}

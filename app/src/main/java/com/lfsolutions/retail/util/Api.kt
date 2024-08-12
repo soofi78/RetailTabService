@@ -9,6 +9,8 @@ object Api {
     const val SaleOrder = "salesOrder/"
 
     object Name {
+
+
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"
         const val CREATE_UPDATE_SALE_INVOICE = "CreateOrUpdateSalesInvoice"
         const val CREATE_UPDATE_STOCK_TRANSFER = "service/CreateOutGoingStockTransfer"
@@ -23,6 +25,8 @@ object Api {
         const val GET_SALES_ORDER_DETAIL = "SalesOrder/GetSalesOrderForEdit"
         const val GET_SALES_INVOICES = "SalesInvoice/GetAll"
         const val GET_SALE_INVOICE_DETAIL = "SalesInvoice/GetSalesInvoiceForEdit"
+        const val GET_SALE_RECEIPT = "SalesReceipt/GetAll"
+        const val DELETE_SALE_RECEIPT = "salesReceipt/DeleteSalesReceipt"
         const val GET_EQUIPMENT_TYPE = "GetAgreementMemoTypesForCombobox"
         const val GET_ACTION_TYPES = "getComplaintActionTypesForCombobox"
         const val GET_COMPLAINT_TYPES = "getComplaintTypesforCombobox"

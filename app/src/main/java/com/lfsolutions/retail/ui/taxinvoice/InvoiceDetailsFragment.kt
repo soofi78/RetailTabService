@@ -9,25 +9,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
-import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentInvoiceDetailsBinding
-import com.lfsolutions.retail.model.CategoryItem
-import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
-import com.lfsolutions.retail.ui.documents.history.SaleOrderInvoiceItem
-import com.lfsolutions.retail.ui.saleorder.OrderDetailsFragmentArgs
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -71,13 +64,13 @@ class InvoiceDetailsFragment : Fragment() {
         binding.invoiceAmount.text = invoice?.salesInvoiceRes?.InvoiceNetTotalFromatted()
         binding.balance.text = invoice?.salesInvoiceRes?.BalanceFormatted()
         binding.customer.text = invoice?.salesInvoiceRes?.customerName
-        val items = ArrayList<SaleOrderInvoiceItem>()
+        val items = ArrayList<HistoryItemInterface>()
         invoice?.salesInvoiceDetailRes?.forEach {
             items.add(it)
         }
         binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
-                override fun onItemClickedListener(saleOrderInvoiceItem: SaleOrderInvoiceItem) {
+                override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
             })
