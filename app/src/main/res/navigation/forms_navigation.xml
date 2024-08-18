@@ -89,7 +89,7 @@
         android:id="@+id/navigation_tax_invoice_product_list"
         android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceProductList"
         android:label="Product"
-        tools:layout="@layout/fragment_sale_order_invoice_equipment_list">
+        tools:layout="@layout/fragment_sale_order_invoice_stock_equipment_list">
         <argument
             android:name="customer"
             app:argType="string"
@@ -155,7 +155,7 @@
         android:id="@+id/navigation_sale_order_product_list"
         android:name="com.lfsolutions.retail.ui.saleorder.SaleOrderEquipmentListFragment"
         android:label="Agreement Memo"
-        tools:layout="@layout/fragment_sale_order_invoice_equipment_list">
+        tools:layout="@layout/fragment_sale_order_invoice_stock_equipment_list">
         <argument
             android:name="customer"
             app:argType="string"

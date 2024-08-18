@@ -13,11 +13,11 @@ data class CreateUpdateAgreementMemoRequestBody(
     }
 
     fun updatePriceAndQty() {
-        var totalPrice = 0
-        var qty = 0
+        var totalPrice = 0.0
+        var qty = 0.0
         AgreementMemoDetail.forEach {
-            totalPrice += it.TotalCost ?: 0
-            qty += it.Qty ?: 0
+            totalPrice += it.TotalCost ?: 0.0
+            qty += it.Qty ?: 0.0
         }
 
         AgreementMemo?.AgreementQty = qty

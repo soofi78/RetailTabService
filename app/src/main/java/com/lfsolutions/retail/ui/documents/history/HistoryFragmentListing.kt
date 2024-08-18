@@ -14,6 +14,8 @@ import com.lfsolutions.retail.databinding.FragmentHistoryListingBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.outgoingstock.StockTransfer
+import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
@@ -44,6 +46,7 @@ class HistoryFragmentListing : Fragment() {
     private val order = ArrayList<HistoryItemInterface>()
     private val invoices = ArrayList<HistoryItemInterface>()
     private val receipts = ArrayList<HistoryItemInterface>()
+    private val outgoing = ArrayList<HistoryItemInterface>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -58,7 +61,10 @@ class HistoryFragmentListing : Fragment() {
                 requireActivity().finish()
             }
             binding.types.adapter = HistoryTypeAdapter(arrayListOf(
-                HistoryType.Order, HistoryType.Invoices, HistoryType.Receipts
+                HistoryType.Order,
+                HistoryType.Invoices,
+                HistoryType.Receipts,
+                HistoryType.OutgoingTransfer
             ), object : OnHistoryTypeClicked {
                 override fun onHistoryTypeClicked(type: HistoryType) {
                     getHistory(type)
@@ -131,10 +137,44 @@ class HistoryFragmentListing : Fragment() {
                 getReceiptHistory(force)
             }
 
+            HistoryType.OutgoingTransfer -> {
+                getOutGoingStockList(force)
+            }
+
             HistoryType.Returns -> {
                 getReturnsHistory(force)
             }
         }
+    }
+
+    private fun getOutGoingStockList(force: Boolean) {
+        if (outgoing.isEmpty() || force) NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale receipts"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val res = response?.body() as BaseResponse<StockTransferHistoryResult>
+                    outgoing.clear()
+                    res.result?.items?.forEach {
+                        outgoing.add(it)
+                    }
+                    setAdapter(outgoing)
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get sale invoice list")
+                }
+            }).enque(
+                Network.api()?.getAllStockTransfer(HistoryRequest().apply {
+                    locationId = Main.app.getSession().defaultLocationId
+                    userId = Main.app.getSession().userId
+                    startDate = this@HistoryFragmentListing.startDate
+                    endDate = this@HistoryFragmentListing.endDate
+                    customerId = (customer?.id ?: 0).toString()
+                    invoiceType = null
+                    status = null
+                })
+            ).execute()
+        else setAdapter(outgoing)
     }
 
     private fun getReceiptHistory(force: Boolean) {
@@ -261,6 +301,13 @@ class HistoryFragmentListing : Fragment() {
                         }
                     }
                 })
+        } else if (historyitem is StockTransfer) {
+            findNavController().navigate(
+                R.id.action_navigation_stock_transfer_history_fragment_to_transfer_details,
+                bundleOf(
+                    Constants.Item to Gson().toJson(historyitem)
+                )
+            )
         } else {
             Notify.toastLong("Invalid item received")
         }

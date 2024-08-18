@@ -196,8 +196,8 @@ class TaxInvoiceFragment : Fragment() {
 
     private fun updateSaleInvoiceDetails(result: ArrayList<Product>) {
         result.forEach { product ->
-            val qty = 1
-            val subTotal = (qty * (product?.cost ?: 0)).toDouble()
+            val qty = 1.0
+            val subTotal = (qty * (product?.cost ?: 0.0)).toDouble()
             val discount = 0.0
             val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
@@ -216,8 +216,8 @@ class TaxInvoiceFragment : Fragment() {
                     NetCost = total,
                     CostWithoutTax = product.cost?.toDouble() ?: 0.0,
                     DepartmentId = 0,
-                    LastPurchasePrice = 0,
-                    SellingPrice = 0,
+                    LastPurchasePrice = 0.0,
+                    SellingPrice = 0.0,
                     MRP = 0,
                     IsBatch = false,
                     ItemDiscount = 0.0,

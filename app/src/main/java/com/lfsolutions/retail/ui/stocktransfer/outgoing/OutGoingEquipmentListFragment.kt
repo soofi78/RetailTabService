@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.saleorder
+package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -25,20 +24,18 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
-import com.lfsolutions.retail.ui.adapter.ProductListAdapter
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class SaleOrderEquipmentListFragment : Fragment() {
-    private lateinit var customer: Customer
+class OutGoingEquipmentListFragment : Fragment() {
     private lateinit var binding: FragmentSaleOrderInvoiceStockEquipmentListBinding
     private lateinit var categoryAdapter: ProductCategoryAdapter
     private var categories: ArrayList<CategoryItem> = arrayListOf()
     private var productList: List<Product> = arrayListOf()
-    private lateinit var mAdapter: SaleOrderEquipmentAdapter
+    private lateinit var mAdapter: OutGoingStockEquipmentAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,11 +44,8 @@ class SaleOrderEquipmentListFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentSaleOrderInvoiceStockEquipmentListBinding.inflate(layoutInflater)
-            customer =
-                Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -134,12 +128,12 @@ class SaleOrderEquipmentListFragment : Fragment() {
     }
 
     private fun updateEquipmentListView(products: List<Product>) {
-        mAdapter = SaleOrderEquipmentAdapter(products)
-        mAdapter.setListener(object : SaleOrderEquipmentAdapter.OnEquipmentClickListener {
+        mAdapter = OutGoingStockEquipmentAdapter(products)
+        mAdapter.setListener(object : OutGoingStockEquipmentAdapter.OnEquipmentClickListener {
             override fun onEquipmentClick(product: Product) {
                 findNavController()
                     .navigate(
-                        R.id.action_navigation_sale_order_product_list_to_add_product_to_sale_order,
+                        R.id.action_navigation_out_going_stock_product_listing_to_add_product,
                         bundleOf(Constants.Product to Gson().toJson(product))
                     )
             }

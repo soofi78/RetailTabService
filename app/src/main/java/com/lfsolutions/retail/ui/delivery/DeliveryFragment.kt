@@ -16,7 +16,7 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.outgoingstock.OutGoingProduct
+import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -24,9 +24,8 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
-import com.lfsolutions.retail.ui.outgoingstock.GenerateOutGoingStockBottomSheet
-import com.lfsolutions.retail.ui.outgoingstock.OutGoingStockSummaryActivity
-import com.lfsolutions.retail.util.Calculator
+import com.lfsolutions.retail.ui.stocktransfer.incoming.GenerateInComingStockBottomSheet
+import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockSummaryActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -73,7 +72,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             Notify.toastLong("Please select items first!")
             return
         }
-        val modal = GenerateOutGoingStockBottomSheet()
+        val modal = GenerateInComingStockBottomSheet()
         modal.setOnConfirmClickListener {
             outGoingStockConfirmClicked(scheduledList)
         }
@@ -103,9 +102,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }).execute()
     }
 
-    private fun openOutStockProductSummaryActivity(outGoingProducts: java.util.ArrayList<OutGoingProduct>?) {
-        startActivity(Intent(requireActivity(), OutGoingStockSummaryActivity::class.java).apply {
-            putExtra(Constants.OutGoingProducts, Gson().toJson(outGoingProducts))
+    private fun openOutStockProductSummaryActivity(stockTransferProducts: java.util.ArrayList<StockTransferProduct>?) {
+        startActivity(Intent(requireActivity(), IncomingStockSummaryActivity::class.java).apply {
+            putExtra(Constants.OutGoingProducts, Gson().toJson(stockTransferProducts))
         })
     }
 

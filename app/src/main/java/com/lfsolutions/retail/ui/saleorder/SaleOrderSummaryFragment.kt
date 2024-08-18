@@ -67,7 +67,7 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         )
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
-            override fun onQuantityChanged(quantity: Int) {
+            override fun onQuantityChanged(quantity: Double) {
                 val index =
                     Main.app.getSaleOrder()?.SalesOrderDetail?.indexOf(salesOrderDetail) ?: -1
                 if (index > -1) {
@@ -136,7 +136,7 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.txtTotal.text = "$currency " +
                 Main.app.getSaleOrder()?.SalesOrder?.SoGrandTotal.toString()
                     .formatDecimalSeparator()
-        mBinding.btnComplete.isEnabled = Main.app.getSaleOrder()?.SalesOrder?.OrderedQty != 0
+        mBinding.btnComplete.isEnabled = Main.app.getSaleOrder()?.SalesOrder?.OrderedQty != 0.0
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {

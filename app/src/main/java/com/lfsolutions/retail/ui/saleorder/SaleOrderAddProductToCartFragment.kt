@@ -148,9 +148,9 @@ class SaleOrderAddProductToCartFragment : Fragment() {
             }
         }
 
-        val qty = mBinding.txtQty.text.toString().toInt()
+        val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
-            (mBinding.txtQty.text.toString().toInt() * (product?.cost ?: 0)).toDouble()
+            (mBinding.txtQty.text.toString().toDouble() * (product?.cost ?: 0.0)).toDouble()
         val discount = 0.0
         val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
         val netTotal = (subTotal - discount) + taxAmount
@@ -230,7 +230,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
     private fun updateTotal() {
         val currency = Main.app.getSession().currencySymbol
         val totalAmount =
-            (mBinding.txtQty.text.toString().toInt() * (product.cost ?: 0)).toDouble()
+            (mBinding.txtQty.text.toString().toInt() * (product.cost ?: 0.0)).toDouble()
         val discount = 0.0
         val subTotal = totalAmount - discount
         val taxAmount = subTotal * (product.getApplicableTaxRate() / 100.0)

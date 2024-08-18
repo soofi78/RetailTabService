@@ -62,8 +62,8 @@ data class SaleInvoiceListItem(
 
     private fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
-            invoiceDate,
-            DateTime.DateTimetRetailFormat.replace("T", " ").replace("Z", "")
+            invoiceDate?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
         )
         val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
         return formatted ?: invoiceDate ?: ""

@@ -168,6 +168,7 @@ class NewAgreementMemoFragment : Fragment() {
                 object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         Notify.toastLong("success")
+                        findNavController().popBackStack()
                     }
 
                     override fun onFailure(

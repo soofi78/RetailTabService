@@ -20,11 +20,14 @@ import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
+import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
+import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
@@ -141,10 +144,8 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     equipmentTypes =
                         (response?.body() as RetailResponse<EquipmentTypeResult>).result?.items?.filter {
-                            it.value.equals(
-                                "F",
-                                true
-                            ).not()
+                            it.value.equals("F", true).not()
+                                    && it.value.equals("E", true).not()
                         }
                     setEquipmentTypesAdapter()
                 }
@@ -166,7 +167,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
 
     private fun setData() {
-        mBinding.txtQty.text = if (product?.qtyOnHand == 0) "0" else "1"
+        mBinding.txtQty.text = if (product?.qtyOnHand?.toInt() == 0) "0" else "1"
         product?.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
@@ -185,19 +186,11 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     private fun addOnClickListener() {
         mBinding.btnSub.setOnClickListener {
-            mBinding.txtQty.text.toString().toInt().let { qty ->
-                if (qty > 1) mBinding.txtQty.text = (qty - 1).toString()
-
-                updateTotal()
-            }
-
+            openQuantityUpdateDialog()
         }
 
         mBinding.btnAdd.setOnClickListener {
-            mBinding.txtQty.text.toString().toInt().let { qty ->
-                mBinding.txtQty.text = (qty + 1).toString()
-                updateTotal()
-            }
+            openQuantityUpdateDialog()
         }
 
         mBinding.header.setOnBackClick {
@@ -228,6 +221,30 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
     }
 
+    private fun openQuantityUpdateDialog() {
+        val modal = ProductQuantityUpdateSheet()
+        modal.setProductDetails(
+            product?.imagePath.toString(),
+            product?.productName.toString(),
+            mBinding.txtQty.text.toString().toDouble(),
+            product?.cost ?: 0.0,
+            product?.unitName.toString()
+        )
+        modal.setOnProductDetailsChangedListener(object :
+            ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
+            override fun onQuantityChanged(quantity: Double) {
+                mBinding.txtQty.text = quantity.toString()
+                updateTotal()
+            }
+
+            override fun onPriceChanged(price: Double) {
+                product?.cost = price
+                updateTotal()
+            }
+        })
+        requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
+    }
+
     private fun addToCart() {
         val batchList = arrayListOf<ProductBatchList>()
         if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
@@ -240,8 +257,8 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
             }
         }
 
-        val qty = mBinding.txtQty.text.toString().toInt()
-        val cost = product?.cost ?: 0
+        val qty = mBinding.txtQty.text.toString().toDouble()
+        val cost = product?.cost ?: 0.0
         Main.app.getAgreementMemo()?.addEquipment(
             AgreementMemoDetail(
                 ProductId = product?.productId?.toInt() ?: 0,
@@ -249,7 +266,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                 UnitName = product?.unitName,
                 UnitId = product?.unitId,
                 Qty = qty,
-                QtyOnHand = product?.qtyOnHand,
+                QtyOnHand = product?.qtyOnHand?.toDouble(),
                 Cost = cost,
                 TotalCost = qty * cost,
                 Type = product?.type,
@@ -270,11 +287,10 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
     }
 
     private fun updateTotal() {
-        mBinding.txtTotalPrice.text =
-            product?.cost?.let {
-                Main.app.getSession().currencyCode + (mBinding.txtQty.text.toString()
-                    .toInt() * it).formatDecimalSeparator()
-            }
+        mBinding.txtTotalPrice.text = product?.cost?.let {
+            Main.app.getSession().currencyCode + (mBinding.txtQty.text.toString()
+                .toDouble() * it).formatDecimalSeparator()
+        }
     }
 
 }

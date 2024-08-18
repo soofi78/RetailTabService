@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.outgoingstock
+package com.lfsolutions.retail.ui.stocktransfer.incoming
 
 import android.app.Dialog
 import android.os.Bundle
@@ -14,7 +14,7 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.ui.delivery.DeliveryItemAdapter
 import java.util.ArrayList
 
-class GenerateOutGoingStockBottomSheet : BottomSheetDialogFragment() {
+class GenerateInComingStockBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var list: ArrayList<Customer>
     private lateinit var onConfirmClick: OnClickListener

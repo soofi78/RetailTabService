@@ -10,6 +10,7 @@ import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
+import com.lfsolutions.retail.model.GetLocationResult
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
@@ -24,6 +25,8 @@ import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
+import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
+import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
@@ -107,8 +110,11 @@ interface ApiServices {
     )
     fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<String>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_STOCK_TRANSFER))
-    fun createUpdateStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_IN_COMING_STOCK_TRANSFER))
+    fun createUpdateInComingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_OUT_GOING_STOCK_TRANSFER))
+    fun createUpdateOutGoingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<String>>?
 
     @Multipart
     @POST(Api.Name.UPLOAD_SIGNATURE)
@@ -143,6 +149,15 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_SALE_RECEIPT))
     fun deleteSaleReceipt(@Body idRequest: IdRequest): Call<BaseResponse<Any>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_LOCATIONS))
+    fun getLocations(): Call<BaseResponse<GetLocationResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_STOCK_TRANSFER_HISTORY))
+    fun getAllStockTransfer(@Body request: HistoryRequest): Call<BaseResponse<StockTransferHistoryResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_TRANSFER_DETAIL))
+    fun getTransferDetails(@Body idRequest: IdRequest): Call<BaseResponse<StockTransferDetailItem>>?
 }
 
 

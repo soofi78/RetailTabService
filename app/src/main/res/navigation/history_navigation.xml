@@ -27,6 +27,15 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
 
+
+        <action
+            android:id="@+id/action_navigation_stock_transfer_history_fragment_to_transfer_details"
+            app:destination="@id/navigation_transfer_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
     </fragment>
 
     <fragment
@@ -34,6 +43,17 @@
         android:name="com.lfsolutions.retail.ui.taxinvoice.InvoiceDetailsFragment"
         android:label="Customers"
         tools:layout="@layout/fragment_invoice_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transfer_detail"
+        android:name="com.lfsolutions.retail.ui.stocktransfer.StockTransferDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_stock_transfer_details">
         <argument
             android:name="item"
             app:argType="string"

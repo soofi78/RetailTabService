@@ -12,6 +12,7 @@ import com.lfsolutions.retail.databinding.FragmentDocumentsBinding
 import com.lfsolutions.retail.model.Documents
 import com.lfsolutions.retail.ui.documents.history.HistoryFlowActivity
 import com.lfsolutions.retail.ui.documents.payment.PaymentFlowActivity
+import com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockFlowActivity
 import java.util.ArrayList
 
 class DocumentsFragment : Fragment() {
@@ -50,6 +51,13 @@ class DocumentsFragment : Fragment() {
         if (document is DocumentType.History) {
             openHistoryView()
         }
+        if (document is DocumentType.OutGoingStockRecord){
+            openOutGoingStockTransfer()
+        }
+    }
+
+    private fun openOutGoingStockTransfer() {
+        startActivity(Intent(requireActivity(), OutGoingStockFlowActivity::class.java))
     }
 
     private fun openHistoryView() {

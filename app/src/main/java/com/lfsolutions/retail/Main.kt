@@ -8,7 +8,6 @@ import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
-import com.lfsolutions.retail.model.sale.order.SalesOrder
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
@@ -19,7 +18,8 @@ class Main : Application() {
 
     private var saleOrder: SaleOrderRequest? = null
     private var taxInvoice: SaleInvoiceRequest? = null
-    private var stockTransferRequest: StockTransferRequestBody? = null
+    private var inComingStockTransferRequest: StockTransferRequestBody? = null
+    private var outGoingStockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ComplaintServiceRequest? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
 
@@ -76,16 +76,28 @@ class Main : Application() {
         complaintService = null
     }
 
-    fun getStockTransferRequestObject(): StockTransferRequestBody {
-        if (stockTransferRequest == null) {
-            stockTransferRequest = StockTransferRequestBody()
-            stockTransferRequest?.locationId = getSession().defaultLocationId
+    fun getInComingStockTransferRequestObject(): StockTransferRequestBody {
+        if (inComingStockTransferRequest == null) {
+            inComingStockTransferRequest = StockTransferRequestBody()
+            inComingStockTransferRequest?.locationId = getSession().defaultLocationId
         }
-        return stockTransferRequest!!
+        return inComingStockTransferRequest!!
     }
 
-    fun cleaStockTransfer() {
-        stockTransferRequest = null
+    fun clearInComingStockTransfer() {
+        inComingStockTransferRequest = null
+    }
+
+    fun getOutGoingStockTransferRequestObject(): StockTransferRequestBody {
+        if (outGoingStockTransferRequest == null) {
+            outGoingStockTransferRequest = StockTransferRequestBody()
+            outGoingStockTransferRequest?.locationId = getSession().defaultLocationId
+        }
+        return outGoingStockTransferRequest!!
+    }
+
+    fun clearOutGoingStockTransfer() {
+        outGoingStockTransferRequest = null
     }
 
     fun sessionExpired() {

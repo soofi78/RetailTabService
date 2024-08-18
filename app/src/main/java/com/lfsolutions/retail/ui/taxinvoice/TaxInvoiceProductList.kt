@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceEquipmentListBinding
+import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceStockEquipmentListBinding
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
@@ -42,7 +42,7 @@ class TaxInvoiceProductList : Fragment() {
     private lateinit var categoryAdapter: ProductCategoryAdapter
     private var productList: List<Product> = arrayListOf()
     private var categories: ArrayList<CategoryItem> = arrayListOf()
-    private lateinit var binding: FragmentSaleOrderInvoiceEquipmentListBinding
+    private lateinit var binding: FragmentSaleOrderInvoiceStockEquipmentListBinding
     private lateinit var mAdapter: ProductListAdapter
 
 
@@ -52,7 +52,7 @@ class TaxInvoiceProductList : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
-            binding = FragmentSaleOrderInvoiceEquipmentListBinding.inflate(layoutInflater)
+            binding = FragmentSaleOrderInvoiceStockEquipmentListBinding.inflate(layoutInflater)
             customer =
                 Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }

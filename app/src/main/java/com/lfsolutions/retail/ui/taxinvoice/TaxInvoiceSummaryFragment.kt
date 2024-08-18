@@ -67,7 +67,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         )
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
-            override fun onQuantityChanged(quantity: Int) {
+            override fun onQuantityChanged(quantity: Double) {
                 val index =
                     Main.app.getTaxInvoice()?.SalesInvoiceDetail?.indexOf(salesInvoiceDetail) ?: -1
                 if (index > -1) {
@@ -136,7 +136,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.txtTotal.text = "$currency " +
                 Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceGrandTotal.toString()
                     .formatDecimalSeparator()
-        mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceQty != 0
+        mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceQty != 0.0
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {

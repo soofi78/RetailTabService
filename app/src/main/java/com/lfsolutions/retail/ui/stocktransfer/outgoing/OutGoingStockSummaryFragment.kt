@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
 import android.graphics.Canvas
 import android.os.Bundle
@@ -10,34 +10,48 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.databinding.FragmentAgreementMemoSummaryBinding
+import com.lfsolutions.retail.databinding.FragmentOutGoingStockSummaryBinding
+import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
+import com.lfsolutions.retail.network.BaseResponse
+import com.lfsolutions.retail.network.Network
+import com.lfsolutions.retail.network.NetworkCall
+import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
-
 import com.videotel.digital.util.Notify
+import retrofit2.Call
+import retrofit2.Response
 
 
-class AgreementMemoSummaryFragment : Fragment() {
-
+class OutGoingStockSummaryFragment : Fragment() {
+    private lateinit var mBinding: FragmentOutGoingStockSummaryBinding
     private var itemSwipeHelper: ItemTouchHelper? = null
-    private var _binding: FragmentAgreementMemoSummaryBinding? = null
-    private val mBinding get() = _binding!!
-    private lateinit var mAdapter: AgreementMemoSummaryAdapter
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAgreementMemoSummaryBinding.inflate(inflater, container, false)
-        return mBinding.root
+    private lateinit var mAdapter: OutGoingStockSummaryAdapter
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        mBinding = FragmentOutGoingStockSummaryBinding.inflate(layoutInflater)
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = AgreementMemoSummaryAdapter(Main.app.getAgreementMemo()?.AgreementMemoDetail)
-        mAdapter.setListener(object : AgreementMemoSummaryAdapter.OnOrderSummarySelectListener {
-            override fun onOrderSummarySelect() {
-//                findNavController()
-//                    .navigate(R.id.action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment)
+        initiateView()
+    }
+
+
+    private fun initiateView() {
+        mAdapter = OutGoingStockSummaryAdapter(
+            requireActivity(),
+            Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails
+        )
+        mAdapter.setOnItemUpdateListener(object : OutGoingStockSummaryAdapter.OnItemUpdated {
+            override fun OnItemUpdated(stockTransferProduct: StockTransferProduct) {
+                updateSummaryAmountAndQty()
             }
         })
 
@@ -45,20 +59,34 @@ class AgreementMemoSummaryFragment : Fragment() {
         itemSwipeHelper?.attachToRecyclerView(mBinding.recyclerView)
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
-        mBinding.header.setBackText("Order Summary")
+        mBinding.header.setBackText("Back")
         Main.app.getSession().name?.let { mBinding.header.setName(it) }
         addOnClickListener()
+        mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
     }
 
+
     private fun updateSummaryAmountAndQty() {
-        Main.app.getAgreementMemo()?.updatePriceAndQty()
-        Main.app.getAgreementMemo()?.serializeItems()
-        val total =
-            Main.app.getAgreementMemo()?.AgreementMemo?.AgreementTotal?.formatDecimalSeparator()
-        val totalQty = Main.app.getAgreementMemo()?.AgreementMemo?.AgreementQty
-        mBinding.txtQTY.text = totalQty.toString()
-        mBinding.txtTotal.text = Main.app.getSession().currencySymbol + total.toString()
-        mBinding.btnComplete.isEnabled = totalQty != 0.0
+        mBinding.txtQTY.text = getQty().toString()
+        mBinding.txtTotal.text =
+            Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
+        mBinding.btnComplete.isEnabled = getQty() != 0.0
+    }
+
+    private fun getTotal(): Double {
+        var total = 0.0
+        Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach {
+            total += it.subTotal
+        }
+        return total
+    }
+
+    private fun getQty(): Double {
+        var qty = 0.0
+        Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach {
+            qty += it.qty
+        }
+        return qty
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {
@@ -86,7 +114,7 @@ class AgreementMemoSummaryFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
-                if (viewHolder is AgreementMemoSummaryAdapter.ViewHolder) {
+                if (viewHolder is OutGoingStockSummaryAdapter.ViewHolder) {
                     val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
                     return makeMovementFlags(0, swipeFlags)
                 } else return 0
@@ -96,12 +124,12 @@ class AgreementMemoSummaryFragment : Fragment() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ) {
-                getDefaultUIUtil().clearView((viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView())
+                getDefaultUIUtil().clearView((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 if (viewHolder != null) {
-                    getDefaultUIUtil().onSelected((viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView())
+                    getDefaultUIUtil().onSelected((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
                 }
             }
 
@@ -117,7 +145,7 @@ class AgreementMemoSummaryFragment : Fragment() {
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
-                    (viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -137,7 +165,7 @@ class AgreementMemoSummaryFragment : Fragment() {
                 getDefaultUIUtil().onDrawOver(
                     c,
                     recyclerView,
-                    (viewHolder as AgreementMemoSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -150,8 +178,7 @@ class AgreementMemoSummaryFragment : Fragment() {
     private fun addOnClickListener() {
         mBinding.btnCancel.setOnClickListener {
             Notify.toastLong("Cleared all items")
-            Main.app.getAgreementMemo()?.AgreementMemoDetail?.clear()
-            findNavController().popBackStack()
+            requireActivity().finish()
         }
 
         mBinding.header.setOnBackClick {

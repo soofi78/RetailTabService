@@ -14,7 +14,7 @@ data class ComplaintServiceRequest(
     }
 
     fun updatePriceAndQty() {
-        var totalPrice = 0
+        var totalPrice = 0.0
         var qty = 0
         complaintServiceDetails.forEach {
             totalPrice += it.price

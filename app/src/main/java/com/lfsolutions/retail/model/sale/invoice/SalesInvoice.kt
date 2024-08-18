@@ -26,7 +26,7 @@ data class SalesInvoice(
     @SerializedName("NetDiscount") var NetDiscount: Double? = 0.0,
     @SerializedName("InvoiceGrandTotal") var InvoiceGrandTotal: Double? = 0.0,
     @SerializedName("InvoiceTotalValue") var InvoiceTotalValue: Double? = 0.0,
-    @SerializedName("InvoiceQty") var InvoiceQty: Int? = 0,
+    @SerializedName("InvoiceQty") var InvoiceQty: Double? = 0.0,
     @SerializedName("Remarks") var Remarks: String? = null,
     @SerializedName("CreditDays") var CreditDays: Int? = 0,
     @SerializedName("SalesOrderId") var SalesOrderId: String? = null,

@@ -16,7 +16,7 @@ data class SaleInvoiceRequest(
     }
 
     fun updatePriceAndQty(dsc: Double = 0.0) {
-        var qty = 0
+        var qty = 0.0
         var netTotal = 0.0
         var discount = dsc
         var subTotal = 0.0

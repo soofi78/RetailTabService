@@ -22,7 +22,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
     private lateinit var binding: ProductQuantityUpdateSheetBinding
     private var image: String = ""
     private var name: String = ""
-    private var quantity: Int = 0
+    private var quantity: Double = 0.0
     private var price: Double = 0.0
     private var unitName: String = ""
     override fun onCreateView(
@@ -37,7 +37,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         Glide.with(requireContext()).load(Main.app.getBaseUrl() + image).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.imgProduct)
         binding.txtProductName.text = name
-        binding.txtQty.text = quantity.toString()
+        binding.txtQty.setText(quantity.toString())
         binding.etPrice.setText(price.formatDecimalSeparator())
         binding.txtCurrency.text = Main.app.getSession().currencySymbol.toString()
         binding.txtUnitName.text = " /$unitName"
@@ -53,21 +53,22 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
                 )
         }
 
-        binding.btnSub.setOnClickListener {
-            binding.txtQty.text.toString().toInt().let { qty ->
-                if (qty > 1) binding.txtQty.text = (qty - 1).toString()
+        binding.txtQty.addTextChangedListener {
+            if (binding.txtQty.text?.isNotEmpty() == true)
                 onProductDetailsChangeListener.onQuantityChanged(
-                    binding.txtQty.text.toString().toInt()
+                    binding.txtQty.text.toString().toDouble()
                 )
+        }
+
+        binding.btnSub.setOnClickListener {
+            binding.txtQty.text.toString().toDouble().let { qty ->
+                if (qty > 1) binding.txtQty.setText((qty - 1.0).toString())
             }
         }
 
         binding.btnAdd.setOnClickListener {
-            binding.txtQty.text.toString().toInt().let { qty ->
-                binding.txtQty.text = (qty + 1).toString()
-                onProductDetailsChangeListener.onQuantityChanged(
-                    binding.txtQty.text.toString().toInt()
-                )
+            binding.txtQty.text.toString().toDouble().let { qty ->
+                binding.txtQty.setText((qty + 1.0).toString())
             }
         }
     }
@@ -93,7 +94,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
     fun setProductDetails(
         image: String,
         name: String,
-        quantity: Int,
+        quantity: Double,
         price: Double,
         unitName: String
     ) {
@@ -109,7 +110,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
     }
 
     interface OnProductDetailsChangeListener {
-        fun onQuantityChanged(quantity: Int)
+        fun onQuantityChanged(quantity: Double)
         fun onPriceChanged(price: Double)
     }
 }

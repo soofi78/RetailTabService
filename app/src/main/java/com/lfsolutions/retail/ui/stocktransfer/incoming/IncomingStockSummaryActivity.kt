@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.outgoingstock
+package com.lfsolutions.retail.ui.stocktransfer.incoming
 
 import android.graphics.Canvas
 import android.os.Bundle
@@ -12,8 +12,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.ActivitySummaryBinding
-import com.lfsolutions.retail.model.outgoingstock.OutGoingProduct
+import com.lfsolutions.retail.databinding.FragmentOutGoingStockSummaryBinding
+import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -27,23 +27,23 @@ import retrofit2.Call
 import retrofit2.Response
 
 
-class OutGoingStockSummaryActivity : AppCompatActivity() {
-    private lateinit var mBinding: ActivitySummaryBinding
+class IncomingStockSummaryActivity : AppCompatActivity() {
+    private lateinit var mBinding: FragmentOutGoingStockSummaryBinding
     private var itemSwipeHelper: ItemTouchHelper? = null
-    private lateinit var mAdapter: OutGoingStockSummaryAdapter
-    private val outGoingProducts = arrayListOf<OutGoingProduct>()
+    private lateinit var mAdapter: InComingStockSummaryAdapter
+    private val stockTransferProducts = arrayListOf<StockTransferProduct>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        mBinding = ActivitySummaryBinding.inflate(layoutInflater)
+        mBinding = FragmentOutGoingStockSummaryBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        Main.app.getStockTransferRequestObject()
+        Main.app.getInComingStockTransferRequestObject()
         getOutGoingProductsFromIntent()
         initiateView()
     }
@@ -51,15 +51,15 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
     private fun getOutGoingProductsFromIntent() {
         val json = intent.getStringExtra(Constants.OutGoingProducts)
         val type = TypeToken.getParameterized(
-            ArrayList::class.java, OutGoingProduct::class.java
+            ArrayList::class.java, StockTransferProduct::class.java
         ).type
-        outGoingProducts.addAll(Gson().fromJson(json, type))
+        stockTransferProducts.addAll(Gson().fromJson(json, type))
     }
 
     private fun initiateView() {
-        mAdapter = OutGoingStockSummaryAdapter(this, outGoingProducts)
-        mAdapter.setOnItemUpdateListener(object : OutGoingStockSummaryAdapter.OnItemUpdated {
-            override fun OnItemUpdated(outGoingProduct: OutGoingProduct) {
+        mAdapter = InComingStockSummaryAdapter(this, stockTransferProducts)
+        mAdapter.setOnItemUpdateListener(object : InComingStockSummaryAdapter.OnItemUpdated {
+            override fun OnItemUpdated(stockTransferProduct: StockTransferProduct) {
                 updateSummaryAmountAndQty()
             }
         })
@@ -72,13 +72,13 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
         Main.app.getSession().name?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
-        Main.app.getStockTransferRequestObject()?.date =
+        Main.app.getInComingStockTransferRequestObject()?.date =
             mBinding.date.text.toString() + "T00:00:00Z"
         mBinding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(this, object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     mBinding.date.setText("$day-$month-$year")
-                    Main.app.getStockTransferRequestObject()?.date =
+                    Main.app.getInComingStockTransferRequestObject()?.date =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
@@ -90,20 +90,20 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
         mBinding.txtQTY.text = getQty().toString()
         mBinding.txtTotal.text =
             Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
-        mBinding.btnComplete.isEnabled = getQty() != 0
+        mBinding.btnComplete.isEnabled = getQty() != 0.0
     }
 
-    private fun getTotal(): Int {
-        var total = 0
-        outGoingProducts.forEach {
+    private fun getTotal(): Double {
+        var total = 0.0
+        stockTransferProducts.forEach {
             total += it.subTotal
         }
         return total
     }
 
-    private fun getQty(): Int {
-        var qty = 0
-        outGoingProducts.forEach {
+    private fun getQty(): Double {
+        var qty = 0.0
+        stockTransferProducts.forEach {
             qty += it.qty
         }
         return qty
@@ -134,7 +134,7 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
                 viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
-                if (viewHolder is OutGoingStockSummaryAdapter.ViewHolder) {
+                if (viewHolder is InComingStockSummaryAdapter.ViewHolder) {
                     val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
                     return makeMovementFlags(0, swipeFlags)
                 } else return 0
@@ -144,12 +144,12 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ) {
-                getDefaultUIUtil().clearView((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
+                getDefaultUIUtil().clearView((viewHolder as InComingStockSummaryAdapter.ViewHolder).getSwipableView())
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 if (viewHolder != null) {
-                    getDefaultUIUtil().onSelected((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
+                    getDefaultUIUtil().onSelected((viewHolder as InComingStockSummaryAdapter.ViewHolder).getSwipableView())
                 }
             }
 
@@ -165,7 +165,7 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
-                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as InComingStockSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -185,7 +185,7 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
                 getDefaultUIUtil().onDrawOver(
                     c,
                     recyclerView,
-                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as InComingStockSummaryAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -213,8 +213,8 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
             }
 
 
-            if (Main.app.getStockTransferRequestObject().date == null ||
-                Main.app.getStockTransferRequestObject().date?.isBlank() == true
+            if (Main.app.getInComingStockTransferRequestObject().date == null ||
+                Main.app.getInComingStockTransferRequestObject().date?.isBlank() == true
             ) {
                 Notify.toastLong("Please select date")
                 return@setOnClickListener
@@ -222,7 +222,8 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
 
 
 
-            Main.app.getStockTransferRequestObject().stockTransferDetails = outGoingProducts
+            Main.app.getInComingStockTransferRequestObject().stockTransferDetails =
+                stockTransferProducts
             NetworkCall.make()
                 .autoLoadigCancel(Loading().forApi(this, "Requesting Stock Transfer"))
                 .setCallback(object : OnNetworkResponse {
@@ -236,18 +237,18 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
                     }
                 }).enque(
                     Network.api()
-                        ?.createUpdateStockTransfer(Main.app.getStockTransferRequestObject())
+                        ?.createUpdateInComingStockTransfer(Main.app.getInComingStockTransferRequestObject())
                 ).execute()
         }
     }
 
     private fun serialBatchVerified(): Boolean {
         var verified = true
-        outGoingProducts.forEach {
+        stockTransferProducts.forEach {
             val serial = it.isAsset == true || it.type.equals("S")
             val notBatched = it.productBatchList == null || it.productBatchList.size == 0
             val batchedAndQtyNotMatch =
-                it.productBatchList != null && it.qty != it.productBatchList.size
+                it.productBatchList != null && it.qty.toInt() != it.productBatchList.size
             if (serial && (notBatched || batchedAndQtyNotMatch)) {
                 verified = false
             }
@@ -257,6 +258,6 @@ class OutGoingStockSummaryActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Main.app.cleaStockTransfer()
+        Main.app.clearInComingStockTransfer()
     }
 }
