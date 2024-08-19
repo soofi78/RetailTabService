@@ -12,6 +12,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentHistoryListingBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.outgoingstock.StockTransfer
@@ -26,6 +27,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
@@ -40,6 +42,7 @@ class HistoryFragmentListing : Fragment() {
 
     private var selectedType: HistoryType? = null
     private var customer: Customer? = null
+    private var isCustomerSpecificHistory: Boolean = false
     private var endDate: String? = null
     private var startDate: String? = null
     private lateinit var binding: FragmentHistoryListingBinding
@@ -47,9 +50,14 @@ class HistoryFragmentListing : Fragment() {
     private val invoices = ArrayList<HistoryItemInterface>()
     private val receipts = ArrayList<HistoryItemInterface>()
     private val outgoing = ArrayList<HistoryItemInterface>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    private fun setCustomerFromIntent() {
+        if (requireActivity() is FormsActivity && (requireActivity() as FormsActivity).customer != null) {
+            customer = (requireActivity() as FormsActivity).customer
+            isCustomerSpecificHistory = true
+        }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -60,18 +68,8 @@ class HistoryFragmentListing : Fragment() {
             binding.header.setOnBackClick {
                 requireActivity().finish()
             }
-            binding.types.adapter = HistoryTypeAdapter(arrayListOf(
-                HistoryType.Order,
-                HistoryType.Invoices,
-                HistoryType.Receipts,
-                HistoryType.OutgoingTransfer
-            ), object : OnHistoryTypeClicked {
-                override fun onHistoryTypeClicked(type: HistoryType) {
-                    getHistory(type)
-                }
-            })
-            getHistory(HistoryType.Order)
         }
+        getHistory(HistoryType.Order)
         binding.filterView.setOnClickListener {
             val filterSheet = HistoryFilterSheet()
             filterSheet.setFilteredData(customer, startDate, endDate)
@@ -94,6 +92,39 @@ class HistoryFragmentListing : Fragment() {
 
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setCustomerFromIntent()
+        setHistoryTabAdapter()
+        customerSpecificHistoryViewChanges()
+    }
+
+    private fun customerSpecificHistoryViewChanges() {
+        binding.filterView.visibility = if (isCustomerSpecificHistory) View.GONE else View.VISIBLE
+        binding.header.visibility = if (isCustomerSpecificHistory) View.GONE else View.VISIBLE
+    }
+
+    private fun setHistoryTabAdapter() {
+        binding.types.adapter =
+            HistoryTypeAdapter(getHistoryTypeList(), object : OnHistoryTypeClicked {
+                override fun onHistoryTypeClicked(type: HistoryType) {
+                    getHistory(type)
+                }
+            })
+    }
+
+    private fun getHistoryTypeList(): java.util.ArrayList<HistoryType> {
+        val list = arrayListOf(
+            HistoryType.Order,
+            HistoryType.Invoices,
+            HistoryType.Receipts,
+        )
+        if (isCustomerSpecificHistory.not()) {
+            list.add(HistoryType.OutgoingTransfer)
+        }
+        return list
     }
 
     private fun setCustomerFilterData() {

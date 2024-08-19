@@ -75,11 +75,6 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
             Notify.toastLong("Please select an item first")
             return
         }
-
-        if (binding.remarks.text.toString().isEmpty()) {
-            Notify.toastLong("Please add remarks")
-            return
-        }
         if (paymentTypes.isEmpty()) getPaymentTypes()
         else showPaymentTypes()
     }

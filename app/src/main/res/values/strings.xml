@@ -18,7 +18,7 @@
     <string name="label_visitation_schedule">Visitation Schedule</string>
     <string name="label_all_customer">All Customers</string>
     <string name="label_documents">Documents</string>
-    <string name="label_outgoing_stock_record">Outgoing Stock Record</string>
+    <string name="label_outgoing_stock_record">Stock Transfer</string>
     <string name="label_daily_sales_record">Daily Sales Record</string>
     <string name="label_driver_memo">Driver\'s Memo</string>
     <string name="title_activity_item_details">ItemDetails</string>
@@ -31,7 +31,7 @@
     <string name="label_rent">Rent</string>
     <string name="label_exchange">Exchange</string>
     <string name="label_return">Return</string>
-    <string name="label_add">Add</string>
+    <string name="label_add">Add Item</string>
     <string name="label_add_to_order">Add to Order</string>
     <string name="label_sale_option">Sale Option</string>
     <string name="label_sign_on">Sign On</string>
@@ -116,5 +116,6 @@
     <string name="label_view_sale_invoice">View Sale Invoice</string>
     <string name="label_payment">Payment</string>
     <string name="label_history">History</string>
+    <string name="stock_receive">Stock Receive</string>
 
 </resources>

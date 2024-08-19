@@ -29,6 +29,7 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
         if (Main.app.getSession().isSupervisor?.not() == true) {
             binding.newServiceForm.visibility = View.GONE
             binding.newAgreementMemo.visibility = View.GONE
+            binding.newSaleOrder.visibility = View.GONE
         }
 
         binding.newServiceForm.setOnClickListener {

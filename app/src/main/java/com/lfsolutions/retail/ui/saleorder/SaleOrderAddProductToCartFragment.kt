@@ -23,6 +23,8 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
+import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
+import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
@@ -73,7 +75,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
     }
 
     private fun setData() {
-        mBinding.txtQty.text = "1"
+        mBinding.txtQty.text = "1.0"
         product?.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
@@ -97,15 +99,11 @@ class SaleOrderAddProductToCartFragment : Fragment() {
     private fun addOnClickListener() {
 
         mBinding.btnSub.setOnClickListener {
-            mBinding.txtQty.text.toString().toInt().let { qty ->
-                if (qty > 1) mBinding.txtQty.text = (qty - 1).toString()
-            }
+            openQuantityUpdateDialog()
         }
 
         mBinding.btnAdd.setOnClickListener {
-            mBinding.txtQty.text.toString().toInt().let { qty ->
-                mBinding.txtQty.text = (qty + 1).toString()
-            }
+            openQuantityUpdateDialog()
         }
 
         mBinding.btnSave.setOnClickListener {
@@ -129,6 +127,30 @@ class SaleOrderAddProductToCartFragment : Fragment() {
             addToCart()
             it.findNavController().popBackStack()
         }
+    }
+
+    private fun openQuantityUpdateDialog() {
+        val modal = ProductQuantityUpdateSheet()
+        modal.setProductDetails(
+            product.imagePath.toString(),
+            product.productName.toString(),
+            mBinding.txtQty.text.toString().toDouble(),
+            product.cost ?: 0.0,
+            product.unitName.toString()
+        )
+        modal.setOnProductDetailsChangedListener(object :
+            ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
+            override fun onQuantityChanged(quantity: Double) {
+                mBinding.txtQty.text = quantity.toString()
+                updateTotal()
+            }
+
+            override fun onPriceChanged(price: Double) {
+                product.cost = price
+                updateTotal()
+            }
+        })
+        requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
     }
 
     private fun addToCart() {
@@ -230,7 +252,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
     private fun updateTotal() {
         val currency = Main.app.getSession().currencySymbol
         val totalAmount =
-            (mBinding.txtQty.text.toString().toInt() * (product.cost ?: 0.0)).toDouble()
+            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0)).toDouble()
         val discount = 0.0
         val subTotal = totalAmount - discount
         val taxAmount = subTotal * (product.getApplicableTaxRate() / 100.0)

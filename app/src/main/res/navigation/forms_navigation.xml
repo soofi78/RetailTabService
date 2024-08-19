@@ -53,9 +53,9 @@
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.lfsolutions.retail.ui.forms.history.HistoryFragment"
+        android:name="com.lfsolutions.retail.ui.documents.history.HistoryFragmentListing"
         android:label="@string/title_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history_listing" />
 
     <fragment
         android:id="@+id/navigation_tax_invoice"
@@ -174,8 +174,7 @@
         android:id="@+id/navigation_sale_order_to_product_summary"
         android:name="com.lfsolutions.retail.ui.saleorder.SaleOrderSummaryFragment"
         android:label="Cart"
-        tools:layout="@layout/fragment_tax_invoice_summary">
-    </fragment>
+        tools:layout="@layout/fragment_tax_invoice_summary"></fragment>
 
     <fragment
         android:id="@+id/navigation_add_product_to_sale_order"
@@ -343,5 +342,16 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_customer_details"
+        android:name="com.lfsolutions.retail.ui.customer.CustomerDetailsFragment"
+        android:label="Customer Details"
+        tools:layout="@layout/fragment_customer_details">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 </navigation>

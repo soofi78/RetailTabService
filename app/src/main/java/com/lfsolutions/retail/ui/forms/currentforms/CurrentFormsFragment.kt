@@ -23,6 +23,7 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormAdapter
 import com.lfsolutions.retail.ui.forms.FormType
+import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -47,25 +48,23 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun setCustomer() {
-        customer = Gson().fromJson(
-            requireActivity().intent.getStringExtra(Constants.Customer), Customer::class.java
-        )
+        customer = (requireActivity() as FormsActivity).customer
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setCustomerData()
         getFormsData()
         addOnClickListener()
         setAdapter(null)
-        setupHeader()
-
     }
 
     private fun setupHeader() {
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
-        mBinding.header.setOnBackClick { requireActivity().finish() }
-        mBinding.header.setBackText("Current Forms")
+        (requireActivity() as FormsActivity).setTitle("Current Forms")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupHeader()
     }
 
     private fun openSelectedForm(formType: FormType?) {
@@ -115,7 +114,11 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         if (Main.app.getSession().isSupervisor == true) {
             forms?.let { filtered.addAll(it) }
         } else {
-            forms?.filter { (it.getType() != FormType.AgreementMemo || it.getType() != FormType.ServiceForm) }
+            forms?.filter {
+                (it.getType() != FormType.AgreementMemo
+                        && it.getType() != FormType.ServiceForm
+                        && it.getType() != FormType.SaleOrder)
+            }
                 ?.let { filtered.addAll(it) }
         }
         mAdapter = FormAdapter(filtered)
@@ -131,11 +134,6 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         val loading = Loading().forApi(requireActivity())
         NetworkCall.make().setCallback(this).setTag("FROMS").autoLoadigCancel(loading)
             .enque(Network.api()?.getCustomerForm(FormsRequest(customer?.id))).execute()
-    }
-
-    private fun setCustomerData() {
-        mBinding.txtCustomerName.text = customer?.name
-        mBinding.txtAddress.text = customer?.address1
     }
 
     private fun addOnClickListener() {

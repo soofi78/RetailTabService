@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -53,6 +54,21 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
                 )
         }
 
+        binding.etPrice.isEnabled = Main.app.getSession().isEditPrice
+        binding.priceView.isEnabled = Main.app.getSession().isEditPrice
+        binding.priceView.isClickable = Main.app.getSession().isEditPrice
+
+        if (Main.app.getSession().isEditPrice) {
+            binding.txtUnitName.setCompoundDrawables(
+                null, null, ContextCompat.getDrawable(
+                    binding.root.context,
+                    R.drawable.ic_edit
+                ), null
+            )
+        } else {
+            binding.txtUnitName.setCompoundDrawables(null, null, null, null)
+        }
+
         binding.txtQty.addTextChangedListener {
             if (binding.txtQty.text?.isNotEmpty() == true)
                 onProductDetailsChangeListener.onQuantityChanged(
@@ -96,7 +112,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         name: String,
         quantity: Double,
         price: Double,
-        unitName: String
+        unitName: String,
     ) {
         this.image = image
         this.name = name
