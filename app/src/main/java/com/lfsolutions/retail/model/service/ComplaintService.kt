@@ -1,10 +1,12 @@
 package com.lfsolutions.retail.model.service
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.DateTime
 
 
 data class ComplaintService(
-    @SerializedName("id") var id: String? = null,
+    @SerializedName("id") var id: Int? = null,
     @SerializedName("csNo") var csNo: String? = null,
     @SerializedName("csDate") var csDate: String? = null,
     @SerializedName("locationId") var locationId: Int? = null,
@@ -13,7 +15,7 @@ data class ComplaintService(
     @SerializedName("status") var status: String? = "C",
     @SerializedName("remarks") var remarks: String? = null,
     @SerializedName("tenantId") var tenantId: Int? = null,
-    @SerializedName("totalQty") var totalQty: Int? = null,
+    @SerializedName("totalQty") var totalQty: Double? = 0.0,
     @SerializedName("totalPrice") var totalPrice: Double = 0.0,
     @SerializedName("timeIn") var timeIn: String? = null,
     @SerializedName("timeOut") var timeOut: String? = null,
@@ -32,4 +34,25 @@ data class ComplaintService(
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null,
     @SerializedName("date") var date: String? = null
-)
+) : HistoryItemInterface {
+    override fun getTitle(): String {
+        return csNo + " / " + transferDateFormatted()
+    }
+
+    fun transferDateFormatted(): String {
+        val date = DateTime.getDateFromString(
+            csDate?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        return formatted ?: csDate ?: ""
+    }
+
+    override fun getDescription(): String {
+        return customerName + " / " + status
+    }
+
+    override fun getAmount(): String {
+        return "Qty: " + totalQty.toString()
+    }
+}

@@ -24,8 +24,10 @@ object Api {
         const val GET_SALES_TRANSACTIONS = "SalesTransaction/GetSalesTransactions"
         const val GET_SALES_ORDERS = "SalesOrder/GetAll"
         const val GET_SALES_ORDER_DETAIL = "SalesOrder/GetSalesOrderForEdit"
+        const val GET_SALES_ORDER_PDF = "salesOrder/GetSalesOrderPrintPdfAttachment"
         const val GET_SALES_INVOICES = "SalesInvoice/GetAll"
         const val GET_SALE_INVOICE_DETAIL = "SalesInvoice/GetSalesInvoiceForEdit"
+        const val GET_SALE_INVOICE_PDF = "salesInvoice/GetSalesInvoicePrintPdfAttachment"
         const val GET_SALE_RECEIPT = "SalesReceipt/GetAll"
         const val DELETE_SALE_RECEIPT = "salesReceipt/DeleteSalesReceipt"
         const val GET_LOCATIONS = "Location/GetLocations"
@@ -45,5 +47,10 @@ object Api {
         const val CREATE_UPDATE_MEMO = "agreementMemo/CreateOrUpdateAgreementMemo"
         const val CREATE_UPDATE_COMPLAINT_SERVICE =
             "complaintService/CreateOrUpdateComplaintService"
+        const val GET_COMPLAINT_SERVICE_PDF =
+            "ComplaintService/GetComplaintServicePrintPdfAttachment"
+        const val GET_AGREEMENT_MEMO_PDF = "AgreementMemo/GetAgreementMemoPrintPdfAttachment"
+        const val GET_ALL_AGREEMENT_MEMO_LIST = "agreementMemo/GetAll"
+        const val GET_ALL_COMPLAINT_SERVICE_LIST = "complaintService/GetAll"
     }
 }

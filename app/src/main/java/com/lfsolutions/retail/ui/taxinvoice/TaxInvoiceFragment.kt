@@ -119,7 +119,12 @@ class TaxInvoiceFragment : Fragment() {
                 arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
                 object : OnOptionItemClick {
                     override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                        customer?.let { it1 ->
+                            CustomerDetailActivity.start(
+                                requireActivity(),
+                                it1
+                            )
+                        }
                     }
                 })
         }
@@ -160,6 +165,11 @@ class TaxInvoiceFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (Main.app.getTaxInvoice()?.SalesInvoiceDetail?.size == 0) {
                 Notify.toastLong("Please add products")
+                return@setOnClickListener
+            }
+
+            if (binding.signaturePad.isEmpty) {
+                Notify.toastLong("Please add your signature")
                 return@setOnClickListener
             }
 

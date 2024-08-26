@@ -18,6 +18,7 @@ data class UserSession(
     @SerializedName("dashboard") var dashboard: Boolean? = null,
     @SerializedName("posInvoiceRounded") var posInvoiceRounded: Int? = null,
     @SerializedName("defaultLocationId") var defaultLocationId: Int? = null,
+    @SerializedName("defaultLocation") var defaultLocation: String? = null,
     @SerializedName("locationCode") var locationCode: String? = null,
     @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("vendorId") var vendorId: String? = null,

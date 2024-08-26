@@ -15,7 +15,18 @@ class HistoryTypeAdapter(
 ) :
     RecyclerView.Adapter<HistoryTypeAdapter.ViewHolder>() {
 
-    private var lastCheckedButton: ToggleButton? = null
+    var lastSelectedIndex = -1
+
+    init {
+        types.forEach {
+            if (it.type == HistoryType.Order.type) {
+                it.selected = true
+                lastSelectedIndex = 0
+            } else {
+                it.selected = false
+            }
+        }
+    }
 
     class ViewHolder(val binding: HistoryItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -30,40 +41,36 @@ class HistoryTypeAdapter(
     override fun getItemCount(): Int = types.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.item.textOn = types[position].type
-        holder.binding.item.textOff = types[position].type
+        if (types[position].selected) {
+            holder.binding.item.setBackgroundResource(R.drawable.rounded_corner_orange_background)
+        } else {
+            holder.binding.item.setBackgroundResource(R.drawable.rounded_corner_dark_grey)
+        }
+
         holder.binding.item.text = types[position].type
-        holder.binding.item.setCompoundDrawables(
+        holder.binding.item.setCompoundDrawablesWithIntrinsicBounds(
             ContextCompat.getDrawable(
                 holder.binding.item.context,
                 types[position].icon
             ), null, null, null
         )
         holder.binding.item.tag = types[position]
-        holder.binding.item.isChecked = types[position].selected
-        if (position == 0 && types[0].selected) {
-            lastCheckedButton = holder.binding.item
-        }
-        holder.binding.item.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                lastCheckedButton?.isChecked = false
-                lastCheckedButton?.let {
-                    (it.tag as HistoryType).selected = false
-                }
-                (buttonView.tag as HistoryType).selected = true
-                lastCheckedButton = buttonView as ToggleButton?
-                onHistoryTypeClicked.onHistoryTypeClicked(buttonView.tag as HistoryType)
-                try {
-                    notifyDataSetChanged()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        holder.binding.item.setOnClickListener { buttonView ->
+            (buttonView.tag as HistoryType).selected = true
+            if (lastSelectedIndex > -1 && lastSelectedIndex != position)
+                types[lastSelectedIndex].selected = false
+            lastSelectedIndex = position
+            onHistoryTypeClicked.onHistoryTypeClicked(buttonView.tag as HistoryType)
+            try {
+                notifyDataSetChanged()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
-    fun getSelectedItem(): HistoryType {
-        return if (lastCheckedButton == null) return HistoryType.Order else lastCheckedButton?.tag as HistoryType
+    fun getSelectedHistoryItem() {
+
     }
 }
 

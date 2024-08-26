@@ -111,11 +111,12 @@ class OutGoingStockFragment : Fragment() {
         }
 
 
-        binding.wareHouseName.text = Main.app.getSession().wareHouseLocationName
+        binding.wareHouseName.text = Main.app.getSession().defaultLocation.toString()
+
     }
 
     private fun setHeaderData() {
-        binding.header.setBackText("OutGoing Stock Transfer")
+        binding.header.setBackText("Stock Transfer")
         Main.app.getSession().name?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             requireActivity().finish()

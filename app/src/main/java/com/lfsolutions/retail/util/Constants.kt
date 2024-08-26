@@ -2,6 +2,7 @@ package com.lfsolutions.retail.util
 
 object Constants {
 
+    const val DownloadPdf: String="Download PDF"
     const val Print: String = "Print"
     const val Delete: String = "Delete"
     const val Item: String = "item"

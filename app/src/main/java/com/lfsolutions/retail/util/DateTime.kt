@@ -208,7 +208,6 @@ object DateTime {
         )
         mTimePicker.setOnCancelListener { dialog ->
             dialog.dismiss()
-            callback?.onTimeSelected("00", "00", "00")
         }
         mTimePicker.show()
     }

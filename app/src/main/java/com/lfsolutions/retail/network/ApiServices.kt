@@ -23,6 +23,7 @@ import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
@@ -36,6 +37,7 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.model.service.ActionTypeResult
+import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.model.service.ComplaintServiceRequest
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
@@ -156,11 +158,29 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_STOCK_TRANSFER_HISTORY))
     fun getAllStockTransfer(@Body request: HistoryRequest): Call<BaseResponse<StockTransferHistoryResult>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_AGREEMENT_MEMO_LIST))
+    fun getAllAgreementMemo(@Body request: HistoryRequest): Call<BaseResponse<AgreementMemoHistoryResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_COMPLAINT_SERVICE_LIST))
+    fun getAllComplaintServices(@Body request: HistoryRequest): Call<BaseResponse<ComplaintServiceHistoryResult>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_TRANSFER_DETAIL))
     fun getTransferDetails(@Body idRequest: IdRequest): Call<BaseResponse<StockTransferDetailItem>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_TRANSFER_PDF))
     fun getStockTransferPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_PDF))
+    fun getSaleInvoicePDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_PDF))
+    fun getSaleOrderPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_COMPLAINT_SERVICE_PDF))
+    fun getComplaintServicePDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_PDF))
+    fun getAgreementMemoPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 }
 
 

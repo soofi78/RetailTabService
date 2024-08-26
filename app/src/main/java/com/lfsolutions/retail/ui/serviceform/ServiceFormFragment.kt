@@ -186,6 +186,11 @@ class ServiceFormFragment : Fragment() {
             Notify.toastLong("Please add products")
             return
         }
+
+        if (binding.signaturePad.isEmpty) {
+            Notify.toastLong("Please add your signature")
+            return
+        }
         uploadSignature()
     }
 
@@ -290,7 +295,12 @@ class ServiceFormFragment : Fragment() {
                 arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
                 object : OnOptionItemClick {
                     override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                        customer?.let { it1 ->
+                            CustomerDetailActivity.start(
+                                requireActivity(),
+                                it1
+                            )
+                        }
                     }
                 })
         }

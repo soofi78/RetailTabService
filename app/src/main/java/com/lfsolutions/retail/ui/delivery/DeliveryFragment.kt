@@ -48,7 +48,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     ): View {
 
         _binding = FragmentDeliveryBinding.inflate(inflater, container, false)
-
         return mBinding.root
 
     }
@@ -64,7 +63,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
         mBinding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
-        getCustomerDetails()
     }
 
     private fun generateOutStock(scheduledList: ArrayList<Customer>) {
@@ -117,6 +115,11 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         startActivity(FormsActivity.getInstance(context = requireContext()).apply {
             putExtra(Constants.Customer, Gson().toJson(customer))
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getCustomerDetails()
     }
 
     override fun onDestroyView() {

@@ -160,7 +160,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/rounded_corner_light_gray_background"
-                android:inputType="text"
+                android:inputType="numberSigned"
                 android:maxLines="1"
                 android:padding="15dp"
                 android:singleLine="true" />

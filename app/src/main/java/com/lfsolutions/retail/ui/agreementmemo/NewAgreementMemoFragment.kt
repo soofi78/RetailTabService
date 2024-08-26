@@ -135,6 +135,11 @@ class NewAgreementMemoFragment : Fragment() {
                 Notify.toastLong("No Product added into the list")
                 return@setOnClickListener
             }
+
+            if (mBinding.signaturePad.isEmpty) {
+                Notify.toastLong("Please add your signature")
+                return@setOnClickListener
+            }
             NetworkCall.make()
                 .autoLoadigCancel(Loading().forApi(requireActivity(), "Uploading Signature..."))
                 .setCallback(
@@ -158,6 +163,9 @@ class NewAgreementMemoFragment : Fragment() {
                 .execute()
         }
 
+        mBinding.btnCancel.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun saveAgreement() {

@@ -136,6 +136,11 @@ class SaleOrderFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            if (binding.signaturePad.isEmpty) {
+                Notify.toastLong("Please add your signature")
+                return@setOnClickListener
+            }
+
             Main.app.getSaleOrder()?.serializeItems()
             Main.app.getSaleOrder()?.SalesOrder?.CustomerName =
                 binding.inputCustomerName.text.toString()

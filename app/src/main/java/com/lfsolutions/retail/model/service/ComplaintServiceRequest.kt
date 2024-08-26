@@ -15,10 +15,10 @@ data class ComplaintServiceRequest(
 
     fun updatePriceAndQty() {
         var totalPrice = 0.0
-        var qty = 0
+        var qty = 0.0
         complaintServiceDetails.forEach {
             totalPrice += it.price
-            qty += it.qty?.toInt() ?: 0
+            qty += it.qty?.toDouble() ?: 0.0
         }
 
         complaintService?.totalQty = qty

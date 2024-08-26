@@ -20,6 +20,10 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -73,6 +77,38 @@ class OrderDetailsFragment : Fragment() {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
             })
+
+        binding.pdf.setOnClickListener {
+            getPDFLink()
+        }
+    }
+
+    private fun getPDFLink() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val downloadPath =
+                        (response?.body() as BaseResponse<String>).result?.split("develop\\")
+                            ?.last()
+                    val name =
+                        DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
+                            "Upload\\"
+                        )?.last().toString()
+                    DocumentDownloader.download(
+                        name,
+                        AppSession[Constants.baseUrl] + downloadPath,
+                        requireActivity()
+                    )
+                    Notify.toastLong("Downloading Started")
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Download Failed")
+                }
+            }).enque(
+                Network.api()?.getSaleOrderPDF(IdRequest(id = item.id))
+            ).execute()
     }
 
     private fun getSaleInvoiceDetail() {
