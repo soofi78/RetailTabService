@@ -26,9 +26,12 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
+import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
+import com.lfsolutions.retail.ui.widgets.options.OptionItem
+import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.makeTextBold
 import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
@@ -109,18 +112,17 @@ class TaxInvoiceFragment : Fragment() {
     }
 
     private fun setCustomerData() {
-        binding.txtGroup.text = makeTextBold(
-            text = getString(R.string.prefix_group, customer.group), startIndex = 8
-        )
-        binding.txtCustomerName.text = customer.name
-        binding.txtAddress.text = customer.address1
-        binding.txtAccountNo.text = makeTextBold(
-            text = getString(R.string.prefix_account_no, customer.customerCode), startIndex = 8
-        )
-
-        binding.txtArea.text =
-            makeTextBold(text = getString(R.string.prefix_area, customer.area), startIndex = 7)
-
+        customer?.let { binding.customerView.setCustomer(it) }
+        binding.customerView.setOnClickListener {
+            OptionsBottomSheet.show(
+                requireActivity().supportFragmentManager,
+                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
+                object : OnOptionItemClick {
+                    override fun onOptionItemClick(optionItem: OptionItem) {
+                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                    }
+                })
+        }
     }
 
     private fun setPaymentTermsAdapter() {

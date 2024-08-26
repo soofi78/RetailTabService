@@ -158,6 +158,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_TRANSFER_DETAIL))
     fun getTransferDetails(@Body idRequest: IdRequest): Call<BaseResponse<StockTransferDetailItem>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_TRANSFER_PDF))
+    fun getStockTransferPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 }
 
 

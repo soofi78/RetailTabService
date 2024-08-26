@@ -20,10 +20,14 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormAdapter
 import com.lfsolutions.retail.ui.forms.FormType
 import com.lfsolutions.retail.ui.forms.FormsActivity
+import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
+import com.lfsolutions.retail.ui.widgets.options.OptionItem
+import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -40,7 +44,6 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentCurrentFormsBinding.inflate(inflater, container, false)
         setCustomer()
         return mBinding.root
@@ -53,19 +56,33 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupHeader()
+        setCustomerData()
         getFormsData()
         addOnClickListener()
         setAdapter(null)
     }
 
     private fun setupHeader() {
-        (requireActivity() as FormsActivity).setTitle("Current Forms")
+        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        mBinding.header.setOnBackClick { requireActivity().finish() }
+        mBinding.header.setBackText("Customer Forms")
     }
 
-    override fun onResume() {
-        super.onResume()
-        setupHeader()
+    private fun setCustomerData() {
+        customer?.let { mBinding.customerView.setCustomer(it) }
+        mBinding.customerView.setOnClickListener {
+            OptionsBottomSheet.show(
+                requireActivity().supportFragmentManager,
+                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
+                object : OnOptionItemClick {
+                    override fun onOptionItemClick(optionItem: OptionItem) {
+                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                    }
+                })
+        }
     }
+
 
     private fun openSelectedForm(formType: FormType?) {
         when (formType) {

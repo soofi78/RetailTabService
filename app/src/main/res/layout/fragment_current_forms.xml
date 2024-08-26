@@ -5,13 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.lfsolutions.retail.ui.widgets.HeaderView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/yellow"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.lfsolutions.retail.ui.customer.CustomerView
+        android:id="@+id/customerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customerView"
         tools:itemCount="3"
         tools:listitem="@layout/item_form" />
 

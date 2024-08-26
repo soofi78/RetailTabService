@@ -55,7 +55,7 @@ class DeliveryItemAdapter(
 
     private fun setScheduleData(binding: ItemScheduledBinding, customer: Customer?) {
 
-        binding.root.setBackgroundColor(binding.root.resources.getColor(if (customer?.IsVisited == true) R.color.red else R.color.white))
+        binding.root.setBackgroundColor(binding.root.resources.getColor(if (customer?.IsVisited == true) R.color.light_red else R.color.white))
         binding.txtGroup.text =
             makeTextBold(
                 text = binding.txtGroup.context.getString(

@@ -14,112 +14,20 @@
         app:cardBackgroundColor="@color/yellow"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardCustomerInfo"
+    <com.lfsolutions.retail.ui.customer.CustomerView
+        android:id="@+id/customerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
         app:cardBackgroundColor="@color/sandal"
-        app:layout_constraintTop_toBottomOf="@+id/header">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoCustomer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/person_black"
-                app:layout_constraintBottom_toBottomOf="@id/flowCustomerInfo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/flowCustomerInfo" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowCustomerInfo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="flowName,txtAddress,flowGroup"
-                app:flow_horizontalAlign="start"
-                app:flow_verticalGap="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/icoCustomer"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:constraint_referenced_ids="txtCustomerName,txtAccountNo"
-                app:layout_constraintHorizontal_chainStyle="spread_inside" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtCustomerName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="BKE Coffeeshop 1"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtAccountNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="A/C No. AZ0001"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:constraint_referenced_ids="txtGroup,txtArea"
-                app:flow_horizontalGap="30dp"
-                app:layout_constraintHorizontal_chainStyle="spread_inside" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Group: ABC"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintHorizontal_weight="1" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtArea"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Area: W"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintHorizontal_weight="1" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtAddress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="12 Tai Seng St, LEVEL 5 LUXASIA Building, Singapore 53411"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toBottomOf="@+id/header"/>
 
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardCustomerInfo">
+        app:layout_constraintTop_toBottomOf="@+id/customerView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

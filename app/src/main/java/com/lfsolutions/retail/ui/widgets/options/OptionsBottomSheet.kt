@@ -30,6 +30,7 @@ class OptionsBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.options.adapter = OptionsAdapter(options, object : OnOptionItemClick {
             override fun onOptionItemClick(optionItem: OptionItem) {
+                optionSheet?.dismiss()
                 this@OptionsBottomSheet.onOptionItemClick?.onOptionItemClick(optionItem)
             }
         })
@@ -58,16 +59,16 @@ class OptionsBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "OptionsBottomSheetDialog"
-
+        private var optionSheet: OptionsBottomSheet? = null
         fun show(
             supportFragmentManager: FragmentManager,
             options: ArrayList<OptionItem>,
             optionItemClick: OnOptionItemClick
         ) {
-            val modal = OptionsBottomSheet()
-            modal.setOnClickListener(optionItemClick)
-            modal.setOptions(options)
-            supportFragmentManager.let { modal.show(it, TAG) }
+            optionSheet = OptionsBottomSheet()
+            optionSheet?.setOnClickListener(optionItemClick)
+            optionSheet?.setOptions(options)
+            supportFragmentManager.let { optionSheet?.show(it, TAG) }
         }
     }
 }

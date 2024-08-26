@@ -23,7 +23,7 @@
         android:background="@color/sandal"
         android:gravity="center_vertical"
         android:padding="15dp"
-        android:text="Summary for Outgoing Stock Record "
+        android:text="Summary for Stock Receive"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -191,7 +191,7 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corner_yellow_background"
-            android:text="Close" />
+            android:text="Save" />
 
     </LinearLayout>
 

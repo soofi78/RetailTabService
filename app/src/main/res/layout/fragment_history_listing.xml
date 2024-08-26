@@ -12,6 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.lfsolutions.retail.ui.customer.CustomerView
+        android:id="@+id/customerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+
     <RelativeLayout
         android:id="@+id/filterView"
         android:layout_width="match_parent"

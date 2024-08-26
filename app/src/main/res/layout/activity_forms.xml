@@ -20,19 +20,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/item_detail_menu" />
 
-    <com.lfsolutions.retail.ui.widgets.HeaderView
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/yellow"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.lfsolutions.retail.ui.customer.CustomerView
-        android:id="@+id/customerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
-
     <fragment
         android:id="@+id/nav_host_fragment_activity_item_details"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -42,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customerView"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/forms_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

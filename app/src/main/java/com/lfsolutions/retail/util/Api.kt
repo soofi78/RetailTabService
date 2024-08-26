@@ -31,6 +31,7 @@ object Api {
         const val GET_LOCATIONS = "Location/GetLocations"
         const val GET_ALL_STOCK_TRANSFER_HISTORY = "stockTransfer/GetAll"
         const val GET_STOCK_TRANSFER_DETAIL = "stockTransfer/GetStockTransferForEdit"
+        const val GET_STOCK_TRANSFER_PDF = "StockTransfer/GetStockTransferPrintPdfAtatchment"
         const val GET_EQUIPMENT_TYPE = "GetAgreementMemoTypesForCombobox"
         const val GET_ACTION_TYPES = "getComplaintActionTypesForCombobox"
         const val GET_COMPLAINT_TYPES = "getComplaintTypesforCombobox"

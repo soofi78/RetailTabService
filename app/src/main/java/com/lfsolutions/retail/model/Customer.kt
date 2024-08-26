@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 data class Customer(
@@ -40,9 +41,8 @@ data class Customer(
     @SerializedName("type") var type: String? = null,
     @SerializedName("isTaxInclusive") var isTaxInclusive: String? = null,
     @SerializedName("isWalkIn") var isWalkIn: String? = null,
-    @SerializedName("IsVisited") var IsVisited: Boolean? = null,
+    @SerializedName("isVisited") var IsVisited: Boolean? = null,
     @SerializedName("thirdPartyId") var thirdPartyId: String? = null,
     @SerializedName("bankDetails") var bankDetails: String? = null,
-    @SerializedName("customerImages") var customerImages: String? = null
-)
+) : Serializable
 

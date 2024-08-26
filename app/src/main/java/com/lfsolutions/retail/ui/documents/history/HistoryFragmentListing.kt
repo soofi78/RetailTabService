@@ -12,7 +12,6 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentHistoryListingBinding
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.outgoingstock.StockTransfer
@@ -27,7 +26,11 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.forms.FormsActivity
+import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
+import com.lfsolutions.retail.ui.widgets.options.OptionItem
+import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
@@ -64,10 +67,6 @@ class HistoryFragmentListing : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentHistoryListingBinding.inflate(inflater)
-            binding.header.setBackText("History")
-            binding.header.setOnBackClick {
-                requireActivity().finish()
-            }
         }
         getHistory(HistoryType.Order)
         binding.filterView.setOnClickListener {
@@ -94,16 +93,36 @@ class HistoryFragmentListing : Fragment() {
         return binding.root
     }
 
+    private fun setupHeader() {
+        Main.app.getSession().name?.let { binding.header.setName(it) }
+        binding.header.setOnBackClick { requireActivity().finish() }
+        binding.header.setBackText("Customer History")
+    }
+
+    private fun setCustomerData() {
+        customer?.let { binding.customerView.setCustomer(it) }
+        binding.customerView.setOnClickListener {
+            OptionsBottomSheet.show(requireActivity().supportFragmentManager,
+                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
+                object : OnOptionItemClick {
+                    override fun onOptionItemClick(optionItem: OptionItem) {
+                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                    }
+                })
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setCustomerFromIntent()
         setHistoryTabAdapter()
         customerSpecificHistoryViewChanges()
+        setupHeader()
+        setCustomerData()
     }
 
     private fun customerSpecificHistoryViewChanges() {
         binding.filterView.visibility = if (isCustomerSpecificHistory) View.GONE else View.VISIBLE
-        binding.header.visibility = if (isCustomerSpecificHistory) View.GONE else View.VISIBLE
     }
 
     private fun setHistoryTabAdapter() {
@@ -297,8 +316,7 @@ class HistoryFragmentListing : Fragment() {
     }
 
     private fun setAdapter(items: ArrayList<HistoryItemInterface>) {
-        binding.items.adapter = SaleOrderInvoiceListAdapter(
-            items,
+        binding.items.adapter = SaleOrderInvoiceListAdapter(items,
             object : SaleOrderInvoiceListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     openDetailsFragment(saleOrderInvoiceItem)

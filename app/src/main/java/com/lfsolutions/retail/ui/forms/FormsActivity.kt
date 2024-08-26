@@ -26,6 +26,7 @@ class FormsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setCustomer()
         mBinding = ActivityFormsBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         val navView: BottomNavigationView = mBinding.navView
@@ -37,42 +38,13 @@ class FormsActivity : AppCompatActivity() {
             }
         }
         navView.setupWithNavController(navController)
-        setupHeader()
-        setCustomer()
-    }
-
-    private fun setupHeader() {
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
-        mBinding.header.setOnBackClick { finish() }
-        mBinding.header.setBackText("Customer Forms")
-    }
-
-    private fun setCustomerData() {
-        customer?.let { mBinding.customerView.setCustomer(it) }
-        mBinding.customerView.setOnClickListener {
-            OptionsBottomSheet.show(
-                supportFragmentManager,
-                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
-                object : OnOptionItemClick {
-                    override fun onOptionItemClick(optionItem: OptionItem) {
-                        Notify.toastLong("Open Customer")
-                    }
-                })
-        }
     }
 
     private fun setCustomer() {
         customer = Gson().fromJson(
             intent.getStringExtra(Constants.Customer), Customer::class.java
         )
-        setCustomerData()
     }
-
-
-    fun setTitle(title: String) {
-        mBinding.header.setBackText(title)
-    }
-
 
     private fun showBottomNavigationBar() {
         mBinding.navView.visibility = View.VISIBLE
