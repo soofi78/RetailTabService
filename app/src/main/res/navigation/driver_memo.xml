@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/driver_memo.xml"
+    app:startDestination="@id/navigation_driver_memo_list">
+
+    <fragment
+        android:id="@+id/navigation_driver_memo_list"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoListFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_driver_memo_list">
+        <action
+            android:id="@+id/action_navigation_driver_memo_list_to_driver_memo_edit"
+            app:destination="@id/navigation_driver_memo_details"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_driver_memo_details"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_driver_memo_details">
+
+        <argument
+            android:name="memo"
+            app:argType="string"
+            app:nullable="true" />
+
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_driver_product_list"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoProductListFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_driver_memo_details">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_driver_memo_add_product"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.AddProductToDriverMemoFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_driver_memo_details">
+
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="true" />
+
+    </fragment>
+
+</navigation>

@@ -74,7 +74,6 @@ class NewAgreementMemoFragment : Fragment() {
         setData()
     }
 
-
     private fun setData() {
         val today = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         mBinding.dateText.text = today

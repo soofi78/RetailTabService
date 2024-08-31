@@ -25,12 +25,10 @@
         android:name="com.lfsolutions.retail.ui.documents.payment.CustomerSaleTransactionsFragment"
         android:label="Customers"
         tools:layout="@layout/fragment_customer_sale_transactions">
-
         <argument
             android:name="customer"
             app:argType="string"
             app:nullable="false" />
-
     </fragment>
 
 

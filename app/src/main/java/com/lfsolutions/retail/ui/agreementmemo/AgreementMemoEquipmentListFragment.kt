@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentAgreementMemoEquipmentListBinding
+import com.lfsolutions.retail.databinding.ProductListBinding
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
@@ -34,7 +35,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
 
     private var equipmentlist: List<Product> = arrayListOf()
     private lateinit var customer: Customer
-    private lateinit var _binding: FragmentAgreementMemoEquipmentListBinding
+    private lateinit var _binding: ProductListBinding
     private val mBinding get() = _binding!!
     private lateinit var mAdapter: EquipmentAdapter
     private lateinit var categoryAdapter: ProductCategoryAdapter
@@ -45,7 +46,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         if (::_binding.isInitialized.not()) {
-            _binding = FragmentAgreementMemoEquipmentListBinding.inflate(inflater, container, false)
+            _binding = ProductListBinding.inflate(inflater, container, false)
             customer =
                 Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }
@@ -90,14 +91,46 @@ class AgreementMemoEquipmentListFragment : Fragment() {
     private fun updateCategoryAdapter() {
         categoryAdapter = ProductCategoryAdapter(categories, object : OnCategoryItemClicked {
             override fun onCategoryItemClicked(categoryItem: CategoryItem) {
-                if (categoryItem.name.equals("All").not()) {
-                    updateEquipmentListView(equipmentlist.filter { it.categoryName == categoryItem.name })
-                } else {
-                    updateEquipmentListView(equipmentlist.toList())
-                }
+                filterProducts(categoryItem,mBinding.searchView.query.toString())
             }
         })
         mBinding.categoriesRecyclerView.adapter = categoryAdapter
+    }
+
+    private fun filterProducts(categoryItem: CategoryItem, query: String = "") {
+        var filteredList = ArrayList<Product>()
+        filteredList.addAll(equipmentlist.filter { it.categoryName == categoryItem.name })
+
+        if (filteredList.isEmpty())
+            filteredList.addAll(equipmentlist)
+
+        filteredList =
+            filteredList.filter {
+                isFilterCandidate(
+                    it,
+                    query.split(" ").toSet()
+                )
+            } as ArrayList<Product>
+
+
+
+        updateEquipmentListView(filteredList)
+    }
+
+    private fun isFilterCandidate(
+        product: Product,
+        query: Set<String>
+    ): Boolean {
+        if (query.isEmpty())
+            return true
+        var contains = true
+        query.forEach {
+            contains =
+                contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.categoryName?.lowercase()?.contains(it) == true
+                        || product.unitName?.lowercase()?.contains(it) == true)
+        }
+        return contains
     }
 
     private fun setData() {
@@ -106,6 +139,18 @@ class AgreementMemoEquipmentListFragment : Fragment() {
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
         }
+        mBinding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    filterProducts(categoryAdapter.getSelectedItem(), newText)
+                }
+                return true
+            }
+        })
     }
 
     private fun getEquipmentList() {
@@ -116,7 +161,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
 
                     (response?.body() as RetailResponse<EquipmentListResult>).result?.items?.toList()
                         ?.let { equipmentlist = it }
-                    equipmentlist.toList()?.let { updateEquipmentListView(it) }
+                    updateEquipmentListView(equipmentlist.toList())
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {

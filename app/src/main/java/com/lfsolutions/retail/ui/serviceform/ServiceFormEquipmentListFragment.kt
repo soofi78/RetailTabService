@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -89,16 +90,47 @@ class ServiceFormEquipmentListFragment : Fragment() {
     private fun updateCategoryAdapter() {
         categoryAdapter = ProductCategoryAdapter(categories, object : OnCategoryItemClicked {
             override fun onCategoryItemClicked(categoryItem: CategoryItem) {
-                if (categoryItem.name.equals("All").not()) {
-                    updateEquipmentListView(equipmentlist.filter { it.categoryName == categoryItem.name })
-                } else {
-                    updateEquipmentListView(equipmentlist.toList())
-                }
+                filterProducts(categoryItem, mBinding.searchView.query.toString())
             }
         })
         mBinding.categoriesRecyclerView.adapter = categoryAdapter
     }
 
+    private fun filterProducts(categoryItem: CategoryItem, query: String = "") {
+        var filteredList = ArrayList<Product>()
+        filteredList.addAll(equipmentlist.filter { it.categoryName == categoryItem.name })
+
+        if (filteredList.isEmpty())
+            filteredList.addAll(equipmentlist)
+
+        filteredList =
+            filteredList.filter {
+                isFilterCandidate(
+                    it,
+                    query.split(" ").toSet()
+                )
+            } as ArrayList<Product>
+
+
+
+        updateEquipmentListView(filteredList)
+    }
+
+    private fun isFilterCandidate(
+        product: Product,
+        query: Set<String>
+    ): Boolean {
+        if (query.isEmpty())
+            return true
+        var contains = true
+        query.forEach {
+            contains =
+                contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.categoryName?.lowercase()?.contains(it) == true
+                        || product.unitName?.lowercase()?.contains(it) == true)
+        }
+        return contains
+    }
 
     private fun setData() {
         mBinding.header.setBackText("Equipment List")
@@ -106,6 +138,19 @@ class ServiceFormEquipmentListFragment : Fragment() {
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
         }
+
+        mBinding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null) {
+                    filterProducts(categoryAdapter.getSelectedItem(), newText)
+                }
+                return true
+            }
+        })
     }
 
     private fun getEquipmentList() {

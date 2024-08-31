@@ -10,7 +10,7 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.util.makeTextBold
 
 class DeliveryItemAdapter(
-    var customers: ArrayList<Customer>? = ArrayList(),
+    var customers: List<Customer>?= ArrayList(),
     val type: CustomerItemType
 ) :
 

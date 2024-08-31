@@ -408,8 +408,8 @@ class HistoryFragmentListing : Fragment() {
     }
 
     private fun setAdapter(items: ArrayList<HistoryItemInterface>) {
-        binding.items.adapter = SaleOrderInvoiceListAdapter(items,
-            object : SaleOrderInvoiceListAdapter.OnItemClickedListener {
+        binding.items.adapter = HistoryListAdapter(items,
+            object : HistoryListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     openDetailsFragment(saleOrderInvoiceItem)
                 }

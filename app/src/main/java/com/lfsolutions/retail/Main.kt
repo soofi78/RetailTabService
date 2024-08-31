@@ -5,6 +5,7 @@ import android.content.Intent
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
@@ -22,6 +23,7 @@ class Main : Application() {
     private var outGoingStockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ComplaintServiceRequest? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
+    private var driverMemo: CreateUpdateDriverMemoRequestBody? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -45,6 +47,12 @@ class Main : Application() {
         return memo
     }
 
+    fun getDriverMemo(): CreateUpdateDriverMemoRequestBody {
+        if (driverMemo == null)
+            driverMemo = CreateUpdateDriverMemoRequestBody()
+        return driverMemo!!
+    }
+
     fun getTaxInvoice(): SaleInvoiceRequest? {
         if (taxInvoice == null) taxInvoice = SaleInvoiceRequest()
         return taxInvoice
@@ -62,6 +70,10 @@ class Main : Application() {
 
     fun clearAgreementMemo() {
         memo = null
+    }
+
+    fun clearDriverMemo() {
+        driverMemo = null
     }
 
     fun clearTaxInvoice() {

@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 
-class SaleOrderInvoiceListAdapter(
+class HistoryListAdapter(
     private val items: ArrayList<HistoryItemInterface>,
     private val mListener: OnItemClickedListener
 ) :
-    RecyclerView.Adapter<SaleOrderInvoiceListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
 
     class ViewHolder(val binding: SaleOrderInvoiceListItemBinding) :

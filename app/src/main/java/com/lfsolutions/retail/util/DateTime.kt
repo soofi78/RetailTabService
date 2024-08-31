@@ -167,13 +167,12 @@ object DateTime {
         mm = calendar[Calendar.MONTH]
         dd = calendar[Calendar.DATE]
         val dialog = DatePickerDialog(activity!!, { view, year, monthOfYear, dayOfMonth ->
-            var monthOfYear = monthOfYear
-            monthOfYear = monthOfYear + 1
+            val month = monthOfYear + 1
             var d = dayOfMonth.toString() + ""
-            var m = monthOfYear.toString() + ""
-            if (monthOfYear + "".length == 1) {
-                m = "0$monthOfYear"
-            } else if (dayOfMonth + "".length == 1) {
+            var m = month.toString() + ""
+            if (month.toString().length == 1) {
+                m = "0$month"
+            } else if (dayOfMonth.toString().length == 1) {
                 d = "0$dayOfMonth"
             }
             callback?.onDateSelected(year.toString(), m, d)

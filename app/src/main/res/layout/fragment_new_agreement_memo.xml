@@ -104,7 +104,7 @@
                                 android:layout_height="wrap_content">
 
                                 <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/lblDate"
+                                    android:id="@+id/lblOutlet"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/label_date"
@@ -119,13 +119,13 @@
                                     android:text="*"
                                     android:textColor="@color/red"
                                     android:textSize="16sp"
-                                    app:layout_constraintStart_toEndOf="@id/lblDate"
-                                    app:layout_constraintTop_toTopOf="@id/lblDate" />
+                                    app:layout_constraintStart_toEndOf="@id/lblOutlet"
+                                    app:layout_constraintTop_toTopOf="@id/lblOutlet" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
                             <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/date_text"
+                                android:id="@+id/dateText"
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:layout_marginTop="5dp"
@@ -144,7 +144,7 @@
                         android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblCompanyName"
+                            android:id="@+id/lblDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -160,8 +160,8 @@
                             android:text="*"
                             android:textColor="@color/red"
                             android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblCompanyName"
-                            app:layout_constraintTop_toTopOf="@id/lblCompanyName" />
+                            app:layout_constraintStart_toEndOf="@id/lblDate"
+                            app:layout_constraintTop_toTopOf="@id/lblDate" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -181,7 +181,7 @@
                         android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblAddress"
+                            android:id="@+id/lblDeliveryDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -197,8 +197,8 @@
                             android:text="*"
                             android:textColor="@color/red"
                             android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblAddress"
-                            app:layout_constraintTop_toTopOf="@id/lblAddress" />
+                            app:layout_constraintStart_toEndOf="@id/lblDeliveryDate"
+                            app:layout_constraintTop_toTopOf="@id/lblDeliveryDate" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

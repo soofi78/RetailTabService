@@ -38,8 +38,19 @@
             android:name=".ui.documents.history.HistoryFlowActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.documents.payment.PaymentFlowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.documents.dailysale.DailySaleFlowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.documents.drivermemo.DriverMemoFlowActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

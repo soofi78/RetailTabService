@@ -16,10 +16,4 @@
         android:icon="@drawable/icon_schedule"
         android:title="@string/title_schedule" />
 
-    <item
-        android:id="@+id/navigation_all_records"
-        android:icon="@drawable/icon_all_record"
-        android:title="@string/title_all_records" />
-
-
 </menu>

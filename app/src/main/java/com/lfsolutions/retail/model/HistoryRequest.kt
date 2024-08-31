@@ -15,6 +15,7 @@ data class HistoryRequest(
     @SerializedName("filter") var filter: String? = null,
     @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("referenceNo") var referenceNo: String? = null,
-    @SerializedName("userId") var userId: Int? = null
+    @SerializedName("userId") var userId: Int? = null,
+    @SerializedName("agreementNo") var agreementNo: Int? = null
 )
 

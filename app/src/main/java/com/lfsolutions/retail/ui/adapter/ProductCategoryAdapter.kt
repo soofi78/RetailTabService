@@ -53,6 +53,14 @@ class ProductCategoryAdapter(
             }
         }
     }
+
+    fun getSelectedItem(): CategoryItem {
+        return if (lastCheckedButton?.tag == null) {
+            CategoryItem(name = "ALL")
+        } else {
+            lastCheckedButton?.tag as CategoryItem
+        }
+    }
 }
 
 interface OnCategoryItemClicked {

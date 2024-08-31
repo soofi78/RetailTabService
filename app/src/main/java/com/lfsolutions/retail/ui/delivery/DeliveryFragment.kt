@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ import retrofit2.Response
 
 class DeliveryFragment : Fragment(), OnNetworkResponse {
 
+    private var getCustomersResponse: RetailResponse<CustomerResult>? = null
     private var _binding: FragmentDeliveryBinding? = null
 
     private val mBinding get() = _binding!!
@@ -54,7 +56,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setAdapters(null)
+        setAdapters(null, "")
         if (Main.app.getSession().isSupervisor == false) {
             mBinding.recyclerViewUrgent.visibility = View.GONE
             mBinding.cardUrgent.visibility = View.GONE
@@ -63,6 +65,38 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
         mBinding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
+
+
+        mBinding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                setAdapters(getCustomersResponse, newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun isCandidateForFilter(query: String, customer: Customer): Boolean {
+        if (query.isNullOrEmpty())
+            return true
+        var contains = true
+        query.split(" ").toSet().forEach {
+            contains =
+                contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.country?.lowercase()?.contains(it) == true
+                        || customer.area?.lowercase()?.contains(it) == true
+                        || customer.address1?.lowercase()?.contains(it) == true
+                        || customer.address2?.lowercase()?.contains(it) == true
+                        || customer.address3?.lowercase()?.contains(it) == true
+                        || customer.customerCode?.lowercase()?.contains(it) == true
+                        || customer.email?.lowercase()?.contains(it) == true
+                        || customer.salespersonName?.lowercase()?.contains(it) == true
+                        || customer.city?.lowercase()?.contains(it) == true)
+        }
+        return contains
     }
 
     private fun generateOutStock(scheduledList: ArrayList<Customer>) {
@@ -129,21 +163,24 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-        val getCustomersResponse = response?.body() as RetailResponse<CustomerResult>
-        setAdapters(getCustomersResponse)
+        getCustomersResponse = response?.body() as RetailResponse<CustomerResult>
+        setAdapters(getCustomersResponse, "")
     }
 
-    private fun setAdapters(getCustomersResponse: RetailResponse<CustomerResult>?) {
+    private fun setAdapters(getCustomersResponse: RetailResponse<CustomerResult>?, s: String) {
         mUrgentAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getUrgentCustomersList(),
+            getCustomersResponse?.result?.getUrgentCustomersList()
+                ?.filter { isCandidateForFilter(s, it) },
             DeliveryItemAdapter.CustomerItemType.Urgent
         )
         mToVisitAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getToVisitsCustomersList(),
+            getCustomersResponse?.result?.getToVisitsCustomersList()
+                ?.filter { isCandidateForFilter(s, it) },
             DeliveryItemAdapter.CustomerItemType.ToVisit
         )
         mScheduleAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getScheduledCustomersList(),
+            getCustomersResponse?.result?.getScheduledCustomersList()
+                ?.filter { isCandidateForFilter(s, it) },
             DeliveryItemAdapter.CustomerItemType.Scheduled
         )
         mBinding.recyclerViewUrgent.adapter = mUrgentAdapter
@@ -160,8 +197,8 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 displayItemDetails(customer)
             }
         })
-
     }
+
 
     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 

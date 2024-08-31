@@ -10,6 +10,7 @@ import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
+import com.lfsolutions.retail.model.GetAllDriverMemoResult
 import com.lfsolutions.retail.model.GetLocationResult
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
@@ -22,9 +23,12 @@ import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.model.dailysale.DailySaleRecord
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
@@ -181,6 +185,15 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_PDF))
     fun getAgreementMemoPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DAILY_SALE_RECORD))
+    fun dailySaleRecord(@Body userIdDateRequestBody: UserIdDateRequestBody): Call<BaseResponse<DailySaleRecord>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_DRIVER_MEMO))
+    fun getDriverMemo(@Body driverMemo: CreateUpdateDriverMemoRequestBody): Call<BaseResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_DRIVER_MEMOS))
+    fun getAllDriverMemos(@Body request: HistoryRequest): Call<BaseResponse<GetAllDriverMemoResult>>?
 }
 
 

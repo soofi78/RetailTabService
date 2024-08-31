@@ -49,10 +49,10 @@ class HomeActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
         navView.setupWithNavController(navController)
-        Main.app.getSession().isSupervisor?.let {
-            navView.menu.findItem(R.id.navigation_all_records)
-                .setVisible(it)
-        }
+//        Main.app.getSession().isSupervisor?.let {
+//            navView.menu.findItem(R.id.navigation_all_records)
+//                .setVisible(it)
+//        }
         setData()
         setClickListener()
 

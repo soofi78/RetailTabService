@@ -35,7 +35,8 @@ data class AgreementMemoDetail(
     @SerializedName("LastModificationTime") var LastModificationTime: String? = null,
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
     @SerializedName("CreationTime") var CreationTime: String? = null,
-    @SerializedName("CreatorUserId") var CreatorUserId: String? = null
+    @SerializedName("CreatorUserId") var CreatorUserId: String? = null,
+    @SerializedName("changeunitflag") var changeunitflag: Boolean? = null
 ) {
     fun getSerialNumbers(): String {
         var serials = ""

@@ -9,7 +9,7 @@
         android:id="@+id/navigation_agreement_memo_equipment"
         android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoEquipmentListFragment"
         android:label="Agreement Memo"
-        tools:layout="@layout/fragment_agreement_memo_equipment_list" />
+        tools:layout="@layout/product_list" />
 
     <fragment
         android:id="@+id/navigation_agreement_memo_summary"
