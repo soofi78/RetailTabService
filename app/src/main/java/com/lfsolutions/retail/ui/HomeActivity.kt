@@ -13,22 +13,25 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
+import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Dialogs
 import com.lfsolutions.retail.util.OnOptionDialogItemClicked
+import com.videotel.digital.util.Notify
 
 class HomeActivity : AppCompatActivity() {
 
     private var optionsClick = OnClickListener {
         Dialogs.optionsDialog(context = this@HomeActivity,
-            options = arrayOf(Constants.Logout, Constants.ViewProfile),
+            options = arrayOf(Constants.Logout, Constants.ViewProfile, Constants.Version),
             onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
                 override fun onClick(option: String) {
                     when (option) {
                         Constants.Logout -> Main.app.sessionExpired()
+                        Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
                     }
                 }
             })

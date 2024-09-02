@@ -1,3 +1,7 @@
+import android.databinding.tool.ext.capitalizeUS
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -21,8 +25,8 @@ android {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 34
-        versionCode = 45
-        versionName = "0.0.45"
+        versionCode = 48
+        versionName = "0.0.48"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,8 +51,28 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "Retail_${
+                    variant.buildType.name.capitalizeUS()
+                }_VC${variant.versionCode}_VN${variant.versionName}_VD${getDate()}.apk"
+                output.outputFileName = outputFileName
+            }
     }
 }
+
+fun getDate(): String? {
+    val date = Date()
+    val formattedDate = SimpleDateFormat("yyyyMMdd-HHmm").format(date)
+    return formattedDate
+}
+
 
 dependencies {
 
