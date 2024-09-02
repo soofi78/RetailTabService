@@ -107,7 +107,7 @@ class DocumentsFragment : Fragment() {
     }
 
     private fun getDocumentsMenuList(): ArrayList<DocumentType> {
-        return arrayListOf(
+        val docs = arrayListOf(
             DocumentType.OutGoingStockRecord(
                 R.string.label_outgoing_stock_record,
                 R.drawable.outgoing_stock_record
@@ -115,10 +115,6 @@ class DocumentsFragment : Fragment() {
             DocumentType.DailySalesRecord(
                 R.string.label_daily_sales_record,
                 R.drawable.daily_sales_record
-            ),
-            DocumentType.DriverMemo(
-                R.string.label_driver_memo,
-                R.drawable.driver_memo
             ),
             DocumentType.Payment(
                 R.string.label_payment,
@@ -129,6 +125,16 @@ class DocumentsFragment : Fragment() {
                 R.drawable.ic_history
             )
         )
+
+        if (Main.app.getSession().isSupervisor == true) {
+            docs.add(
+                DocumentType.DriverMemo(
+                    R.string.label_driver_memo,
+                    R.drawable.driver_memo
+                )
+            )
+        }
+        return docs
     }
 
 }

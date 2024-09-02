@@ -158,14 +158,20 @@ class HistoryFragmentListing : Fragment() {
         val historyList = arrayListOf(
             HistoryType.Order,
             HistoryType.Invoices,
-            HistoryType.Receipts,
-            HistoryType.AgreementMemo,
-            HistoryType.ComplaintService
+            HistoryType.Receipts
         )
+
+
+        if (Main.app.getSession().isSupervisor == true) {
+            historyList.add(HistoryType.AgreementMemo)
+            historyList.add(HistoryType.ComplaintService)
+        }
 
         if (isCustomerSpecificHistory.not()) {
             historyList.add(HistoryType.OutgoingTransfer)
         }
+
+
         return historyList
     }
 

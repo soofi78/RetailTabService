@@ -15,12 +15,22 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
+import com.lfsolutions.retail.model.CategoryItem
+import com.lfsolutions.retail.model.CategoryResult
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.network.BaseResponse
+import com.lfsolutions.retail.network.Network
+import com.lfsolutions.retail.network.NetworkCall
+import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Dialogs
+import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.OnOptionDialogItemClicked
 import com.videotel.digital.util.Notify
+import retrofit2.Call
+import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
 
@@ -31,10 +41,27 @@ class HomeActivity : AppCompatActivity() {
                 override fun onClick(option: String) {
                     when (option) {
                         Constants.Logout -> Main.app.sessionExpired()
+                        Constants.ViewProfile -> openProfile()
                         Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
                     }
                 }
             })
+    }
+
+    private fun openProfile() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(this, "Loading profile information"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to load user info")
+                }
+            }).enque(
+                Network.api()?.getUserDetails(IdRequest(id = Main.app.getSession().userId))
+            ).execute()
     }
 
     private var _binding: ActivityHomeBinding? = null

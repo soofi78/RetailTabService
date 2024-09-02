@@ -38,10 +38,14 @@ class CustomerDetailsFragment : Fragment() {
 
 
     private fun setData() {
-        binding.customerName.text = customer?.name
-        binding.customerCode.text = customer?.customerCode
-        binding.area.text = customer?.area
-        binding.group.text = customer?.group
+        binding.outletName.text = customer?.name
+        binding.officialOpen.text = customer?.officialOpen
+        binding.picName.text = customer?.picName
+        binding.contact.text = customer?.phoneNo
+        binding.operatingHours.text = customer?.operatingHours
+        binding.acNumber.text = customer?.customerCode
+        binding.area.text = customer?.customerWorkArea
+        binding.term.text = customer?.paymentTerm
         binding.address.text = customer?.address1
     }
 }

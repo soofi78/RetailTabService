@@ -194,6 +194,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_DRIVER_MEMOS))
     fun getAllDriverMemos(@Body request: HistoryRequest): Call<BaseResponse<GetAllDriverMemoResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_USER_DETAILS))
+    fun getUserDetails(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
 }
 
 
