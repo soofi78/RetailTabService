@@ -29,7 +29,7 @@
                 android:id="@+id/cardCustomerUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:padding="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -47,222 +47,369 @@
                         android:weightSum="2">
 
                         <LinearLayout
-                            android:id="@+id/serialViewHolder"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
+                            android:layout_marginEnd="1dp"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/lblSerialNumber"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/label_serial_number"
-                                    android:textSize="16sp"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:text="*"
-                                    android:textColor="@color/red"
-                                    android:textSize="16sp"
-                                    app:layout_constraintStart_toEndOf="@id/lblSerialNumber"
-                                    app:layout_constraintTop_toTopOf="@id/lblSerialNumber" />
-
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:orientation="vertical">
 
                             <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/serialNumber"
+                                android:id="@+id/lblOutlet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Outlet Name"
+                                android:textSize="16sp" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/outletName"
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="5dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:background="@drawable/rounded_corner_light_gray_background"
                                 android:gravity="center_vertical"
-                                android:inputType="text"
                                 android:maxLines="1"
-                                android:padding="15dp"
-                                android:singleLine="true" />
+                                android:padding="10dp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
+                            android:layout_marginStart="1dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblOfficialOpen"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Official Open"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                                <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/lblOutlet"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Outlet Name"
-                                    android:textSize="16sp"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:text="*"
-                                    android:textColor="@color/red"
-                                    android:textSize="16sp"
-                                    app:layout_constraintStart_toEndOf="@id/lblOutlet"
-                                    app:layout_constraintTop_toTopOf="@id/lblOutlet" />
-
-                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                             <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/outletName"
+                                android:id="@+id/officialOpen"
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="5dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:background="@drawable/rounded_corner_light_gray_background"
                                 android:gravity="center_vertical"
                                 android:maxLines="1"
-                                android:padding="15dp" />
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblPICName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="PIC. Name"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/picName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblContact"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Contact"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/contact"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="Date"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="*"
-                            android:textColor="@color/red"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblDate"
-                            app:layout_constraintTop_toTopOf="@id/lblDate" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/date"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/rounded_corner_light_gray_background"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:padding="15dp"
-                        android:singleLine="true" />
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblDeliveryDate"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="Delivery Date"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:layout_marginEnd="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblOperatingHours"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Operating Hours"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/operatingHours"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="*"
-                            android:textColor="@color/red"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblDeliveryDate"
-                            app:layout_constraintTop_toTopOf="@id/lblDeliveryDate" />
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblAcNo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="A/C No."
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/deliveryDate"
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/acNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/rounded_corner_light_gray_background"
-                        android:inputType="number"
-                        android:padding="15dp" />
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblAddress"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="Address"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:layout_marginEnd="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblArea"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Area"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/area"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="*"
-                            android:textColor="@color/red"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblAddress"
-                            app:layout_constraintTop_toTopOf="@id/lblAddress" />
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblTerm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Term"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/term"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Address"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="2dp"
                         android:background="@drawable/rounded_corner_light_gray_background"
                         android:inputType="number"
-                        android:padding="15dp" />
+                        android:padding="10dp" />
 
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblRemarks"
-                            android:layout_width="wrap_content"
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:text="Remarks"
-                            android:textSize="16sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:layout_marginEnd="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="5dp"
+                                android:text="Date"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:padding="10dp"
+                                android:singleLine="true" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/lblDeliveryDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="5dp"
+                                android:text="Delivery Date"
+                                android:textSize="16sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/deliveryDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:background="@drawable/rounded_corner_light_gray_background"
+                                android:inputType="number"
+                                android:padding="10dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblRemarks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Remarks"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/remarks"
@@ -271,7 +418,7 @@
                         android:layout_marginTop="5dp"
                         android:background="@drawable/slight_rounded_corner_white_background_black_stroke"
                         android:gravity="top|start"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:padding="15dp" />
 
                 </LinearLayout>
@@ -282,7 +429,9 @@
                 android:id="@+id/productsHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintTop_toTopOf="parent">
 

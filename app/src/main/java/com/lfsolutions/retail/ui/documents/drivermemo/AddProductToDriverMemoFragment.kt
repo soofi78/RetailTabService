@@ -46,7 +46,6 @@ class AddProductToDriverMemoFragment : Fragment() {
     private lateinit var _binding: FragmentDriverMemoAddProductBinding
     private val mBinding get() = _binding
     private val args by navArgs<AddProductToDriverMemoFragmentArgs>()
-    private var equipmentTypes: List<EquipmentType>? = null
 
 
     override fun onCreateView(
@@ -65,35 +64,6 @@ class AddProductToDriverMemoFragment : Fragment() {
         addOnClickListener()
         setData()
         updateTotal()
-        updateEquipmentTypeList()
-    }
-
-    private fun updateEquipmentTypeList() {
-        if (equipmentTypes == null) NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity()))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    equipmentTypes =
-                        (response?.body() as RetailResponse<EquipmentTypeResult>).result?.items?.filter {
-                            it.value.equals("F", true).not()
-                                    && it.value.equals("E", true).not()
-                        }
-                    setEquipmentTypesAdapter()
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get equipment list")
-                }
-            }).enque(Network.api()?.getEquipmentType()).execute()
-    }
-
-    private fun setEquipmentTypesAdapter() {
-        val adapter = equipmentTypes?.let {
-            ArrayAdapter(
-                requireActivity(), R.layout.simple_text_item, it
-            )
-        }
-        mBinding.spinnerEquipmentType.adapter = adapter
     }
 
 
@@ -178,13 +148,8 @@ class AddProductToDriverMemoFragment : Fragment() {
                 totalCost = qty * cost,
                 totalPrice = qty * cost,
                 type = product?.type,
-                driverType = getAgreementType()
             )
         )
-    }
-
-    private fun getAgreementType(): String {
-        return equipmentTypes?.get(mBinding.spinnerEquipmentType.selectedItemPosition)?.value ?: ""
     }
 
     private fun updateTotal() {

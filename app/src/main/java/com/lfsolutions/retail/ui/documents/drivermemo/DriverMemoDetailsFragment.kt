@@ -79,6 +79,13 @@ class DriverMemoDetailsFragment : Fragment() {
             Main.app.getDriverMemo().driverMemo.customerId = customer?.id
             Main.app.getDriverMemo().driverMemo.customerName = customer?.name
             binding.outletName.text = customer?.name
+            binding.officialOpen.text = customer?.officialOpen
+            binding.picName.text = customer?.picName
+            binding.contact.text = customer?.phoneNo
+            binding.operatingHours.text = customer?.operatingHours
+            binding.acNumber.text = customer?.customerCode
+            binding.area.text = customer?.customerWorkArea
+            binding.term.text = customer?.paymentTerm
             binding.address.text = customer?.address1
         }
         if (args.memo != null) {
@@ -134,7 +141,7 @@ class DriverMemoDetailsFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
-                if (viewHolder is OutGoingStockSummaryAdapter.ViewHolder) {
+                if (viewHolder is DriverMemoProductAdapter.ViewHolder) {
                     val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
                     return makeMovementFlags(0, swipeFlags)
                 } else return 0
@@ -144,12 +151,12 @@ class DriverMemoDetailsFragment : Fragment() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ) {
-                getDefaultUIUtil().clearView((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
+                getDefaultUIUtil().clearView((viewHolder as DriverMemoProductAdapter.ViewHolder).getSwipableView())
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 if (viewHolder != null) {
-                    getDefaultUIUtil().onSelected((viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView())
+                    getDefaultUIUtil().onSelected((viewHolder as DriverMemoProductAdapter.ViewHolder).getSwipableView())
                 }
             }
 
@@ -165,7 +172,7 @@ class DriverMemoDetailsFragment : Fragment() {
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
-                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as DriverMemoProductAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,
@@ -185,7 +192,7 @@ class DriverMemoDetailsFragment : Fragment() {
                 getDefaultUIUtil().onDrawOver(
                     c,
                     recyclerView,
-                    (viewHolder as OutGoingStockSummaryAdapter.ViewHolder).getSwipableView(),
+                    (viewHolder as DriverMemoProductAdapter.ViewHolder).getSwipableView(),
                     dX,
                     dY,
                     actionState,

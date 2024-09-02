@@ -24,6 +24,7 @@ object DateTime {
     const val DateTimeFormatWOss = "dd/MM/yyyy HH:mm"
     const val DateFormatWithDayName = "EEEE, dd MMM, yyyy"
     const val DateFormatWithDayNameMonthNameAndTime = "EEEE, dd MMM HH:mm"
+    const val DateFormatWithDayNameMonthNameAndYear = "EEEE, dd MMM yyyy"
     const val SimpleDateFormat = "dd-MM-yyyy"
     const val ServerDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
     fun format(STAMP: Date?, FORMAT: String?): String? {

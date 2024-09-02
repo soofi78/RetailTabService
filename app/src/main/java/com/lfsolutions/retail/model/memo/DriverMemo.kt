@@ -39,7 +39,7 @@ data class DriverMemo(
             agreementDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: agreementDate ?: ""
     }
 
@@ -48,6 +48,6 @@ data class DriverMemo(
     }
 
     override fun getAmount(): String {
-        return Main.app.getSession().currencySymbol + totalCost?.formatDecimalSeparator()
+        return "Qty: " + totalQty.toString().formatDecimalSeparator()
     }
 }

@@ -158,51 +158,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/lblEquipment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/label_equipment"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="MissingConstraints" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="*"
-                    android:textColor="@color/red"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@id/lblEquipment"
-                    app:layout_constraintTop_toTopOf="@id/lblEquipment" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinnerEquipmentType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/spinner_background"
-                    android:entries="@array/equipment_type"
-                    android:padding="3dp"
-                    android:textAlignment="center"
-                    app:layout_constraintTop_toBottomOf="@id/lblEquipment" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

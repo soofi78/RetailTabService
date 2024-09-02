@@ -21,6 +21,7 @@ data class Customer(
     @SerializedName("area") var area: String? = null,
     @SerializedName("creationTimes") var creationTimes: String? = null,
     @SerializedName("paymentTermId") var paymentTermId: Int? = null,
+    @SerializedName("paymentTerm") var paymentTerm: String? = null,
     @SerializedName("isDeleted") var isDeleted: Boolean? = null,
     @SerializedName("deleterUserId") var deleterUserId: String? = null,
     @SerializedName("deletionTime") var deletionTime: String? = null,
@@ -44,5 +45,9 @@ data class Customer(
     @SerializedName("isVisited") var IsVisited: Boolean? = null,
     @SerializedName("thirdPartyId") var thirdPartyId: String? = null,
     @SerializedName("bankDetails") var bankDetails: String? = null,
+    @SerializedName("officialOpen") var officialOpen: String? = null,
+    @SerializedName("operatingHours") var operatingHours: String? = null,
+    @SerializedName("picName") var picName: String? = null,
+    @SerializedName("customerWorkArea") var customerWorkArea: String? = null,
 ) : Serializable
 

@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                 android:background="@drawable/rounded_corner_gray_background"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/txtPrice"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageButton
@@ -109,19 +109,6 @@
                     android:padding="5dp"
                     android:src="@drawable/add_black" />
             </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtPrice"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:gravity="center_vertical|end"
-                android:padding="5dp"
-                android:text="$10"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

@@ -2,18 +2,14 @@ package com.lfsolutions.retail.ui.documents.drivermemo
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.ItemDocumentBinding
 import com.lfsolutions.retail.databinding.ItemDriverDetailsBinding
-import com.lfsolutions.retail.model.Documents
 import com.lfsolutions.retail.model.memo.DriverMemoDetail
-import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockSummaryAdapter.OnItemUpdated
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
@@ -54,8 +50,6 @@ class DriverMemoProductAdapter(
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
         holder.binding.txtQty.text = item.qty.toString()
-        holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + item.totalPrice.formatDecimalSeparator()
         holder.binding.txtProductName.text = item.productName
 
         holder.binding.btnAdd.tag = position
