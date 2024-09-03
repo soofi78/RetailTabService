@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lfsolutions.retail.databinding.FragmentCustomerDetailsBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.util.DateTime
 
 class CustomerDetailsFragment : Fragment() {
 
@@ -39,7 +40,7 @@ class CustomerDetailsFragment : Fragment() {
 
     private fun setData() {
         binding.outletName.text = customer?.name
-        binding.officialOpen.text = customer?.officialOpen
+        binding.officialOpen.text = getFormattedDate(customer?.officialOpen)
         binding.picName.text = customer?.picName
         binding.contact.text = customer?.phoneNo
         binding.operatingHours.text = customer?.operatingHours
@@ -47,5 +48,14 @@ class CustomerDetailsFragment : Fragment() {
         binding.area.text = customer?.customerWorkArea
         binding.term.text = customer?.paymentTerm
         binding.address.text = customer?.address1
+    }
+
+    private fun getFormattedDate(officialOpen: String?): String {
+        val date = DateTime.getDateFromString(
+            officialOpen?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
+        return formatted ?: officialOpen ?: ""
     }
 }

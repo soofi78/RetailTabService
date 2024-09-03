@@ -6,6 +6,7 @@ import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
+import com.lfsolutions.retail.model.DateRequest
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
@@ -33,6 +34,7 @@ import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
+import com.lfsolutions.retail.model.profile.UserProfile
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
@@ -196,7 +198,11 @@ interface ApiServices {
     fun getAllDriverMemos(@Body request: HistoryRequest): Call<BaseResponse<GetAllDriverMemoResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_USER_DETAILS))
-    fun getUserDetails(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
+    fun getUserDetails(@Body idRequest: IdRequest): Call<BaseResponse<UserProfile>>?
+
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SCHEDULED_VISITATION))
+    fun getScheduledVisitation(@Body dateRequest: DateRequest): Call<BaseResponse<CustomerResult>>?
 }
 
 

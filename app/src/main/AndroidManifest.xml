@@ -28,6 +28,9 @@
         <activity
             android:name=".ui.customer.CustomerDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.login.ProfileActivity"
+            android:exported="false" />
 
         <activity
             android:name=".ui.stocktransfer.outgoing.OutGoingStockFlowActivity"

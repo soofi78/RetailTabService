@@ -26,6 +26,12 @@ data class CustomerResult(
         return arrayListOf()
     }
 
+    fun getScheduledVisitationCustomersList(): ArrayList<Customer> {
+        val index = items.indexOf(CustomersItem("Visitation Schedule"))
+        if (index > -1) return items[index].customers
+        return arrayListOf()
+    }
+
     fun getAll(): ArrayList<Customer> {
         val customers = ArrayList<Customer>()
         items.forEach {

@@ -76,7 +76,7 @@ class DeliveryItemAdapter(
         binding.txtArea.text =
             makeTextBold(
                 text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
-                startIndex = 7
+                startIndex = 6
             )
 
         binding.root.tag = customer

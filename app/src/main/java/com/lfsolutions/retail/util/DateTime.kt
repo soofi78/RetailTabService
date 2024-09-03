@@ -15,6 +15,7 @@ import java.util.TimeZone
 object DateTime {
     const val DateFormat = "MMM dd, yyyy"
     const val DateFormatRetail = "yyyy-MM-dd"
+    const val DateFormatSV = "dd-MM-yyyy"
     const val DateTimetRetailFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimeRetailFrontEndFormate = "dd MMM yyyy, hh:mm a"
     const val PinFormate = "MMddyy"
@@ -173,7 +174,9 @@ object DateTime {
             var m = month.toString() + ""
             if (month.toString().length == 1) {
                 m = "0$month"
-            } else if (dayOfMonth.toString().length == 1) {
+            }
+
+            if (dayOfMonth.toString().length == 1) {
                 d = "0$dayOfMonth"
             }
             callback?.onDateSelected(year.toString(), m, d)

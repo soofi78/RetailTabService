@@ -54,6 +54,7 @@ object Api {
         const val CREATE_UPDATE_DRIVER_MEMO = "driverMemo/CreateOrUpdateDriverMemo"
         const val GET_ALL_DRIVER_MEMOS = "driverMemo/GetAll"
         const val GET_USER_DETAILS = "User/GetUserForEdit"
+        const val GET_SCHEDULED_VISITATION = "Service/ApiGetCustomerVisitationSchedule"
         const val GET_ALL_AGREEMENT_MEMO_LIST = "agreementMemo/GetAll"
         const val GET_ALL_COMPLAINT_SERVICE_LIST = "complaintService/GetAll"
     }

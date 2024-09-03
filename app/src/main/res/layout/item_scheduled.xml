@@ -55,7 +55,7 @@
         android:id="@+id/txtArea"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Area - W"
+        android:text="Area - -"
         android:textSize="15sp"
         app:layout_constraintHorizontal_weight="1" />
 

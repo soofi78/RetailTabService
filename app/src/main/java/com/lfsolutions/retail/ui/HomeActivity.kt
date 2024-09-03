@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.ui
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -15,22 +16,13 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
-import com.lfsolutions.retail.model.CategoryItem
-import com.lfsolutions.retail.model.CategoryResult
-import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.UserSession
-import com.lfsolutions.retail.network.BaseResponse
-import com.lfsolutions.retail.network.Network
-import com.lfsolutions.retail.network.NetworkCall
-import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.login.ProfileActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Dialogs
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.OnOptionDialogItemClicked
 import com.videotel.digital.util.Notify
-import retrofit2.Call
-import retrofit2.Response
 
 class HomeActivity : AppCompatActivity() {
 
@@ -49,19 +41,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun openProfile() {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(this, "Loading profile information"))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to load user info")
-                }
-            }).enque(
-                Network.api()?.getUserDetails(IdRequest(id = Main.app.getSession().userId))
-            ).execute()
+        startActivity(Intent(this, ProfileActivity::class.java))
     }
 
     private var _binding: ActivityHomeBinding? = null
@@ -79,10 +59,10 @@ class HomeActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
         navView.setupWithNavController(navController)
-//        Main.app.getSession().isSupervisor?.let {
-//            navView.menu.findItem(R.id.navigation_all_records)
-//                .setVisible(it)
-//        }
+        Main.app.getSession().isSupervisor?.let {
+            navView.menu.findItem(R.id.navigation_schedule)
+                .setVisible(it)
+        }
         setData()
         setClickListener()
 

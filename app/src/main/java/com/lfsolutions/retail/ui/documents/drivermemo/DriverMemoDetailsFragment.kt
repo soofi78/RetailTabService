@@ -79,7 +79,7 @@ class DriverMemoDetailsFragment : Fragment() {
             Main.app.getDriverMemo().driverMemo.customerId = customer?.id
             Main.app.getDriverMemo().driverMemo.customerName = customer?.name
             binding.outletName.text = customer?.name
-            binding.officialOpen.text = customer?.officialOpen
+            binding.officialOpen.text = getFormattedDate(customer?.officialOpen)
             binding.picName.text = customer?.picName
             binding.contact.text = customer?.phoneNo
             binding.operatingHours.text = customer?.operatingHours
@@ -93,6 +93,15 @@ class DriverMemoDetailsFragment : Fragment() {
         }
         addOnClickListener()
         setData()
+    }
+
+    private fun getFormattedDate(officialOpen: String?): String {
+        val date = DateTime.getDateFromString(
+            officialOpen?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
+        return formatted ?: officialOpen ?: ""
     }
 
 
