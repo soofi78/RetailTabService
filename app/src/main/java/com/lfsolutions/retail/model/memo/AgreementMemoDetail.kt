@@ -2,6 +2,9 @@ package com.lfsolutions.retail.model.memo
 
 import android.util.Log
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.DateTime
 
 
 data class AgreementMemoDetail(
@@ -10,13 +13,13 @@ data class AgreementMemoDetail(
     @SerializedName("ProductId") var ProductId: Int? = null,
     @SerializedName("InventoryCode") var InventoryCode: String? = null,
     @SerializedName("Barcode") var Barcode: String? = null,
-    @SerializedName("ProductName") var ProductName: String? = null,
-    @SerializedName("Qty") var Qty: Double? = null,
+    @SerializedName("ProductName", alternate = arrayOf("productName")) var ProductName: String? = null,
+    @SerializedName("Qty", alternate = arrayOf("qty")) var Qty: Double? = null,
     @SerializedName("Cost") var Cost: Double? = null,
     @SerializedName("UnitId") var UnitId: Int? = null,
-    @SerializedName("UnitName") var UnitName: String? = null,
-    @SerializedName("TotalCost") var TotalCost: Double? = null,
-    @SerializedName("SlNo") var SlNo: Int? = null,
+    @SerializedName("UnitName", alternate = arrayOf("unitName")) var UnitName: String? = null,
+    @SerializedName("TotalCost", alternate = arrayOf("totalCost")) var TotalCost: Double? = null,
+    @SerializedName("SlNo", alternate = arrayOf("slNo")) var SlNo: Int? = null,
     @SerializedName("Remarks") var Remarks: String? = null,
     @SerializedName("Type") var Type: String? = null,
     @SerializedName("AgreementType") var AgreementType: String? = null,
@@ -24,7 +27,7 @@ data class AgreementMemoDetail(
     @SerializedName("ItemSerialNumber") var ItemSerialNumber: String? = null,
     @SerializedName("ProductBatchList") var ProductBatchList: ArrayList<ProductBatchList> = arrayListOf(),
     @SerializedName("Price") var Price: Double? = 0.0,
-    @SerializedName("TotalPrice") var TotalPrice: Double? = 0.0,
+    @SerializedName("TotalPrice", alternate = arrayOf("totalPrice")) var TotalPrice: Double? = 0.0,
     @SerializedName("ProductGroup") var ProductGroup: String? = null,
     @SerializedName("IsBatch") var IsBatch: Boolean? = null,
     @SerializedName("QtyOnHand") var QtyOnHand: Double? = null,
@@ -37,7 +40,19 @@ data class AgreementMemoDetail(
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: String? = null,
     @SerializedName("changeunitflag") var changeunitflag: Boolean? = null
-) {
+) : HistoryItemInterface {
+    override fun getTitle(): String {
+        return ProductName.toString()
+    }
+
+    override fun getDescription(): String {
+        return UnitName.toString() + "/" + Qty
+    }
+
+    override fun getAmount(): String {
+        return Main.app.getSession().currencySymbol + TotalCost
+    }
+
     fun getSerialNumbers(): String {
         var serials = ""
         ProductBatchList.forEach {
@@ -46,5 +61,9 @@ data class AgreementMemoDetail(
                 if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber
         }
         return serials
+    }
+
+    override fun getSerializedNumber(): String {
+        return SlNo.toString()
     }
 }

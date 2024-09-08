@@ -55,14 +55,31 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/customers"
+        <LinearLayout
+            android:id="@+id/customersViewHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_delivery"
-            tools:visibility="gone" />
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner_light_gray_background"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@drawable/rounded_corner_light_gray_background"
+                app:queryHint="Search" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/customers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_delivery" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"

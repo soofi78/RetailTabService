@@ -34,13 +34,22 @@ data class DriverMemo(
         return (agreementNo ?: "") + " / " + (getFormattedDate())
     }
 
-    private fun getFormattedDate(): String {
+    fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
             agreementDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
         val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: agreementDate ?: ""
+    }
+
+    fun getFormattedDeliverDate(): String {
+        val date = DateTime.getDateFromString(
+            deliveryDate?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
+        return formatted ?: deliveryDate ?: ""
     }
 
     override fun getDescription(): String {

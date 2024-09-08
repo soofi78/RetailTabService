@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Retail"
         android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup"
         tools:targetApi="31">
 
         <activity

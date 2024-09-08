@@ -37,9 +37,7 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
                         R.id.nav_host_fragment_activity, AgreementMemoEquipmentListFragment().apply {
-                            arguments = bundleOf(
-                                Constants.IsServiceForm to args.IsEquipment,
-                                Constants.Customer to args.customer
+                            arguments = bundleOf(Constants.Customer to args.customer
                             )
                         }, "NewFragmentTag"
                     )

@@ -449,27 +449,19 @@ class HistoryFragmentListing : Fragment() {
                     }
                 })
         } else if (historyitem is AgreementMemo) {
-            Dialogs.optionsDialog(context = requireActivity(),
-                options = arrayOf(Constants.DownloadPdf, Constants.Print),
-                onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
-                    override fun onClick(option: String) {
-                        when (option) {
-                            Constants.DownloadPdf -> downloadAgreementMemoPdf(historyitem)
-                            Constants.Print -> Notify.toastLong("Printer not connected!")
-                        }
-                    }
-                })
+            findNavController().navigate(
+                R.id.action_navigation_history_listing_to_agreement_memo_details,
+                bundleOf(
+                    Constants.Item to Gson().toJson(historyitem)
+                )
+            )
         } else if (historyitem is ComplaintService) {
-            Dialogs.optionsDialog(context = requireActivity(),
-                options = arrayOf(Constants.DownloadPdf, Constants.Print),
-                onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
-                    override fun onClick(option: String) {
-                        when (option) {
-                            Constants.DownloadPdf -> downloadComplaintServicePdf(historyitem)
-                            Constants.Print -> Notify.toastLong("Printer not connected!")
-                        }
-                    }
-                })
+            findNavController().navigate(
+                R.id.action_navigation_history_listing_to_service_details,
+                bundleOf(
+                    Constants.Item to Gson().toJson(historyitem)
+                )
+            )
         } else if (historyitem is StockTransfer) {
             findNavController().navigate(
                 R.id.action_navigation_stock_transfer_history_fragment_to_transfer_details,

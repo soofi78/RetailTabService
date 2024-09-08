@@ -13,7 +13,6 @@
         android:padding="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -23,6 +22,15 @@
             android:textColor="@color/orange"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_light_gray_background"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@drawable/rounded_corner_light_gray_background"
+            app:queryHint="Search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/customers"

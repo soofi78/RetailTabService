@@ -1,8 +1,12 @@
 package com.lfsolutions.retail.model.memo
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 data class AgreementMemo(
     @SerializedName("Id", alternate = arrayOf("id")) var Id: Int? = null,
@@ -38,18 +42,18 @@ data class AgreementMemo(
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: String? = null,
-    @SerializedName("Signature") var Signature: String? = null
+    @SerializedName("Signature", alternate = arrayOf("signature")) var Signature: String? = null
 ) : HistoryItemInterface {
     override fun getTitle(): String {
-        return AgreementNo + " / " + transferDateFormatted()
+        return AgreementNo + " / " + agreementDateFormatted()
     }
 
-    fun transferDateFormatted(): String {
+    fun agreementDateFormatted(): String {
         val date = DateTime.getDateFromString(
             AgreementDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: AgreementDate ?: ""
     }
 
@@ -61,4 +65,11 @@ data class AgreementMemo(
         return "Qty: " + AgreementQty.toString()
     }
 
+    fun totalFormatted(): String {
+        return Main.app.getSession().currencySymbol + "" + AgreementTotal?.formatDecimalSeparator()
+    }
+
+    fun signatureUrl(): String {
+        return AppSession.get(Constants.baseUrl) + Signature
+    }
 }

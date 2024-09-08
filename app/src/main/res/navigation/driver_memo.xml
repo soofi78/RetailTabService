@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_driver_memo_list">
         <action
             android:id="@+id/action_navigation_driver_memo_list_to_driver_memo_edit"
-            app:destination="@id/navigation_driver_memo_details"
+            app:destination="@id/navigation_create_driver_memo"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -20,10 +20,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_driver_memo_details"
-        android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoDetailsFragment"
+        android:id="@+id/navigation_create_driver_memo"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.CreateDriverMemoFragment"
         android:label="Customers"
-        tools:layout="@layout/fragment_driver_memo_details">
+        tools:layout="@layout/fragment_create_driver_memo">
 
         <argument
             android:name="memo"
@@ -41,7 +41,7 @@
         android:id="@+id/navigation_driver_product_list"
         android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoProductListFragment"
         android:label="Customers"
-        tools:layout="@layout/fragment_driver_memo_details">
+        tools:layout="@layout/product_list">
 
     </fragment>
 
@@ -49,10 +49,23 @@
         android:id="@+id/navigation_driver_memo_add_product"
         android:name="com.lfsolutions.retail.ui.documents.drivermemo.AddProductToDriverMemoFragment"
         android:label="Customers"
-        tools:layout="@layout/fragment_driver_memo_details">
+        tools:layout="@layout/fragment_agreement_memo_add_equipment">
 
         <argument
             android:name="product"
+            app:argType="string"
+            app:nullable="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_driver_memo_details"
+        android:name="com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_driver_memo_details">
+
+        <argument
+            android:name="driver_memo"
             app:argType="string"
             app:nullable="true" />
 

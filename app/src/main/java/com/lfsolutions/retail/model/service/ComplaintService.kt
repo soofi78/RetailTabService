@@ -1,7 +1,10 @@
 package com.lfsolutions.retail.model.service
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 
 
@@ -36,10 +39,10 @@ data class ComplaintService(
     @SerializedName("date") var date: String? = null
 ) : HistoryItemInterface {
     override fun getTitle(): String {
-        return csNo + " / " + transferDateFormatted()
+        return csNo + " / " + serviceDateFormatted()
     }
 
-    fun transferDateFormatted(): String {
+    fun serviceDateFormatted(): String {
         val date = DateTime.getDateFromString(
             csDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
@@ -54,5 +57,13 @@ data class ComplaintService(
 
     override fun getAmount(): String {
         return "Qty: " + totalQty.toString()
+    }
+
+    fun signatureUrl(): String {
+        return AppSession[Constants.baseUrl] + signature
+    }
+
+    fun totalFormatted(): String {
+        return Main.app.getSession().currencySymbol + totalPrice
     }
 }

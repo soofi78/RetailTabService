@@ -216,16 +216,6 @@
         app:popExitAnim="@anim/fade_out"
         tools:layout="@layout/fragment_agreement_memo_bottom_navigation">
         <argument
-            android:name="IsEquipment"
-            android:defaultValue="true"
-            app:argType="boolean" />
-
-        <argument
-            android:name="IsServiceForm"
-            android:defaultValue="false"
-            app:argType="boolean" />
-
-        <argument
             android:name="customer"
             app:argType="string"
             app:nullable="false" />
@@ -303,11 +293,6 @@
         <argument
             android:name="IsEquipment"
             android:defaultValue="true"
-            app:argType="boolean" />
-
-        <argument
-            android:name="IsServiceForm"
-            android:defaultValue="false"
             app:argType="boolean" />
 
         <argument

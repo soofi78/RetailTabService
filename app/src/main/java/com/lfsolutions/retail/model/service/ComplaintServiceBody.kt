@@ -1,10 +1,9 @@
 package com.lfsolutions.retail.model.service
 
 import com.google.gson.annotations.SerializedName
-import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 
 
-data class ComplaintServiceRequest(
+data class ComplaintServiceBody(
     @SerializedName("complaintService") var complaintService: ComplaintService? = ComplaintService(),
     @SerializedName("complaintServiceDetails") var complaintServiceDetails: ArrayList<ComplaintServiceDetails> = arrayListOf()
 ) {

@@ -2,8 +2,13 @@ package com.lfsolutions.retail.model.service
 
 import android.util.Log
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.ApplicableTaxes
 import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.DateTime
 
 
 data class ComplaintServiceDetails(
@@ -32,14 +37,29 @@ data class ComplaintServiceDetails(
     @SerializedName("transType") var transType: String? = null,
     @SerializedName("transTypeDisplayText") @Transient var transTypeDisplayText: String? = null,
 
-    ) {
+    ) : HistoryItemInterface {
+    override fun getTitle(): String {
+        return productName.toString()
+    }
+
+    override fun getDescription(): String {
+        return unitName.toString()
+    }
+
+    override fun getAmount(): String {
+        return qty.toString()
+    }
+
     fun getSerialNumbers(): CharSequence? {
         var serials = ""
         productBatchList.forEach {
-            Log.d("Serial", it.SerialNumber.toString())
             serials +=
                 if (serials == "") it.SerialNumber.toString() else " / " + it.SerialNumber
         }
         return serials
+    }
+
+    override fun getSerializedNumber(): String {
+        return slNo.toString()
     }
 }

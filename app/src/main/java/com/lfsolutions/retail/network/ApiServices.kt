@@ -6,7 +6,6 @@ import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
-import com.lfsolutions.retail.model.DateRequest
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FormResult
@@ -26,6 +25,7 @@ import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.model.VisitDateRequest
 import com.lfsolutions.retail.model.dailysale.DailySaleRecord
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
@@ -44,7 +44,7 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
-import com.lfsolutions.retail.model.service.ComplaintServiceRequest
+import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.util.Api
@@ -105,7 +105,7 @@ interface ApiServices {
     fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
-    fun createUpdateComplaintService(@Body complaintServiceRequest: ComplaintServiceRequest): Call<BaseResponse<ComplaintServiceResponse>>?
+    fun createUpdateComplaintService(@Body complaintServiceBody: ComplaintServiceBody): Call<BaseResponse<ComplaintServiceResponse>>?
 
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
@@ -135,7 +135,7 @@ interface ApiServices {
     fun getCustomersForPayment(): Call<RetailResponse<CustomerPaymentsResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_SALE_RECEIPT))
-    fun createSaleReceipt(@Body paymentRequest: PaymentRequest): Call<BaseResponse<Any>>
+    fun createSaleReceipt(@Body paymentRequest: PaymentRequest): Call<BaseResponse<String>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_TRANSACTIONS))
     fun getSalesTransactions(@Body saleTransactions: SaleTransactionRequestBody): Call<RetailResponse<ArrayList<CustomerSaleTransaction>>>
@@ -145,6 +145,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_DETAIL))
     fun getSalesOrderDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleOrderResponse>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_DETAILS))
+    fun getAgreementMemoDetails(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateAgreementMemoRequestBody>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_INVOICES))
     fun getSaleInvoices(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleInvoiceListResult>>
@@ -200,9 +203,14 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_USER_DETAILS))
     fun getUserDetails(@Body idRequest: IdRequest): Call<BaseResponse<UserProfile>>?
 
-
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SCHEDULED_VISITATION))
-    fun getScheduledVisitation(@Body dateRequest: DateRequest): Call<BaseResponse<CustomerResult>>?
+    fun getScheduledVisitation(@Body visitDateRequest: VisitDateRequest): Call<BaseResponse<CustomerResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DRIVER_MEMO_FOR_EDIT))
+    fun getDriverMemo(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateDriverMemoRequestBody>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_COMPLAINT_SERVICE_DETAILS))
+    fun getComplaintServiceDetails(@Body idRequest: IdRequest): Call<BaseResponse<ComplaintServiceBody>>?
 }
 
 

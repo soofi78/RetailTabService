@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 
 data class CreateUpdateAgreementMemoRequestBody(
-    @SerializedName("AgreementMemo") var AgreementMemo: AgreementMemo? = AgreementMemo(),
-    @SerializedName("AgreementMemoDetail") var AgreementMemoDetail: ArrayList<AgreementMemoDetail> = arrayListOf()
+    @SerializedName("AgreementMemo", alternate = arrayOf("agreementMemo")) var AgreementMemo: AgreementMemo? = AgreementMemo(),
+    @SerializedName("AgreementMemoDetail", alternate = arrayOf("agreementMemoDetail")) var AgreementMemoDetail: ArrayList<AgreementMemoDetail> = arrayListOf()
 ) {
     fun addEquipment(agreementMemoDetail: AgreementMemoDetail) {
         AgreementMemoDetail.add(agreementMemoDetail)

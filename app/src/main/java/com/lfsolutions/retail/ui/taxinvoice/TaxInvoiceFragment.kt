@@ -107,8 +107,10 @@ class TaxInvoiceFragment : Fragment() {
         binding.header.setBackText("Tax Invoice")
         Main.app.getSession().name?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
-            findNavController().popBackStack()
+
         }
+
+        binding.btnCancel.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun setCustomerData() {

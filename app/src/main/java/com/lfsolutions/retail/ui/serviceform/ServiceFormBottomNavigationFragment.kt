@@ -38,7 +38,6 @@ class ServiceFormBottomNavigationFragment : Fragment() {
                     ft.replace(
                         R.id.nav_host_fragment_activity, ServiceFormEquipmentListFragment().apply {
                             arguments = bundleOf(
-                                Constants.IsServiceForm to args.IsEquipment,
                                 Constants.Customer to args.customer
                             )
                         }, "NewFragmentTag"

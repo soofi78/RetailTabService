@@ -161,7 +161,8 @@
                         android:backgroundTint="@color/yellow"
                         android:foreground="?selectableItemBackground"
                         android:text="Pay"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:visibility="gone" />
 
 
                 </LinearLayout>

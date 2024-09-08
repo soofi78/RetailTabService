@@ -13,4 +13,11 @@ data class BaseResponse<T>(
     @SerializedName("unAuthorizedRequest") var unAuthorizedRequest: Boolean? = null,
     @SerializedName("__abp") var _abp: Boolean? = null
 
-)
+) {
+    fun getMessage(message: String): String {
+        if (error != null && error?.message.isNullOrEmpty().not()) {
+            return error!!.message!!
+        }
+        return message
+    }
+}

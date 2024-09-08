@@ -50,6 +50,7 @@ calculator = { group = "com.maltaisn", name = "calcdialog", version.ref = "calcd
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 navigation-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationArgs" }
 

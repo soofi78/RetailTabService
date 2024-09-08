@@ -148,6 +148,10 @@ class SaleOrderFragment : Fragment() {
             uploadSignature()
         }
 
+        binding.btnCancel.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
     }
 
     private fun uploadSignature() {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,7 +25,7 @@ import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 class HistoryFilterSheet : BottomSheetDialogFragment() {
 
@@ -65,6 +66,17 @@ class HistoryFilterSheet : BottomSheetDialogFragment() {
             onHistoryFilter.onFilter(startDate, endDate, selectedCustomer)
             dismiss()
         }
+
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                setCustomerAdapter(customers, newText ?: "")
+                return true
+            }
+        })
     }
 
     private fun setSelectedDateData() {
@@ -156,7 +168,7 @@ class HistoryFilterSheet : BottomSheetDialogFragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     customers =
                         (response?.body() as RetailResponse<CustomerPaymentsResult>).result?.items!!
-                    setCustomerAdapter()
+                    setCustomerAdapter(customers)
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -164,20 +176,43 @@ class HistoryFilterSheet : BottomSheetDialogFragment() {
                 }
             }).autoLoadigCancel(Loading().forApi(requireActivity()))
             .enque(Network.api()?.getCustomersForPayment()).execute()
-        else setCustomerAdapter()
+        else setCustomerAdapter(customers)
     }
 
-    private fun setCustomerAdapter() {
-        customerAdapter = DeliveryItemAdapter(customers, DeliveryItemAdapter.CustomerItemType.All)
+    private fun setCustomerAdapter(customers: ArrayList<Customer>, query: String = "") {
+        customerAdapter = DeliveryItemAdapter(
+            customers.filter { isCandidateForFilter(query, it) },
+            DeliveryItemAdapter.CustomerItemType.All
+        )
         customerAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
-                binding.customers.visibility = View.GONE
+                binding.customersViewHolder.visibility = View.GONE
                 selectedCustomer = customer
                 setSelectedCustomerData()
             }
         })
         binding.customers.adapter = customerAdapter
-        binding.customers.visibility = View.VISIBLE
+        binding.customersViewHolder.visibility = View.VISIBLE
+    }
+
+    private fun isCandidateForFilter(query: String, customer: Customer): Boolean {
+        if (query.isEmpty())
+            return true
+        var contains = true
+        query.split(" ").toSet().forEach {
+            contains =
+                contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.country?.lowercase()?.contains(it) == true
+                        || customer.area?.lowercase()?.contains(it) == true
+                        || customer.address1?.lowercase()?.contains(it) == true
+                        || customer.address2?.lowercase()?.contains(it) == true
+                        || customer.address3?.lowercase()?.contains(it) == true
+                        || customer.customerCode?.lowercase()?.contains(it) == true
+                        || customer.email?.lowercase()?.contains(it) == true
+                        || customer.salespersonName?.lowercase()?.contains(it) == true
+                        || customer.city?.lowercase()?.contains(it) == true)
+        }
+        return contains
     }
 
 

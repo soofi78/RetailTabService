@@ -9,7 +9,6 @@ object Constants {
     const val Delete: String = "Delete"
     const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
-    const val IsServiceForm = "IsServiceForm"
     val Logout: CharSequence = "Logout"
     val ViewProfile: CharSequence = "View Profile"
     const val Product: String = "product"

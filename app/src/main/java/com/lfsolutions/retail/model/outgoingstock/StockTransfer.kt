@@ -40,7 +40,7 @@ data class StockTransfer(
             transferDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: transferDate ?: ""
     }
 

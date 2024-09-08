@@ -146,7 +146,6 @@ class ServiceFormFragment : Fragment() {
         binding.btnOpenEquipmentList.setOnClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to true,
-                "IsServiceForm" to true,
                 Constants.Customer to args.customer
             )
             it.findNavController().navigate(
@@ -155,10 +154,13 @@ class ServiceFormFragment : Fragment() {
             )
         }
 
+        binding.btnCancel.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.btnViewOrder.setOnClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to false,
-                "IsServiceForm" to true,
                 Constants.Customer to args.customer
             )
             it.findNavController().navigate(

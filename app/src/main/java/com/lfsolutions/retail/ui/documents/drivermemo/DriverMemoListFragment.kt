@@ -14,6 +14,9 @@ import com.lfsolutions.retail.databinding.FragmentDriverMemoListBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.GetAllDriverMemoResult
 import com.lfsolutions.retail.model.HistoryRequest
+import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
+import com.lfsolutions.retail.model.memo.DriverMemo
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -103,7 +106,7 @@ class DriverMemoListFragment : Fragment() {
     private fun createNewDriverMemo(customer: Customer) {
         findNavController().navigate(
             R.id.action_navigation_driver_memo_list_to_driver_memo_edit,
-            bundleOf(Constants.Customer to Gson().toJson(customer),Constants.Memo to null)
+            bundleOf(Constants.Customer to Gson().toJson(customer), Constants.Memo to null)
         )
     }
 
@@ -173,13 +176,36 @@ class DriverMemoListFragment : Fragment() {
         binding.driverMemoList.adapter = HistoryListAdapter(driverItems,
             object : HistoryListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
-                    openDriverMemo(saleOrderInvoiceItem)
+                    getDriverMemoDetails(saleOrderInvoiceItem as DriverMemo)
                 }
             })
     }
 
-    private fun openDriverMemo(saleOrderInvoiceItem: HistoryItemInterface) {
+    private fun getDriverMemoDetails(memo: DriverMemo) {
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val res =
+                        (response?.body() as BaseResponse<CreateUpdateDriverMemoRequestBody>).result
+                    res?.driverMemo?.customerName = memo.customerName
+                    res?.let { openDriverMemo(it) }
 
+                }
+
+                override fun onFailure(
+                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
+                ) {
+                    Notify.toastLong("Unable get driver memo")
+                }
+            }).enque(Network.api()?.getDriverMemo(IdRequest(id = memo.id))).execute()
+    }
+
+    private fun openDriverMemo(res: CreateUpdateDriverMemoRequestBody) {
+        findNavController().navigate(
+            R.id.navigation_driver_memo_details, bundleOf(
+                "driver_memo" to Gson().toJson(res)
+            )
+        )
     }
 
 }

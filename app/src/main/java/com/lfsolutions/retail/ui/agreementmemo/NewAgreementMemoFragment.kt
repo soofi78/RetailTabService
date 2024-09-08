@@ -116,7 +116,7 @@ class NewAgreementMemoFragment : Fragment() {
         }
 
         mBinding.btnViewOrder.setOnClickListener {
-            val bundle = bundleOf("IsEquipment" to false)
+            val bundle = bundleOf(Constants.Customer to Gson().toJson(customer))
             it.findNavController().navigate(
                 R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
                 bundle

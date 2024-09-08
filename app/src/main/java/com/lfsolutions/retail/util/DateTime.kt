@@ -3,6 +3,7 @@ package com.lfsolutions.retail.util
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import com.whiteelephant.monthpicker.MonthPickerDialog
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -25,6 +26,7 @@ object DateTime {
     const val DateTimeFormatWOss = "dd/MM/yyyy HH:mm"
     const val DateFormatWithDayName = "EEEE, dd MMM, yyyy"
     const val DateFormatWithDayNameMonthNameAndTime = "EEEE, dd MMM HH:mm"
+    const val DateFormatWithMonthNameAndYear = "MMM yyyy"
     const val DateFormatWithDayNameMonthNameAndYear = "EEEE, dd MMM yyyy"
     const val SimpleDateFormat = "dd-MM-yyyy"
     const val ServerDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
@@ -160,6 +162,28 @@ object DateTime {
         }
     }
 
+    fun showMonthYearPicker(activity: Activity?, onDatePickedCallback: OnDatePickedCallback) {
+        val today = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val builder = MonthPickerDialog.Builder(
+            activity, { selectedMonth, selectedYear ->
+
+                var month = selectedMonth.plus(1).toString()
+                if (month.length == 1) {
+                    month = "0$month"
+                }
+
+                onDatePickedCallback.onDateSelected(
+                    selectedYear.toString(),
+                    month,
+                    "01"
+                )
+            },
+            today.get(Calendar.YEAR),
+            today.get(Calendar.MONTH)
+        )
+        builder.build().show()
+    }
+
     fun showDatePicker(activity: Activity?, callback: OnDatePickedCallback?) {
         val yy: Int
         val mm: Int
@@ -168,19 +192,20 @@ object DateTime {
         yy = calendar[Calendar.YEAR]
         mm = calendar[Calendar.MONTH]
         dd = calendar[Calendar.DATE]
-        val dialog = DatePickerDialog(activity!!, { view, year, monthOfYear, dayOfMonth ->
-            val month = monthOfYear + 1
-            var d = dayOfMonth.toString() + ""
-            var m = month.toString() + ""
-            if (month.toString().length == 1) {
-                m = "0$month"
-            }
+        val dialog =
+            DatePickerDialog(activity!!, { view, year, monthOfYear, dayOfMonth ->
+                val month = monthOfYear + 1
+                var d = dayOfMonth.toString() + ""
+                var m = month.toString() + ""
+                if (month.toString().length == 1) {
+                    m = "0$month"
+                }
 
-            if (dayOfMonth.toString().length == 1) {
-                d = "0$dayOfMonth"
-            }
-            callback?.onDateSelected(year.toString(), m, d)
-        }, yy, mm, dd)
+                if (dayOfMonth.toString().length == 1) {
+                    d = "0$dayOfMonth"
+                }
+                callback?.onDateSelected(year.toString(), m, d)
+            }, yy, mm, dd)
         dialog.setOnCancelListener { dialog ->
             dialog.dismiss()
             callback?.onDateSelected("", "", "")

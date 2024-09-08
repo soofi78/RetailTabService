@@ -47,8 +47,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
     ): View? {
         if (::_binding.isInitialized.not()) {
             _binding = ProductListBinding.inflate(inflater, container, false)
-            customer =
-                Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
+            customer = Gson().fromJson(arguments?.getString(Constants.Customer), Customer::class.java)
         }
         return mBinding.root
     }

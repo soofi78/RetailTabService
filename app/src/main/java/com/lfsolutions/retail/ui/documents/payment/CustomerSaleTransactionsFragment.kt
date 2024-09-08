@@ -109,7 +109,6 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
         binding.header.binding?.txtName?.setOnClickListener {
             onPayClickListener()
         }
-
     }
 
     private fun getSelectedItemsAmount(): Double {
@@ -183,9 +182,9 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val result = response?.body() as BaseResponse<Any>
+                val result = response?.body() as BaseResponse<String>
                 if (result.success == true) {
-                    Notify.toastLong("Payment Successful")
+                    Notify.toastLong("Payment Successful ${result.result}")
                     findNavController().popBackStack()
                 } else {
                     Notify.toastLong("Payment Failed")
@@ -251,10 +250,11 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
                 transactions[index].appliedAmount =
                     value?.toDouble()?.formatDecimalSeparator()?.replace(",", "")?.toDouble()
                 transactions[index].applied = true
-                saleTransactionAdapter.notifyDataSetChanged()
+                saleTransactionAdapter.notifyItemChanged(index)
             }
             amountEditTransaction = null
         }
+        updateSelectedAmount()
     }
 
 }

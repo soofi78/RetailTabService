@@ -29,6 +29,23 @@
 
 
         <action
+            android:id="@+id/action_navigation_history_listing_to_agreement_memo_details"
+            app:destination="@id/navigation_agreement_memo_details"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_history_listing_to_service_details"
+            app:destination="@id/navigation_service_details"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+
+        <action
             android:id="@+id/action_navigation_stock_transfer_history_fragment_to_transfer_details"
             app:destination="@id/navigation_transfer_detail"
             app:enterAnim="@anim/fade_in"
@@ -43,6 +60,7 @@
         android:name="com.lfsolutions.retail.ui.taxinvoice.InvoiceDetailsFragment"
         android:label="Customers"
         tools:layout="@layout/fragment_invoice_details">
+
         <argument
             android:name="item"
             app:argType="string"
@@ -65,6 +83,28 @@
         android:name="com.lfsolutions.retail.ui.saleorder.OrderDetailsFragment"
         android:label="Customers"
         tools:layout="@layout/fragment_order_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_details"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_agreement_memo_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_service_details"
+        android:name="com.lfsolutions.retail.ui.serviceform.ComplaintServiceDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_complaint_service_details">
         <argument
             android:name="item"
             app:argType="string"

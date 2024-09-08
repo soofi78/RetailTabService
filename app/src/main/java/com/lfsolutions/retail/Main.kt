@@ -9,7 +9,7 @@ import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
-import com.lfsolutions.retail.model.service.ComplaintServiceRequest
+import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -21,7 +21,7 @@ class Main : Application() {
     private var taxInvoice: SaleInvoiceRequest? = null
     private var inComingStockTransferRequest: StockTransferRequestBody? = null
     private var outGoingStockTransferRequest: StockTransferRequestBody? = null
-    private var complaintService: ComplaintServiceRequest? = null
+    private var complaintService: ComplaintServiceBody? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
     private var driverMemo: CreateUpdateDriverMemoRequestBody? = null
 
@@ -63,8 +63,8 @@ class Main : Application() {
         return saleOrder
     }
 
-    fun getComplaintService(): ComplaintServiceRequest? {
-        if (complaintService == null) complaintService = ComplaintServiceRequest()
+    fun getComplaintService(): ComplaintServiceBody? {
+        if (complaintService == null) complaintService = ComplaintServiceBody()
         return complaintService
     }
 

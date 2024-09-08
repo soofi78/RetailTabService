@@ -22,6 +22,9 @@ data class CustomerSaleTransaction(
         if (id == (other as CustomerSaleTransaction).id) {
             return true
         }
+        if (transactionNo == (other as CustomerSaleTransaction).transactionNo) {
+            return true
+        }
         return super.equals(other)
     }
 }

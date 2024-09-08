@@ -14,6 +14,7 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.DateRequest
 import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.VisitDateRequest
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -38,20 +39,24 @@ class ScheduleFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentScheduleBinding.inflate(inflater, container, false)
-        date = DateTime.getCurrentDateTime(DateTime.DateFormatSV)
+        date = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         return mBinding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.dateFilter.text = date
+        mBinding.dateFilter.text =
+            DateTime.getCurrentDateTime(DateTime.DateFormatWithMonthNameAndYear)
         mBinding.dateFilter.setOnClickListener {
-            DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+            DateTime.showMonthYearPicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     super.onDateSelected(year, month, day)
-                    date = "$day-$month-$year"
-                    mBinding.dateFilter.text = date
+                    date = "$year-$month-$day"
+                    mBinding.dateFilter.text = DateTime.format(
+                        DateTime.getDateFromString(date, DateTime.DateFormatRetail),
+                        DateTime.DateFormatWithMonthNameAndYear
+                    )
                     getScheduledVisitation()
                 }
             })
@@ -129,7 +134,8 @@ class ScheduleFragment : Fragment() {
 
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity()))
-            .enque(Network.api()?.getScheduledVisitation(DateRequest(date = this.date))).execute()
+            .enque(Network.api()?.getScheduledVisitation(VisitDateRequest(VisitDate = this.date)))
+            .execute()
     }
 
     override fun onDestroyView() {

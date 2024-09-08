@@ -57,5 +57,8 @@ object Api {
         const val GET_SCHEDULED_VISITATION = "Service/ApiGetCustomerVisitationSchedule"
         const val GET_ALL_AGREEMENT_MEMO_LIST = "agreementMemo/GetAll"
         const val GET_ALL_COMPLAINT_SERVICE_LIST = "complaintService/GetAll"
+        const val GET_DRIVER_MEMO_FOR_EDIT = "DriverMemo/GetDriverMemoForEdit"
+        const val GET_AGREEMENT_MEMO_DETAILS = "AgreementMemo/GetAgreementMemoForEdit"
+        const val GET_COMPLAINT_SERVICE_DETAILS = "ComplaintService/GetComplaintServiceForEdit"
     }
 }
