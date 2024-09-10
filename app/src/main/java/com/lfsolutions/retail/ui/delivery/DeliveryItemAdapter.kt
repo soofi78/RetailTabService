@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.ui.delivery
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
@@ -10,8 +11,9 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.util.makeTextBold
 
 class DeliveryItemAdapter(
-    var customers: List<Customer>?= ArrayList(),
-    val type: CustomerItemType
+    var customers: List<Customer>? = ArrayList(),
+    val type: CustomerItemType,
+    var checkBoxEnabledForScheduled: Boolean = true
 ) :
 
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -54,7 +56,8 @@ class DeliveryItemAdapter(
     }
 
     private fun setScheduleData(binding: ItemScheduledBinding, customer: Customer?) {
-
+        binding.selected.visibility = if (checkBoxEnabledForScheduled) View.VISIBLE else View.GONE
+        binding.selected.isEnabled = checkBoxEnabledForScheduled
         binding.root.setBackgroundColor(binding.root.resources.getColor(if (customer?.IsVisited == true) R.color.light_red else R.color.white))
         binding.txtGroup.text =
             makeTextBold(

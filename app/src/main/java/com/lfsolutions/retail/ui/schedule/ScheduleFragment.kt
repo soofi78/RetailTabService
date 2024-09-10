@@ -62,7 +62,7 @@ class ScheduleFragment : Fragment() {
             })
         }
         mBinding.recyclerViewVisitationSchedule.adapter =
-            DeliveryItemAdapter(ArrayList(), DeliveryItemAdapter.CustomerItemType.Scheduled)
+            DeliveryItemAdapter(ArrayList(), DeliveryItemAdapter.CustomerItemType.Scheduled, false)
         mBinding.recyclerViewVisitationSchedule.addItemDecoration(
             DividerItemDecoration(
                 requireContext(), DividerItemDecoration.VERTICAL
@@ -86,7 +86,7 @@ class ScheduleFragment : Fragment() {
         mScheduleAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getScheduledVisitationCustomersList()
                 ?.filter { isCandidateForFilter(s, it) },
-            DeliveryItemAdapter.CustomerItemType.Scheduled
+            DeliveryItemAdapter.CustomerItemType.Scheduled, false
         )
         mBinding.recyclerViewVisitationSchedule.adapter = mScheduleAdapter
         mScheduleAdapter?.setListener(object : DeliveryItemAdapter.OnItemClickListener {
