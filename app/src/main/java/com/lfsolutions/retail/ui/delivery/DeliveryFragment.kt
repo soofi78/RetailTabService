@@ -2,6 +2,7 @@ package com.lfsolutions.retail.ui.delivery
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -16,6 +19,7 @@ import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerResult
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
@@ -25,6 +29,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
+import com.lfsolutions.retail.ui.saleorder.SaleOrderSummaryAdapter
 import com.lfsolutions.retail.ui.stocktransfer.incoming.GenerateInComingStockBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockSummaryActivity
 import com.lfsolutions.retail.util.Constants
@@ -35,6 +40,7 @@ import retrofit2.Response
 
 class DeliveryFragment : Fragment(), OnNetworkResponse {
 
+    private lateinit var itemSwipeHelper: ItemTouchHelper
     private var getCustomersResponse: RetailResponse<CustomerResult>? = null
     private var _binding: FragmentDeliveryBinding? = null
 
@@ -170,21 +176,23 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     private fun setAdapters(getCustomersResponse: RetailResponse<CustomerResult>?, s: String) {
         mUrgentAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getUrgentCustomersList()
-                ?.filter { isCandidateForFilter(s, it) },
+                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
             DeliveryItemAdapter.CustomerItemType.Urgent
         )
         mToVisitAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getToVisitsCustomersList()
-                ?.filter { isCandidateForFilter(s, it) },
+                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
             DeliveryItemAdapter.CustomerItemType.ToVisit
         )
         mScheduleAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getScheduledCustomersList()
-                ?.filter { isCandidateForFilter(s, it) },
+                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
             DeliveryItemAdapter.CustomerItemType.Scheduled
         )
         mBinding.recyclerViewUrgent.adapter = mUrgentAdapter
         mBinding.recyclerViewToVisit.adapter = mToVisitAdapter
+        itemSwipeHelper = ItemTouchHelper(getSwipeToDeleteListener())
+        itemSwipeHelper.attachToRecyclerView(mBinding.recyclerViewSchedule)
         mBinding.recyclerViewSchedule.adapter = mScheduleAdapter
         mUrgentAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
@@ -211,5 +219,112 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             )
         )
     }
+
+    private fun getSwipeToDeleteListener(): SimpleCallback {
+        return object :
+            SimpleCallback(
+                0,
+                LEFT or RIGHT
+            ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                val position = viewHolder.adapterPosition
+                deleteFromSchedule(position)
+            }
+
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                super.getMovementFlags(recyclerView, viewHolder)
+                if (viewHolder is DeliveryItemAdapter.ViewHolderScheduled) {
+                    val swipeFlags = START or END
+                    return makeMovementFlags(0, swipeFlags)
+                } else return 0
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                getDefaultUIUtil().clearView((viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView())
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                if (viewHolder != null) {
+                    getDefaultUIUtil().onSelected((viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView())
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                getDefaultUIUtil().onDraw(
+                    c,
+                    recyclerView,
+                    (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView(),
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
+            override fun onChildDrawOver(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder?,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                getDefaultUIUtil().onDrawOver(
+                    c,
+                    recyclerView,
+                    (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView(),
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+        }
+    }
+
+    private fun deleteFromSchedule(position: Int) {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                mScheduleAdapter.remove(position)
+                Notify.toastLong("Success")
+            }
+
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to delete")
+                getCustomerDetails()
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity()))
+            .enque(
+                Network.api()?.deleteCustomerFromVisitationSchedule(
+                    IdRequest(
+                        mScheduleAdapter.customers?.get(position)?.id
+                    )
+                )
+            ).execute()
+    }
+
 
 }

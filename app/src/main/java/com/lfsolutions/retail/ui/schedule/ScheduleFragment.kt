@@ -7,14 +7,19 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.gson.Gson
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentScheduleBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.CustomerIdRequest
+import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.DateRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.VisitDateRequest
+import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -24,6 +29,7 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
@@ -62,7 +68,7 @@ class ScheduleFragment : Fragment() {
             })
         }
         mBinding.recyclerViewVisitationSchedule.adapter =
-            DeliveryItemAdapter(ArrayList(), DeliveryItemAdapter.CustomerItemType.Scheduled, false)
+            DeliveryItemAdapter(ArrayList(), DeliveryItemAdapter.CustomerItemType.Scheduled)
         mBinding.recyclerViewVisitationSchedule.addItemDecoration(
             DividerItemDecoration(
                 requireContext(), DividerItemDecoration.VERTICAL
@@ -79,14 +85,48 @@ class ScheduleFragment : Fragment() {
             }
         })
         getScheduledVisitation()
+
+        mBinding.fabAddToScheduled.setOnClickListener {
+            val list = mScheduleAdapter?.getCheckedItemList()
+            if (list.isNullOrEmpty()) {
+                Notify.toastLong("Please select items")
+                return@setOnClickListener
+            }
+
+            val ids = arrayListOf<CustomerIdRequest>()
+            list.forEach { customer ->
+                customer.id?.let { customerId -> ids.add(CustomerIdRequest(id = customerId)) }
+            }
+            NetworkCall.make()
+                .autoLoadigCancel(Loading().forApi(requireActivity(), "Adding to schedule..."))
+                .enque(Network.api()?.addCustomerVisitationSchedule(ids))
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(
+                        call: Call<*>?,
+                        response: Response<*>?,
+                        tag: Any?
+                    ) {
+                        Notify.toastLong("Success")
+                        findNavController().navigate(R.id.navigation_delivery)
+                    }
+
+                    override fun onFailure(
+                        call: Call<*>?,
+                        response: BaseResponse<*>?,
+                        tag: Any?
+                    ) {
+                        Notify.toastLong("Unable to add to schedule")
+                    }
+                }).execute()
+        }
     }
 
 
     private fun setAdapters(getCustomersResponse: BaseResponse<CustomerResult>?, s: String) {
         mScheduleAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getScheduledVisitationCustomersList()
-                ?.filter { isCandidateForFilter(s, it) },
-            DeliveryItemAdapter.CustomerItemType.Scheduled, false
+                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+            DeliveryItemAdapter.CustomerItemType.Scheduled
         )
         mBinding.recyclerViewVisitationSchedule.adapter = mScheduleAdapter
         mScheduleAdapter?.setListener(object : DeliveryItemAdapter.OnItemClickListener {

@@ -11,9 +11,8 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.util.makeTextBold
 
 class DeliveryItemAdapter(
-    var customers: List<Customer>? = ArrayList(),
+    var customers: ArrayList<Customer>? = ArrayList(),
     val type: CustomerItemType,
-    var checkBoxEnabledForScheduled: Boolean = true
 ) :
 
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -24,7 +23,13 @@ class DeliveryItemAdapter(
         RecyclerView.ViewHolder(binding.root)
 
     class ViewHolderScheduled(val binding: ItemScheduledBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        fun getSwipableView(): View? {
+            return if (binding.swipeAble.tag != null && binding.swipeAble.tag == true)
+                binding.swipeAble
+            else null
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -56,9 +61,9 @@ class DeliveryItemAdapter(
     }
 
     private fun setScheduleData(binding: ItemScheduledBinding, customer: Customer?) {
-        binding.selected.visibility = if (checkBoxEnabledForScheduled) View.VISIBLE else View.GONE
-        binding.selected.isEnabled = checkBoxEnabledForScheduled
-        binding.root.setBackgroundColor(binding.root.resources.getColor(if (customer?.IsVisited == true) R.color.light_red else R.color.white))
+        binding.selected.visibility = if (customer?.IsVisited == true) View.GONE else View.VISIBLE
+        binding.selected.isEnabled = customer?.IsVisited == false
+        binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(if (customer?.IsVisited == true) R.color.light_red else R.color.white))
         binding.txtGroup.text =
             makeTextBold(
                 text = binding.txtGroup.context.getString(
@@ -90,6 +95,7 @@ class DeliveryItemAdapter(
         binding.selected.setOnCheckedChangeListener { _, isChecked ->
             customer?.isSelected = isChecked
         }
+        binding.swipeAble.tag = customer?.isVisitationSchedule ?: false
     }
 
     fun getCheckedItemList(): ArrayList<Customer> {
@@ -133,17 +139,18 @@ class DeliveryItemAdapter(
 
     override fun getItemCount(): Int = customers?.size ?: 0
 
+    fun remove(position: Int) {
+        customers?.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 
     fun setListener(listener: OnItemClickListener) {
-
         mListener = listener
-
     }
 
     interface OnItemClickListener {
-
         fun onItemClick(customer: Customer)
-
     }
 
     enum class CustomerItemType {

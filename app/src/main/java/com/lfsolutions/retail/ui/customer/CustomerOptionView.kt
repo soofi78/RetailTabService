@@ -71,7 +71,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
 
     private fun setCustomerAdapter(customers: ArrayList<Customer>, query: String = "") {
         customerAdapter = DeliveryItemAdapter(
-            customers.filter { isCandidateForFilter(query, it) },
+            customers.filter { isCandidateForFilter(query, it) } as ArrayList<Customer>?,
             DeliveryItemAdapter.CustomerItemType.All
         )
         customerAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {

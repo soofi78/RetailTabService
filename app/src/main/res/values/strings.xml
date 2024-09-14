@@ -117,5 +117,6 @@
     <string name="label_payment">Payment</string>
     <string name="label_history">History</string>
     <string name="stock_receive">Stock Receive</string>
+    <string name="add_to_visit">Add to schedule</string>
 
 </resources>

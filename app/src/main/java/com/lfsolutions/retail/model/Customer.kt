@@ -49,5 +49,6 @@ data class Customer(
     @SerializedName("operatingHours") var operatingHours: String? = null,
     @SerializedName("picName") var picName: String? = null,
     @SerializedName("customerWorkArea") var customerWorkArea: String? = null,
+    @SerializedName("isVisitationSchedule") var isVisitationSchedule: Boolean? = null
 ) : Serializable
 

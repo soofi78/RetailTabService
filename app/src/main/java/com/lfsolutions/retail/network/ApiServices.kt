@@ -2,6 +2,7 @@ package com.lfsolutions.retail.network
 
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
+import com.lfsolutions.retail.model.CustomerIdRequest
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.CustomerResult
@@ -211,6 +212,12 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_COMPLAINT_SERVICE_DETAILS))
     fun getComplaintServiceDetails(@Body idRequest: IdRequest): Call<BaseResponse<ComplaintServiceBody>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.ADD_CUSTOMER_TO_VISITATION_SCHEDULE))
+    fun addCustomerVisitationSchedule(@Body list: ArrayList<CustomerIdRequest>): Call<BaseResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_CUSTOMER_FROM_VISITATION_SCHEDULE))
+    fun deleteCustomerFromVisitationSchedule(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
 }
 
 
