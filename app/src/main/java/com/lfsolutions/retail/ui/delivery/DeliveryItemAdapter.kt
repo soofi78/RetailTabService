@@ -63,7 +63,13 @@ class DeliveryItemAdapter(
     private fun setScheduleData(binding: ItemScheduledBinding, customer: Customer?) {
         binding.selected.visibility = if (customer?.IsVisited == true) View.GONE else View.VISIBLE
         binding.selected.isEnabled = customer?.IsVisited == false
-        binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(if (customer?.IsVisited == true) R.color.light_red else R.color.white))
+        if (customer?.IsVisited == true) {
+            binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.light_red))
+        } else if (customer?.isVisitationSchedule == true) {
+            binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.orange))
+        } else {
+            binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.white))
+        }
         binding.txtGroup.text =
             makeTextBold(
                 text = binding.txtGroup.context.getString(
