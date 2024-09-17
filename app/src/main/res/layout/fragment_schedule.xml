@@ -48,8 +48,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/sort"
                 app:layout_constraintTop_toBottomOf="@+id/txtVisitationSchedule"
                 app:queryHint="Search" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sort"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_sort"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.gson.Gson
@@ -14,12 +13,8 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentScheduleBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdRequest
-import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerResult
-import com.lfsolutions.retail.model.DateRequest
-import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.VisitDateRequest
-import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -40,6 +35,7 @@ class ScheduleFragment : Fragment() {
     private var date: String? = null
     private var _binding: FragmentScheduleBinding? = null
     private val mBinding get() = _binding!!
+    private var sort = Constants.ASCENDING
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -119,13 +115,39 @@ class ScheduleFragment : Fragment() {
                     }
                 }).execute()
         }
+
+        mBinding.sort.setOnClickListener {
+            sort = if (sort == Constants.ASCENDING) Constants.DESCENDING else Constants.ASCENDING
+            Notify.toastLong("Sort: $sort")
+            setAdapters(res, (mBinding.searchView.query ?: "").toString())
+        }
     }
 
 
     private fun setAdapters(getCustomersResponse: BaseResponse<CustomerResult>?, s: String) {
+        val list = getCustomersResponse?.result?.getScheduledVisitationCustomersList()
+            ?.filter { isCandidateForFilter(s, it) }
+        val sortedResult = if (sort == Constants.ASCENDING) {
+            list?.sortedBy {
+                DateTime.getDateFromString(
+                    it.visitDate?.replace("T", " ")?.replace("Z", ""),
+                    DateTime.DateTimetRetailFormat
+                )
+            }
+        } else {
+            list?.sortedByDescending {
+                DateTime.getDateFromString(
+                    it.visitDate?.replace("T", " ")?.replace("Z", ""),
+                    DateTime.DateTimetRetailFormat
+                )
+            }
+        }
         mScheduleAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getScheduledVisitationCustomersList()
-                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+            ArrayList<Customer>().apply {
+                sortedResult?.forEach {
+                    add(it)
+                }
+            },
             DeliveryItemAdapter.CustomerItemType.Scheduled
         )
         mBinding.recyclerViewVisitationSchedule.adapter = mScheduleAdapter

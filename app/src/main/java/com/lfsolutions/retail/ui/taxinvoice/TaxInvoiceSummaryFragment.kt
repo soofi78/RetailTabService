@@ -52,7 +52,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Sale Invoice Summary")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
     }
 

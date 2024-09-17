@@ -134,7 +134,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
 
     private fun setData() {
         mBinding.header.setBackText("Equipment List")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
         }

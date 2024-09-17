@@ -23,7 +23,7 @@ data class UserSession(
     @SerializedName("customerId") var customerId: String? = null,
     @SerializedName("vendorId") var vendorId: String? = null,
     @SerializedName("result") var result: String? = null,
-    @SerializedName("name") var name: String? = "",
+    @SerializedName("userName") var userName: String? = "",
     @SerializedName("isSuperVisor") var isSupervisor: Boolean? = true,
     @SerializedName("wareHouseLocationId") var wareHouseLocationId: Int? = null,
     @SerializedName("wareHouseLocationName") var wareHouseLocationName: String? = null,

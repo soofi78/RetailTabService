@@ -90,7 +90,7 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.customerName.text = customer?.name
         mBinding.address.text = customer?.address1
         mBinding.header.setBackText("New Agreement Memo")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
 
     }
 

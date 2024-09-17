@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -22,8 +21,6 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
-import com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoFlowActivity
-import com.lfsolutions.retail.ui.serviceform.ServiceFormFragmentArgs
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -56,7 +53,7 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
 
     private fun setHeaderData() {
         binding.header.setBackText("Customers")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             requireActivity().finish()
         }

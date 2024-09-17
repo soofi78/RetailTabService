@@ -67,7 +67,7 @@ class OutGoingStockAddProductToCartFragment : Fragment() {
 
     private fun setHeaderData() {
         mBinding.header.setBackText("Out Going Stock")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
         }

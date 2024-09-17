@@ -48,6 +48,8 @@ import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
+import com.lfsolutions.retail.model.service.ServiceTypeResult
+import com.lfsolutions.retail.model.service.ServiceTypes
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -76,6 +78,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
     fun getComplaintTypes(): Call<RetailResponse<ComplaintTypeResult>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
+    fun getServiceType(): Call<RetailResponse<ServiceTypeResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_PAYMENTS_TYPES))
     fun getPaymentTerms(): Call<BaseResponse<PaymentTermsResult>>

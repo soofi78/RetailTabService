@@ -16,10 +16,8 @@ import java.util.TimeZone
 object DateTime {
     const val DateFormat = "MMM dd, yyyy"
     const val DateFormatRetail = "yyyy-MM-dd"
-    const val DateFormatSV = "dd-MM-yyyy"
     const val DateTimetRetailFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimeRetailFrontEndFormate = "dd MMM yyyy, hh:mm a"
-    const val PinFormate = "MMddyy"
     const val TimeFormat = "hh:mm a"
     const val TimeFormat24 = "HH:mm:ss"
     const val DateTimeFormat = "MMM dd, yyyy - hh:mm a"

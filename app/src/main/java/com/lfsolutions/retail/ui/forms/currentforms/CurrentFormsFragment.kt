@@ -64,7 +64,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun setupHeader() {
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick { requireActivity().finish() }
         mBinding.header.setBackText("Customer Forms")
     }
@@ -77,7 +77,12 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
                 arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
                 object : OnOptionItemClick {
                     override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 -> CustomerDetailActivity.start(requireActivity(), it1) }
+                        customer?.let { it1 ->
+                            CustomerDetailActivity.start(
+                                requireActivity(),
+                                it1
+                            )
+                        }
                     }
                 })
         }

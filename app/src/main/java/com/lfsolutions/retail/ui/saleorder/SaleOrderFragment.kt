@@ -95,7 +95,7 @@ class SaleOrderFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Sale Order")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }

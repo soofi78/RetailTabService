@@ -16,6 +16,7 @@ data class ComplaintService(
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("customerName") var customerName: String? = null,
     @SerializedName("status") var status: String? = "C",
+    @SerializedName("type") var type: String? = "C",
     @SerializedName("remarks") var remarks: String? = null,
     @SerializedName("tenantId") var tenantId: Int? = null,
     @SerializedName("totalQty") var totalQty: Double? = 0.0,

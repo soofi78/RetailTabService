@@ -2,6 +2,8 @@ package com.lfsolutions.retail.util
 
 object Constants {
 
+    const val ASCENDING = "Ascending"
+    const val DESCENDING = "Descending"
     const val Version = "Version"
     const val Memo = "memo"
     const val DownloadPdf: String = "Download PDF"

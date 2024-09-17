@@ -105,7 +105,7 @@ class TaxInvoiceFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Tax Invoice")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
 
         }

@@ -20,7 +20,6 @@ import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 import com.lfsolutions.retail.model.memo.ProductBatchList
-import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -179,7 +178,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
             if (product?.isSerialEquipment() == true) View.VISIBLE else View.GONE
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         product?.productName?.let { mBinding.header.setBackText(it) }
     }
 

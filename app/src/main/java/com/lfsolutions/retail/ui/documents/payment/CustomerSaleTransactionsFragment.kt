@@ -96,7 +96,7 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
     private fun setHeaderData() {
         binding.header.setBackText("Customer Transactions")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }

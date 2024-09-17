@@ -50,6 +50,11 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
                 FormType.SaleOrder -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
                 null -> {}
             }
+            binding.type.visibility = View.GONE
+            form?.type?.let {
+                binding.type.visibility = View.VISIBLE
+                binding.type.text = it
+            }
         }
         holder.itemView.tag = form
         holder.itemView.setOnClickListener {

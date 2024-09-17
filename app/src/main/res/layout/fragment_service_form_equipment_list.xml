@@ -32,19 +32,10 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 app:iconifiedByDefault="false"
-                app:layout_constraintEnd_toStartOf="@+id/actionFilter"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:queryHint="Search" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/actionFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/filter_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

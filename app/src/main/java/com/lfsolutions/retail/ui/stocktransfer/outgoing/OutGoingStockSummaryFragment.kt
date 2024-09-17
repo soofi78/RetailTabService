@@ -12,16 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentOutGoingStockSummaryBinding
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
-import com.lfsolutions.retail.network.BaseResponse
-import com.lfsolutions.retail.network.Network
-import com.lfsolutions.retail.network.NetworkCall
-import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.DateTime
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
-import retrofit2.Call
-import retrofit2.Response
 
 
 class OutGoingStockSummaryFragment : Fragment() {
@@ -60,7 +53,7 @@ class OutGoingStockSummaryFragment : Fragment() {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Back")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
     }

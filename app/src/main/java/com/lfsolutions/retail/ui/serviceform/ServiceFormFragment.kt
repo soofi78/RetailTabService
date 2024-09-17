@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -19,6 +20,8 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.service.ServiceTypeResult
+import com.lfsolutions.retail.model.service.ServiceTypes
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -47,6 +50,7 @@ class ServiceFormFragment : Fragment() {
     private lateinit var customer: Customer
     private val feedbacks = ArrayList<Feedback>()
     private lateinit var binding: FragmentServiceFormBinding
+    private var serviceTypes = ArrayList<ServiceTypes>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +83,36 @@ class ServiceFormFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Main.app.getComplaintService()?.complaintService?.customerId = customer.id
         setData()
+        getServiceTypeData()
         setClickListener()
         getFeedbackData()
+    }
+
+    private fun getServiceTypeData() {
+        if (serviceTypes.isEmpty()) {
+            NetworkCall.make()
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                        (response?.body() as RetailResponse<ServiceTypeResult>).result?.items?.let {
+                            serviceTypes.addAll(it)
+                        }
+                        setServiceTypeAdapter()
+                    }
+
+                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+
+                    }
+                })
+                .autoLoadigCancel(Loading().forApi(requireActivity()))
+                .enque(Network.api()?.getServiceType()).execute()
+        } else {
+            setServiceTypeAdapter()
+        }
+    }
+
+    private fun setServiceTypeAdapter() {
+        val adapter = ArrayAdapter(requireActivity(), R.layout.simple_text_item, serviceTypes)
+        binding.spinnerType.adapter = adapter
     }
 
     private fun setClickListener() {
@@ -171,13 +203,6 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun onPrintAndSave() {
-        val complaint = Main.app.getComplaintService()?.complaintService?.complaintBy
-        val designation = Main.app.getComplaintService()?.complaintService?.designation
-        val mobile = Main.app.getComplaintService()?.complaintService?.mobileNo
-        if (complaint.isNullOrBlank() || designation.isNullOrBlank() || mobile.isNullOrBlank()) {
-            Notify.toastLong("Please enter complainant details")
-            return
-        }
 
         if (isAllFeedbackSelected().not()) {
             Notify.toastLong("Please select all feedbacks")
@@ -223,6 +248,13 @@ class ServiceFormFragment : Fragment() {
     private fun saveComplaint() {
         Main.app.getComplaintService()?.serializeItems()
         Main.app.getComplaintService()?.complaintService?.customerFeedbackList = feedbacks
+        if (binding.spinnerType.selectedItemPosition > -1) {
+            Main.app.getComplaintService()?.complaintService?.status =
+                serviceTypes.get(binding.spinnerType.selectedItemPosition).value
+            Main.app.getComplaintService()?.complaintService?.type =
+                serviceTypes.get(binding.spinnerType.selectedItemPosition).value
+        }
+
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(
@@ -336,7 +368,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Service Form")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }

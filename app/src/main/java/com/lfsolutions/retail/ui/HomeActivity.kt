@@ -76,7 +76,7 @@ class HomeActivity : AppCompatActivity() {
     private fun setData() {
         val userSession =
             Gson().fromJson(AppSession[Constants.SESSION], UserSession::class.java)
-        mBinding.txtName.text = userSession.name
+        mBinding.txtName.text = userSession.userName
         mBinding.txtLocation.text = makeTextBold(
             text = getString(R.string.prefix_location, userSession.locationCode.toString()),
             startIndex = 10

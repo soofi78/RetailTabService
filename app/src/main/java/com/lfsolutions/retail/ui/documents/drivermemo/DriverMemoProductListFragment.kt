@@ -14,7 +14,6 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ProductListBinding
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
-import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentListResult
@@ -133,7 +132,7 @@ class DriverMemoProductListFragment : Fragment() {
 
     private fun setData() {
         mBinding.header.setBackText("Equipment List")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
         }

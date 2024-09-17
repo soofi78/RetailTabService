@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentHistoryBinding
 import com.lfsolutions.retail.ui.forms.FormAdapter
@@ -48,7 +47,7 @@ class HistoryFragment : Fragment() {
 
     private fun setData() {
         mBinding.header.setBackText("History Forms")
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
     }
 
     private fun addDataObserver() {

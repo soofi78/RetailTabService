@@ -272,7 +272,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
             if (product?.isSerialEquipment() == true) View.VISIBLE else View.GONE
-        Main.app.getSession().name?.let { mBinding.header.setName(it) }
+        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         product?.productName?.let { mBinding.header.setBackText(it) }
     }
 
@@ -308,10 +308,10 @@ class AddServiceFormEquipmentFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (selectedComplaintTypes.isEmpty()) {
-                Notify.toastLong("Please select complaint types")
-                return@setOnClickListener
-            }
+//            if (selectedComplaintTypes.isEmpty()) {
+//                Notify.toastLong("Please select complaint types")
+//                return@setOnClickListener
+//            }
 
             addToCart()
             it.findNavController().popBackStack()

@@ -102,7 +102,7 @@ class HistoryFragmentListing : Fragment() {
     }
 
     private fun setupHeader() {
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { requireActivity().finish() }
         binding.header.setBackText("Customer History")
     }

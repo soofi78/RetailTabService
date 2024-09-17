@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -20,18 +19,15 @@ import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
-import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
 import com.lfsolutions.retail.ui.adapter.ProductListAdapter
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -146,7 +142,7 @@ class TaxInvoiceProductList : Fragment() {
 
     private fun setData() {
         binding.header.setBackText("Product List")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }

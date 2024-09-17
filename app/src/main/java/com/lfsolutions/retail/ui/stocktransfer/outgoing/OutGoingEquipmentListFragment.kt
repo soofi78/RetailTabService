@@ -14,7 +14,6 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceStockEquipmentListBinding
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
-import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.Product
@@ -132,7 +131,7 @@ class OutGoingEquipmentListFragment : Fragment() {
 
     private fun setData() {
         binding.header.setBackText("Product List")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }

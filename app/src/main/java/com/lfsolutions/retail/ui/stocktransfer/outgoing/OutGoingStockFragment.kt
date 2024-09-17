@@ -1,6 +1,5 @@
 package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,33 +7,20 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOutgoingStockBinding
-import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
-import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.GetLocationResult
 import com.lfsolutions.retail.model.Locations
-import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
-import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
-import java.io.File
-import java.io.FileOutputStream
-import java.util.Date
 
 class OutGoingStockFragment : Fragment() {
 
@@ -117,7 +103,7 @@ class OutGoingStockFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Stock Transfer")
-        Main.app.getSession().name?.let { binding.header.setName(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             requireActivity().finish()
         }
