@@ -63,6 +63,7 @@ class DailySaleRecordFragment : Fragment() {
         selectedDate = (requireActivity() as DailySaleFlowActivity).getSelectedDate().toString()
         binding.date.text = selectedDate
         binding.header.setBackText("Daily Sale Record")
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         fetchDailySale()
     }
 

@@ -72,6 +72,7 @@ class InvoiceDetailsFragment : Fragment() {
     private fun setData() {
         invoice?.salesInvoiceRes?.invoiceNo?.let { binding.header.setBackText(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         Glide.with(binding.signature).load(invoice?.salesInvoiceRes?.signatureUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.signature)
         binding.invoiceNo.text = invoice?.salesInvoiceRes?.invoiceNo

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentDriverMemoDetailsBinding
 import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
@@ -30,6 +31,7 @@ import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
+import kotlinx.coroutines.MainScope
 import retrofit2.Call
 import retrofit2.Response
 import kotlin.system.measureTimeMillis
@@ -62,6 +64,7 @@ class DriverMemoDetailsFragment : Fragment() {
 
     private fun setData() {
         binding.header.setBackText(item.driverMemo.agreementNo.toString())
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
         binding.orderNo.text = item.driverMemo.agreementNo
         binding.orderDate.text = item.driverMemo.getFormattedDate()

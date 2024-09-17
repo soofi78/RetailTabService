@@ -62,6 +62,7 @@ class DriverMemoListFragment : Fragment() {
 
 
     private fun setData() {
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             requireActivity().finish()
         }

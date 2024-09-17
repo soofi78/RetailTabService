@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentInvoiceDetailsBinding
 import com.lfsolutions.retail.databinding.FragmentStockTransferDetailsBinding
@@ -62,6 +63,7 @@ class StockTransferDetailsFragment : Fragment() {
 
     private fun setData() {
         stockTransfer?.stockTransfer?.transferNo?.let { binding.header.setBackText(it) }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
         binding.transferNo.text = stockTransfer?.stockTransfer?.transferNo
         binding.transferDate.text = stockTransfer?.stockTransfer?.transferDateFormatted()

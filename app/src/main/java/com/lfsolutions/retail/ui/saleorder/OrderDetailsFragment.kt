@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
@@ -59,6 +60,7 @@ class OrderDetailsFragment : Fragment() {
     private fun setData() {
         order?.salesOrder?.soNo?.let { binding.header.setBackText(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         Glide.with(binding.signature).load(order?.salesOrder?.signatureUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.signature)
         binding.orderNo.text = order?.salesOrder?.soNo

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoDetailsBinding
 import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
@@ -63,6 +64,7 @@ class AgreementMemoDetailsFragment : Fragment() {
     private fun setData() {
         memo?.AgreementMemo?.AgreementNo?.let { binding.header.setBackText(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
+        Main.app.getSession().userName?.let { binding.header.setName(it) }
         Glide.with(binding.signature).load(memo?.AgreementMemo?.signatureUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.signature)
         binding.agreementNo.text = memo?.AgreementMemo?.AgreementNo
