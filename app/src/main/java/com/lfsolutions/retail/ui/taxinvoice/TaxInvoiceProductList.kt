@@ -17,7 +17,9 @@ import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.FilterRequest
 import com.lfsolutions.retail.model.LocationIdRequestObject
+import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -59,6 +61,7 @@ class TaxInvoiceProductList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setData()
+        binding.filter.setOnCheckedChangeListener { _, _ -> getProductCategory() }
         if (categories.isEmpty()) {
             getProductCategory()
             return
@@ -72,10 +75,13 @@ class TaxInvoiceProductList : Fragment() {
 
 
     private fun getProductCategory() {
+        val filter =
+            if (binding.filter.isChecked) FilterRequest.on() else FilterRequest.off()
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Category List"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    categories.clear()
                     (response?.body() as BaseResponse<CategoryResult>).result?.items?.let {
                         categories = it
                     }
@@ -88,7 +94,7 @@ class TaxInvoiceProductList : Fragment() {
                     Notify.toastLong("Unable to category list")
                 }
             }).enque(
-                Network.api()?.getProductCategories()
+                Network.api()?.getProductCategories(filter)
             ).execute()
     }
 
@@ -110,8 +116,10 @@ class TaxInvoiceProductList : Fragment() {
         var filteredList = ArrayList<Product>()
         filteredList.addAll(productList.filter { it.categoryName == categoryItem.name })
 
-        if (filteredList.isEmpty())
-            filteredList.addAll(productList)
+        if (categoryItem.name.equals("ALL",true))
+            categories.forEach { cat->
+                filteredList.addAll(productList.filter { it.categoryName == cat.name })
+            }
 
         filteredList =
             filteredList.filter {
@@ -162,13 +170,15 @@ class TaxInvoiceProductList : Fragment() {
     }
 
     private fun getEquipmentList() {
+        val filter =
+            if (binding.filter.isChecked) "SR" else null
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading products"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     (response?.body() as RetailResponse<EquipmentListResult>).result?.items?.toList()
                         ?.let { productList = it }
-                    productList.toList()?.let { updateEquipmentListView(it) }
+                    filterProducts(categoryAdapter.getSelectedItem(), "")
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -176,7 +186,7 @@ class TaxInvoiceProductList : Fragment() {
                 }
             }).enque(
                 Network.api()
-                    ?.getEquipmentList(LocationIdRequestObject(Main.app.getSession().defaultLocationId))
+                    ?.getEquipmentList(ProductListRB(Main.app.getSession().defaultLocationId,filter))
             ).execute()
     }
 

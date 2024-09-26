@@ -126,16 +126,52 @@
         app:layout_constraintTop_toBottomOf="@+id/cardCustomerInfo"
         app:queryHint="Search" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoriesRecyclerView"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/categoriesRecyclerViewWrapper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoriesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/filterView"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <LinearLayout
+            android:id="@+id/filterView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@color/gray"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Filter: " />
+
+            <Switch
+                android:id="@+id/filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:layout_margin="3dp"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -145,7 +181,7 @@
         android:layout_marginBottom="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/btnCart"
-        app:layout_constraintTop_toBottomOf="@+id/categoriesRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/categoriesRecyclerViewWrapper"
         tools:itemCount="10"
         tools:listitem="@layout/item_equipment" />
 

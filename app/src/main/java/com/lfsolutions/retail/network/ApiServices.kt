@@ -9,6 +9,7 @@ import com.lfsolutions.retail.model.CustomerResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.FilterRequest
 import com.lfsolutions.retail.model.FormResult
 import com.lfsolutions.retail.model.FormsRequest
 import com.lfsolutions.retail.model.GetAllDriverMemoResult
@@ -20,6 +21,7 @@ import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
+import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
@@ -89,7 +91,7 @@ interface ApiServices {
     fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
-    fun getEquipmentList(@Body locationIdRequestObject: LocationIdRequestObject): Call<RetailResponse<EquipmentListResult>>
+    fun getEquipmentList(@Body productListRB: ProductListRB): Call<RetailResponse<EquipmentListResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_FOR_TAX_INVOICE))
     fun getProductForTaxInvoice(@Body request: LocationIdCustomerIdRequestObject): Call<RetailResponse<EquipmentListResult>>
@@ -98,7 +100,7 @@ interface ApiServices {
     fun getOutGoingStockTransferProductList(@Body customerIdsList: CustomerIdsList): Call<RetailResponse<OutGoingStockProductsResults>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CATEGORIES))
-    fun getProductCategories(): Call<BaseResponse<CategoryResult>>
+    fun getProductCategories(@Body filterRequest: FilterRequest = FilterRequest()): Call<BaseResponse<CategoryResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS))
     fun getSerialNumbers(
