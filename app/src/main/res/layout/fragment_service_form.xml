@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/sandal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
@@ -30,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="20dp"
-                app:cardBackgroundColor="@color/sandal"
+                app:cardBackgroundColor="?attr/secondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -114,7 +113,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:backgroundTint="@color/yellow"
+                                android:backgroundTint="?attr/primary"
                                 android:drawableTop="@drawable/ic_globe"
                                 android:drawablePadding="2dp"
                                 android:text="Check In"
@@ -260,7 +259,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/yellow"
+                app:cardBackgroundColor="?attr/primary"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -330,7 +329,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/yellow"
+                app:cardBackgroundColor="?attr/primary"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -553,7 +552,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_margin="10dp"
-                        android:background="@color/sandal"
+                        android:background="?attr/secondary"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatButton

@@ -7,9 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.lfsolutions.retail.databinding.ActivityCustomerDetailBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.Constants
 
-class CustomerDetailActivity : AppCompatActivity() {
+class CustomerDetailActivity : BaseActivity() {
 
     var customer: Customer? = null
     private var mBinding: ActivityCustomerDetailBinding? = null

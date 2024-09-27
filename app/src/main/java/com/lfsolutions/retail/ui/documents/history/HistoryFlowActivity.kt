@@ -16,9 +16,10 @@ import com.lfsolutions.retail.databinding.ActivityFormsBinding
 import com.lfsolutions.retail.databinding.ActivityHistoryFlowBinding
 import com.lfsolutions.retail.databinding.ActivityPaymentsFlowBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.Constants
 
-class HistoryFlowActivity : AppCompatActivity() {
+class HistoryFlowActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityHistoryFlowBinding
 

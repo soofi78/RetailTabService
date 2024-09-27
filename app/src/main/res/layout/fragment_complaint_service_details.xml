@@ -184,7 +184,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="?attr/primary"
         android:src="@drawable/ic_print" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -195,6 +195,6 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:layout_toStartOf="@+id/print"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="?attr/primary"
         android:src="@drawable/ic_pdf" />
 </RelativeLayout>

@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
@@ -21,7 +20,7 @@
         android:layout_height="wrap_content"
         android:elevation="20dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/sandal"
+        app:cardBackgroundColor="?attr/secondary"
         app:layout_constraintTop_toBottomOf="@+id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout

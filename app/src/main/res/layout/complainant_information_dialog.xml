@@ -171,6 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_corner_yellow_background"
+                android:backgroundTint="?attr/tertiary"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"
                 android:text="Confirm"

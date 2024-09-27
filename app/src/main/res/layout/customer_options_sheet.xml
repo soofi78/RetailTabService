@@ -19,7 +19,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="Select Customer"
-            android:textColor="@color/orange"
+            android:textColor="?attr/tertiary"
             android:textSize="16sp"
             android:textStyle="bold" />
 

@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:elevation="10dp"
-        app:cardBackgroundColor="@color/sandal"
+        app:cardBackgroundColor="?attr/secondary"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatEditText

@@ -20,6 +20,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.HomeActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -28,7 +29,7 @@ import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class LoginActivity : AppCompatActivity(), OnNetworkResponse {
+class LoginActivity : BaseActivity(), OnNetworkResponse {
 
     private var _binding: ActivityLoginBinding? = null
 

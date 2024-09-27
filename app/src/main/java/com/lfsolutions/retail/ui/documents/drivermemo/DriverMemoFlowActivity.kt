@@ -8,11 +8,12 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityDailySaleFlowBinding
 import com.lfsolutions.retail.databinding.ActivityDriverMemoFlowBinding
 import com.lfsolutions.retail.databinding.ActivityPaymentsFlowBinding
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.documents.payment.CustomerForPaymentsFragment
 import com.lfsolutions.retail.ui.serviceform.ServiceFormEquipmentListFragment
 import com.lfsolutions.retail.util.Constants
 
-class DriverMemoFlowActivity : AppCompatActivity() {
+class DriverMemoFlowActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityDriverMemoFlowBinding
 

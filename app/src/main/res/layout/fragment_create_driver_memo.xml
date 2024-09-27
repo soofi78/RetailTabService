@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
+        app:cardBackgroundColor="?attr/primary"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
@@ -433,7 +433,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/sandal"
+                        android:background="?attr/secondary"
                         android:orientation="horizontal"
                         android:padding="5dp"
                         android:weightSum="2">

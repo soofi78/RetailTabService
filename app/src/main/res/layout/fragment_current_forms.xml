@@ -9,7 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/yellow"
+        app:cardBackgroundColor="?attr/primary"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.lfsolutions.retail.ui.customer.CustomerView
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="?attr/primary"
         android:contentDescription="@string/label_add"
         android:src="@drawable/add_black"
         android:visibility="visible"

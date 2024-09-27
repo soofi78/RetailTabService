@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.OptionItemBinding
-import com.lfsolutions.retail.model.Form
-import java.lang.StackWalker.Option
 
 class OptionsAdapter(val options: ArrayList<OptionItem>?, val optionItemClick: OnOptionItemClick) :
     RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {

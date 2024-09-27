@@ -10,8 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.databinding.BottomSheetOptionsBinding
-import com.lfsolutions.retail.ui.forms.FormType
-import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 
 class OptionsBottomSheet : BottomSheetDialogFragment() {
 

@@ -17,9 +17,10 @@ import com.lfsolutions.retail.databinding.ActivityHistoryFlowBinding
 import com.lfsolutions.retail.databinding.ActivityOutGoingStockTransferFlowBinding
 import com.lfsolutions.retail.databinding.ActivityPaymentsFlowBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.Constants
 
-class OutGoingStockFlowActivity : AppCompatActivity() {
+class OutGoingStockFlowActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityOutGoingStockTransferFlowBinding
 

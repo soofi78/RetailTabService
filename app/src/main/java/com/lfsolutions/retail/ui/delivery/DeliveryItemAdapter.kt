@@ -8,6 +8,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemDeliveryBinding
 import com.lfsolutions.retail.databinding.ItemScheduledBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.ui.theme.getAppColor
 import com.lfsolutions.retail.util.makeTextBold
 
 class DeliveryItemAdapter(
@@ -66,7 +67,7 @@ class DeliveryItemAdapter(
         if (customer?.IsVisited == true) {
             binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.light_red))
         } else if (customer?.isVisitationSchedule == true) {
-            binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.orange))
+            binding.swipeAble.setBackgroundColor(binding.swipeAble.context.getAppColor(R.attr.tertiary))
         } else {
             binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.white))
         }

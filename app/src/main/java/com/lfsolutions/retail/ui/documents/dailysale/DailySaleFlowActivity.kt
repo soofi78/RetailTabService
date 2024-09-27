@@ -7,10 +7,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityDailySaleFlowBinding
 import com.lfsolutions.retail.databinding.ActivityPaymentsFlowBinding
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.serviceform.ServiceFormEquipmentListFragment
 import com.lfsolutions.retail.util.Constants
 
-class DailySaleFlowActivity : AppCompatActivity() {
+class DailySaleFlowActivity : BaseActivity() {
 
     private lateinit var mBinding: ActivityDailySaleFlowBinding
 

@@ -9,17 +9,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
-import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityFormsBinding
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.Constants
-import com.videotel.digital.util.Notify
 
-class FormsActivity : AppCompatActivity() {
+class FormsActivity : BaseActivity() {
 
     var customer: Customer? = null
     private lateinit var mBinding: ActivityFormsBinding

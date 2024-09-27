@@ -18,23 +18,40 @@ import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.ui.login.ProfileActivity
+import com.lfsolutions.retail.ui.theme.RetailThemes
+import com.lfsolutions.retail.ui.theme.recreateSmoothly
+import com.lfsolutions.retail.ui.widgets.theme.OnThemeSelected
+import com.lfsolutions.retail.ui.widgets.theme.ThemeSelectionSheet
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Dialogs
 import com.lfsolutions.retail.util.OnOptionDialogItemClicked
 import com.videotel.digital.util.Notify
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private var optionsClick = OnClickListener {
         Dialogs.optionsDialog(context = this@HomeActivity,
-            options = arrayOf(Constants.Logout, Constants.ViewProfile, Constants.Version),
+            options = arrayOf(
+                Constants.Logout,
+                Constants.ViewProfile,
+                Constants.AppTheme,
+                Constants.Version
+            ),
             onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
                 override fun onClick(option: String) {
                     when (option) {
                         Constants.Logout -> Main.app.sessionExpired()
                         Constants.ViewProfile -> openProfile()
                         Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
+                        Constants.AppTheme -> ThemeSelectionSheet.show(supportFragmentManager,
+                            object : OnThemeSelected {
+                                override fun onThemeSelected(theme: RetailThemes) {
+                                    AppSession.put(Constants.AppTheme, theme.themeName)
+                                    recreateSmoothly()
+                                    finishAffinity()
+                                }
+                            })
                     }
                 }
             })

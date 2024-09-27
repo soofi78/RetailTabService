@@ -2,6 +2,7 @@ package com.lfsolutions.retail.util
 
 object Constants {
 
+    const val AppTheme: String = "App Theme"
     const val ASCENDING = "Ascending"
     const val DESCENDING = "Descending"
     const val Version = "Version"

@@ -22,6 +22,7 @@ retrofit = "2.11.0"
 okhttp = "3.4.1"
 glide = "4.16.0"
 calcdialog = "2.2.2"
+colorPicker = "2.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,7 @@ square-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref =
 square-okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 calculator = { group = "com.maltaisn", name = "calcdialog", version.ref = "calcdialog" }
+color-picker = { group = "com.github.Dhaval2404", name = "ColorPicker", version.ref = "colorPicker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
