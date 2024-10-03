@@ -60,6 +60,14 @@ data class ComplaintService(
         return "Qty: " + totalQty.toString()
     }
 
+    fun statusFormatted(): String {
+        return if (status.equals("C", true)) {
+            "Completed"
+        } else {
+            "Pending"
+        }
+    }
+
     fun signatureUrl(): String {
         return AppSession[Constants.baseUrl] + signature
     }

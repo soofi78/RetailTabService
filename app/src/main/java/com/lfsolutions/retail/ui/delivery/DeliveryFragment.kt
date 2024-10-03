@@ -107,7 +107,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     private fun generateOutStock(scheduledList: ArrayList<Customer>) {
         if (scheduledList.isEmpty()) {
-            Notify.toastLong("Please select items first!")
+            Notify.toastLong("Please select schedule customer!")
             return
         }
         val modal = GenerateInComingStockBottomSheet()

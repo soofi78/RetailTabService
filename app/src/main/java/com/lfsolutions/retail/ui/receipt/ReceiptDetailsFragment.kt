@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.serviceform
+package com.lfsolutions.retail.ui.receipt
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,15 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentComplaintServiceDetailsBinding
+import com.lfsolutions.retail.databinding.FragmentAgreementMemoDetailsBinding
+import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
+import com.lfsolutions.retail.databinding.FragmentReceiptDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.service.ComplaintService
-import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.model.memo.AgreementMemo
+import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
+import com.lfsolutions.retail.model.sale.SaleReceipt
+import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
+import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -26,16 +31,18 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class ComplaintServiceDetailsFragment : Fragment() {
+class ReceiptDetailsFragment : Fragment() {
 
-    private var service: ComplaintServiceBody? = null
-    private lateinit var item: ComplaintService
-    private val args by navArgs<ComplaintServiceDetailsFragmentArgs>()
-    private lateinit var binding: FragmentComplaintServiceDetailsBinding
+    private var receipt: SaleReceipt? = null
+    private lateinit var item: SaleReceipt
+
+    private val args by navArgs<ReceiptDetailsFragmentArgs>()
+    private lateinit var binding: FragmentReceiptDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +53,8 @@ class ComplaintServiceDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
-            binding = FragmentComplaintServiceDetailsBinding.inflate(inflater)
-            item = Gson().fromJson(args.item, ComplaintService::class.java)
+            binding = FragmentReceiptDetailsBinding.inflate(inflater)
+            item = Gson().fromJson(args.item, SaleReceipt::class.java)
         }
         return binding.root
     }
@@ -58,21 +65,25 @@ class ComplaintServiceDetailsFragment : Fragment() {
     }
 
     private fun setData() {
-        service?.complaintService?.csNo?.let { binding.header.setBackText(it) }
-        binding.header.setOnBackClick { findNavController().popBackStack() }
+        binding.header.setBackText(receipt?.receiptNo ?: "Back")
         Main.app.getSession().userName?.let { binding.header.setName(it) }
-        Glide.with(binding.signature).load(service?.complaintService?.signatureUrl()).centerCrop()
-            .placeholder(R.drawable.no_image).into(binding.signature)
-        binding.serviceNo.text = service?.complaintService?.csNo
-        binding.serviceDate.text = service?.complaintService?.serviceDateFormatted()
-        binding.status.text = service?.complaintService?.statusFormatted()
-        binding.serviceAmount.text = service?.complaintService?.totalFormatted()
-        binding.customer.text = service?.complaintService?.customerName
-        val items = ArrayList<HistoryItemInterface>()
-        service?.complaintServiceDetails?.forEach {
-            items.add(it)
+        binding.header.setOnBackClick {
+            findNavController().popBackStack()
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
+        binding.receiptNo.text = receipt?.receiptNo
+        binding.receiptDate.text = receipt?.getFormattedDate()
+        binding.paymentMethod.text = receipt?.paymentTypeName
+        binding.discount.text = receipt?.discountFormatted()
+        binding.amount.text = receipt?.getAmount()
+        binding.customer.text = receipt?.customerName
+        val items = ArrayList<HistoryItemInterface>()
+        var counter = 1
+        receipt?.items?.forEach {
+            it.slNo = counter
+            items.add(it)
+            counter++
+        }
+        binding.receiptItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
@@ -82,6 +93,27 @@ class ComplaintServiceDetailsFragment : Fragment() {
         binding.pdf.setOnClickListener {
             getPDFLink()
         }
+
+        binding.delete.setOnClickListener {
+            deleteSaleReceipt()
+        }
+    }
+
+    private fun deleteSaleReceipt() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Deleting Sale Receipt"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    Notify.toastLong("Sale Receipt Deleted")
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to delete sale receipt")
+                }
+            }).enque(
+                Network.api()?.deleteSaleReceipt(IdRequest(receipt?.id))
+            ).execute()
     }
 
     private fun getPDFLink() {
@@ -108,24 +140,24 @@ class ComplaintServiceDetailsFragment : Fragment() {
                     Notify.toastLong("Download Failed")
                 }
             }).enque(
-                Network.api()?.getComplaintServicePDF(IdRequest(id = item.id))
+                Network.api()?.getAgreementMemoPDF(IdRequest(id = item.id))
             ).execute()
     }
 
     private fun getSaleInvoiceDetail() {
         NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading service details"))
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading receipt details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    service = (response?.body() as BaseResponse<ComplaintServiceBody>).result
+                    receipt = (response?.body() as BaseResponse<SaleReceipt>).result
                     setData()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get service detail")
+                    Notify.toastLong("Unable to get receipt details")
                 }
             }).enque(
-                Network.api()?.getComplaintServiceDetails(IdRequest(id = item.id))
+                Network.api()?.getReceiptDetails(IdRequest(id = item.id))
             ).execute()
     }
 }

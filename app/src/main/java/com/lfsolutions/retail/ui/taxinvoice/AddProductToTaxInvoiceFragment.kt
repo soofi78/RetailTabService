@@ -228,7 +228,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
         val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
-            (mBinding.txtQty.text.toString().toDouble() * (product?.cost ?: 0.0)).toDouble()
+            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0))
         val discount = 0.0
         val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
         val netTotal = (subTotal - discount) + taxAmount
@@ -313,19 +313,17 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun updateTotal() {
         val currency = Main.app.getSession().currencySymbol
-        val totalAmount =
-            (mBinding.txtQty.text.toString().toInt() * (product.cost ?: 0.0)).toDouble()
+        val totalAmount = (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0))
         val discount = 0.0
         val subTotal = totalAmount - discount
         val taxAmount = subTotal * (product.getApplicableTaxRate() / 100.0)
         val total = (subTotal + taxAmount)
-        mBinding.txtTotalAmount.text =
-            currency + " " + totalAmount.toString().formatDecimalSeparator()
-        mBinding.txtDiscounts.text = currency + " " + discount.toString().formatDecimalSeparator()
-        mBinding.txtSubTotal.text = currency + " " + subTotal.toString().formatDecimalSeparator()
-        mBinding.lblTaxAmount.text = "Tax (" + product.getApplicableTaxRate() + "%)"
-        mBinding.txtTaxAmount.text = currency + " " + taxAmount.toString().formatDecimalSeparator()
-        mBinding.txtTotal.text = currency + " " + total.toString().formatDecimalSeparator()
+        mBinding.txtTotalAmount.text = """$currency ${totalAmount.toString().formatDecimalSeparator()}"""
+        mBinding.txtDiscounts.text = """$currency ${discount.toString().formatDecimalSeparator()}"""
+        mBinding.txtSubTotal.text = """$currency ${subTotal.toString().formatDecimalSeparator()}"""
+        mBinding.lblTaxAmount.text = """Tax (${product.getApplicableTaxRate()}%)"""
+        mBinding.txtTaxAmount.text = """$currency ${taxAmount.toString().formatDecimalSeparator()}"""
+        mBinding.txtTotal.text = """$currency ${total.toString().formatDecimalSeparator()}"""
     }
 
     private fun updateAddButtonForSerialNumber() {

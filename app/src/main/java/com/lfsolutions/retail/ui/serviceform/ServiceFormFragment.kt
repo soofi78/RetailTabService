@@ -249,8 +249,6 @@ class ServiceFormFragment : Fragment() {
         Main.app.getComplaintService()?.serializeItems()
         Main.app.getComplaintService()?.complaintService?.customerFeedbackList = feedbacks
         if (binding.spinnerType.selectedItemPosition > -1) {
-            Main.app.getComplaintService()?.complaintService?.status =
-                serviceTypes.get(binding.spinnerType.selectedItemPosition).value
             Main.app.getComplaintService()?.complaintService?.type =
                 serviceTypes.get(binding.spinnerType.selectedItemPosition).value
         }

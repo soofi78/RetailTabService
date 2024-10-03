@@ -55,7 +55,7 @@
         android:id="@+id/navigation_history"
         android:name="com.lfsolutions.retail.ui.documents.history.HistoryFragmentListing"
         android:label="@string/title_history"
-        tools:layout="@layout/fragment_history_listing" >
+        tools:layout="@layout/fragment_history_listing">
 
         <action
             android:id="@+id/action_navigation_sale_order_invoice_history_fragment_to_invoice_details"
@@ -97,6 +97,25 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
 
+        <action
+            android:id="@+id/action_navigation_receipt_history_fragment_to_receipt_details"
+            app:destination="@id/navigation_receipt_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_receipt_detail"
+        android:name="com.lfsolutions.retail.ui.receipt.ReceiptDetailsFragment"
+        android:label="Receipt Details"
+        tools:layout="@layout/fragment_receipt_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
 

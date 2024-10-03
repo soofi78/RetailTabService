@@ -38,6 +38,7 @@ import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.profile.UserProfile
+import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
@@ -156,6 +157,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_DETAILS))
     fun getAgreementMemoDetails(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateAgreementMemoRequestBody>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_RECEIPT_DETAILS))
+    fun getReceiptDetails(@Body idRequest: IdRequest): Call<BaseResponse<SaleReceipt>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_INVOICES))
     fun getSaleInvoices(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleInvoiceListResult>>

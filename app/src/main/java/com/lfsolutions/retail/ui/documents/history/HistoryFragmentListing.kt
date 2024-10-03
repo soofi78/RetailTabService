@@ -438,16 +438,12 @@ class HistoryFragmentListing : Fragment() {
                 )
             )
         } else if (historyitem is SaleReceipt) {
-            Dialogs.optionsDialog(context = requireActivity(),
-                options = arrayOf(Constants.Print, Constants.Delete),
-                onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
-                    override fun onClick(option: String) {
-                        when (option) {
-                            Constants.Delete -> deleteSaleReceipt(historyitem)
-                            Constants.Print -> Notify.toastLong("Printer not connected!")
-                        }
-                    }
-                })
+            findNavController().navigate(
+                R.id.action_navigation_receipt_history_fragment_to_receipt_details,
+                bundleOf(
+                    Constants.Item to Gson().toJson(historyitem)
+                )
+            )
         } else if (historyitem is AgreementMemo) {
             findNavController().navigate(
                 R.id.action_navigation_history_listing_to_agreement_memo_details,
@@ -472,56 +468,5 @@ class HistoryFragmentListing : Fragment() {
         } else {
             Notify.toastLong("Invalid item received")
         }
-    }
-
-    private fun downloadComplaintServicePdf(historyitem: ComplaintService) {
-        Network.api()?.getComplaintServicePDF(IdRequest(historyitem.id))?.let { getPDFLink(it) }
-    }
-
-    private fun downloadAgreementMemoPdf(historyitem: AgreementMemo) {
-        Network.api()?.getAgreementMemoPDF(IdRequest(historyitem.Id))?.let { getPDFLink(it) }
-    }
-
-    private fun getPDFLink(call: Call<*>) {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val downloadPath =
-                        (response?.body() as BaseResponse<String>).result?.split("develop\\")
-                            ?.last()
-                    val name =
-                        DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
-                        )?.last().toString()
-                    DocumentDownloader.download(
-                        name,
-                        AppSession[Constants.baseUrl] + downloadPath,
-                        requireActivity()
-                    )
-                    Notify.toastLong("Downloading Started")
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Download Failed")
-                }
-            }).enque(call).execute()
-    }
-
-    private fun deleteSaleReceipt(receipt: SaleReceipt) {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Deleting Sale Receipt"))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    Notify.toastLong("Sale Receipt Deleted")
-                    getReceiptHistory(true)
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to delete sale receipt")
-                }
-            }).enque(
-                Network.api()?.deleteSaleReceipt(IdRequest(receipt.id))
-            ).execute()
     }
 }
