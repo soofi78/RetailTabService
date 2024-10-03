@@ -203,6 +203,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_PDF))
     fun getAgreementMemoPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_RECEIPT_PDF))
+    fun getSaleReceiptPdf(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DAILY_SALE_RECORD))
     fun dailySaleRecord(@Body userIdDateRequestBody: UserIdDateRequestBody): Call<BaseResponse<DailySaleRecord>>?
 

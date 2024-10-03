@@ -140,7 +140,7 @@ class ReceiptDetailsFragment : Fragment() {
                     Notify.toastLong("Download Failed")
                 }
             }).enque(
-                Network.api()?.getAgreementMemoPDF(IdRequest(id = item.id))
+                Network.api()?.getSaleReceiptPdf(IdRequest(id = item.id))
             ).execute()
     }
 
