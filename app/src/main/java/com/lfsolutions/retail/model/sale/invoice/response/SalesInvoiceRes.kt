@@ -24,6 +24,7 @@ data class SalesInvoiceRes(
     @SerializedName("invoiceNetDiscount") var invoiceNetDiscount: Double? = null,
     @SerializedName("invoiceSubTotal") var invoiceSubTotal: Double? = null,
     @SerializedName("invoiceTax") var invoiceTax: Double? = null,
+    @SerializedName("invoiceQtyTotal") var invoiceQty: Double? = 0.0,
     @SerializedName("invoiceNetTotal") var invoiceNetTotal: Double? = null,
     @SerializedName("invoiceRoundingAmount") var invoiceRoundingAmount: Double? = null,
     @SerializedName("otherCharges") var otherCharges: Double? = null,
@@ -99,6 +100,6 @@ data class SalesInvoiceRes(
     }
 
     fun signatureUrl(): String {
-        return Main.app.getBaseUrl() + signature
+        return Main.app.getBaseUrl() + signature?.replace("\\\\", "\\").toString()
     }
 }

@@ -60,6 +60,7 @@ class ProfileFragment : Fragment() {
 
     private fun setData(userProfile: UserProfile?) {
         binding.name.text = userProfile?.user?.name
+        binding.name.text = userProfile?.user?.name
         binding.surname.text = userProfile?.user?.surname
         binding.username.text = userProfile?.user?.userName
         binding.phoneNumber.text = userProfile?.user?.phoneNumber

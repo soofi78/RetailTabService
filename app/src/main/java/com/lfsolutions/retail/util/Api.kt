@@ -22,6 +22,7 @@ object Api {
         const val GET_CUSTOMERS_FOR_PAYMENT = "Service/ApiGetCustomersForPayments"
         const val CREATE_SALE_RECEIPT = "SalesReceipt/CreateOrUpdateSalesReceipt"
         const val GET_SALES_TRANSACTIONS = "SalesTransaction/GetSalesTransactions"
+        const val GET_RECEIPT_TEMPLATE_PRINT = "ReceiptTemplate/GetReceiptTemplateByLocation"
         const val GET_SALES_ORDERS = "SalesOrder/GetAll"
         const val GET_SALES_ORDER_DETAIL = "SalesOrder/GetSalesOrderForEdit"
         const val GET_SALES_ORDER_PDF = "salesOrder/GetSalesOrderPrintPdfAttachment"

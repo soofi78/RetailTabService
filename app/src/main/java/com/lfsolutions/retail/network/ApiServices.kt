@@ -21,11 +21,13 @@ import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
+import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.VisitDateRequest
@@ -148,6 +150,10 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_TRANSACTIONS))
     fun getSalesTransactions(@Body saleTransactions: SaleTransactionRequestBody): Call<RetailResponse<ArrayList<CustomerSaleTransaction>>>
+
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_RECEIPT_TEMPLATE_PRINT))
+    fun getReceiptTemplatePrint(@Body typeRequest: TypeRequest): Call<RetailResponse<ArrayList<PrintTemplate>>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDERS))
     fun getSalesOrder(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleOrderListResult>>

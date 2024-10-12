@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.ui.taxinvoice
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +19,10 @@ import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.PaymentType
+import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
+import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
 import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
 import com.lfsolutions.retail.network.BaseResponse
@@ -28,6 +31,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.AppSession
@@ -53,8 +57,7 @@ class InvoiceDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentInvoiceDetailsBinding.inflate(inflater)
@@ -85,7 +88,8 @@ class InvoiceDetailsFragment : Fragment() {
         invoice?.salesInvoiceDetailRes?.forEach {
             items.add(it)
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
+        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
+            items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
@@ -98,6 +102,113 @@ class InvoiceDetailsFragment : Fragment() {
         binding.pay.setOnClickListener {
             getTransactionReference()
         }
+
+        binding.print.setOnClickListener {
+            printSaleInvoice()
+        }
+    }
+
+    private fun printSaleInvoice() {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
+                if ((res.result?.size ?: 0) > 0) {
+                    preparePrintTemplate(res.result?.get(0))
+                }
+            }
+
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to get receipt template")
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading receipt template..."))
+            .enque(
+                Network.api()?.getReceiptTemplatePrint(TypeRequest())
+            ).execute()
+    }
+
+    private fun preparePrintTemplate(template: PrintTemplate?) {
+        var templateText = template?.template
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceNo, invoice?.salesInvoiceRes?.invoiceNo.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceDate, invoice?.salesInvoiceRes?.invoiceDate.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceTerm, invoice?.salesInvoiceRes?.paymentTermName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoiceRes?.customerName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceAddress1, "{Sample Address Here...}"
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceAddress2, "{Sample Address Here...}"
+        )
+
+        val itemTemplate = templateText?.substring(
+            templateText.indexOf(Constants.Invoice.InvoiceItemsStart),
+            templateText.indexOf(Constants.Invoice.InvoiceItemsEnd) + 10
+        )
+
+        val itemTemplateClean = itemTemplate?.replace(Constants.Invoice.InvoiceItemsStart, "")
+            ?.replace(Constants.Invoice.InvoiceItemsEnd, "")
+
+        var items = ""
+        var count = 0;
+        invoice?.salesInvoiceDetailRes?.forEach {
+            items = itemTemplateClean?.replace(Constants.Invoice.Index, it.slNo.toString())
+                ?.replace(Constants.Invoice.ProductName, it.productName.toString())
+                ?.replace(Constants.Invoice.Qty, it.qty.toString())
+                ?.replace(Constants.Invoice.Price, it.price.toString())
+                ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
+            count += 1
+            if (count < (invoice?.salesInvoiceDetailRes?.size ?: 0)) {
+                items += "\n"
+            }
+        }
+
+        templateText = templateText?.replace(itemTemplate.toString(), items)
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceSubTotal, invoice?.salesInvoiceRes?.invoiceSubTotal.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceTax, invoice?.salesInvoiceRes?.invoiceTax.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceNetTotal, invoice?.salesInvoiceRes?.invoiceNetTotal.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceQty, invoice?.salesInvoiceRes?.invoiceQty.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceBalanceAmount, invoice?.salesInvoiceRes?.balance.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceSignature,
+            "@@@" + invoice?.salesInvoiceRes?.signatureUrl().toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceQR,
+            Constants.QRTagStart + invoice?.salesInvoiceRes?.zatcaQRCode.toString() + Constants.QRTagEnd
+        )
+
+        templateText?.let { PrinterManager.print(it) }
+
+        Log.d("Print", templateText.toString())
     }
 
     private fun getTransactionReference() {
@@ -125,21 +236,20 @@ class InvoiceDetailsFragment : Fragment() {
 
     private fun payFor(transaction: CustomerSaleTransaction) {
         this.transaction = transaction
-        if (paymentTypes.isEmpty())
-            NetworkCall.make().setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val result = response?.body() as BaseResponse<PaymentTermsResult>
-                    result.result?.items?.let {
-                        paymentTypes.addAll(it)
-                    }
-                    showPaymentTypes()
+        if (paymentTypes.isEmpty()) NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                val result = response?.body() as BaseResponse<PaymentTermsResult>
+                result.result?.items?.let {
+                    paymentTypes.addAll(it)
                 }
+                showPaymentTypes()
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to load payment types")
-                }
-            }).autoLoadigCancel(Loading().forApi(requireActivity()))
-                .enque(Network.api()?.getPaymentTerms()).execute()
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to load payment types")
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity()))
+            .enque(Network.api()?.getPaymentTerms()).execute()
         else showPaymentTypes()
     }
 
@@ -191,8 +301,7 @@ class InvoiceDetailsFragment : Fragment() {
     }
 
     private fun getPDFLink() {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val downloadPath =
@@ -203,9 +312,7 @@ class InvoiceDetailsFragment : Fragment() {
                             "Upload\\"
                         )?.last().toString()
                     DocumentDownloader.download(
-                        name,
-                        AppSession[Constants.baseUrl] + downloadPath,
-                        requireActivity()
+                        name, AppSession[Constants.baseUrl] + downloadPath, requireActivity()
                     )
                     Notify.toastLong("Downloading Started")
                 }

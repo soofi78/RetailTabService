@@ -1,7 +1,33 @@
 package com.lfsolutions.retail.util
 
 object Constants {
+    object Invoice {
+        const val InvoiceSubTotal = "{{invoice.invoiceSubTotal}}"
+        const val InvoiceTax = "{{invoice.tax}}"
+        const val InvoiceNetTotal = "{{invoice.netTotal}}"
+        const val InvoiceBalanceAmount = "{{customer.balanceAmount}}"
+        const val InvoiceSignature = "@#@{{&invoice.signature}}"
+        const val InvoiceQR = "###{{invoice.qrUrl}}"
+        const val Qty = "{{qty}}"
+        const val Price = "{{price}}"
+        const val NetTotal = "{{netTotal}}"
+        const val ProductName = "{{productName}}"
+        const val Index = "{{index}}"
+        const val InvoiceItemsStart = "{{#items}}"
+        const val InvoiceItemsEnd = "{{/items}}"
+        const val InvoiceAddress1 = "{{customer.address1}}"
+        const val InvoiceAddress2 = "{{customer.address2}}"
+        const val InvoiceCustomerName = "{{&invoice.customerName}}"
+        const val InvoiceTerm = "{{invoice.terms}}"
+        const val InvoiceDate = "{{invoice.invoiceDate}}"
+        const val InvoiceNo = "{{invoice.invoiceNo}}"
+        const val InvoiceQty = "{{invoice.qty}}"
+    }
 
+    const val QRTagStart = "<qrcode>"
+    const val QRTagEnd = "</qrcode>"
+    const val PrinterSettings = "Select Printer"
+    const val SELECTED_BLUETOOTH: String = "Selected Bluetooth"
     const val AppTheme: String = "App Theme"
     const val ASCENDING = "Ascending"
     const val DESCENDING = "Descending"

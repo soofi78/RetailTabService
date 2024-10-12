@@ -18,6 +18,7 @@ import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.ui.login.ProfileActivity
+import com.lfsolutions.retail.ui.settings.printer.PrinterSettingsActivity
 import com.lfsolutions.retail.ui.theme.RetailThemes
 import com.lfsolutions.retail.ui.theme.recreateSmoothly
 import com.lfsolutions.retail.ui.widgets.theme.OnThemeSelected
@@ -33,16 +34,18 @@ class HomeActivity : BaseActivity() {
     private var optionsClick = OnClickListener {
         Dialogs.optionsDialog(context = this@HomeActivity,
             options = arrayOf(
-                Constants.Logout,
                 Constants.ViewProfile,
+                Constants.PrinterSettings,
                 Constants.AppTheme,
-                Constants.Version
+                Constants.Version,
+                Constants.Logout,
             ),
             onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
                 override fun onClick(option: String) {
                     when (option) {
                         Constants.Logout -> Main.app.sessionExpired()
                         Constants.ViewProfile -> openProfile()
+                        Constants.PrinterSettings -> selectPrinter()
                         Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
                         Constants.AppTheme -> ThemeSelectionSheet.show(supportFragmentManager,
                             object : OnThemeSelected {
@@ -55,6 +58,10 @@ class HomeActivity : BaseActivity() {
                     }
                 }
             })
+    }
+
+    private fun selectPrinter() {
+        startActivity(Intent(this, PrinterSettingsActivity::class.java))
     }
 
     private fun openProfile() {
