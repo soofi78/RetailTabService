@@ -173,6 +173,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_DETAIL))
     fun getSaleInvoiceDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_FOR_PRINT))
+    fun getSaleInvoiceForPrint(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_RECEIPT))
     fun getSaleReceipts(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleReceiptResult>>
 

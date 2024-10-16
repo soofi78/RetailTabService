@@ -81,7 +81,7 @@ class PrinterSettingsActivity : BaseActivity() {
 
 
     private fun setHeader() {
-        binding.header.setBackText("Profile")
+        binding.header.setBackText("Printer Settings")
         binding.header.setOnBackClick {
             this.finish()
         }

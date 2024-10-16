@@ -8,31 +8,52 @@ import com.lfsolutions.retail.util.DateTime
 
 
 data class AgreementMemoDetail(
-    @SerializedName("Id") var Id: String? = null,
-    @SerializedName("AgreementMemoId") var AgreementMemoId: Int? = 0,
-    @SerializedName("ProductId") var ProductId: Int? = null,
-    @SerializedName("InventoryCode") var InventoryCode: String? = null,
-    @SerializedName("Barcode") var Barcode: String? = null,
-    @SerializedName("ProductName", alternate = arrayOf("productName")) var ProductName: String? = null,
+    @SerializedName("Id", alternate = arrayOf("id")) var Id: String? = null,
+    @SerializedName("AgreementMemoId", alternate = arrayOf("agreementMemoId")) var AgreementMemoId: Int? = 0,
+    @SerializedName("ProductId", alternate = arrayOf("productId")) var ProductId: Int? = null,
+    @SerializedName(
+        "InventoryCode",
+        alternate = arrayOf("inventoryCode")
+    ) var InventoryCode: String? = null,
+    @SerializedName("Barcode", alternate = arrayOf("barcode")) var Barcode: String? = null,
+    @SerializedName(
+        "ProductName",
+        alternate = arrayOf("productName")
+    ) var ProductName: String? = null,
     @SerializedName("Qty", alternate = arrayOf("qty")) var Qty: Double? = null,
-    @SerializedName("Cost") var Cost: Double? = null,
-    @SerializedName("UnitId") var UnitId: Int? = null,
+    @SerializedName("Cost", alternate = arrayOf("cost")) var Cost: Double? = null,
+    @SerializedName("UnitId", alternate = arrayOf("unitId")) var UnitId: Int? = null,
     @SerializedName("UnitName", alternate = arrayOf("unitName")) var UnitName: String? = null,
     @SerializedName("TotalCost", alternate = arrayOf("totalCost")) var TotalCost: Double? = null,
     @SerializedName("SlNo", alternate = arrayOf("slNo")) var SlNo: Int? = null,
-    @SerializedName("Remarks") var Remarks: String? = null,
-    @SerializedName("Type") var Type: String? = null,
-    @SerializedName("AgreementType") var AgreementType: String? = null,
-    @SerializedName("AgreementTypeDisplayText") var AgreementTypeDisplayText: String? = null,
-    @SerializedName("ItemSerialNumber") var ItemSerialNumber: String? = null,
-    @SerializedName("ProductBatchList") var ProductBatchList: ArrayList<ProductBatchList> = arrayListOf(),
-    @SerializedName("Price") var Price: Double? = 0.0,
+    @SerializedName("Remarks", alternate = arrayOf("remarks")) var Remarks: String? = null,
+    @SerializedName("Type", alternate = arrayOf("type")) var Type: String? = null,
+    @SerializedName(
+        "AgreementType",
+        alternate = arrayOf("agreementType")
+    ) var AgreementType: String? = null,
+    @SerializedName(
+        "AgreementTypeString",
+        alternate = arrayOf("agreementTypeString")
+    ) var AgreementTypeDisplayText: String? = null,
+    @SerializedName(
+        "ItemSerialNumber",
+        alternate = arrayOf("itemSerialNumber")
+    ) var ItemSerialNumber: String? = null,
+    @SerializedName(
+        "ProductBatchList",
+        alternate = arrayOf("productBatchList")
+    ) var ProductBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
+    @SerializedName("Price", alternate = arrayOf("price")) var Price: Double? = 0.0,
     @SerializedName("TotalPrice", alternate = arrayOf("totalPrice")) var TotalPrice: Double? = 0.0,
-    @SerializedName("ProductGroup") var ProductGroup: String? = null,
-    @SerializedName("IsBatch") var IsBatch: Boolean? = null,
-    @SerializedName("QtyOnHand") var QtyOnHand: Double? = null,
-    @SerializedName("IsAsset") var IsAsset: Boolean? = null,
-    @SerializedName("IsDeleted") var IsDeleted: Boolean? = null,
+    @SerializedName(
+        "ProductGroup",
+        alternate = arrayOf("productGroup")
+    ) var ProductGroup: String? = null,
+    @SerializedName("IsBatch", alternate = arrayOf("isBatch")) var IsBatch: Boolean? = null,
+    @SerializedName("QtyOnHand", alternate = arrayOf("qtyOnHand")) var QtyOnHand: Double? = null,
+    @SerializedName("IsAsset", alternate = arrayOf("isAsset")) var IsAsset: Boolean? = null,
+    @SerializedName("IsDeleted", alternate = arrayOf("isDeleted")) var IsDeleted: Boolean? = null,
     @SerializedName("DeleterUserId") var DeleterUserId: String? = null,
     @SerializedName("DeletionTime") var DeletionTime: String? = null,
     @SerializedName("LastModificationTime") var LastModificationTime: String? = null,
@@ -55,7 +76,7 @@ data class AgreementMemoDetail(
 
     fun getSerialNumbers(): String {
         var serials = ""
-        ProductBatchList.forEach {
+        ProductBatchList?.forEach {
             Log.d("Serial", it.SerialNumber.toString())
             serials +=
                 if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber

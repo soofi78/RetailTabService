@@ -16,6 +16,7 @@ import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.memo.AgreementMemo
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
+import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransfer
 import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.sale.SaleReceipt
@@ -35,13 +36,9 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
 import com.lfsolutions.retail.ui.widgets.options.OptionItem
 import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
-import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
-import com.lfsolutions.retail.util.Dialogs
-import com.lfsolutions.retail.util.DocumentDownloader
-import com.lfsolutions.retail.util.OnOptionDialogItemClicked
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -132,7 +129,9 @@ class HistoryFragmentListing : Fragment() {
         setupHeader()
         setCustomerData()
         setHistoryTabAdapter()
-        getHistory(HistoryType.Order)
+        if (selectedType != null) getHistory(selectedType!!, true)
+        else getHistory(HistoryType.Order)
+
         if (isCustomerSpecificHistory.not()) {
             binding.customerView.visibility = View.GONE
         }
@@ -146,15 +145,18 @@ class HistoryFragmentListing : Fragment() {
     private fun setHistoryTabAdapter() {
         if (historyTypeAdapter == null)
             historyTypeAdapter =
-                HistoryTypeAdapter(getHistoryTypeList(), object : OnHistoryTypeClicked {
-                    override fun onHistoryTypeClicked(type: HistoryType) {
-                        getHistory(type)
-                    }
-                })
+                HistoryTypeAdapter(
+                    getHistoryTypeList(selectedType),
+                    object : OnHistoryTypeClicked {
+                        override fun onHistoryTypeClicked(type: HistoryType) {
+                            getHistory(type)
+                        }
+                    },
+                )
         binding.types.adapter = historyTypeAdapter
     }
 
-    private fun getHistoryTypeList(): java.util.ArrayList<HistoryType> {
+    private fun getHistoryTypeList(selectedType: HistoryType?): java.util.ArrayList<HistoryType> {
         val historyList = arrayListOf(
             HistoryType.Order,
             HistoryType.Invoices,
@@ -171,6 +173,11 @@ class HistoryFragmentListing : Fragment() {
             historyList.add(HistoryType.OutgoingTransfer)
         }
 
+        selectedType?.let { selected ->
+            historyList.forEach {
+                it.selected = it.type == selected.type
+            }
+        }
 
         return historyList
     }
@@ -274,7 +281,7 @@ class HistoryFragmentListing : Fragment() {
                     res.result?.items?.forEach {
                         agreementMemo.add(it)
                     }
-                    setAdapter(agreementMemo)
+                    setAdapter(agreementMemo, true)
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -291,7 +298,7 @@ class HistoryFragmentListing : Fragment() {
                     status = null
                 })
             ).execute()
-        else setAdapter(agreementMemo)
+        else setAdapter(agreementMemo, true)
     }
 
     private fun getOutGoingStockList(force: Boolean) {
@@ -413,13 +420,45 @@ class HistoryFragmentListing : Fragment() {
         else setAdapter(order)
     }
 
-    private fun setAdapter(items: ArrayList<HistoryItemInterface>) {
-        binding.items.adapter = HistoryListAdapter(items,
+    private fun setAdapter(items: ArrayList<HistoryItemInterface>, clone: Boolean = false) {
+        binding.items.adapter = HistoryListAdapter(
+            items,
             object : HistoryListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     openDetailsFragment(saleOrderInvoiceItem)
                 }
-            })
+
+                override fun onCloneClicked(item: HistoryItemInterface) {
+                    if (item is AgreementMemo) {
+                        cloneAgreementMemo(item)
+                    }
+                }
+            }, clone
+        )
+    }
+
+    private fun cloneAgreementMemo(item: AgreementMemo) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val memo =
+                        (response?.body() as BaseResponse<CreateUpdateAgreementMemoRequestBody>).result
+                    Main.app.setAgreementMemo(memo)
+                    val CUS = Customer()
+                    CUS.id = memo?.AgreementMemo?.CustomerId
+                    CUS.name = item.CustomerName
+                    findNavController().navigate(R.id.action_navigation_history_listing_to_new_agreement_memo,
+                        Bundle().apply { putString(Constants.Customer, Gson().toJson(CUS)) })
+
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get order detail")
+                }
+            }).enque(
+                Network.api()?.getAgreementMemoDetails(IdRequest(id = item.Id))
+            ).execute()
     }
 
     private fun openDetailsFragment(historyitem: HistoryItemInterface) {

@@ -28,6 +28,7 @@ object Api {
         const val GET_SALES_ORDER_PDF = "salesOrder/GetSalesOrderPrintPdfAttachment"
         const val GET_SALES_INVOICES = "SalesInvoice/GetAll"
         const val GET_SALE_INVOICE_DETAIL = "SalesInvoice/GetSalesInvoiceForEdit"
+        const val GET_SALE_INVOICE_FOR_PRINT = "SalesInvoice/SalesInvoiceForPrint"
         const val GET_SALE_INVOICE_PDF = "salesInvoice/GetSalesInvoicePrintPdfAttachment"
         const val GET_SALE_RECEIPT = "SalesReceipt/GetAll"
         const val DELETE_SALE_RECEIPT = "salesReceipt/DeleteSalesReceipt"

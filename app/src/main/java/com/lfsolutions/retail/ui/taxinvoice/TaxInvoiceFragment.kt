@@ -107,21 +107,20 @@ class TaxInvoiceFragment : Fragment() {
         binding.header.setBackText("Tax Invoice")
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
-
+            findNavController().popBackStack()
         }
-
         binding.btnCancel.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun setCustomerData() {
-        customer?.let { binding.customerView.setCustomer(it) }
+        customer.let { binding.customerView.setCustomer(it) }
         binding.customerView.setOnClickListener {
             OptionsBottomSheet.show(
                 requireActivity().supportFragmentManager,
                 arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
                 object : OnOptionItemClick {
                     override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 ->
+                        customer.let { it1 ->
                             CustomerDetailActivity.start(
                                 requireActivity(),
                                 it1
@@ -210,8 +209,8 @@ class TaxInvoiceFragment : Fragment() {
 
     private fun updateSaleInvoiceDetails(result: ArrayList<Product>) {
         result.forEach { product ->
-            val qty = 1.0
-            val subTotal = (qty * (product?.cost ?: 0.0)).toDouble()
+            val qty = product.qty ?: 0.0
+            val subTotal = (qty * (product.cost ?: 0.0))
             val discount = 0.0
             val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
@@ -228,7 +227,7 @@ class TaxInvoiceFragment : Fragment() {
                     QtyStock = product.qtyOnHand,
                     Price = subTotal,
                     NetCost = total,
-                    CostWithoutTax = product.cost?.toDouble() ?: 0.0,
+                    CostWithoutTax = product.cost ?: 0.0,
                     DepartmentId = 0,
                     LastPurchasePrice = 0.0,
                     SellingPrice = 0.0,

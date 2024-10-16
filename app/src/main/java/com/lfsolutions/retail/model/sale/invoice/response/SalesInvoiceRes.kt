@@ -15,6 +15,8 @@ data class SalesInvoiceRes(
     @SerializedName("locationId") var locationId: Int? = null,
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("customerName") var customerName: String? = null,
+    @SerializedName("address1") var address1: String? = null,
+    @SerializedName("address2") var address2: String? = null,
     @SerializedName("deliveryTimingDescription") var deliveryTimingDescription: String? = null,
     @SerializedName("customerRemarks") var customerRemarks: String? = null,
     @SerializedName("companyRemarks") var companyRemarks: String? = null,

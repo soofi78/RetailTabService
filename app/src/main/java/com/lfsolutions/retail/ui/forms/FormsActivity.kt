@@ -19,6 +19,7 @@ class FormsActivity : BaseActivity() {
 
     var customer: Customer? = null
     private lateinit var mBinding: ActivityFormsBinding
+    var isFromDeliveryFragment: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class FormsActivity : BaseActivity() {
             }
         }
         navView.setupWithNavController(navController)
+
     }
 
     private fun setCustomer() {

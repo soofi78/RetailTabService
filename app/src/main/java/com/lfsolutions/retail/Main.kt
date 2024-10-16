@@ -120,6 +120,33 @@ class Main : Application() {
         })
     }
 
+    fun setAgreementMemo(memo: CreateUpdateAgreementMemoRequestBody?) {
+        clearAgreementMemo()
+        getAgreementMemo()!!.apply {
+            AgreementMemo = memo?.AgreementMemo
+            AgreementMemo?.Id = null
+            AgreementMemo?.AgreementDate = null
+            AgreementMemo?.AgreementNo = null
+            AgreementMemo?.CreationTime = null
+            AgreementMemo?.LastModificationTime = null
+            AgreementMemo?.CreatorUserId = null
+            AgreementMemo?.DeletionTime = null
+            AgreementMemo?.Signature = null
+            AgreementMemo?.Status = "C"
+            memo?.AgreementMemoDetail?.let { AgreementMemoDetail.addAll(it) }
+            AgreementMemoDetail.forEach { memoDetailItem ->
+                memoDetailItem.Id = null
+                memoDetailItem.AgreementMemoId = null
+                memoDetailItem.CreatorUserId = null
+                memoDetailItem.CreationTime = null
+                memoDetailItem.LastModificationTime = null
+                memoDetailItem.LastModifierUserId = null
+            }
+        }
+        getAgreementMemo()?.updatePriceAndQty()
+        getAgreementMemo()?.serializeItems()
+    }
+
 
     companion object {
         lateinit var app: Main

@@ -59,6 +59,62 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
 
+        <action
+            android:id="@+id/action_navigation_history_listing_to_new_agreement_memo"
+            app:destination="@id/navigation_agreement_memo"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/fragment_new_agreement_memo">
+        <action
+            android:id="@+id/action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation"
+            app:destination="@id/navigation_agreement_memo_bottom_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_bottom_navigation"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoBottomNavigationFragment"
+        android:label="Agreement Memo"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out"
+        tools:layout="@layout/fragment_agreement_memo_bottom_navigation">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_navigation_agreement_memo_bottom_navigation_to_navigation_add_equipment"
+            app:destination="@id/navigation_agreement_memo_add_equipment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_add_equipment"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AddAgreementMemoEquipmentFragment"
+        android:label="Add Equipment"
+        tools:layout="@layout/fragment_agreement_memo_add_equipment">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
     <fragment

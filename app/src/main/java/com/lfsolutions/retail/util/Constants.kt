@@ -24,6 +24,7 @@ object Constants {
         const val InvoiceQty = "{{invoice.qty}}"
     }
 
+    const val FormType: String = "FormType"
     const val QRTagStart = "<qrcode>"
     const val QRTagEnd = "</qrcode>"
     const val PrinterSettings = "Select Printer"

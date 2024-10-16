@@ -182,4 +182,14 @@
         android:backgroundTint="?attr/tertiary"
         android:text="@string/stock_receive" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSelectCustomer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:backgroundTint="?attr/tertiary"
+        android:src="@drawable/add_black" />
+
 </RelativeLayout>

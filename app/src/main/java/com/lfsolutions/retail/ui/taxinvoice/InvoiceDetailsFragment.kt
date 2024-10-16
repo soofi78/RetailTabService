@@ -145,12 +145,13 @@ class InvoiceDetailsFragment : Fragment() {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress1, "{Sample Address Here...}"
+            Constants.Invoice.InvoiceAddress1, invoice?.salesInvoiceRes?.address1 ?: ""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress2, "{Sample Address Here...}"
+            Constants.Invoice.InvoiceAddress2, invoice?.salesInvoiceRes?.address2 ?: ""
         )
+
 
         val itemTemplate = templateText?.substring(
             templateText.indexOf(Constants.Invoice.InvoiceItemsStart),
@@ -163,7 +164,7 @@ class InvoiceDetailsFragment : Fragment() {
         var items = ""
         var count = 0;
         invoice?.salesInvoiceDetailRes?.forEach {
-            items = itemTemplateClean?.replace(Constants.Invoice.Index, it.slNo.toString())
+            items += itemTemplateClean?.replace(Constants.Invoice.Index, it.slNo.toString())
                 ?.replace(Constants.Invoice.ProductName, it.productName.toString())
                 ?.replace(Constants.Invoice.Qty, it.qty.toString())
                 ?.replace(Constants.Invoice.Price, it.price.toString())

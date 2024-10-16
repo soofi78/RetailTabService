@@ -51,13 +51,13 @@ class NewAgreementMemoFragment : Fragment() {
     ): View {
         if (::_binding.isInitialized.not()) {
             _binding = FragmentNewAgreementMemoBinding.inflate(inflater, container, false)
-            Main.app.clearAgreementMemo()
             Main.app.getAgreementMemo()
             Main.app.getAgreementMemo()?.AgreementMemo?.LocationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getAgreementMemo()?.AgreementMemo?.CreationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
+            Main.app.getAgreementMemo()?.AgreementMemo?.CreatorUserId = Main.app.getSession().userId
         }
         return mBinding.root
 
@@ -91,13 +91,13 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.address.text = customer?.address1
         mBinding.header.setBackText("New Agreement Memo")
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
-
     }
 
 
     private fun addOnClickListener() {
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
+            Main.app.clearAgreementMemo()
         }
         mBinding.btnClearSign.setOnClickListener {
             mBinding.signaturePad.clear()
@@ -164,6 +164,7 @@ class NewAgreementMemoFragment : Fragment() {
 
         mBinding.btnCancel.setOnClickListener {
             findNavController().popBackStack()
+            Main.app.clearAgreementMemo()
         }
     }
 
@@ -175,6 +176,7 @@ class NewAgreementMemoFragment : Fragment() {
                 object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         Notify.toastLong("success")
+                        Main.app.clearAgreementMemo()
                         findNavController().popBackStack()
                     }
 
@@ -199,6 +201,11 @@ class NewAgreementMemoFragment : Fragment() {
             )
         )
         return filePart
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Main.app.clearAgreementMemo()
     }
 
 }

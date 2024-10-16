@@ -14,6 +14,7 @@ data class Product(
     @SerializedName("unitName") var unitName: String? = null,
     @SerializedName("unitId") var unitId: Int? = null,
     @SerializedName("qtyOnHand") var qtyOnHand: Double? = null,
+    @SerializedName("qty") var qty: Double? = null,
     @SerializedName("cost") var cost: Double? = null,
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,

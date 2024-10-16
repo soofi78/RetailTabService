@@ -27,6 +27,9 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.customer.CustomerOptionView
+import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
+import com.lfsolutions.retail.ui.forms.FormType
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.saleorder.SaleOrderSummaryAdapter
@@ -83,6 +86,31 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 return true
             }
         })
+
+        mBinding.fabSelectCustomer.setOnClickListener {
+            val filterSheet = CustomerOptionView()
+            filterSheet.setOnItemClicked(object : DeliveryItemAdapter.OnItemClickListener {
+                override fun onItemClick(customer: Customer) {
+                    createNewFormFor(customer)
+                }
+            })
+            requireActivity().supportFragmentManager.let {
+                filterSheet.show(
+                    it, HistoryFilterSheet.TAG
+                )
+            }
+        }
+    }
+
+    private fun createNewFormFor(customer: Customer) {
+        val modal = NewFormsBottomSheet()
+        modal.setOnClickListener {
+            startActivity(FormsActivity.getInstance(context = requireContext()).apply {
+                putExtra(Constants.Customer, Gson().toJson(customer))
+                putExtra(Constants.FormType, it.tag.toString())
+            })
+        }
+        requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
     }
 
     private fun isCandidateForFilter(query: String, customer: Customer): Boolean {

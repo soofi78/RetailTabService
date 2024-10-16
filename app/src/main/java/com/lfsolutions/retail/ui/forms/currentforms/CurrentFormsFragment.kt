@@ -41,13 +41,14 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private lateinit var mAdapter: FormAdapter
     private var customer: Customer? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCurrentFormsBinding.inflate(inflater, container, false)
         setCustomer()
         return mBinding.root
-
     }
 
     private fun setCustomer() {
@@ -175,6 +176,11 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+        if (requireActivity().intent.getStringExtra(Constants.FormType) != null) {
+            val form = FormType.find(requireActivity().intent.getStringExtra(Constants.FormType)!!)
+            openSelectedForm(form)
+            requireActivity().intent.removeExtra(Constants.FormType)
+        }
         val forms = response?.body() as RetailResponse<FormResult>
         setAdapter(forms.result?.items)
     }

@@ -174,12 +174,14 @@ class DriverMemoListFragment : Fragment() {
     }
 
     private fun setDriverItems() {
-        binding.driverMemoList.adapter = HistoryListAdapter(driverItems,
+        binding.driverMemoList.adapter = HistoryListAdapter(
+            driverItems,
             object : HistoryListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     getDriverMemoDetails(saleOrderInvoiceItem as DriverMemo)
                 }
-            })
+            }
+        )
     }
 
     private fun getDriverMemoDetails(memo: DriverMemo) {

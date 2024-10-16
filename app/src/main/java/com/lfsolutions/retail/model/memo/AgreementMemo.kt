@@ -25,12 +25,12 @@ data class AgreementMemo(
     ) var AgreementQty: Double? = null,
     @SerializedName(
         "AgreementTotal",
-        alternate = arrayOf("agreementTotal")
+        alternate = ["agreementTotal"]
     ) var AgreementTotal: Double? = null,
-    @SerializedName("Remarks") var Remarks: String? = null,
-    @SerializedName("TenantId") var TenantId: Int? = 0,
-    @SerializedName("Status", alternate = arrayOf("status")) var Status: String = "C",
-    @SerializedName("CustomerId") var CustomerId: Int? = null,
+    @SerializedName("Remarks", alternate = ["remarks"]) var Remarks: String? = null,
+    @SerializedName("TenantId", alternate = ["tenantId"]) var TenantId: Int? = 0,
+    @SerializedName("Status", alternate = ["status"]) var Status: String = "C",
+    @SerializedName("CustomerId", alternate = ["customerId"]) var CustomerId: Int? = null,
     @SerializedName(
         "CustomerName",
         alternate = arrayOf("customerName")
@@ -41,7 +41,7 @@ data class AgreementMemo(
     @SerializedName("LastModificationTime") var LastModificationTime: String? = null,
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
     @SerializedName("CreationTime") var CreationTime: String? = null,
-    @SerializedName("CreatorUserId") var CreatorUserId: String? = null,
+    @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
     @SerializedName("Signature", alternate = arrayOf("signature")) var Signature: String? = null
 ) : HistoryItemInterface {
     override fun getTitle(): String {

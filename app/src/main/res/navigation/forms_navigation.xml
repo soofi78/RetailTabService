@@ -105,6 +105,14 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
 
+        <action
+            android:id="@+id/action_navigation_history_listing_to_new_agreement_memo"
+            app:destination="@id/navigation_agreement_memo"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
     </fragment>
 
     <fragment

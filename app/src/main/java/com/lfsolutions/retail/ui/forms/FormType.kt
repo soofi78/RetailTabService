@@ -1,6 +1,8 @@
 package com.lfsolutions.retail.ui.forms
 
-enum class FormType(val typeName: String) {
+import java.io.Serializable
+
+enum class FormType(val typeName: String) : Serializable {
     AgreementMemo("Agreement Memo"),
     ServiceForm("Complaint Service"),
     InvoiceForm("Sale Invoice"),
