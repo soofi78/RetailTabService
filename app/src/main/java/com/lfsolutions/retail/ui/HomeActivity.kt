@@ -89,7 +89,6 @@ class HomeActivity : BaseActivity() {
         }
         setData()
         setClickListener()
-
     }
 
     private fun setClickListener() {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "575518792716",
+    "project_id": "retail-sg-e4582",
+    "storage_bucket": "retail-sg-e4582.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575518792716:android:816384ba54957b6c036229",
+        "android_client_info": {
+          "package_name": "com.lfsolutions.retail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLH_2T3V-qvn7eTC8_e5vQjIBeIzvWrHM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
