@@ -1,14 +1,9 @@
 package com.lfsolutions.retail.model.service
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
-import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.ApplicableTaxes
 import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
-import com.lfsolutions.retail.util.AppSession
-import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.DateTime
 
 
 data class ComplaintServiceDetails(
@@ -21,7 +16,7 @@ data class ComplaintServiceDetails(
     @SerializedName("qty") var qty: String? = null,
     @SerializedName("unitId") var unitId: Int? = null,
     @SerializedName("complaintTypes") var complaintTypes: ArrayList<ComplaintTypes> = arrayListOf(),
-    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList> = arrayListOf(),
+    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
     @SerializedName("type") var type: String? = null,
     @SerializedName("serviceTypes") var serviceTypes: ArrayList<String> = arrayListOf(),
     @SerializedName("price") var price: Double = 0.0,
@@ -34,8 +29,9 @@ data class ComplaintServiceDetails(
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
     @SerializedName("changeunitflag") var changeunitflag: Boolean = false,
     @SerializedName("actionType") var actionType: String? = null,
+    @SerializedName("actionTypeString") var actionTypeString: String? = null,
+    @SerializedName("transTypeString") var transTypeDisplayText: String? = null,
     @SerializedName("transType") var transType: String? = null,
-    @SerializedName("transTypeDisplayText") @Transient var transTypeDisplayText: String? = null,
 
     ) : HistoryItemInterface {
     override fun getTitle(): String {
@@ -52,7 +48,7 @@ data class ComplaintServiceDetails(
 
     fun getSerialNumbers(): CharSequence? {
         var serials = ""
-        productBatchList.forEach {
+        productBatchList?.forEach {
             serials +=
                 if (serials == "") it.SerialNumber.toString() else " / " + it.SerialNumber
         }

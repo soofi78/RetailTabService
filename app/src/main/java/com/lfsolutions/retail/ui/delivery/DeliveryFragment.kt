@@ -18,7 +18,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentDeliveryBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdsList
-import com.lfsolutions.retail.model.CustomerResult
+import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
@@ -29,10 +29,8 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.customer.CustomerOptionView
 import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
-import com.lfsolutions.retail.ui.forms.FormType
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
-import com.lfsolutions.retail.ui.saleorder.SaleOrderSummaryAdapter
 import com.lfsolutions.retail.ui.stocktransfer.incoming.GenerateInComingStockBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockSummaryActivity
 import com.lfsolutions.retail.util.Constants
@@ -44,7 +42,7 @@ import retrofit2.Response
 class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     private lateinit var itemSwipeHelper: ItemTouchHelper
-    private var getCustomersResponse: RetailResponse<CustomerResult>? = null
+    private var getCustomersResponse: RetailResponse<CustomersResult>? = null
     private var _binding: FragmentDeliveryBinding? = null
 
     private val mBinding get() = _binding!!
@@ -197,11 +195,11 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-        getCustomersResponse = response?.body() as RetailResponse<CustomerResult>
+        getCustomersResponse = response?.body() as RetailResponse<CustomersResult>
         setAdapters(getCustomersResponse, "")
     }
 
-    private fun setAdapters(getCustomersResponse: RetailResponse<CustomerResult>?, s: String) {
+    private fun setAdapters(getCustomersResponse: RetailResponse<CustomersResult>?, s: String) {
         mUrgentAdapter = DeliveryItemAdapter(
             getCustomersResponse?.result?.getUrgentCustomersList()
                 ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,

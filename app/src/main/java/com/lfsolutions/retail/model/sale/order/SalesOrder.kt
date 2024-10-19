@@ -28,7 +28,7 @@ data class SalesOrder(
     @SerializedName("DeliveryPersonId") var DeliveryPersonId: String? = null,
     @SerializedName("EmployeeId") var EmployeeId: String? = null,
     @SerializedName("SoTotalValue") var SoTotalValue: Double = 0.0,
-    @SerializedName("ProfitMargin") var ProfitMargin: Int? = null,
+    @SerializedName("ProfitMargin") var ProfitMargin: Double? = null,
     @SerializedName("Remarks") var Remarks: String? = null,
     @SerializedName("CreditDays") var CreditDays: Int? = null,
     @SerializedName("Status") var Status: String? = null,

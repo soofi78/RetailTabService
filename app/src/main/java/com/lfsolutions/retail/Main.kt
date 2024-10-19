@@ -68,6 +68,30 @@ class Main : Application() {
         return complaintService
     }
 
+    fun setComplaintService(complaintService: ComplaintServiceBody?) {
+        clearComplaintService()
+        getComplaintService().apply {
+            this?.complaintService = complaintService?.complaintService
+            this?.complaintService?.id = null
+            this?.complaintService?.csNo = null
+            this?.complaintService?.csDate = null
+            this?.complaintService?.creationTime = null
+            this?.complaintService?.deletionTime = null
+            this?.complaintService?.lastModificationTime = null
+            this?.complaintService?.creatorUserId = null
+            this?.complaintService?.deleterUserId = null
+            this?.complaintService?.signature = null
+            this?.complaintService?.status = "C"
+            this?.complaintService?.type = "C"
+            complaintService?.complaintServiceDetails?.let {
+                this?.complaintServiceDetails?.addAll(it)
+            }
+            this?.complaintServiceDetails?.forEach { item ->
+                item.id = null
+            }
+        }
+    }
+
     fun clearAgreementMemo() {
         memo = null
     }

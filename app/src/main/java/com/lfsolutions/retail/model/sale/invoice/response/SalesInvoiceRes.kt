@@ -51,7 +51,7 @@ data class SalesInvoiceRes(
     @SerializedName("tokenId") var tokenId: String? = null,
     @SerializedName("invoiceDueDate") var invoiceDueDate: String? = null,
     @SerializedName("type") var type: String? = null,
-    @SerializedName("profitMargin") var profitMargin: Int? = null,
+    @SerializedName("profitMargin") var profitMargin: Double? = null,
     @SerializedName("taxName") var taxName: String? = null,
     @SerializedName("signature") var signature: String? = null,
     @SerializedName("deliveryOrderList") var deliveryOrderList: String? = null,

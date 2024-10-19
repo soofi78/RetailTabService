@@ -13,7 +13,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentScheduleBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdRequest
-import com.lfsolutions.retail.model.CustomerResult
+import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.VisitDateRequest
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -31,7 +31,7 @@ import retrofit2.Response
 class ScheduleFragment : Fragment() {
 
     private var mScheduleAdapter: DeliveryItemAdapter? = null
-    private var res: BaseResponse<CustomerResult>? = null
+    private var res: BaseResponse<CustomersResult>? = null
     private var date: String? = null
     private var _binding: FragmentScheduleBinding? = null
     private val mBinding get() = _binding!!
@@ -124,7 +124,7 @@ class ScheduleFragment : Fragment() {
     }
 
 
-    private fun setAdapters(getCustomersResponse: BaseResponse<CustomerResult>?, s: String) {
+    private fun setAdapters(getCustomersResponse: BaseResponse<CustomersResult>?, s: String) {
         val list = getCustomersResponse?.result?.getScheduledVisitationCustomersList()
             ?.filter { isCandidateForFilter(s, it) }
         val sortedResult = if (sort == Constants.ASCENDING) {
@@ -188,7 +188,7 @@ class ScheduleFragment : Fragment() {
     private fun getScheduledVisitation() {
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                res = response?.body() as BaseResponse<CustomerResult>
+                res = response?.body() as BaseResponse<CustomersResult>
                 setAdapters(res, "")
             }
 

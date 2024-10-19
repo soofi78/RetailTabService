@@ -45,7 +45,7 @@ data class SalesInvoice(
     @SerializedName("TokenId") var TokenId: String? = null,
     @SerializedName("InvoiceDueDate") var InvoiceDueDate: String? = null,
     @SerializedName("Type") var Type: String? = "N",
-    @SerializedName("ProfitMargin") var ProfitMargin: Int? = 0,
+    @SerializedName("ProfitMargin") var ProfitMargin: Double? = 0.0,
     @SerializedName("TaxName") var TaxName: String? = null,
     @SerializedName("Signature") var Signature: String? = null,
     @SerializedName("DeliveryOrderList") var DeliveryOrderList: ArrayList<String> = arrayListOf(),

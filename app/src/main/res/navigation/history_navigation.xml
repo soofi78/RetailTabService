@@ -67,7 +67,70 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
 
+        <action
+            android:id="@+id/action_navigation_history_listing_to_serviceFormFragment"
+            app:destination="@id/serviceFormFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/serviceFormFragment"
+        android:name="com.lfsolutions.retail.ui.serviceform.ServiceFormFragment"
+        android:label="fragment_service_form"
+        tools:layout="@layout/fragment_service_form">
+
+        <action
+            android:id="@+id/action_navigation_service_form_to_service_form_bottom_navigation"
+            app:destination="@id/navigation_service_form_bottom_navigation"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_service_form_bottom_navigation"
+        android:name="com.lfsolutions.retail.ui.serviceform.ServiceFormBottomNavigationFragment"
+        android:label="Agreement Memo"
+        app:enterAnim="@anim/fade_in"
+        app:exitAnim="@anim/fade_out"
+        app:popEnterAnim="@anim/fade_in"
+        app:popExitAnim="@anim/fade_out"
+        tools:layout="@layout/fragment_service_form_bottom_navigation">
+        <argument
+            android:name="IsEquipment"
+            android:defaultValue="true"
+            app:argType="boolean" />
+
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+        <action
+            android:id="@+id/action_navigation_service_form_bottom_navigation_to_navigation_service_form_add_equipment"
+            app:destination="@id/navigation_service_form_equipment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_service_form_equipment"
+        android:name="com.lfsolutions.retail.ui.serviceform.AddServiceFormEquipmentFragment"
+        android:label="Add Equipment"
+        tools:layout="@layout/fragment_service_form_add_equipment">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/navigation_agreement_memo"

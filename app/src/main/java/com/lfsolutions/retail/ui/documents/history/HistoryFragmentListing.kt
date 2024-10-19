@@ -12,6 +12,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentHistoryListingBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.memo.AgreementMemo
@@ -26,6 +27,7 @@ import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.service.ComplaintService
+import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -251,7 +253,7 @@ class HistoryFragmentListing : Fragment() {
                     res.result?.items?.forEach {
                         complaintService.add(it)
                     }
-                    setAdapter(complaintService)
+                    setAdapter(complaintService, true)
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -268,7 +270,7 @@ class HistoryFragmentListing : Fragment() {
                     status = null
                 })
             ).execute()
-        else setAdapter(complaintService)
+        else setAdapter(complaintService, true)
     }
 
     private fun getAgreementMemoHistory(force: Boolean) {
@@ -431,10 +433,68 @@ class HistoryFragmentListing : Fragment() {
                 override fun onCloneClicked(item: HistoryItemInterface) {
                     if (item is AgreementMemo) {
                         cloneAgreementMemo(item)
+                    } else if (item is ComplaintService) {
+                        cloneComplaintService(item)
                     }
                 }
             }, clone
         )
+    }
+
+    private fun cloneComplaintService(complaintService: ComplaintService) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading service details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val service = (response?.body() as BaseResponse<ComplaintServiceBody>).result
+                    Main.app.setComplaintService(service)
+                    Main.app.getComplaintService()?.complaintService?.customerId =
+                        service?.complaintService?.customerId
+                    Main.app.getComplaintService()?.complaintService?.customerName =
+                        complaintService.customerName
+                    service?.complaintService?.customerId?.let {
+                        getCustomerCompleteDetails(
+                            it,
+                            complaintService
+                        )
+                    }
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get service detail")
+                }
+            }).enque(
+                Network.api()?.getComplaintServiceDetails(IdRequest(id = complaintService.id))
+            ).execute()
+    }
+
+    private fun getCustomerCompleteDetails(id: Int, item: HistoryItemInterface) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val customer = (response?.body() as BaseResponse<CustomerResponse>).result?.customer
+                    navigateCloneObjectTo(item, customer)
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Main.app.clearComplaintService()
+                    Main.app.clearAgreementMemo()
+                }
+            }).enque(
+                Network.api()?.getCustomer(IdRequest(id = id))
+            ).execute()
+    }
+
+    private fun navigateCloneObjectTo(item: HistoryItemInterface, customer: Customer?) {
+        if (item is AgreementMemo) {
+            findNavController().navigate(R.id.action_navigation_history_listing_to_new_agreement_memo,
+                Bundle().apply { putString(Constants.Customer, Gson().toJson(customer)) })
+        } else if (item is ComplaintService) {
+            findNavController().navigate(R.id.action_navigation_history_listing_to_serviceFormFragment,
+                Bundle().apply { putString(Constants.Customer, Gson().toJson(customer)) })
+        }
+
     }
 
     private fun cloneAgreementMemo(item: AgreementMemo) {
@@ -445,12 +505,7 @@ class HistoryFragmentListing : Fragment() {
                     val memo =
                         (response?.body() as BaseResponse<CreateUpdateAgreementMemoRequestBody>).result
                     Main.app.setAgreementMemo(memo)
-                    val CUS = Customer()
-                    CUS.id = memo?.AgreementMemo?.CustomerId
-                    CUS.name = item.CustomerName
-                    findNavController().navigate(R.id.action_navigation_history_listing_to_new_agreement_memo,
-                        Bundle().apply { putString(Constants.Customer, Gson().toJson(CUS)) })
-
+                    memo?.AgreementMemo?.CustomerId?.let { getCustomerCompleteDetails(it, item) }
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {

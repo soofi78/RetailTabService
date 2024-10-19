@@ -60,7 +60,7 @@ data class SaleOrderListItem(
     @SerializedName("address1") var address1: String? = null,
     @SerializedName("isDelivered") var isDelivered: Boolean? = null,
     @SerializedName("isRefund") var isRefund: Boolean? = null,
-    @SerializedName("profitMargin") var profitMargin: Int? = null,
+    @SerializedName("profitMargin") var profitMargin: Double? = null,
     @SerializedName("isDeleted") var isDeleted: Boolean? = null,
     @SerializedName("deleterUserId") var deleterUserId: String? = null,
     @SerializedName("deletionTime") var deletionTime: String? = null,

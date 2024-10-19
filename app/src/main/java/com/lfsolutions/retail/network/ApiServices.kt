@@ -2,10 +2,12 @@ package com.lfsolutions.retail.network
 
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
+import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdRequest
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
-import com.lfsolutions.retail.model.CustomerResult
+import com.lfsolutions.retail.model.CustomerResponse
+import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
@@ -54,7 +56,6 @@ import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.ServiceTypeResult
-import com.lfsolutions.retail.model.service.ServiceTypes
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -69,7 +70,7 @@ interface ApiServices {
     fun login(@Body request: LoginRequest): Call<UserSession>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS))
-    fun getCustomers(): Call<RetailResponse<CustomerResult>>?
+    fun getCustomers(): Call<RetailResponse<CustomersResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
     fun getCustomerForm(@Body formRequest: FormsRequest): Call<RetailResponse<FormResult>>?
@@ -164,6 +165,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_AGREEMENT_MEMO_DETAILS))
     fun getAgreementMemoDetails(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateAgreementMemoRequestBody>>
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMER))
+    fun getCustomer(@Body idRequest: IdRequest): Call<BaseResponse<CustomerResponse>>
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_RECEIPT_DETAILS))
     fun getReceiptDetails(@Body idRequest: IdRequest): Call<BaseResponse<SaleReceipt>>
 
@@ -228,7 +232,7 @@ interface ApiServices {
     fun getUserDetails(@Body idRequest: IdRequest): Call<BaseResponse<UserProfile>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SCHEDULED_VISITATION))
-    fun getScheduledVisitation(@Body visitDateRequest: VisitDateRequest): Call<BaseResponse<CustomerResult>>?
+    fun getScheduledVisitation(@Body visitDateRequest: VisitDateRequest): Call<BaseResponse<CustomersResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DRIVER_MEMO_FOR_EDIT))
     fun getDriverMemo(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateDriverMemoRequestBody>>?

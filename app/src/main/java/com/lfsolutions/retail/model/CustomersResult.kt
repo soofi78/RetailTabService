@@ -3,7 +3,7 @@ package com.lfsolutions.retail.model
 import com.google.gson.annotations.SerializedName
 
 
-data class CustomerResult(
+data class CustomersResult(
 
     @SerializedName("items") var items: ArrayList<CustomersItem> = arrayListOf()
 

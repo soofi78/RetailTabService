@@ -63,7 +63,6 @@ class ServiceFormFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentServiceFormBinding.inflate(layoutInflater, container, false)
-            Main.app.clearComplaintService()
             Main.app.getComplaintService()
             Main.app.getComplaintService()?.complaintService?.locationId =
                 Main.app.getSession().defaultLocationId
@@ -188,6 +187,7 @@ class ServiceFormFragment : Fragment() {
 
         binding.btnCancel.setOnClickListener {
             findNavController().popBackStack()
+            Main.app.clearComplaintService()
         }
 
         binding.btnViewOrder.setOnClickListener {
@@ -262,6 +262,7 @@ class ServiceFormFragment : Fragment() {
                         if (result.success == true) {
                             Notify.toastLong("Complaint Service Created: ${result.result?.id}")
                             findNavController().popBackStack()
+                            Main.app.clearComplaintService()
                         } else {
                             Notify.toastLong("Unable create or update memo")
                         }
@@ -320,14 +321,14 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun setCustomerData() {
-        customer?.let { binding.cardCustomerInfo.setCustomer(it) }
+        customer.let { binding.cardCustomerInfo.setCustomer(it) }
         binding.cardCustomerInfo.setOnClickListener {
             OptionsBottomSheet.show(
                 requireActivity().supportFragmentManager,
                 arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
                 object : OnOptionItemClick {
                     override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 ->
+                        customer.let { it1 ->
                             CustomerDetailActivity.start(
                                 requireActivity(),
                                 it1
@@ -369,6 +370,12 @@ class ServiceFormFragment : Fragment() {
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
+            Main.app.clearComplaintService()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Main.app.clearComplaintService()
     }
 }
