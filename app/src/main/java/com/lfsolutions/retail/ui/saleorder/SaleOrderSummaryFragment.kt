@@ -72,11 +72,10 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
                     Main.app.getSaleOrder()?.SalesOrderDetail?.indexOf(salesOrderDetail) ?: -1
                 if (index > -1) {
                     Main.app.getSaleOrder()?.SalesOrderDetail?.get(index)?.apply {
-                        val subTotal = quantity * CostWithoutTax
-                        val discount = 0.0
+                        val subTotal = (quantity * CostWithoutTax) - discount
                         val taxAmount = subTotal * (TaxRate / 100.0)
-                        val netTotal = (subTotal - discount) + taxAmount
-                        val total = (subTotal + taxAmount)
+                        val netTotal = subTotal + taxAmount
+                        val total = subTotal + taxAmount
                         Qty = quantity
                         Price = subTotal
                         NetCost = total

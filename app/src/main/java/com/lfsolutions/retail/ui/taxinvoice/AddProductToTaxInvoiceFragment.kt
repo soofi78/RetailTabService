@@ -244,7 +244,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             QtyStock = product.qtyOnHand,
             Price = subTotal,
             NetCost = total,
-            CostWithoutTax = product?.cost?.toDouble() ?: 0.0,
+            CostWithoutTax = product.cost ?: 0.0,
             TaxRate = product.getApplicableTaxRate().toDouble(),
             DepartmentId = 0,
             LastPurchasePrice = 0.0,
@@ -315,14 +315,16 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         val currency = Main.app.getSession().currencySymbol
         val totalAmount = (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0))
         val discount = 0.0
-        val subTotal = totalAmount - discount
+        val subTotal = totalAmount
         val taxAmount = subTotal * (product.getApplicableTaxRate() / 100.0)
-        val total = (subTotal + taxAmount)
-        mBinding.txtTotalAmount.text = """$currency ${totalAmount.toString().formatDecimalSeparator()}"""
+        val total = ((subTotal - discount) + taxAmount)
+        mBinding.txtTotalAmount.text =
+            """$currency ${totalAmount.toString().formatDecimalSeparator()}"""
         mBinding.txtDiscounts.text = """$currency ${discount.toString().formatDecimalSeparator()}"""
         mBinding.txtSubTotal.text = """$currency ${subTotal.toString().formatDecimalSeparator()}"""
         mBinding.lblTaxAmount.text = """Tax (${product.getApplicableTaxRate()}%)"""
-        mBinding.txtTaxAmount.text = """$currency ${taxAmount.toString().formatDecimalSeparator()}"""
+        mBinding.txtTaxAmount.text =
+            """$currency ${taxAmount.toString().formatDecimalSeparator()}"""
         mBinding.txtTotal.text = """$currency ${total.toString().formatDecimalSeparator()}"""
     }
 

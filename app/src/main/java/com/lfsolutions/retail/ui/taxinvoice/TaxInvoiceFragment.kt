@@ -212,7 +212,7 @@ class TaxInvoiceFragment : Fragment() {
             val qty = product.qty ?: 0.0
             val subTotal = (qty * (product.cost ?: 0.0))
             val discount = 0.0
-            val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
+            val taxAmount = (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
             val total = (subTotal + taxAmount)
             Main.app.getTaxInvoice()?.addEquipment(

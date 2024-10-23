@@ -36,7 +36,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.txtQty.text = salveInvoiceDetails?.get(position)?.Qty.toString()
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + salveInvoiceDetails?.get(position)?.NetTotal?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + salveInvoiceDetails?.get(position)?.SubTotal?.formatDecimalSeparator()
         holder.binding.txtProductName.text = salveInvoiceDetails?.get(position)?.ProductName
         Glide.with(holder.binding.imgProduct.context)
             .load(Main.app.getBaseUrl() + salveInvoiceDetails?.get(position)?.ProductImage)

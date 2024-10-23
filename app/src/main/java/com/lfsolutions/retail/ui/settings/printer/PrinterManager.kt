@@ -53,8 +53,7 @@ object PrinterManager {
             }
             this.printer = EscPosPrinter(connection, 203, 48f, 32)
         }
-        var rawText = """
-        @@@http://sg.rtlconnect.net/common/upload/Taj2.bmp        
+        val rawText = """  
         [C]<b><font size='big'>Test Print</font></b>
         [C]================================
         [C]${device.name}
@@ -62,24 +61,6 @@ object PrinterManager {
         [C]<b>Connection Successful</b>
         [C]================================
         """.trimIndent()
-        val urls = extractUrls(rawText)
-        urls.forEach {
-            val bitmap: Bitmap = Glide.with(Main.app).asBitmap().load(it).submit().get()
-            val targetWidth = 383 // 48mm printing zone with 203dpi => 383px
-            val rescaledBitmap = Bitmap.createScaledBitmap(
-                bitmap,
-                targetWidth,
-                Math.round(
-                    (bitmap.getHeight().toFloat()) * (targetWidth.toFloat()) / (bitmap.getWidth()
-                        .toFloat())
-                ),
-                true
-            )
-            val imageBase64 =
-                PrinterTextParserImg.bitmapToHexadecimalString(printer, rescaledBitmap)
-            rawText = rawText.replace("@@@$it", "[C]<img>$imageBase64</img>\n")
-            Log.d("TEST", rawText)
-        }
         this.printer?.printFormattedText(rawText)
         return true
     }
@@ -111,7 +92,7 @@ object PrinterManager {
     fun getDefaultPrinterBluetoothDevice(): BluetoothDevice? {
         var device: BluetoothDevice? = null
         getBluetoothPrinterDevices().forEach {
-            if (it.address == AppSession.get(Constants.SELECTED_BLUETOOTH)) {
+            if (it.address == AppSession[Constants.SELECTED_BLUETOOTH]) {
                 device = it
             }
         }

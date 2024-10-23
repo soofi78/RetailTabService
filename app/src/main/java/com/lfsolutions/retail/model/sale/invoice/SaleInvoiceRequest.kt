@@ -37,8 +37,8 @@ data class SaleInvoiceRequest(
         SalesInvoice?.InvoiceNetTotal = netTotal
         SalesInvoice?.InvoiceSubTotal = subTotal
         SalesInvoice?.InvoiceTax = taxAmount
-        SalesInvoice?.InvoiceGrandTotal = netTotal.minus(discount)
-        SalesInvoice?.Balance = netTotal.minus(discount)
+        SalesInvoice?.InvoiceGrandTotal = netTotal.minus(discount).plus(taxAmount)
+        SalesInvoice?.Balance = netTotal.minus(discount).plus(taxAmount)
         SalesInvoice?.NetDiscount = discount
         SalesInvoice?.InvoiceNetDiscount = discount
         SalesInvoice?.InvoiceNetDiscountPerc =
