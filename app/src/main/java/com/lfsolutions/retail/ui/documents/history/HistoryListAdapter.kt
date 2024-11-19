@@ -3,13 +3,16 @@ package com.lfsolutions.retail.ui.documents.history
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 
 class HistoryListAdapter(
     private val items: ArrayList<HistoryItemInterface>,
     private val mListener: OnItemClickedListener,
-    private val clone: Boolean = false
+    private val onChecked: OnCheckedChangeListener? = null,
+    private val clone: Boolean = false,
+    private val checkable: Boolean = false
 ) :
     RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
@@ -30,10 +33,13 @@ class HistoryListAdapter(
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
-        holder.itemView.setOnClickListener {
+        holder.binding.check.visibility = if (checkable) View.VISIBLE else View.GONE
+        holder.binding.parent.tag = item
+        holder.binding.parent.setOnClickListener {
             mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }
-
+        holder.binding.check.tag = item
+        holder.binding.check.setOnCheckedChangeListener(onChecked)
         holder.binding.clone.visibility = if (clone) View.VISIBLE else View.GONE
         holder.binding.clone.setOnClickListener {
             mListener.onCloneClicked(it.tag as HistoryItemInterface)

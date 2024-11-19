@@ -15,6 +15,7 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.SaleOrderToStockReceive
 import com.lfsolutions.retail.model.memo.AgreementMemo
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
@@ -48,6 +49,7 @@ import retrofit2.Response
 class HistoryFragmentListing : Fragment() {
 
 
+    private var stockReceiveDate: String = ""
     private var selectedType: HistoryType? = null
     private var customer: Customer? = null
     private var isCustomerSpecificHistory: Boolean = false
@@ -55,6 +57,7 @@ class HistoryFragmentListing : Fragment() {
     private var startDate: String? = null
     private lateinit var binding: FragmentHistoryListingBinding
     private val order = ArrayList<HistoryItemInterface>()
+    private val orderStockReceiveId = ArrayList<Int>()
     private val invoices = ArrayList<HistoryItemInterface>()
     private val receipts = ArrayList<HistoryItemInterface>()
     private val outgoing = ArrayList<HistoryItemInterface>()
@@ -137,6 +140,52 @@ class HistoryFragmentListing : Fragment() {
         if (isCustomerSpecificHistory.not()) {
             binding.customerView.visibility = View.GONE
         }
+
+        binding.fabStockRecord.setOnClickListener {
+            stockReceived()
+        }
+
+        binding.date.setOnClickListener {
+            DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+                override fun onDateSelected(year: String, month: String, day: String) {
+                    stockReceiveDate =
+                        year + "-" + month + "-" + day + "T00:00:00Z"
+                }
+            })
+        }
+    }
+
+    private fun stockReceived() {
+        if (orderStockReceiveId.size == 0) {
+            Notify.toastLong("Please select sale order first")
+            return
+        }
+
+        if (stockReceiveDate.isNullOrEmpty()) {
+            Notify.toastLong("Please select date")
+            return
+        }
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    Notify.toastLong("Stock Received Successfully")
+                    getHistory(HistoryType.Order, true)
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to receive stock")
+                }
+            }).enque(
+                Network.api()?.SalesOrderToStockReceiveForDriver(
+                    SaleOrderToStockReceive(
+                        locationId = Main.app.getSession().defaultLocationId,
+                        remarks = binding.remarks.text.toString(),
+                        date = stockReceiveDate,
+                        salesOrderIds = orderStockReceiveId
+                    )
+                )
+            ).execute()
     }
 
 
@@ -375,7 +424,7 @@ class HistoryFragmentListing : Fragment() {
                     res.result?.items?.forEach {
                         invoices.add(it)
                     }
-                    setAdapter(invoices)
+                    setAdapter(invoices, false)
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -394,35 +443,74 @@ class HistoryFragmentListing : Fragment() {
     }
 
     private fun getOrderHistory(force: Boolean = false) {
-        if (order.isEmpty() || force) NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val res = response?.body() as BaseResponse<SaleOrderListResult>
-                    order.clear()
-                    res.result?.items?.forEach {
-                        order.add(it)
-                    }
-                    setAdapter(order)
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get sale receipt list")
-                }
-            }).enque(
-                Network.api()?.getSalesOrder(HistoryRequest().apply {
-                    locationId = Main.app.getSession().defaultLocationId
-                    userId = Main.app.getSession().userId
-                    startDate = this@HistoryFragmentListing.startDate
-                    endDate = this@HistoryFragmentListing.endDate
-                    filter = customer?.name
-                    status = "X"
-                })
-            ).execute()
-        else setAdapter(order)
+        if (order.isEmpty() || force)
+            callSaleOrderApi()
+        else setAdapter(order, false, Main.app.getSession().isSupervisor?.not() == true)
     }
 
-    private fun setAdapter(items: ArrayList<HistoryItemInterface>, clone: Boolean = false) {
+    private fun callSaleOrderApi() {
+        if (Main.app.getSession().isSupervisor == true) {
+            NetworkCall.make()
+                .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                        val res = response?.body() as BaseResponse<SaleOrderListResult>
+                        order.clear()
+                        res.result?.items?.forEach {
+                            order.add(it)
+                        }
+                        setAdapter(order)
+                    }
+
+                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                        Notify.toastLong("Unable to get sale receipt list")
+                    }
+                }).enque(
+                    Network.api()?.getSalesOrder(HistoryRequest().apply {
+                        locationId = Main.app.getSession().defaultLocationId
+                        userId = Main.app.getSession().userId
+                        startDate = this@HistoryFragmentListing.startDate
+                        endDate = this@HistoryFragmentListing.endDate
+                        filter = customer?.name
+                        status = "X"
+                    })
+                ).execute()
+        } else {
+            NetworkCall.make()
+                .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                        val res = response?.body() as BaseResponse<SaleOrderListResult>
+                        order.clear()
+                        res.result?.items?.forEach {
+                            order.add(it)
+                        }
+                        setAdapter(order, false, Main.app.getSession().isSupervisor?.not() == true)
+                    }
+
+                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                        Notify.toastLong("Unable to get sale receipt list")
+                    }
+                }).enque(
+                    Network.api()?.getSaleOrderBySalePerson(
+                        HistoryRequest().apply {
+                            locationId = Main.app.getSession().defaultLocationId
+                            userId = Main.app.getSession().userId
+                            startDate = this@HistoryFragmentListing.startDate
+                            endDate = this@HistoryFragmentListing.endDate
+                            filter = customer?.name
+                            status = "X"
+                        }
+                    )
+                ).execute()
+        }
+    }
+
+    private fun setAdapter(
+        items: ArrayList<HistoryItemInterface>,
+        clone: Boolean = false,
+        checkable: Boolean = false
+    ) {
         binding.items.adapter = HistoryListAdapter(
             items,
             object : HistoryListAdapter.OnItemClickedListener {
@@ -437,8 +525,26 @@ class HistoryFragmentListing : Fragment() {
                         cloneComplaintService(item)
                     }
                 }
-            }, clone
+            }, onChecked = { buttonView, isChecked ->
+                if (isChecked) {
+                    orderStockReceiveId.add((buttonView.tag as HistoryItemInterface).getId())
+                } else {
+                    orderStockReceiveId.remove((buttonView.tag as HistoryItemInterface).getId())
+                }
+            }, clone, checkable
+
         )
+
+
+        if (checkable && selectedType == HistoryType.Order) {
+            binding.remarks.visibility = View.VISIBLE
+            binding.fabStockRecord.visibility = View.VISIBLE
+            binding.date.visibility = View.VISIBLE
+        } else {
+            binding.remarks.visibility = View.GONE
+            binding.fabStockRecord.visibility = View.GONE
+            binding.date.visibility = View.GONE
+        }
     }
 
     private fun cloneComplaintService(complaintService: ComplaintService) {
@@ -473,7 +579,8 @@ class HistoryFragmentListing : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val customer = (response?.body() as BaseResponse<CustomerResponse>).result?.customer
+                    val customer =
+                        (response?.body() as BaseResponse<CustomerResponse>).result?.customer
                     navigateCloneObjectTo(item, customer)
                 }
 

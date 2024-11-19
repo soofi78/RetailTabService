@@ -54,6 +54,8 @@ object Api {
         const val GET_AGREEMENT_MEMO_PDF = "AgreementMemo/GetAgreementMemoPrintPdfAttachment"
         const val GET_SALE_RECEIPT_PDF = "SalesReceipt/GetSalesReceiptPrintPdfAttachment"
         const val GET_DAILY_SALE_RECORD = "Service/GetDailySales"
+        const val SALE_ORDER_BY_SALES_PERSON = "service/GetSalesOrderBySalesPerson"
+        const val SALE_ORDER_STOCK_RECEIVE_FOR_DRIVER = "service/SalesOrderToStockReceiveForDriver"
         const val CREATE_UPDATE_DRIVER_MEMO = "driverMemo/CreateOrUpdateDriverMemo"
         const val GET_ALL_DRIVER_MEMOS = "driverMemo/GetAll"
         const val GET_USER_DETAILS = "User/GetUserForEdit"

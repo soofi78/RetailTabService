@@ -84,6 +84,10 @@ data class SaleOrderListItem(
         return formatted ?: soDate ?: ""
     }
 
+    override fun getId(): Int {
+        return id ?: -1
+    }
+
     override fun getDescription(): String {
         return customerName ?: ""
     }

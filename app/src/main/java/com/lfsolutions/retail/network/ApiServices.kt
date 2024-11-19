@@ -2,7 +2,6 @@ package com.lfsolutions.retail.network
 
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
-import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerIdRequest
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
@@ -26,6 +25,7 @@ import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.SaleOrderToStockReceive
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.SignatureUploadResult
@@ -221,6 +221,12 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DAILY_SALE_RECORD))
     fun dailySaleRecord(@Body userIdDateRequestBody: UserIdDateRequestBody): Call<BaseResponse<DailySaleRecord>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.SALE_ORDER_BY_SALES_PERSON))
+    fun getSaleOrderBySalePerson(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleOrderListResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.SALE_ORDER_STOCK_RECEIVE_FOR_DRIVER))
+    fun SalesOrderToStockReceiveForDriver(@Body saleOrderToStockReceive: SaleOrderToStockReceive): Call<BaseResponse<Any>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_DRIVER_MEMO))
     fun getDriverMemo(@Body driverMemo: CreateUpdateDriverMemoRequestBody): Call<BaseResponse<Any>>?
