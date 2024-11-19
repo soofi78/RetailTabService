@@ -96,8 +96,18 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
             FormType.ServiceForm -> openServiceForm()
             FormType.InvoiceForm -> openSaleInvoice()
             FormType.SaleOrder -> openSaleOrder()
+            FormType.DeliveryOrder -> openDeliveryOrder()
             null -> Notify.toastLong("Invalid form requested")
         }
+    }
+
+    private fun openDeliveryOrder() {
+        mBinding.root.findNavController()
+            .navigate(
+                R.id.action_navigation_current_forms_to_navigation_delivery_order,
+                Bundle().apply {
+                    putString(Constants.Customer, Gson().toJson(customer))
+                })
     }
 
     private fun openSaleInvoice() {

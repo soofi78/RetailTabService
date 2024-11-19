@@ -49,6 +49,7 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
                 FormType.ServiceForm -> binding.icoItem.setImageResource(R.drawable.service_form)
                 FormType.SaleOrder -> binding.icoItem.setImageResource(R.drawable.agreement_memo)
                 null -> {}
+                FormType.DeliveryOrder -> binding.icoItem.setImageResource(R.drawable.service_form)
             }
             binding.type.visibility = View.GONE
             form?.type?.let {

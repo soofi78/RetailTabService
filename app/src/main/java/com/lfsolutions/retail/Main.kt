@@ -10,6 +10,7 @@ import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -18,6 +19,7 @@ import com.lfsolutions.retail.util.Constants
 class Main : Application() {
 
     private var saleOrder: SaleOrderRequest? = null
+    private var deliveryOrder: DeliveryOrderDTO? = null
     private var taxInvoice: SaleInvoiceRequest? = null
     private var inComingStockTransferRequest: StockTransferRequestBody? = null
     private var outGoingStockTransferRequest: StockTransferRequestBody? = null
@@ -63,6 +65,11 @@ class Main : Application() {
         return saleOrder
     }
 
+    fun getDeliveryOrder(): DeliveryOrderDTO? {
+        if (deliveryOrder == null) deliveryOrder = DeliveryOrderDTO()
+        return deliveryOrder
+    }
+
     fun getComplaintService(): ComplaintServiceBody? {
         if (complaintService == null) complaintService = ComplaintServiceBody()
         return complaintService
@@ -106,6 +113,10 @@ class Main : Application() {
 
     fun clearSaleOrder() {
         saleOrder = null
+    }
+
+    fun clearDeliveryOrder() {
+        deliveryOrder = null
     }
 
     fun clearComplaintService() {

@@ -7,12 +7,14 @@ object Api {
     const val Feedback = "Feedback/"
     const val SaleInvoice = "salesInvoice/"
     const val SaleOrder = "salesOrder/"
+    const val DeliveryOrder = "deliveryOrder/"
 
     object Name {
 
 
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"
         const val CREATE_UPDATE_SALE_INVOICE = "CreateOrUpdateSalesInvoice"
+        const val CREATE_UPDATE_DELIVERY_ORDER = "CreateOrUpdateDeliveryOrder"
         const val CREATE_UPDATE_OUT_GOING_STOCK_TRANSFER = "Service/CreateOutGoingStockTransfer"
         const val CREATE_UPDATE_IN_COMING_STOCK_TRANSFER = "Service/CreateInComingStockTransfer"
         const val UPLOAD_SIGNATURE = "File/UploadAgreementMemoSignature"
