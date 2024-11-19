@@ -52,6 +52,8 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     ): View {
         _binding = FragmentAddToCartBinding.inflate(inflater, container, false)
         product = Gson().fromJson(args.product, Product::class.java)
+        mBinding.txtSaleOption.visibility=View.GONE
+        mBinding.saleOptionTypeViewHolder.visibility=View.GONE
         return mBinding.root
     }
 
@@ -232,7 +234,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
         val netTotal = (subTotal - discount) + taxAmount
         val total = (subTotal + taxAmount)
         Main.app.getDeliveryOrder()?.addEquipment(
-            DeliveryOrderDetail(
+            DeliveryOrderDetails(
                 productId = product.productId?.toInt() ?: 0,
                 inventoryCode = product.inventoryCode,
                 productName = product.productName,

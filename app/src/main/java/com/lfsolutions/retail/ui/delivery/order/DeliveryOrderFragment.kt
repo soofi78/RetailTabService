@@ -274,8 +274,8 @@ class DeliveryOrderFragment : Fragment() {
         IsExpire: Boolean,
         CreationTime: String,
         CreatorUserId: Int?
-    ): DeliveryOrderDetail {
-        return DeliveryOrderDetail()
+    ): DeliveryOrderDetails {
+        return DeliveryOrderDetails()
     }
 
 
@@ -302,10 +302,10 @@ class DeliveryOrderFragment : Fragment() {
         NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val result = response?.body() as BaseResponse<Any>
+                    val result = response?.body() as BaseResponse<DeliverOrderDetail>
                     if (result.success == true) {
-                        Main.app.clearTaxInvoice()
-                        Notify.toastLong("Delivery order Created")
+                        Main.app.clearDeliveryOrder()
+                        Notify.toastLong("Delivery order Created " + result.result?.transactionNo)
                         findNavController().popBackStack()
                     } else {
                         Notify.toastLong("Unable create delivery order: ${result.result}")

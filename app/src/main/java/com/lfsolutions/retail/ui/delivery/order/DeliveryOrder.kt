@@ -37,5 +37,4 @@ data class DeliveryOrder(
     var totalQty: Double? = 0.0,
     var signature: String? = null,
     var subTotal: Double? = null
-
 )

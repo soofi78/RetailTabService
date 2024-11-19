@@ -2,7 +2,7 @@ package com.lfsolutions.retail.ui.delivery.order
 
 data class DeliveryOrderDTO(
     val deliveryOrder: DeliveryOrder = DeliveryOrder(),
-    val deliveryOrderDetail: ArrayList<DeliveryOrderDetail> = ArrayList()
+    val deliveryOrderDetail: ArrayList<DeliveryOrderDetails> = ArrayList()
 ) {
     fun serializeItems() {
         var serial = 0
@@ -12,8 +12,8 @@ data class DeliveryOrderDTO(
         }
     }
 
-    fun addEquipment(deliveryOrderDetail: DeliveryOrderDetail) {
-        this.deliveryOrderDetail.add(deliveryOrderDetail)
+    fun addEquipment(deliveryOrderDetails: DeliveryOrderDetails) {
+        this.deliveryOrderDetail.add(deliveryOrderDetails)
         updatePriceAndQty()
     }
 

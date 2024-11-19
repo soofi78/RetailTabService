@@ -8,10 +8,8 @@ import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
-import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
-import com.lfsolutions.retail.util.formatDecimalSeparator
 
-class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetail>?) :
+class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
     RecyclerView.Adapter<DeliveryOrderSummaryAdapter.ViewHolder>() {
 
     private var mListener: OnOrderSummarySelectListener? = null
@@ -54,7 +52,7 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetail>?) :
 
         holder.itemView.tag = items?.get(position)
         holder.itemView.setOnClickListener {
-            mListener?.onOrderSummarySelect(it.tag as DeliveryOrderDetail)
+            mListener?.onOrderSummarySelect(it.tag as DeliveryOrderDetails)
         }
 
     }
@@ -69,7 +67,7 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetail>?) :
     }
 
     interface OnOrderSummarySelectListener {
-        fun onOrderSummarySelect(item: DeliveryOrderDetail)
+        fun onOrderSummarySelect(item: DeliveryOrderDetails)
     }
 
 }

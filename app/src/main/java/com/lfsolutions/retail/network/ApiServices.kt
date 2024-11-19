@@ -56,6 +56,7 @@ import com.lfsolutions.retail.model.service.ComplaintServiceBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.ServiceTypeResult
+import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
@@ -136,7 +137,7 @@ interface ApiServices {
         Api.Base.plus(Api.ServicesApp).plus(Api.DeliveryOrder)
             .plus(Api.Name.CREATE_UPDATE_DELIVERY_ORDER)
     )
-    fun createDeliveryOrder(@Body deliveryOrderDTO: DeliveryOrderDTO): Call<BaseResponse<String>>?
+    fun createDeliveryOrder(@Body deliveryOrderDTO: DeliveryOrderDTO): Call<BaseResponse<DeliverOrderDetail>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_IN_COMING_STOCK_TRANSFER))
     fun createUpdateInComingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?

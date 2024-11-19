@@ -39,7 +39,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         super.onViewCreated(view, savedInstanceState)
         mAdapter = DeliveryOrderSummaryAdapter(Main.app.getDeliveryOrder()?.deliveryOrderDetail)
         mAdapter.setListener(object : DeliveryOrderSummaryAdapter.OnOrderSummarySelectListener {
-            override fun onOrderSummarySelect(item: DeliveryOrderDetail) {
+            override fun onOrderSummarySelect(item: DeliveryOrderDetails) {
                 openQuantityUpdateDialog(item)
             }
         })
@@ -53,7 +53,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         addOnClickListener()
     }
 
-    private fun openQuantityUpdateDialog(salesInvoiceDetail: DeliveryOrderDetail) {
+    private fun openQuantityUpdateDialog(salesInvoiceDetail: DeliveryOrderDetails) {
         val modal = ProductQuantityUpdateSheet()
         modal.setProductDetails(
             salesInvoiceDetail.productImage.toString(),
