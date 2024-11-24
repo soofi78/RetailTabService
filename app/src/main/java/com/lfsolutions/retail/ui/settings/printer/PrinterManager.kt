@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.graphics.Bitmap
 import android.provider.Settings
-import android.util.Log
 import com.bumptech.glide.Glide
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection

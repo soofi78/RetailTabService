@@ -14,7 +14,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentComplaintServiceDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.service.ComplaintService
-import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -32,7 +32,7 @@ import retrofit2.Response
 
 class ComplaintServiceDetailsFragment : Fragment() {
 
-    private var service: ComplaintServiceBody? = null
+    private var service: ServiceFormBody? = null
     private lateinit var item: ComplaintService
     private val args by navArgs<ComplaintServiceDetailsFragmentArgs>()
     private lateinit var binding: FragmentComplaintServiceDetailsBinding
@@ -117,7 +117,7 @@ class ComplaintServiceDetailsFragment : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading service details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    service = (response?.body() as BaseResponse<ComplaintServiceBody>).result
+                    service = (response?.body() as BaseResponse<ServiceFormBody>).result
                     setData()
                 }
 

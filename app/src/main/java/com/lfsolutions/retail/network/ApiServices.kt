@@ -52,7 +52,7 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
-import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.ServiceTypeResult
@@ -119,7 +119,7 @@ interface ApiServices {
     fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
-    fun createUpdateComplaintService(@Body complaintServiceBody: ComplaintServiceBody): Call<BaseResponse<ComplaintServiceResponse>>?
+    fun createUpdateComplaintService(@Body serviceFormBody: ServiceFormBody): Call<BaseResponse<ComplaintServiceResponse>>?
 
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
@@ -253,7 +253,7 @@ interface ApiServices {
     fun getDriverMemo(@Body idRequest: IdRequest): Call<BaseResponse<CreateUpdateDriverMemoRequestBody>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_COMPLAINT_SERVICE_DETAILS))
-    fun getComplaintServiceDetails(@Body idRequest: IdRequest): Call<BaseResponse<ComplaintServiceBody>>?
+    fun getComplaintServiceDetails(@Body idRequest: IdRequest): Call<BaseResponse<ServiceFormBody>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.ADD_CUSTOMER_TO_VISITATION_SCHEDULE))
     fun addCustomerVisitationSchedule(@Body list: ArrayList<CustomerIdRequest>): Call<BaseResponse<Any>>?

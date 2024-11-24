@@ -3,7 +3,7 @@ package com.lfsolutions.retail.model.service
 import com.google.gson.annotations.SerializedName
 
 
-data class ComplaintServiceBody(
+data class ServiceFormBody(
     @SerializedName("complaintService") var complaintService: ComplaintService? = ComplaintService(),
     @SerializedName("complaintServiceDetails") var complaintServiceDetails: ArrayList<ComplaintServiceDetails> = arrayListOf()
 ) {

@@ -260,7 +260,7 @@ class ServiceFormFragment : Fragment() {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         val result = response?.body() as BaseResponse<ComplaintServiceResponse>
                         if (result.success == true) {
-                            Notify.toastLong("Complaint Service Created: ${result.result?.id}")
+                            Notify.toastLong("Service Form Created: ${result.result?.id}")
                             findNavController().popBackStack()
                             Main.app.clearComplaintService()
                         } else {

@@ -2,63 +2,57 @@ package com.lfsolutions.retail.ui.stocktransfer.incoming
 
 import android.graphics.Canvas
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentOutGoingStockSummaryBinding
+import com.lfsolutions.retail.databinding.FragmentIncomingStockSummaryBinding
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
-import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
 
-class IncomingStockSummaryActivity : BaseActivity() {
-    private lateinit var mBinding: FragmentOutGoingStockSummaryBinding
+class IncomingStockSummaryFragment : Fragment() {
+    private lateinit var mBinding: FragmentIncomingStockSummaryBinding
     private var itemSwipeHelper: ItemTouchHelper? = null
     private lateinit var mAdapter: InComingStockSummaryAdapter
-    private val stockTransferProducts = arrayListOf<StockTransferProduct>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        mBinding = FragmentOutGoingStockSummaryBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        Main.app.getInComingStockTransferRequestObject()
-        getOutGoingProductsFromIntent()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mBinding = FragmentIncomingStockSummaryBinding.inflate(layoutInflater)
+        return mBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initiateView()
     }
 
-    private fun getOutGoingProductsFromIntent() {
-        val json = intent.getStringExtra(Constants.OutGoingProducts)
-        val type = TypeToken.getParameterized(
-            ArrayList::class.java, StockTransferProduct::class.java
-        ).type
-        stockTransferProducts.addAll(Gson().fromJson(json, type))
-    }
-
     private fun initiateView() {
-        mAdapter = InComingStockSummaryAdapter(this, stockTransferProducts)
+        mAdapter = InComingStockSummaryAdapter(
+            requireActivity(),
+            Main.app.getInComingStockTransferRequestObject().stockTransferDetails
+        )
         mAdapter.setOnItemUpdateListener(object : InComingStockSummaryAdapter.OnItemUpdated {
             override fun OnItemUpdated(stockTransferProduct: StockTransferProduct) {
                 updateSummaryAmountAndQty()
@@ -69,20 +63,24 @@ class IncomingStockSummaryActivity : BaseActivity() {
         itemSwipeHelper?.attachToRecyclerView(mBinding.recyclerView)
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
-        mBinding.header.setBackText("Back")
+        mBinding.header.setBackText("Stock Receive")
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
-        Main.app.getInComingStockTransferRequestObject()?.date =
+        Main.app.getInComingStockTransferRequestObject().date =
             mBinding.date.text.toString() + "T00:00:00Z"
         mBinding.dateSelectionView.setOnClickListener {
-            DateTime.showDatePicker(this, object : DateTime.OnDatePickedCallback {
+            DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     mBinding.date.setText("$day-$month-$year")
-                    Main.app.getInComingStockTransferRequestObject()?.date =
+                    Main.app.getInComingStockTransferRequestObject().date =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
+        }
+
+        mBinding.addEquipment.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_in_coming_stock_to_product_listing)
         }
     }
 
@@ -96,7 +94,7 @@ class IncomingStockSummaryActivity : BaseActivity() {
 
     private fun getTotal(): Double {
         var total = 0.0
-        stockTransferProducts.forEach {
+        Main.app.getInComingStockTransferRequestObject().stockTransferDetails.forEach {
             total += it.subTotal
         }
         return total
@@ -104,7 +102,7 @@ class IncomingStockSummaryActivity : BaseActivity() {
 
     private fun getQty(): Double {
         var qty = 0.0
-        stockTransferProducts.forEach {
+        Main.app.getInComingStockTransferRequestObject().stockTransferDetails.forEach {
             qty += it.qty
         }
         return qty
@@ -199,15 +197,14 @@ class IncomingStockSummaryActivity : BaseActivity() {
     private fun addOnClickListener() {
         mBinding.btnCancel.setOnClickListener {
             Notify.toastLong("Cleared all items")
-            finish()
+            requireActivity().finish()
         }
 
         mBinding.header.setOnBackClick {
-            finish()
+            requireActivity().finish()
         }
 
         mBinding.btnComplete.setOnClickListener {
-
             if (serialBatchVerified().not()) {
                 Notify.toastLong("Please add serial numbers")
                 return@setOnClickListener
@@ -221,16 +218,12 @@ class IncomingStockSummaryActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-
-
-            Main.app.getInComingStockTransferRequestObject().stockTransferDetails =
-                stockTransferProducts
             NetworkCall.make()
-                .autoLoadigCancel(Loading().forApi(this, "Requesting Stock Transfer"))
+                .autoLoadigCancel(Loading().forApi(requireActivity(), "Requesting Stock Transfer"))
                 .setCallback(object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         Notify.toastLong("Success")
-                        finish()
+                        requireActivity().finish()
                     }
 
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -245,7 +238,7 @@ class IncomingStockSummaryActivity : BaseActivity() {
 
     private fun serialBatchVerified(): Boolean {
         var verified = true
-        stockTransferProducts.forEach {
+        Main.app.getInComingStockTransferRequestObject().stockTransferDetails.forEach {
             val serial = it.isAsset == true || it.type.equals("S")
             val notBatched = it.productBatchList == null || it.productBatchList.size == 0
             val batchedAndQtyNotMatch =
@@ -255,6 +248,11 @@ class IncomingStockSummaryActivity : BaseActivity() {
             }
         }
         return verified
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

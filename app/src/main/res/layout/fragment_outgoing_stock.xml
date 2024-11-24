@@ -464,7 +464,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
         android:orientation="horizontal"
-        android:weightSum="3"
+        android:weightSum="2"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -484,24 +484,5 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_corner_yellow_background"
             android:text="@string/label_save" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_yellow_background"
-            android:text="@string/label_upload"
-            android:visibility="gone" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnPrint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_corner_white_background"
-            android:text="@string/label_print" />
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.agreementmemo
+package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,19 +10,21 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.navArgs
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoBottomNavigationBinding
+import com.lfsolutions.retail.databinding.FragmentOutGoingStockBottomNavigationBinding
+import com.lfsolutions.retail.ui.agreementmemo.NewAgreementMemoFragmentArgs
 import com.lfsolutions.retail.util.Constants
 
 
-class AgreementMemoBottomNavigationFragment : Fragment() {
+class OutGoingStockBottomNavigationFragment : Fragment() {
 
-    private var _binding: FragmentAgreementMemoBottomNavigationBinding? = null
-    private val args by navArgs<AgreementMemoBottomNavigationFragmentArgs>()
+    private var _binding: FragmentOutGoingStockBottomNavigationBinding? = null
+    private val args by navArgs<OutGoingStockBottomNavigationFragmentArgs>()
     private val mBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAgreementMemoBottomNavigationBinding.inflate(inflater, container, false)
+        _binding = FragmentOutGoingStockBottomNavigationBinding.inflate(inflater, container, false)
         return mBinding.root
 
     }
@@ -31,16 +33,12 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.navView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.navigation_agreement_memo_equipment -> {
+                R.id.navigation_outgoing_equipment_list_menu -> {
                     val ft: FragmentTransaction =
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
                         R.id.nav_host_fragment_activity,
-                        AgreementMemoEquipmentListFragment().apply {
-                            arguments = bundleOf(
-                                Constants.Customer to args.customer
-                            )
-                        },
+                        OutGoingEquipmentListFragment(),
                         "NewFragmentTag"
                     )
                     ft.commit()
@@ -48,12 +46,12 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
 
                 }
 
-                R.id.navigation_agreement_memo_summary -> {
+                R.id.navigation_outgoing_summary_menu -> {
                     val ft: FragmentTransaction =
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
                         R.id.nav_host_fragment_activity,
-                        AgreementMemoSummaryFragment(),
+                        OutGoingStockSummaryFragment(),
                         "NewFragmentTag"
                     )
                     ft.commit()
@@ -65,14 +63,12 @@ class AgreementMemoBottomNavigationFragment : Fragment() {
                 }
             }
         }
-        arguments?.let {
-
-            if (it.getBoolean("IsEquipment")) {
-                mBinding.navView.selectedItemId = R.id.navigation_agreement_memo_equipment
-            } else {
-                mBinding.navView.selectedItemId = R.id.navigation_agreement_memo_summary
-            }
+        if (args.IsEquipment) {
+            mBinding.navView.selectedItemId = R.id.navigation_outgoing_equipment_list_menu
+        } else {
+            mBinding.navView.selectedItemId = R.id.navigation_outgoing_summary_menu
         }
+
     }
 
 }

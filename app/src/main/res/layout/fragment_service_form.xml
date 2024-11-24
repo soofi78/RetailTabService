@@ -345,7 +345,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="Recipient"
+                        android:text="Supervisor"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -588,7 +588,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:weightSum="3"
+                android:weightSum="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardSignature">
@@ -611,17 +611,8 @@
                     android:background="@drawable/rounded_corner_yellow_background"
                     android:paddingStart="3dp"
                     android:paddingEnd="3dp"
-                    android:text="Print &amp; Save"
+                    android:text="Save"
                     android:visibility="visible" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPrint"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_corner_white_background"
-                    android:text="@string/label_print" />
 
             </LinearLayout>
 

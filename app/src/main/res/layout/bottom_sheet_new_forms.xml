@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground"
         android:orientation="horizontal"
-        android:tag="Complaint Service"
+        android:tag="Service Form"
         android:padding="10dp">
 
         <androidx.appcompat.widget.AppCompatImageView

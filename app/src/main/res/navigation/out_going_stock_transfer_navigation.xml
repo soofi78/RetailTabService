@@ -58,7 +58,28 @@
         android:id="@+id/navigation_outgoing_stock_summary"
         android:name="com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockSummaryFragment"
         android:label="Customers"
-        tools:layout="@layout/fragment_out_going_stock_summary">
+        tools:layout="@layout/fragment_incoming_stock_summary">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_outgoing_stock_bottom_navigation"
+        android:name="com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockBottomNavigationFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_out_going_stock_bottom_navigation">
+
+        <argument
+            android:name="IsEquipment"
+            app:argType="boolean"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_out_going_stock_product_listing_to_add_product"
+            app:destination="@id/navigation_outgoing_stock_add_product"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
 
     </fragment>
 

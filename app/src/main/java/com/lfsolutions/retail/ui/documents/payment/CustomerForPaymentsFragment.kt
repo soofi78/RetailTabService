@@ -46,8 +46,8 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         getCustomerDetails()
     }
 
@@ -92,7 +92,7 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun getCustomerDetails() {
-        if (customers.isEmpty()) NetworkCall.make().setCallback(this)
+        NetworkCall.make().setCallback(this)
             .autoLoadigCancel(Loading().forApi(requireActivity()))
             .enque(Network.api()?.getCustomersForPayment()).execute()
     }

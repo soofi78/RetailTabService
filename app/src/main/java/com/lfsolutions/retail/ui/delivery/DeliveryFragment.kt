@@ -32,7 +32,7 @@ import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.incoming.GenerateInComingStockBottomSheet
-import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockSummaryActivity
+import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockFlowActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -156,7 +156,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val outGoingProducts =
                         (response?.body() as RetailResponse<OutGoingStockProductsResults>).result?.items
-                    openOutStockProductSummaryActivity(outGoingProducts)
+                    openInStockProductSummaryActivity(outGoingProducts)
                     Notify.toastLong("Success")
                 }
 
@@ -166,9 +166,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }).execute()
     }
 
-    private fun openOutStockProductSummaryActivity(stockTransferProducts: java.util.ArrayList<StockTransferProduct>?) {
-        startActivity(Intent(requireActivity(), IncomingStockSummaryActivity::class.java).apply {
-            putExtra(Constants.OutGoingProducts, Gson().toJson(stockTransferProducts))
+    private fun openInStockProductSummaryActivity(stockTransferProducts: java.util.ArrayList<StockTransferProduct>?) {
+        startActivity(Intent(requireActivity(), IncomingStockFlowActivity::class.java).apply {
+            putExtra(Constants.InComingProducts, Gson().toJson(stockTransferProducts))
         })
     }
 

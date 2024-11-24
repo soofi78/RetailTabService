@@ -28,7 +28,7 @@ import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.service.ComplaintService
-import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -217,7 +217,7 @@ class HistoryFragmentListing : Fragment() {
 
         if (Main.app.getSession().isSupervisor == true) {
             historyList.add(HistoryType.AgreementMemo)
-            historyList.add(HistoryType.ComplaintService)
+            historyList.add(HistoryType.ServiceForm)
         }
 
         if (isCustomerSpecificHistory.not()) {
@@ -286,7 +286,7 @@ class HistoryFragmentListing : Fragment() {
                 getAgreementMemoHistory(force)
             }
 
-            HistoryType.ComplaintService -> {
+            HistoryType.ServiceForm -> {
                 getComplaintServiceHistory(force)
             }
         }
@@ -294,7 +294,7 @@ class HistoryFragmentListing : Fragment() {
 
     private fun getComplaintServiceHistory(force: Boolean) {
         if (complaintService.isEmpty() || force) NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading complaint service"))
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Service Form"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val res = response?.body() as BaseResponse<ComplaintServiceHistoryResult>
@@ -306,7 +306,7 @@ class HistoryFragmentListing : Fragment() {
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get complaint service list")
+                    Notify.toastLong("Unable to get Service Form list")
                 }
             }).enque(
                 Network.api()?.getAllComplaintServices(HistoryRequest().apply {
@@ -552,7 +552,7 @@ class HistoryFragmentListing : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading service details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val service = (response?.body() as BaseResponse<ComplaintServiceBody>).result
+                    val service = (response?.body() as BaseResponse<ServiceFormBody>).result
                     Main.app.setComplaintService(service)
                     Main.app.getComplaintService()?.complaintService?.customerId =
                         service?.complaintService?.customerId

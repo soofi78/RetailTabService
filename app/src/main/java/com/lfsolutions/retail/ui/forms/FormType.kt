@@ -4,7 +4,7 @@ import java.io.Serializable
 
 enum class FormType(val typeName: String) : Serializable {
     AgreementMemo("Agreement Memo"),
-    ServiceForm("Complaint Service"),
+    ServiceForm("Service Form"),
     InvoiceForm("Sale Invoice"),
     SaleOrder("Sale Order"),
     DeliveryOrder("Delivery Order");

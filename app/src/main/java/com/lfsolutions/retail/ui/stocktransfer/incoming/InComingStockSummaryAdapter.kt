@@ -3,7 +3,7 @@ package com.lfsolutions.retail.ui.stocktransfer.incoming
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
@@ -27,10 +27,9 @@ import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.math.cos
 
 class InComingStockSummaryAdapter(
-    val activity: AppCompatActivity,
+    val activity: FragmentActivity,
     val stockTransferProducts: ArrayList<StockTransferProduct>?
 ) :
     RecyclerView.Adapter<InComingStockSummaryAdapter.ViewHolder>() {

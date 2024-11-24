@@ -112,11 +112,12 @@
     <string name="label_mobile_number">Mobile Number</string>
     <string name="label_action_type">Action Type</string>
     <string name="label_complaint_types">Complaint Type</string>
-    <string name="label_expired">Expired</string>
+    <string name="label_expired">Sale</string>
     <string name="label_view_sale_invoice">View Sale Invoice</string>
     <string name="label_payment">Payment</string>
     <string name="label_history">History</string>
     <string name="stock_receive">Stock Receive</string>
     <string name="add_to_visit">Add to schedule</string>
+    <string name="label_summary">Summary</string>
 
 </resources>

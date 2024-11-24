@@ -7,19 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentAgreementMemoDetailsBinding
-import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.databinding.FragmentReceiptDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.memo.AgreementMemo
-import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.sale.SaleReceipt
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
-import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -31,7 +23,6 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -75,6 +66,7 @@ class ReceiptDetailsFragment : Fragment() {
         binding.paymentMethod.text = receipt?.paymentTypeName
         binding.discount.text = receipt?.discountFormatted()
         binding.amount.text = receipt?.getAmount()
+        binding.remarks.text = receipt?.remarks
         binding.customer.text = receipt?.customerName
         val items = ArrayList<HistoryItemInterface>()
         var counter = 1

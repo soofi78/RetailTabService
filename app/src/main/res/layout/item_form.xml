@@ -40,6 +40,14 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtSerialNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Serial#. SF12345"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -53,14 +61,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Agreement Memo"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txtSerialNo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Serial#. SF12345"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

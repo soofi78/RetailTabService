@@ -9,7 +9,7 @@ import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
-import com.lfsolutions.retail.model.service.ComplaintServiceBody
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.login.LoginActivity
 import com.lfsolutions.retail.util.AppSession
@@ -23,7 +23,7 @@ class Main : Application() {
     private var taxInvoice: SaleInvoiceRequest? = null
     private var inComingStockTransferRequest: StockTransferRequestBody? = null
     private var outGoingStockTransferRequest: StockTransferRequestBody? = null
-    private var complaintService: ComplaintServiceBody? = null
+    private var complaintService: ServiceFormBody? = null
     private var memo: CreateUpdateAgreementMemoRequestBody? = null
     private var driverMemo: CreateUpdateDriverMemoRequestBody? = null
 
@@ -70,12 +70,12 @@ class Main : Application() {
         return deliveryOrder
     }
 
-    fun getComplaintService(): ComplaintServiceBody? {
-        if (complaintService == null) complaintService = ComplaintServiceBody()
+    fun getComplaintService(): ServiceFormBody? {
+        if (complaintService == null) complaintService = ServiceFormBody()
         return complaintService
     }
 
-    fun setComplaintService(complaintService: ComplaintServiceBody?) {
+    fun setComplaintService(complaintService: ServiceFormBody?) {
         clearComplaintService()
         getComplaintService().apply {
             this?.complaintService = complaintService?.complaintService

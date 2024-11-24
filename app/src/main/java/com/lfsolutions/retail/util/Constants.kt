@@ -39,6 +39,7 @@ object Constants {
     const val Delete: String = "Delete"
     const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
+    const val InComingProducts: String = "in_coming_products"
     val Logout: CharSequence = "Logout"
     val ViewProfile: CharSequence = "View Profile"
     const val Product: String = "product"

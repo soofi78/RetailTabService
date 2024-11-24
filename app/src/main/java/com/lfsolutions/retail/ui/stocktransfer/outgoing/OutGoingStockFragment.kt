@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.lfsolutions.retail.Main
@@ -114,11 +115,17 @@ class OutGoingStockFragment : Fragment() {
 
     private fun addOnClickListener() {
         binding.btnOpenEquipmentList.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_out_going_stock_to_product_listing)
+            findNavController().navigate(
+                R.id.navigation_outgoing_stock_bottom_navigation,
+                bundleOf("IsEquipment" to true)
+            )
         }
         binding.btnViewOrder.setText("View Summary")
         binding.btnViewOrder.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_out_going_stock_to_summary)
+            findNavController().navigate(
+                R.id.navigation_outgoing_stock_bottom_navigation,
+                bundleOf("IsEquipment" to false)
+            )
         }
         binding.btnSave.setOnClickListener {
             if (Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.size == 0) {
