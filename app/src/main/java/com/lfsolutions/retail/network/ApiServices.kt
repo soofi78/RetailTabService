@@ -17,12 +17,14 @@ import com.lfsolutions.retail.model.GetAllDriverMemoResult
 import com.lfsolutions.retail.model.GetLocationResult
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.IsDeliverySchedule
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.PrintTemplate
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleOrderToStockReceive
@@ -94,7 +96,8 @@ interface ApiServices {
     fun getPaymentTerms(): Call<BaseResponse<PaymentTermsResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
-    fun getFeedback(): Call<RetailResponse<ArrayList<Feedback>>>
+    fun getFeedback(@Query("isDeliverySchedule") isDeliverySchedule: Boolean = false): Call<RetailResponse<ArrayList<Feedback>>>
+
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
     fun getEquipmentList(@Body productListRB: ProductListRB): Call<RetailResponse<EquipmentListResult>>
@@ -260,6 +263,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_CUSTOMER_FROM_VISITATION_SCHEDULE))
     fun deleteCustomerFromVisitationSchedule(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_CURRENT_STOCK))
+    fun getCurrentProductStockQuantity(@Body location: LocationIdRequestObject): Call<BaseResponse<ArrayList<Product>>>?
 }
 
 

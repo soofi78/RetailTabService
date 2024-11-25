@@ -2,6 +2,7 @@ package com.lfsolutions.retail.model.memo
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -42,7 +43,8 @@ data class AgreementMemo(
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
-    @SerializedName("Signature", alternate = arrayOf("signature")) var Signature: String? = null
+    @SerializedName("Signature", alternate = arrayOf("signature")) var Signature: String? = null,
+    @SerializedName("customerFeedbackList") var customerFeedbackList: ArrayList<Feedback> = arrayListOf(),
 ) : HistoryItemInterface {
     override fun getTitle(): String {
         return AgreementNo + " / " + agreementDateFormatted()

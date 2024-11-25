@@ -11,4 +11,8 @@ interface HistoryItemInterface {
     fun getSerializedNumber(): String {
         return ""
     }
+
+    fun getImageUrl(): String {
+        return ""
+    }
 }

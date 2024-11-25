@@ -72,5 +72,7 @@ object Api {
         const val ADD_CUSTOMER_TO_VISITATION_SCHEDULE = "Service/AddCustomerVisitationSchedule"
         const val DELETE_CUSTOMER_FROM_VISITATION_SCHEDULE =
             "Service/DeleteCustomerVisitationSchedule"
+        const val GET_PRODUCT_CURRENT_STOCK =
+            "Product/GetApiProductStocksForLocation"
     }
 }

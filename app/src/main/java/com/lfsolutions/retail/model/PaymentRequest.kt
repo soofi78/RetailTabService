@@ -16,6 +16,7 @@ data class PaymentRequest(
     @SerializedName("reference") var reference: String? = null,
     @SerializedName("remarks") var remarks: String? = null,
     @SerializedName("erpInternalId") var erpInternalId: String? = null,
+    @SerializedName("currencyRate") var currencyRate: Int = 1,
     @SerializedName("salesOrderId") var salesOrderId: String? = null,
     @SerializedName("isPDCPayment") var isPDCPayment: Boolean? = null,
     @SerializedName("items") var items: ArrayList<CustomerSaleTransaction> = arrayListOf()

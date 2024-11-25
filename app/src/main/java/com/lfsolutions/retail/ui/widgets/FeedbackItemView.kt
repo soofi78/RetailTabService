@@ -2,11 +2,15 @@ package com.lfsolutions.retail.ui.widgets
 
 import android.content.Context
 import android.graphics.Color
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
+import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FeedbackItemBinding
@@ -26,8 +30,16 @@ class FeedbackItemView : LinearLayout {
         binding = FeedbackItemBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    fun setup() {
+    fun setup(horizontal: Boolean = true) {
         binding!!.feedbackTitle.text = feedback.title
+        if (horizontal) {
+            binding!!.feedbackItems.orientation = HORIZONTAL
+            binding!!.feedbackItems.gravity = Gravity.CENTER
+        } else {
+            binding!!.feedbackItems.orientation = VERTICAL
+            binding!!.feedbackItems.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+        }
+
         feedback.feedbackValue.forEach { value ->
             binding!!.feedbackItems.addView(getRadioButton(value))
         }
@@ -47,8 +59,7 @@ class FeedbackItemView : LinearLayout {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         ).apply {
-            marginStart = 5
-            marginEnd = 5
+            setMargins(5)
         }
         button.setButtonDrawable(R.drawable.radio_button_selector)
         return button

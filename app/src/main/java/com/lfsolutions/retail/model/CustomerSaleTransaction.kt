@@ -10,6 +10,7 @@ data class CustomerSaleTransaction(
     @SerializedName("transactionDate") var transactionDate: String? = null,
     @SerializedName("dueDate") var dueDate: String? = null,
     @SerializedName("amount") var amount: Double? = null,
+    @SerializedName("currencyRate") var currencyRate: Int = 1,
     @SerializedName("actualAmount") var actualAmount: Double? = null,
     @SerializedName("balanceAmount") var balanceAmount: Double? = null,
     @SerializedName("roundingAmount") var roundingAmount: Double? = null,

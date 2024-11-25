@@ -15,6 +15,8 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.LocationIdRequestObject
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.SaleOrderToStockReceive
 import com.lfsolutions.retail.model.memo.AgreementMemo
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
@@ -63,6 +65,7 @@ class HistoryFragmentListing : Fragment() {
     private val outgoing = ArrayList<HistoryItemInterface>()
     private val agreementMemo = ArrayList<HistoryItemInterface>()
     private val complaintService = ArrayList<HistoryItemInterface>()
+    private val currentStock = ArrayList<HistoryItemInterface>()
     private var historyTypeAdapter: HistoryTypeAdapter? = null
 
     private fun setCustomerFromIntent() {
@@ -224,6 +227,8 @@ class HistoryFragmentListing : Fragment() {
             historyList.add(HistoryType.OutgoingTransfer)
         }
 
+        historyList.add(HistoryType.CurrentStock)
+
         selectedType?.let { selected ->
             historyList.forEach {
                 it.selected = it.type == selected.type
@@ -289,7 +294,34 @@ class HistoryFragmentListing : Fragment() {
             HistoryType.ServiceForm -> {
                 getComplaintServiceHistory(force)
             }
+
+            HistoryType.CurrentStock -> {
+                getCurrentProductStock(force)
+            }
         }
+    }
+
+    private fun getCurrentProductStock(force: Boolean) {
+        if (currentStock.isEmpty() || force) NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading current products"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val res = response?.body() as BaseResponse<ArrayList<Product>>
+                    currentStock.clear()
+                    res.result?.forEach {
+                        currentStock.add(it)
+                    }
+                    setAdapter(currentStock)
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get current stock")
+                }
+            }).enque(
+                Network.api()
+                    ?.getCurrentProductStockQuantity(LocationIdRequestObject(Main.app.getSession().defaultLocationId))
+            ).execute()
+        else setAdapter(currentStock, true)
     }
 
     private fun getComplaintServiceHistory(force: Boolean) {

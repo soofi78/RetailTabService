@@ -5,6 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 
 class HistoryListAdapter(
@@ -33,7 +36,12 @@ class HistoryListAdapter(
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
-        holder.binding.check.visibility = if (checkable) View.VISIBLE else View.GONE
+        holder.binding.check.visibility =
+            if (checkable && item.getImageUrl().isEmpty()) View.VISIBLE else View.GONE
+        holder.binding.image.visibility =
+            if (item.getImageUrl().isEmpty()) View.GONE else View.VISIBLE
+        Glide.with(holder.itemView).load(item.getImageUrl()).centerCrop()
+            .placeholder(R.drawable.no_image).into(holder.binding.image)
         holder.binding.parent.tag = item
         holder.binding.parent.setOnClickListener {
             mListener.onItemClickedListener(it.tag as HistoryItemInterface)

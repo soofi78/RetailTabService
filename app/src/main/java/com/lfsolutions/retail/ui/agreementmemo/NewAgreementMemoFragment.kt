@@ -17,10 +17,12 @@ import com.lfsolutions.retail.databinding.FragmentNewAgreementMemoBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
@@ -40,7 +42,7 @@ class NewAgreementMemoFragment : Fragment() {
     private var customer: Customer? = null
     private lateinit var _binding: FragmentNewAgreementMemoBinding
     private val args by navArgs<NewAgreementMemoFragmentArgs>()
-
+    private val feedbacks = ArrayList<Feedback>()
 
     private val mBinding get() = _binding!!
 
@@ -72,6 +74,7 @@ class NewAgreementMemoFragment : Fragment() {
         Main.app.getAgreementMemo()?.AgreementMemo?.CustomerId = customer?.id
         addOnClickListener()
         setData()
+        getFeedbackData()
     }
 
     private fun setData() {
@@ -91,6 +94,42 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.address.text = customer?.address1
         mBinding.header.setBackText("New Agreement Memo")
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
+    }
+
+    private fun getFeedbackData() {
+        if (feedbacks.isEmpty().not())
+            return
+
+        val loading = Loading().forApi(requireActivity())
+        NetworkCall.make()
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    feedbacks.clear()
+                    (response?.body() as RetailResponse<ArrayList<Feedback>>).result?.let {
+                        feedbacks.addAll(
+                            it
+                        )
+                    }
+                    setFeedbackData()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+
+                }
+            })
+            .setTag("FEEDBACK")
+            .autoLoadigCancel(loading)
+            .enque(Network.api()?.getFeedback(true)).execute()
+    }
+
+    private fun setFeedbackData() {
+        mBinding.cardFeedbackViewHandler.visibility =
+            if (feedbacks.isEmpty()) View.GONE else View.VISIBLE
+        feedbacks.forEach { feedback ->
+            val item = FeedbackItemView(context, feedback)
+            mBinding.feedbackViewHandler.addView(item)
+            item.setup(false)
+        }
     }
 
 
@@ -124,6 +163,11 @@ class NewAgreementMemoFragment : Fragment() {
         }
 
         mBinding.btnSave.setOnClickListener {
+
+            if (isAllFeedbackSelected().not()) {
+                Notify.toastLong("Please select all feedbacks")
+                return@setOnClickListener
+            }
 
             if (mBinding.agressTermsAndService.isChecked.not()) {
                 Notify.toastLong("Please agree terms & conditions")
@@ -168,8 +212,21 @@ class NewAgreementMemoFragment : Fragment() {
         }
     }
 
+
+    private fun isAllFeedbackSelected(): Boolean {
+        var feedbackSelected = true
+        feedbacks.forEach { feedback ->
+            if (feedback.selected.isNullOrBlank()) {
+                feedbackSelected = false
+            }
+        }
+        return feedbackSelected
+    }
+
+
     private fun saveAgreement() {
         Main.app.getAgreementMemo()?.serializeItems()
+        Main.app.getAgreementMemo()?.AgreementMemo?.customerFeedbackList = feedbacks
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(
