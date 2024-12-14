@@ -41,14 +41,15 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
             .placeholder(R.drawable.no_image)
             .into(holder.binding.imgProduct)
         holder.binding.txtSerials.visibility = View.GONE
+        holder.binding.txtTag.visibility = View.GONE
 //        holder.binding.txtTag.text =
 //            if (items?.get(position)?.IsFOC == true) "FOC" else if (items?.get(
 //                    position
 //                )?.IsExchange == true
 //            ) "Exchange" else if (items?.get(position)?.IsExpire == true) "Expire" else "None"
 
-        holder.binding.txtTag.visibility =
-            if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
+//        holder.binding.txtTag.visibility =
+//            if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
 
         holder.itemView.tag = items?.get(position)
         holder.itemView.setOnClickListener {

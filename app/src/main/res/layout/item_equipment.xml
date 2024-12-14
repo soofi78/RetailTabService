@@ -27,14 +27,15 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtCategory"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="Category | Qty avail : 1"
         android:textColor="@color/red"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/txtProductName"
-        app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtProductName"
+        app:layout_constraintEnd_toStartOf="@+id/txtPrice"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtPrice"

@@ -128,19 +128,9 @@ class ScheduleFragment : Fragment() {
         val list = getCustomersResponse?.result?.getScheduledVisitationCustomersList()
             ?.filter { isCandidateForFilter(s, it) }
         val sortedResult = if (sort == Constants.ASCENDING) {
-            list?.sortedBy {
-                DateTime.getDateFromString(
-                    it.visitDate?.replace("T", " ")?.replace("Z", ""),
-                    DateTime.DateTimetRetailFormat
-                )
-            }
+            list?.sortedBy { it.name }
         } else {
-            list?.sortedByDescending {
-                DateTime.getDateFromString(
-                    it.visitDate?.replace("T", " ")?.replace("Z", ""),
-                    DateTime.DateTimetRetailFormat
-                )
-            }
+            list?.sortedByDescending { it.name }
         }
         mScheduleAdapter = DeliveryItemAdapter(
             ArrayList<Customer>().apply {
@@ -171,15 +161,10 @@ class ScheduleFragment : Fragment() {
         query.split(" ").toSet().forEach {
             contains =
                 contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.country?.lowercase()?.contains(it) == true
-                        || customer.area?.lowercase()?.contains(it) == true
+                        || customer.customerCode?.lowercase()?.contains(it) == true
                         || customer.address1?.lowercase()?.contains(it) == true
                         || customer.address2?.lowercase()?.contains(it) == true
-                        || customer.address3?.lowercase()?.contains(it) == true
-                        || customer.customerCode?.lowercase()?.contains(it) == true
-                        || customer.email?.lowercase()?.contains(it) == true
-                        || customer.salespersonName?.lowercase()?.contains(it) == true
-                        || customer.city?.lowercase()?.contains(it) == true)
+                        || customer.address3?.lowercase()?.contains(it) == true)
         }
         return contains
     }

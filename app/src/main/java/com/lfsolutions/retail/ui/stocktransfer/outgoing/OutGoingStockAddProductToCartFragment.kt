@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
@@ -67,6 +68,7 @@ class OutGoingStockAddProductToCartFragment : Fragment() {
 
     private fun setHeaderData() {
         mBinding.header.setBackText("Out Going Stock")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
@@ -98,10 +100,20 @@ class OutGoingStockAddProductToCartFragment : Fragment() {
     private fun addOnClickListener() {
 
         mBinding.btnSub.setOnClickListener {
-            openQuantityUpdateDialog()
+            if (mBinding.txtQty.text.toString().toDouble() <= 0) {
+                mBinding.txtQty.text = "1"
+                return@setOnClickListener
+            }
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
+            updateTotal()
         }
 
         mBinding.btnAdd.setOnClickListener {
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
+            updateTotal()
+        }
+
+        mBinding.txtQty.setOnClickListener {
             openQuantityUpdateDialog()
         }
 

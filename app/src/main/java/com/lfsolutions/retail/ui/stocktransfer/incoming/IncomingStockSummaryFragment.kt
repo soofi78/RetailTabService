@@ -17,6 +17,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
@@ -64,6 +65,7 @@ class IncomingStockSummaryFragment : Fragment() {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Stock Receive")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)

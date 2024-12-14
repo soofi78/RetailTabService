@@ -16,6 +16,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.videotel.digital.util.Notify
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -112,7 +113,15 @@ object PrinterManager {
             exception.printStackTrace()
             null
         }
-        return connection?.connect()
+
+        try {
+            return connection?.connect()
+        } catch (exception: Exception) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Notify.toastLong("Unable to connect to printer...")
+            }
+            return null
+        }
     }
 
     @Synchronized
@@ -125,21 +134,26 @@ object PrinterManager {
             var printText = printableText
             val urls = extractUrls(printText)
             urls.forEach {
-                val bitmap: Bitmap = Glide.with(Main.app).asBitmap().load(it).submit().get()
-                val targetWidth = 383 // 48mm printing zone with 203dpi => 383px
-                val rescaledBitmap = Bitmap.createScaledBitmap(
-                    bitmap,
-                    targetWidth,
-                    Math.round(
-                        (bitmap.getHeight()
-                            .toFloat()) * (targetWidth.toFloat()) / (bitmap.getWidth()
-                            .toFloat())
-                    ),
-                    true
-                )
-                val imageBase64 =
-                    PrinterTextParserImg.bitmapToHexadecimalString(printer, rescaledBitmap)
-                printText = printText.replace("@@@$it", "[C]<img>$imageBase64</img>\n")
+                try {
+                    val bitmap: Bitmap = Glide.with(Main.app).asBitmap().load(it).submit().get()
+                    val targetWidth = 383 // 48mm printing zone with 203dpi => 383px
+                    val rescaledBitmap = Bitmap.createScaledBitmap(
+                        bitmap,
+                        targetWidth,
+                        Math.round(
+                            (bitmap.getHeight()
+                                .toFloat()) * (targetWidth.toFloat()) / (bitmap.getWidth()
+                                .toFloat())
+                        ),
+                        true
+                    )
+                    val imageBase64 =
+                        PrinterTextParserImg.bitmapToHexadecimalString(printer, rescaledBitmap)
+                    printText = printText.replace("@@@$it", "[C]<img>$imageBase64</img>\n")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    printText = printText.replace("@@@$it", "")
+                }
             }
             printer?.printFormattedTextAndCut(printText, 40f)
             connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))

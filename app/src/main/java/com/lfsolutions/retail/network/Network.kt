@@ -125,7 +125,7 @@ class Network private constructor() {
             return getInstance()?.getApis()
         }
 
-
+        @Synchronized
         fun clearInstance() {
             instance = null
         }

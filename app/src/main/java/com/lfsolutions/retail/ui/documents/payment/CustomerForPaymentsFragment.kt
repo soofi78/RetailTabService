@@ -21,6 +21,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -53,6 +54,7 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
 
     private fun setHeaderData() {
         binding.header.setBackText("Customers")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             requireActivity().finish()
@@ -77,16 +79,11 @@ class CustomerForPaymentsFragment : Fragment(), OnNetworkResponse {
         if (query.isNullOrEmpty()) return true
         var contains = true
         query.forEach {
-            contains = contains && (customer.name?.lowercase()
-                ?.contains(it.lowercase()) == true || customer.country?.lowercase()
-                ?.contains(it) == true || customer.area?.lowercase()
-                ?.contains(it) == true || customer.address1?.lowercase()
-                ?.contains(it) == true || customer.address2?.lowercase()
-                ?.contains(it) == true || customer.address3?.lowercase()
-                ?.contains(it) == true || customer.customerCode?.lowercase()
-                ?.contains(it) == true || customer.email?.lowercase()
-                ?.contains(it) == true || customer.salespersonName?.lowercase()
-                ?.contains(it) == true || customer.city?.lowercase()?.contains(it) == true)
+            contains = contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
+                    || customer.customerCode?.lowercase()?.contains(it) == true
+                    || customer.address1?.lowercase()?.contains(it) == true
+                    || customer.address2?.lowercase()?.contains(it) == true
+                    || customer.address3?.lowercase()?.contains(it) == true)
         }
         return contains
     }

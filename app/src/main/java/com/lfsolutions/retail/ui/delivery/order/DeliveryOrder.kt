@@ -1,5 +1,9 @@
 package com.lfsolutions.retail.ui.delivery.order
 
+import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.util.DateTime
+
 data class DeliveryOrder(
     var creationTime: String? = null,
     var creatorUserId: Int? = null,
@@ -10,7 +14,7 @@ data class DeliveryOrder(
     var deleterUserId: Int? = null,
     var deletionTime: String? = null,
     var deliveryDate: String? = null,
-    var deliveryNo: Int? = null,
+    var deliveryNo: String? = null,
     var deliveryPersonId: String? = null,
     var deliveryTimingId: String? = null,
     var erpInternalId: Int? = null,
@@ -36,5 +40,32 @@ data class DeliveryOrder(
     var totalDeliveredQty: Double? = null,
     var totalQty: Double? = 0.0,
     var signature: String? = null,
-    var subTotal: Double? = null
-)
+    var subTotal: Double? = null,
+    var address1: String? = null,
+    var address2: String? = null,
+    var zatcaQRCode: String? = null,
+) {
+
+
+    fun signatureUrl(): String {
+        return Main.app.getBaseUrl() + signature
+    }
+
+    fun DeliveryDateFormatted(): String {
+        val date = DateTime.getDateFromString(
+            deliveryDate,
+            DateTime.DateTimetRetailFormat.replace("T", " ").replace("Z", "")
+        )
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        return formatted ?: deliveryDate ?: ""
+    }
+
+    fun statusFormatted(): String {
+        return when (status?.trim()) {
+            "R" -> "Delivered"
+            "D" -> "Draft"
+            "I" -> "Invoiced"
+            else -> "Unknown"
+        }
+    }
+}

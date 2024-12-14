@@ -25,6 +25,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
 import com.lfsolutions.retail.util.Constants
@@ -144,6 +145,7 @@ class ServiceFormEquipmentListFragment : Fragment() {
 
     private fun setData() {
         mBinding.header.setBackText("Equipment List")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()

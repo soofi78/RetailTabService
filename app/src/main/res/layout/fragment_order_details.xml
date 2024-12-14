@@ -237,7 +237,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="80dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -247,7 +247,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="?attr/primary"
         android:src="@drawable/ic_print" />
@@ -257,9 +257,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
         android:layout_toStartOf="@+id/print"
         android:backgroundTint="?attr/primary"
         android:src="@drawable/ic_pdf" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/saleInvoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toStartOf="@+id/pdf"
+        android:backgroundTint="?attr/primary"
+        android:text="Sale Invoice" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/deliveryOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toStartOf="@+id/saleInvoice"
+        android:backgroundTint="?attr/primary"
+        android:text="Delivery Order" />
 </RelativeLayout>

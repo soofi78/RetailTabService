@@ -1,8 +1,8 @@
 package com.lfsolutions.retail.ui.delivery.order
 
 data class DeliveryOrderDTO(
-    val deliveryOrder: DeliveryOrder = DeliveryOrder(),
-    val deliveryOrderDetail: ArrayList<DeliveryOrderDetails> = ArrayList()
+    var deliveryOrder: DeliveryOrder = DeliveryOrder(),
+    var deliveryOrderDetail: ArrayList<DeliveryOrderDetails> = ArrayList()
 ) {
     fun serializeItems() {
         var serial = 0

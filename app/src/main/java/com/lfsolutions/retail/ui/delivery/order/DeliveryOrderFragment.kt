@@ -25,6 +25,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
 import com.lfsolutions.retail.ui.widgets.options.OptionItem
@@ -59,8 +60,8 @@ class DeliveryOrderFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentDeliveryOrderBinding.inflate(inflater, container, false)
-            Main.app.clearDeliveryOrder()
-            Main.app.getDeliveryOrder()
+            if (Main.app.getDeliveryOrder()?.deliveryOrder?.salesOrderId == null)
+                Main.app.clearDeliveryOrder()
             Main.app.getDeliveryOrder()?.deliveryOrder?.creatorUserId = Main.app.getSession().userId
             Main.app.getDeliveryOrder()?.deliveryOrder?.customerId = customer.id
             Main.app.getDeliveryOrder()?.deliveryOrder?.locationId =
@@ -98,11 +99,16 @@ class DeliveryOrderFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Delivery Order")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
+            Main.app.clearDeliveryOrder()
             findNavController().popBackStack()
         }
-        binding.btnCancel.setOnClickListener { findNavController().popBackStack() }
+        binding.btnCancel.setOnClickListener {
+            Main.app.clearDeliveryOrder()
+            findNavController().popBackStack()
+        }
     }
 
     private fun setCustomerData() {
@@ -331,6 +337,11 @@ class DeliveryOrderFragment : Fragment() {
             )
         )
         return filePart
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Main.app.clearDeliveryOrder()
     }
 
 }

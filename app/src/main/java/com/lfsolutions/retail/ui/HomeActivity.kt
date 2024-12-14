@@ -1,72 +1,22 @@
 package com.lfsolutions.retail.ui
 
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.view.View.OnClickListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
-import com.lfsolutions.retail.ui.login.ProfileActivity
-import com.lfsolutions.retail.ui.settings.printer.PrinterSettingsActivity
-import com.lfsolutions.retail.ui.theme.RetailThemes
-import com.lfsolutions.retail.ui.theme.recreateSmoothly
-import com.lfsolutions.retail.ui.widgets.theme.OnThemeSelected
-import com.lfsolutions.retail.ui.widgets.theme.ThemeSelectionSheet
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.Dialogs
-import com.lfsolutions.retail.util.OnOptionDialogItemClicked
-import com.videotel.digital.util.Notify
 
 class HomeActivity : BaseActivity() {
-
-    private var optionsClick = OnClickListener {
-        Dialogs.optionsDialog(context = this@HomeActivity,
-            options = arrayOf(
-                Constants.ViewProfile,
-                Constants.PrinterSettings,
-                Constants.AppTheme,
-                Constants.Version,
-                Constants.Logout,
-            ),
-            onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
-                override fun onClick(option: String) {
-                    when (option) {
-                        Constants.Logout -> Main.app.sessionExpired()
-                        Constants.ViewProfile -> openProfile()
-                        Constants.PrinterSettings -> selectPrinter()
-                        Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
-                        Constants.AppTheme -> ThemeSelectionSheet.show(supportFragmentManager,
-                            object : OnThemeSelected {
-                                override fun onThemeSelected(theme: RetailThemes) {
-                                    AppSession.put(Constants.AppTheme, theme.themeName)
-                                    recreateSmoothly()
-                                    finishAffinity()
-                                }
-                            })
-                    }
-                }
-            })
-    }
-
-    private fun selectPrinter() {
-        startActivity(Intent(this, PrinterSettingsActivity::class.java))
-    }
-
-    private fun openProfile() {
-        startActivity(Intent(this, ProfileActivity::class.java))
-    }
 
     private var _binding: ActivityHomeBinding? = null
 

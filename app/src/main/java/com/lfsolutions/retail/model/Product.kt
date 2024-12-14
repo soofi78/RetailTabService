@@ -16,6 +16,7 @@ data class Product(
     @SerializedName("qtyOnHand") var qtyOnHand: Double? = null,
     @SerializedName("qty") var qty: Double? = null,
     @SerializedName("cost", alternate = arrayOf("unitCost")) var cost: Double? = null,
+    @SerializedName("price") var price: Double? = null,
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
@@ -45,7 +46,7 @@ data class Product(
     }
 
     override fun getAmount(): String {
-        return Main.app.getSession().currencySymbol + cost?.formatDecimalSeparator().toString()
+        return Main.app.getSession().currencySymbol + price?.formatDecimalSeparator().toString()
     }
 
     override fun getImageUrl(): String {

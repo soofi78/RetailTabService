@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.network
 
+import com.lfsolutions.retail.model.AllCustomersResult
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.CustomerIdRequest
@@ -17,9 +18,9 @@ import com.lfsolutions.retail.model.GetAllDriverMemoResult
 import com.lfsolutions.retail.model.GetLocationResult
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.IsDeliverySchedule
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.LocationIdRequestObject
+import com.lfsolutions.retail.model.LocationTenantIdRequestObject
 import com.lfsolutions.retail.model.LoginRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
@@ -36,6 +37,7 @@ import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.VisitDateRequest
 import com.lfsolutions.retail.model.dailysale.DailySaleRecord
+import com.lfsolutions.retail.model.deliveryorder.DeliveryOrderHistoryList
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
@@ -47,8 +49,7 @@ import com.lfsolutions.retail.model.profile.UserProfile
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
-import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
@@ -59,6 +60,7 @@ import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
+import com.lfsolutions.retail.ui.delivery.order.DeliveryOrder
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
@@ -75,6 +77,10 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS))
     fun getCustomers(): Call<RetailResponse<CustomersResult>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_CUSTOMERS))
+    fun getAllCustomers(@Body location: LocationTenantIdRequestObject): Call<BaseResponse<AllCustomersResult>>?
+
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
     fun getCustomerForm(@Body formRequest: FormsRequest): Call<RetailResponse<FormResult>>?
@@ -133,7 +139,7 @@ interface ApiServices {
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
             .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
     )
-    fun createUpdateSaleInvoice(@Body saleInvoiceRequest: SaleInvoiceRequest): Call<BaseResponse<String>>?
+    fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<String>>?
 
 
     @POST(
@@ -171,6 +177,12 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDERS))
     fun getSalesOrder(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleOrderListResult>>
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DELIVERY_ORDERS))
+    fun getDeliveryOrder(@Body historyRequest: HistoryRequest): Call<BaseResponse<DeliveryOrderHistoryList>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DELIVERY_ORDER_DETAIL))
+    fun getDeliveryOrderDetails(@Body idRequest: IdRequest): Call<BaseResponse<DeliveryOrderDTO>>
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_DETAIL))
     fun getSalesOrderDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleOrderResponse>>
 
@@ -187,10 +199,10 @@ interface ApiServices {
     fun getSaleInvoices(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleInvoiceListResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_DETAIL))
-    fun getSaleInvoiceDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
+    fun getSaleInvoiceDetail(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceObject>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_INVOICE_FOR_PRINT))
-    fun getSaleInvoiceForPrint(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceResponse>>
+    fun getSaleInvoiceForPrint(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceObject>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_RECEIPT))
     fun getSaleReceipts(@Body historyRequest: HistoryRequest): Call<BaseResponse<SaleReceiptResult>>
@@ -222,6 +234,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_PDF))
     fun getSaleOrderPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DELIVERY_ORDER_PDF))
+    fun getDeliveryOrderPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_COMPLAINT_SERVICE_PDF))
     fun getComplaintServicePDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 
@@ -230,6 +245,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALE_RECEIPT_PDF))
     fun getSaleReceiptPdf(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DAILY_SALE_RECORD_PDF))
+    fun getDailySaleRecordPdf(@Body dateRequestBody: UserIdDateRequestBody): Call<BaseResponse<String>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DAILY_SALE_RECORD))
     fun dailySaleRecord(@Body userIdDateRequestBody: UserIdDateRequestBody): Call<BaseResponse<DailySaleRecord>>?
@@ -266,6 +284,12 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_CURRENT_STOCK))
     fun getCurrentProductStockQuantity(@Body location: LocationIdRequestObject): Call<BaseResponse<ArrayList<Product>>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.SALE_ORDER_FOR_INVOICE))
+    fun convertToSaleInvoice(@Body idRequest: IdRequest): Call<BaseResponse<SaleInvoiceObject>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.SALE_ORDER_FOR_DELIVERY_ORDER))
+    fun convertToDeliveryOrder(@Body idRequest: IdRequest): Call<BaseResponse<DeliveryOrderDTO>>
 }
 
 

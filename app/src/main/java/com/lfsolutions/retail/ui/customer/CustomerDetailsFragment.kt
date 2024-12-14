@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lfsolutions.retail.databinding.FragmentCustomerDetailsBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.DateTime
 
 class CustomerDetailsFragment : Fragment() {
@@ -27,6 +28,7 @@ class CustomerDetailsFragment : Fragment() {
 
     private fun setHeader() {
         binding.header.setBackText("Customer Details")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         binding.header.setOnBackClick {
             requireActivity().finish()
         }

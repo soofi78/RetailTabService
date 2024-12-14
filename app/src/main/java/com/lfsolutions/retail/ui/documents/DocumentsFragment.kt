@@ -72,6 +72,14 @@ class DocumentsFragment : Fragment() {
             openDriverMemo()
         }
 
+        if (document is DocumentType.CurrentStock) {
+            openCurrentStock()
+        }
+
+    }
+
+    private fun openCurrentStock() {
+        startActivity(Intent(requireActivity(), CurrentStockFlowActivity::class.java))
     }
 
     private fun openDriverMemo() {
@@ -134,6 +142,14 @@ class DocumentsFragment : Fragment() {
                 )
             )
         }
+
+        docs.add(
+            DocumentType.CurrentStock(
+                R.string.label_current_stock,
+                R.drawable.outgoing_stock_record
+            )
+        )
+
         return docs
     }
 

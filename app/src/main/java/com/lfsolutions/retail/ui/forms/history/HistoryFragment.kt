@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentHistoryBinding
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.FormAdapter
 
 class HistoryFragment : Fragment() {
@@ -47,12 +48,12 @@ class HistoryFragment : Fragment() {
 
     private fun setData() {
         mBinding.header.setBackText("History Forms")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
     }
 
     private fun addDataObserver() {
         mViewModel.formTypeLiveData.observe(viewLifecycleOwner) { formType ->
-
         }
     }
 

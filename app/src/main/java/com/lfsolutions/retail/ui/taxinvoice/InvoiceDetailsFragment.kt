@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -24,11 +23,12 @@ import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
-import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.settings.printer.PrinterManager
@@ -47,7 +47,7 @@ class InvoiceDetailsFragment : Fragment() {
 
     private lateinit var transaction: CustomerSaleTransaction
     private val paymentTypes = ArrayList<PaymentType>()
-    private var invoice: SaleInvoiceResponse? = null
+    private var invoice: SaleInvoiceObject? = null
     private lateinit var binding: FragmentInvoiceDetailsBinding
     private lateinit var item: SaleInvoiceListItem
     private val args by navArgs<InvoiceDetailsFragmentArgs>()
@@ -73,19 +73,20 @@ class InvoiceDetailsFragment : Fragment() {
 
 
     private fun setData() {
-        invoice?.salesInvoiceRes?.invoiceNo?.let { binding.header.setBackText(it) }
+        invoice?.salesInvoice?.invoiceNo?.let { binding.header.setBackText(it) }
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         binding.header.setOnBackClick { findNavController().popBackStack() }
         Main.app.getSession().userName?.let { binding.header.setName(it) }
-        Glide.with(binding.signature).load(invoice?.salesInvoiceRes?.signatureUrl()).centerCrop()
+        Glide.with(binding.signature).load(invoice?.salesInvoice?.signatureUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(binding.signature)
-        binding.invoiceNo.text = invoice?.salesInvoiceRes?.invoiceNo
-        binding.invoiceDate.text = invoice?.salesInvoiceRes?.InvoiceDateFormatted()
-        binding.status.text = invoice?.salesInvoiceRes?.StatusFormatted()
-        binding.invoiceAmount.text = invoice?.salesInvoiceRes?.InvoiceNetTotalFromatted()
-        binding.balance.text = invoice?.salesInvoiceRes?.BalanceFormatted()
-        binding.customer.text = invoice?.salesInvoiceRes?.customerName
+        binding.invoiceNo.text = invoice?.salesInvoice?.invoiceNo
+        binding.invoiceDate.text = invoice?.salesInvoice?.InvoiceDateFormatted()
+        binding.status.text = invoice?.salesInvoice?.StatusFormatted()
+        binding.invoiceAmount.text = invoice?.salesInvoice?.InvoiceNetTotalFromatted()
+        binding.balance.text = invoice?.salesInvoice?.BalanceFormatted()
+        binding.customer.text = invoice?.salesInvoice?.customerName
         val items = ArrayList<HistoryItemInterface>()
-        invoice?.salesInvoiceDetailRes?.forEach {
+        invoice?.salesInvoiceDetail?.forEach {
             items.add(it)
         }
         binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
@@ -129,48 +130,48 @@ class InvoiceDetailsFragment : Fragment() {
     private fun preparePrintTemplate(template: PrintTemplate?) {
         var templateText = template?.template
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNo, invoice?.salesInvoiceRes?.invoiceNo.toString()
+            Constants.Invoice.InvoiceNo, invoice?.salesInvoice?.invoiceNo.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, invoice?.salesInvoiceRes?.invoiceDate.toString()
+            Constants.Invoice.InvoiceDate, invoice?.salesInvoice?.invoiceDate.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, invoice?.salesInvoiceRes?.paymentTermName.toString()
+            Constants.Invoice.InvoiceTerm, invoice?.salesInvoice?.paymentTermName.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoiceRes?.customerName.toString()
+            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoice?.customerName.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress1, invoice?.salesInvoiceRes?.address1 ?: ""
+            Constants.Invoice.InvoiceAddress1, invoice?.salesInvoice?.address1 ?: ""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress2, invoice?.salesInvoiceRes?.address2 ?: ""
+            Constants.Invoice.InvoiceAddress2, invoice?.salesInvoice?.address2 ?: ""
         )
 
 
         val itemTemplate = templateText?.substring(
-            templateText.indexOf(Constants.Invoice.InvoiceItemsStart),
-            templateText.indexOf(Constants.Invoice.InvoiceItemsEnd) + 10
+            templateText.indexOf(Constants.Common.ItemsStart),
+            templateText.indexOf(Constants.Common.ItemsEnd) + 10
         )
 
-        val itemTemplateClean = itemTemplate?.replace(Constants.Invoice.InvoiceItemsStart, "")
-            ?.replace(Constants.Invoice.InvoiceItemsEnd, "")
+        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
+            ?.replace(Constants.Common.ItemsEnd, "")
 
         var items = ""
         var count = 0;
-        invoice?.salesInvoiceDetailRes?.forEach {
-            items += itemTemplateClean?.replace(Constants.Invoice.Index, it.slNo.toString())
+        invoice?.salesInvoiceDetail?.forEach {
+            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
                 ?.replace(Constants.Invoice.ProductName, it.productName.toString())
                 ?.replace(Constants.Invoice.Qty, it.qty.toString())
                 ?.replace(Constants.Invoice.Price, it.price.toString())
                 ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
             count += 1
-            if (count < (invoice?.salesInvoiceDetailRes?.size ?: 0)) {
+            if (count < (invoice?.salesInvoiceDetail?.size ?: 0)) {
                 items += "\n"
             }
         }
@@ -178,33 +179,33 @@ class InvoiceDetailsFragment : Fragment() {
         templateText = templateText?.replace(itemTemplate.toString(), items)
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceSubTotal, invoice?.salesInvoiceRes?.invoiceSubTotal.toString()
+            Constants.Invoice.InvoiceSubTotal, invoice?.salesInvoice?.invoiceSubTotal.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTax, invoice?.salesInvoiceRes?.invoiceTax.toString()
+            Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.invoiceTax.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNetTotal, invoice?.salesInvoiceRes?.invoiceNetTotal.toString()
+            Constants.Invoice.InvoiceNetTotal, invoice?.salesInvoice?.invoiceNetTotal.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceQty, invoice?.salesInvoiceRes?.invoiceQty.toString()
+            Constants.Invoice.InvoiceQty, invoice?.salesInvoice?.invoiceQty.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceBalanceAmount, invoice?.salesInvoiceRes?.balance.toString()
+            Constants.Invoice.InvoiceBalanceAmount, invoice?.salesInvoice?.balance.toString()
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceSignature,
-            "@@@" + invoice?.salesInvoiceRes?.signatureUrl().toString()
+            "@@@" + invoice?.salesInvoice?.signatureUrl().toString()
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceQR,
-            Constants.QRTagStart + invoice?.salesInvoiceRes?.zatcaQRCode.toString() + Constants.QRTagEnd
+            Constants.QRTagStart + invoice?.salesInvoice?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
         templateText?.let { PrinterManager.print(it) }
@@ -217,7 +218,7 @@ class InvoiceDetailsFragment : Fragment() {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<CustomerSaleTransaction>>
                 val index =
-                    res.result?.indexOf(CustomerSaleTransaction(transactionNo = invoice?.salesInvoiceRes?.invoiceNo))
+                    res.result?.indexOf(CustomerSaleTransaction(transactionNo = invoice?.salesInvoice?.invoiceNo))
                         ?: -1
                 if (index > -1) {
                     res.result?.get(index)?.let { payFor(it) }
@@ -231,7 +232,7 @@ class InvoiceDetailsFragment : Fragment() {
         }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading transaction details..."))
             .enque(
                 Network.api()
-                    ?.getSalesTransactions(SaleTransactionRequestBody(customerId = invoice?.salesInvoiceRes?.customerId.toString()))
+                    ?.getSalesTransactions(SaleTransactionRequestBody(customerId = invoice?.salesInvoice?.customerId.toString()))
             ).execute()
     }
 
@@ -276,7 +277,7 @@ class InvoiceDetailsFragment : Fragment() {
             locationId = session.defaultLocationId,
             receiptDate = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                 .replace(" ", "T").plus("Z"),
-            customerId = invoice?.salesInvoiceRes?.customerId,
+            customerId = invoice?.salesInvoice?.customerId,
             amount = transaction.appliedAmount,
             paymentTypeId = paymentType.value?.toInt(),
             items = arrayListOf(transaction)
@@ -310,7 +311,7 @@ class InvoiceDetailsFragment : Fragment() {
                             ?.last()
                     val name =
                         DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
+                            "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
                         name, AppSession[Constants.baseUrl] + downloadPath, requireActivity()
@@ -331,7 +332,7 @@ class InvoiceDetailsFragment : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Invoice Details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    invoice = (response?.body() as BaseResponse<SaleInvoiceResponse>).result
+                    invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
                     setData()
                 }
 

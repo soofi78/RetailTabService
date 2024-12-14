@@ -25,6 +25,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.Calculator
@@ -96,6 +97,7 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
     private fun setHeaderData() {
         binding.header.setBackText("Customer Transactions")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
@@ -192,7 +194,7 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
             }
 
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to create payment request")
+                Notify.toastLong("Unable to create payment request" + response?.error?.message)
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity()))
             .enque(Network.api()?.createSaleReceipt(request)).execute()

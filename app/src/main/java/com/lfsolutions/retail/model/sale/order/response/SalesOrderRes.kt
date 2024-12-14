@@ -19,15 +19,15 @@ data class SalesOrderRes(
     @SerializedName("customerName") var customerName: String? = null,
     @SerializedName("isCancelled") var isCancelled: Boolean? = null,
     @SerializedName("poNo") var poNo: String? = null,
-    @SerializedName("soItemDiscount") var soItemDiscount: Int? = null,
-    @SerializedName("soNetDiscountPerc") var soNetDiscountPerc: Int? = null,
-    @SerializedName("soNetDiscount") var soNetDiscount: Int? = null,
-    @SerializedName("soSubTotal") var soSubTotal: Int? = null,
-    @SerializedName("soTax") var soTax: Int? = null,
-    @SerializedName("soNetTotal") var soNetTotal: Int? = null,
-    @SerializedName("soRoundingAmount") var soRoundingAmount: Int? = null,
-    @SerializedName("otherCharges") var otherCharges: Int? = null,
-    @SerializedName("soGrandTotal") var soGrandTotal: Int? = null,
+    @SerializedName("soItemDiscount") var soItemDiscount: Double? = null,
+    @SerializedName("soNetDiscountPerc") var soNetDiscountPerc: Double? = null,
+    @SerializedName("soNetDiscount") var soNetDiscount: Double? = null,
+    @SerializedName("soSubTotal") var soSubTotal: Double? = null,
+    @SerializedName("soTax") var soTax: Double? = null,
+    @SerializedName("soNetTotal") var soNetTotal: Double? = null,
+    @SerializedName("soRoundingAmount") var soRoundingAmount: Double? = null,
+    @SerializedName("otherCharges") var otherCharges: Double? = null,
+    @SerializedName("soGrandTotal") var soGrandTotal: Double? = null,
     @SerializedName("salespersonId") var salespersonId: Int? = null,
     @SerializedName("deliveryPersonId") var deliveryPersonId: String? = null,
     @SerializedName("employeeId") var employeeId: String? = null,
@@ -43,16 +43,16 @@ data class SalesOrderRes(
     @SerializedName("branchId") var branchId: String? = null,
     @SerializedName("taxName") var taxName: String? = null,
     @SerializedName("type") var type: String? = null,
-    @SerializedName("paidAmount") var paidAmount: Int? = null,
-    @SerializedName("balance") var balance: Int? = null,
-    @SerializedName("usedAmount") var usedAmount: Int? = null,
+    @SerializedName("paidAmount") var paidAmount: Double? = null,
+    @SerializedName("balance") var balance: Double? = null,
+    @SerializedName("usedAmount") var usedAmount: Double? = null,
     @SerializedName("fromLocationId") var fromLocationId: String? = null,
     @SerializedName("salesInvoiceId") var salesInvoiceId: String? = null,
     @SerializedName("employeeName") var employeeName: String? = null,
     @SerializedName("fromLocationName") var fromLocationName: String? = null,
-    @SerializedName("orderedQty") var orderedQty: Int? = null,
-    @SerializedName("receivedQty") var receivedQty: Int? = null,
-    @SerializedName("balanceQty") var balanceQty: Int? = null,
+    @SerializedName("orderedQty") var orderedQty: Double? = null,
+    @SerializedName("receivedQty") var receivedQty: Double? = null,
+    @SerializedName("balanceQty") var balanceQty: Double? = null,
     @SerializedName("notified") var notified: Boolean? = null,
     @SerializedName("collected") var collected: Boolean? = null,
     @SerializedName("binLocation") var binLocation: String? = null,
@@ -62,8 +62,8 @@ data class SalesOrderRes(
     @SerializedName("currencyRate") var currencyRate: Int? = null,
     @SerializedName("isLuggageAccepted") var isLuggageAccepted: Boolean? = null,
     @SerializedName("module") var module: Int? = null,
-    @SerializedName("poQuantity") var poQuantity: Int? = null,
-    @SerializedName("orderedQuantity") var orderedQuantity: Int? = null,
+    @SerializedName("poQuantity") var poQuantity: Double? = null,
+    @SerializedName("orderedQuantity") var orderedQuantity: Double? = null,
     @SerializedName("addOn") var addOn: String? = null,
     @SerializedName("purchaseOrderId") var purchaseOrderId: String? = null,
     @SerializedName("walkInCustomerDetail") var walkInCustomerDetail: String? = null,
@@ -76,8 +76,13 @@ data class SalesOrderRes(
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: Int? = null,
     @SerializedName("signature") var signature: String? = null,
+    @SerializedName("address1") var address1: String? = null,
+    @SerializedName("address2") var address2: String? = null,
+    @SerializedName("paymentTermName") var paymentTermName: String? = null,
+    @SerializedName("zatcaQRCode") var zatcaQRCode: String? = null,
+    @SerializedName("isStockTransfer") var isStockTransfer: Boolean? = null
+) {
 
-    ) {
     fun InvoiceDateFormatted(): String {
         val date = DateTime.getDateFromString(
             soDate,
@@ -89,10 +94,16 @@ data class SalesOrderRes(
 
     fun StatusFormatted(): String {
         return when (status) {
-            "I" -> "INVOICED"
-            "A" -> "APPROVED"
-            "P" -> "PENDING"
-            else -> status.toString()
+            "I" -> "Invoiced"
+            "A" -> "Approved"
+            "H" -> "Partial"
+            "R" -> "Delivered"
+            "C" -> "Completed"
+            "PA" -> "Paid"
+            "RE" -> "Released"
+            "RF" -> "Refunded"
+            else -> "PENDING"
+
         }
     }
 

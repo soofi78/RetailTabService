@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.model
 
 data class LocationIdRequestObject(val locationId: Int? = null)
+data class LocationTenantIdRequestObject(val locationId: Int? = null,val tenantId: Int? = null)
 
 data class ProductListRB(val locationId: Int? = null,val type:String?=null)
 

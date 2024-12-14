@@ -30,7 +30,6 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
             binding.newServiceForm.visibility = View.GONE
             binding.newAgreementMemo.visibility = View.GONE
             binding.newSaleOrder.visibility = View.GONE
-            binding.newDeliveryOrder.visibility=View.VISIBLE
         }
 
         binding.newServiceForm.setOnClickListener {

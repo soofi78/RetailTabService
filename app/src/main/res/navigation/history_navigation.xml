@@ -52,6 +52,14 @@
             app:popExitAnim="@anim/fade_out" />
 
         <action
+            android:id="@+id/action_navigation_history_listing_delivery_order_to_details"
+            app:destination="@id/navigation_delivery_order_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
             android:id="@+id/action_navigation_receipt_history_fragment_to_receipt_details"
             app:destination="@id/navigation_receipt_detail"
             app:enterAnim="@anim/fade_in"
@@ -129,7 +137,6 @@
             app:argType="string"
             app:nullable="false" />
     </fragment>
-
 
 
     <fragment
@@ -211,6 +218,99 @@
             android:name="item"
             app:argType="string"
             app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_order_details_to_tax_invoice"
+            app:destination="@id/navigation_tax_invoice"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_order_details_to_delivery_order"
+            app:destination="@id/navigation_delivery_order"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_detail"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_delivery_order_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_tax_invoice"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceFragment"
+        android:label="Tax Invoice"
+        tools:layout="@layout/fragment_sale_order_tax_invoice">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_tax_invoice_to_open_tax_invoice_product_list"
+            app:destination="@id/navigation_tax_invoice_product_list"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_tax_invoice_to_open_products_summary"
+            app:destination="@id/navigation_tax_invoice_summary"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_tax_invoice_summary"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceSummaryFragment"
+        android:label="Product"
+        tools:layout="@layout/fragment_tax_invoice_summary" />
+
+
+    <fragment
+        android:id="@+id/navigation_tax_invoice_product_list"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceProductList"
+        android:label="Product"
+        tools:layout="@layout/fragment_sale_order_invoice_stock_equipment_list">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_tax_invoice_equipment_list_to_navigation_tax_invoice_add_product_to_cart"
+            app:destination="@id/navigation_add_product_to_tax_invoice"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_product_to_tax_invoice"
+        android:name="com.lfsolutions.retail.ui.taxinvoice.AddProductToTaxInvoiceFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
     <fragment
@@ -245,5 +345,68 @@
             app:argType="string"
             app:nullable="false" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderFragment"
+        android:label="Tax Invoice"
+        tools:layout="@layout/fragment_sale_order_tax_invoice">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_to_delivery_order_product_list"
+            app:destination="@id/navigation_delivery_order_product_list"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_to_open_products_summary"
+            app:destination="@id/navigation_delivery_order_summary"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_product_list"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderProductList"
+        android:label="Product"
+        tools:layout="@layout/fragment_sale_order_invoice_stock_equipment_list">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_equipment_list_to_navigation_delivery_order_add_product_to_cart"
+            app:destination="@id/navigation_add_product_to_delivery_order"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_product_to_delivery_order"
+        android:name="com.lfsolutions.retail.ui.delivery.order.AddProductToDeliveryOrderFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_summary"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderSummaryFragment"
+        android:label="Product"
+        tools:layout="@layout/fragment_delivery_order_summary" />
 
 </navigation>

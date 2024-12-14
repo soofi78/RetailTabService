@@ -118,15 +118,10 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         query.split(" ").toSet().forEach {
             contains =
                 contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.country?.lowercase()?.contains(it) == true
-                        || customer.area?.lowercase()?.contains(it) == true
+                        || customer.customerCode?.lowercase()?.contains(it) == true
                         || customer.address1?.lowercase()?.contains(it) == true
                         || customer.address2?.lowercase()?.contains(it) == true
-                        || customer.address3?.lowercase()?.contains(it) == true
-                        || customer.customerCode?.lowercase()?.contains(it) == true
-                        || customer.email?.lowercase()?.contains(it) == true
-                        || customer.salespersonName?.lowercase()?.contains(it) == true
-                        || customer.city?.lowercase()?.contains(it) == true)
+                        || customer.address3?.lowercase()?.contains(it) == true)
         }
         return contains
     }
@@ -138,13 +133,13 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         }
         val modal = GenerateInComingStockBottomSheet()
         modal.setOnConfirmClickListener {
-            outGoingStockConfirmClicked(scheduledList)
+            inComingStockConfirmClicked(scheduledList)
         }
         modal.setList(scheduledList)
         requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
     }
 
-    private fun outGoingStockConfirmClicked(scheduledList: java.util.ArrayList<Customer>) {
+    private fun inComingStockConfirmClicked(scheduledList: java.util.ArrayList<Customer>) {
         val ids = arrayListOf<Int>()
         scheduledList.forEach {
             it.id?.let { it1 -> ids.add(it1) }
@@ -156,7 +151,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val outGoingProducts =
                         (response?.body() as RetailResponse<OutGoingStockProductsResults>).result?.items
-                    openInStockProductSummaryActivity(outGoingProducts)
+                    openInStockProductSummaryActivity(outGoingProducts, ids.get(0))
                     Notify.toastLong("Success")
                 }
 
@@ -166,9 +161,13 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }).execute()
     }
 
-    private fun openInStockProductSummaryActivity(stockTransferProducts: java.util.ArrayList<StockTransferProduct>?) {
+    private fun openInStockProductSummaryActivity(
+        stockTransferProducts: java.util.ArrayList<StockTransferProduct>?,
+        customerId: Int
+    ) {
         startActivity(Intent(requireActivity(), IncomingStockFlowActivity::class.java).apply {
             putExtra(Constants.InComingProducts, Gson().toJson(stockTransferProducts))
+            putExtra(Constants.CustomerId,customerId)
         })
     }
 

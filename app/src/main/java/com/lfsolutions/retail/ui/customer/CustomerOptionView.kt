@@ -9,9 +9,12 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.CustomerOptionsSheetBinding
+import com.lfsolutions.retail.model.AllCustomersResult
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerPaymentsResult
+import com.lfsolutions.retail.model.LocationTenantIdRequestObject
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -57,7 +60,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     customers =
-                        (response?.body() as RetailResponse<CustomerPaymentsResult>).result?.items!!
+                        (response?.body() as BaseResponse<AllCustomersResult>).result?.items!!
                     setCustomerAdapter(customers, binding.searchView.query.toString())
                 }
 
@@ -65,7 +68,14 @@ class CustomerOptionView : BottomSheetDialogFragment() {
                     Notify.toastLong("Unable to get customer data")
                 }
             }).autoLoadigCancel(Loading().forApi(requireActivity()))
-            .enque(Network.api()?.getCustomersForPayment()).execute()
+            .enque(
+                Network.api()?.getAllCustomers(
+                    LocationTenantIdRequestObject(
+                        Main.app.getSession().defaultLocationId,
+                        Main.app.getSession().tenantId
+                    )
+                )
+            ).execute()
         else setCustomerAdapter(customers, binding.searchView.query.toString())
     }
 
@@ -94,15 +104,10 @@ class CustomerOptionView : BottomSheetDialogFragment() {
         query.split(" ").toSet().forEach {
             contains =
                 contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.country?.lowercase()?.contains(it) == true
-                        || customer.area?.lowercase()?.contains(it) == true
+                        || customer.customerCode?.lowercase()?.contains(it) == true
                         || customer.address1?.lowercase()?.contains(it) == true
                         || customer.address2?.lowercase()?.contains(it) == true
-                        || customer.address3?.lowercase()?.contains(it) == true
-                        || customer.customerCode?.lowercase()?.contains(it) == true
-                        || customer.email?.lowercase()?.contains(it) == true
-                        || customer.salespersonName?.lowercase()?.contains(it) == true
-                        || customer.city?.lowercase()?.contains(it) == true)
+                        || customer.address3?.lowercase()?.contains(it) == true)
         }
         return contains
     }

@@ -17,6 +17,7 @@ import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
+import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.PaymentType
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
@@ -26,6 +27,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
 import com.lfsolutions.retail.ui.widgets.options.OptionItem
@@ -45,7 +47,7 @@ import java.util.Date
 
 class TaxInvoiceFragment : Fragment() {
 
-    private lateinit var paymentTypes: ArrayList<PaymentType>
+//    private lateinit var paymentTypes: ArrayList<PaymentType>
     private lateinit var binding: FragmentSaleOrderTaxInvoiceBinding
     private val args by navArgs<TaxInvoiceFragmentArgs>()
     private lateinit var customer: Customer
@@ -60,26 +62,27 @@ class TaxInvoiceFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentSaleOrderTaxInvoiceBinding.inflate(inflater, container, false)
-            Main.app.clearTaxInvoice()
-            Main.app.getTaxInvoice()
-            Main.app.getTaxInvoice()?.SalesInvoice?.CreatorUserId = Main.app.getSession().userId
-            Main.app.getTaxInvoice()?.SalesInvoice?.CustomerId = customer.id
-            Main.app.getTaxInvoice()?.SalesInvoice?.LocationId =
+            if (Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId == null)
+                Main.app.clearTaxInvoice()
+            Main.app.getTaxInvoice()?.salesInvoice?.creatorUserId = Main.app.getSession().userId
+            Main.app.getTaxInvoice()?.salesInvoice?.customerId = customer.id
+            Main.app.getTaxInvoice()?.salesInvoice?.locationId =
                 Main.app.getSession().defaultLocationId
-            Main.app.getTaxInvoice()?.SalesInvoice?.SalespersonId =
+            Main.app.getTaxInvoice()?.salesInvoice?.salespersonId =
                 Main.app.getSession().salesPersonId
-            Main.app.getTaxInvoice()?.SalesInvoice?.CreationTime =
+            Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
-            Main.app.getTaxInvoice()?.SalesInvoice?.DeliveryOrderDate =
+            Main.app.getTaxInvoice()?.salesInvoice?.deliveryOrderDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
-            Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDate =
+            Main.app.getTaxInvoice()?.salesInvoice?.invoiceDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
-            Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDueDate =
+            Main.app.getTaxInvoice()?.salesInvoice?.invoiceDueDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
+//            getPaymentTerms()
         }
         return binding.root
 
@@ -96,19 +99,35 @@ class TaxInvoiceFragment : Fragment() {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.setText("$day-$month-$year")
-                    Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDate =
+                    Main.app.getTaxInvoice()?.salesInvoice?.invoiceDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
         }
     }
 
+//    private fun getPaymentTerms() {
+//        NetworkCall.make().setCallback(object : OnNetworkResponse {
+//            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+//                val result = response?.body() as BaseResponse<PaymentTermsResult>
+//                result.result?.items?.let {
+//                    paymentTypes.addAll(it)
+//                }
+//                setPaymentTermsAdapter()
+//            }
+//
+//            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+//                Notify.toastLong("Unable to load payment types")
+//            }
+//        }).autoLoadigCancel(Loading().forApi(requireActivity()))
+//            .enque(Network.api()?.getPaymentTerms()).execute()
+//    }
+
     private fun setHeaderData() {
-        binding.header.setBackText("Tax Invoice")
+        binding.header.setBackText("Sale Invoice")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
-        binding.header.setOnBackClick {
-            findNavController().popBackStack()
-        }
+        binding.header.setOnBackClick { findNavController().popBackStack() }
         binding.btnCancel.setOnClickListener { findNavController().popBackStack() }
     }
 
@@ -131,16 +150,14 @@ class TaxInvoiceFragment : Fragment() {
         }
     }
 
-    private fun setPaymentTermsAdapter() {
-        val adapter = ArrayAdapter(
-            requireActivity(), R.layout.simple_text_item, paymentTypes
-        )
-        binding.spinnerPaymentTerms.adapter = adapter
-    }
+//    private fun setPaymentTermsAdapter() {
+//        val adapter = ArrayAdapter(requireActivity(), R.layout.simple_text_item, paymentTypes)
+//        binding.spinnerPaymentTerms.adapter = adapter
+//    }
 
     private fun addOnClickListener() {
         binding.btnLoadProducts.setOnClickListener {
-            if (Main.app.getTaxInvoice()?.SalesInvoiceDetail.isNullOrEmpty().not()) {
+            if (Main.app.getTaxInvoice()?.salesInvoiceDetail.isNullOrEmpty().not()) {
                 Notify.toastLong("Please clear the cart first!")
                 return@setOnClickListener
             }
@@ -164,7 +181,7 @@ class TaxInvoiceFragment : Fragment() {
         }
 
         binding.btnSave.setOnClickListener {
-            if (Main.app.getTaxInvoice()?.SalesInvoiceDetail?.size == 0) {
+            if (Main.app.getTaxInvoice()?.salesInvoiceDetail?.size == 0) {
                 Notify.toastLong("Please add products")
                 return@setOnClickListener
             }
@@ -175,9 +192,9 @@ class TaxInvoiceFragment : Fragment() {
             }
 
             Main.app.getTaxInvoice()?.serializeItems()
-            Main.app.getTaxInvoice()?.SalesInvoice?.CustomerName =
+            Main.app.getTaxInvoice()?.salesInvoice?.customerName =
                 binding.inputCustomerName.text.toString()
-            Main.app.getTaxInvoice()?.SalesInvoice?.PaymentTermId = customer.paymentTermId
+            Main.app.getTaxInvoice()?.salesInvoice?.paymentTermId = customer.paymentTermId
             uploadSignature()
         }
     }
@@ -217,40 +234,40 @@ class TaxInvoiceFragment : Fragment() {
             val total = (subTotal + taxAmount)
             Main.app.getTaxInvoice()?.addEquipment(
                 SalesInvoiceDetail(
-                    ProductId = product.productId?.toInt() ?: 0,
-                    InventoryCode = product.inventoryCode,
-                    ProductName = product.productName,
-                    ProductImage = product.imagePath,
-                    UnitId = product.unitId,
-                    UnitName = product.unitName,
-                    Qty = qty,
-                    QtyStock = product.qtyOnHand,
-                    Price = subTotal,
-                    NetCost = total,
-                    CostWithoutTax = product.cost ?: 0.0,
-                    DepartmentId = 0,
-                    LastPurchasePrice = 0.0,
-                    SellingPrice = 0.0,
-                    MRP = 0,
-                    IsBatch = false,
-                    ItemDiscount = 0.0,
-                    ItemDiscountPerc = 0.0,
-                    AverageCost = 0,
-                    NetDiscount = 0.0,
-                    SubTotal = subTotal,
-                    NetTotal = netTotal,
-                    Tax = taxAmount,
-                    TotalValue = subTotal,
-                    IsFOC = false,
-                    IsExchange = false,
-                    IsExpire = false,
-                    CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                    productId = product.productId?.toInt() ?: 0,
+                    inventoryCode = product.inventoryCode,
+                    productName = product.productName,
+                    productImage = product.imagePath,
+                    unitId = product.unitId,
+                    unitName = product.unitName,
+                    qty = qty,
+                    qtyStock = product.qtyOnHand,
+                    price = subTotal,
+                    netCost = total,
+                    costWithoutTax = product.cost ?: 0.0,
+                    departmentId = 0,
+                    lastPurchasePrice = 0.0,
+                    sellingPrice = 0.0,
+                    mrp = 0,
+                    isBatch = false,
+                    itemDiscount = 0.0,
+                    itemDiscountPerc = 0.0,
+                    averageCost = 0.0,
+                    netDiscount = 0.0,
+                    subTotal = subTotal,
+                    netTotal = netTotal,
+                    tax = taxAmount,
+                    totalValue = subTotal,
+                    isFOC = false,
+                    isExchange = false,
+                    isExpire = false,
+                    creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                         .replace(" ", "T").plus("Z"),
-                    CreatorUserId = Main.app.getSession().userId
+                    creatorUserId = Main.app.getSession().userId.toString()
                 ).apply {
                     product.applicableTaxes?.let {
-                        ApplicableTaxes = it
-                        TaxForProduct = it
+                        applicableTaxes = it
+                        taxForProduct = it
                     }
                 })
         }
@@ -264,7 +281,7 @@ class TaxInvoiceFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val result = (response?.body() as RetailResponse<SignatureUploadResult>)
                     val signature = result.result
-                    Main.app.getTaxInvoice()?.SalesInvoice?.Signature = signature?.filePath
+                    Main.app.getTaxInvoice()?.salesInvoice?.signature = signature?.filePath
                     saveTaxInvoice()
                 }
 
@@ -283,17 +300,17 @@ class TaxInvoiceFragment : Fragment() {
                     val result = response?.body() as BaseResponse<Any>
                     if (result.success == true) {
                         Main.app.clearTaxInvoice()
-                        Notify.toastLong("Tax Invoice Created")
+                        Notify.toastLong("Sale Invoice Created")
                         findNavController().popBackStack()
                     } else {
-                        Notify.toastLong("Unable create tax invoice: ${result.result}")
+                        Notify.toastLong("Unable create Sale invoice: ${result.result}")
                     }
                 }
 
                 override fun onFailure(
                     call: Call<*>?, response: BaseResponse<*>?, tag: Any?
                 ) {
-                    Notify.toastLong("Unable create tax invoice")
+                    Notify.toastLong("Unable create sale invoice")
                 }
             }).enque(Network.api()?.createUpdateSaleInvoice(Main.app.getTaxInvoice()!!)).execute()
     }
@@ -308,6 +325,11 @@ class TaxInvoiceFragment : Fragment() {
             )
         )
         return filePart
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Main.app.clearTaxInvoice()
     }
 
 }

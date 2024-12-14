@@ -26,6 +26,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
@@ -71,9 +72,9 @@ class ServiceFormFragment : Fragment() {
                     .plus("Z")
             Main.app.getComplaintService()?.complaintService?.creatorUserId =
                 Main.app.getSession().userId.toString()
-
             Main.app.getComplaintService()?.complaintService?.csDate =
                 Main.app.getComplaintService()?.complaintService?.creationTime
+            binding.txtRcpntName.text = Main.app.getSession().userName
         }
         return binding.root
     }
@@ -116,36 +117,28 @@ class ServiceFormFragment : Fragment() {
 
     private fun setClickListener() {
         binding.btnCheckIn.setOnClickListener {
-            DateTime.showTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
-                override fun onTimeSelected(hours: String, minutes: String, seconds: String) {
-                    val dateTime =
-                        DateTime.getCurrentDateTime(DateTime.DateFormatRetail) + " $hours:$minutes:$seconds"
-                    val dateTimeObject =
-                        DateTime.getDateFromString(dateTime, DateTime.DateTimetRetailFormat)
-                    val formattedDateTime =
-                        DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
-                    binding.checkinTime.text = formattedDateTime
-                    binding.checkinTime.tag = dateTime
-                    Main.app.getComplaintService()?.complaintService?.timeIn = dateTime
-                }
-            })
+            val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                .plus("Z")
+            val dateTimeObject =
+                DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val formattedDateTime =
+                DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
+            binding.checkinTime.text = formattedDateTime
+            binding.checkinTime.tag = time
+            Main.app.getComplaintService()?.complaintService?.timeIn = time
+
         }
 
 
         binding.btnCheckOut.setOnClickListener {
-            DateTime.showTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
-                override fun onTimeSelected(hours: String, minutes: String, seconds: String) {
-                    val dateTime =
-                        DateTime.getCurrentDateTime(DateTime.DateFormatRetail) + " $hours:$minutes:$seconds"
-                    val dateTimeObject =
-                        DateTime.getDateFromString(dateTime, DateTime.DateTimetRetailFormat)
-                    val formattedDateTime =
-                        DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
-                    binding.checkoutTime.text = formattedDateTime
-                    binding.checkoutTime.tag = dateTime
-                    Main.app.getComplaintService()?.complaintService?.timeOut = dateTime
-                }
-            })
+            val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                .plus("Z")
+            val dateTimeObject =
+                DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val formattedDateTime =
+                DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
+            binding.checkoutTime.text = formattedDateTime
+            binding.checkoutTime.tag = time
         }
 
         binding.complainantCard.setOnClickListener {
@@ -203,7 +196,6 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun onPrintAndSave() {
-
         if (isAllFeedbackSelected().not()) {
             Notify.toastLong("Please select all feedbacks")
             return
@@ -218,6 +210,8 @@ class ServiceFormFragment : Fragment() {
             Notify.toastLong("Please add your signature")
             return
         }
+
+        Main.app.getComplaintService()?.complaintService?.remarks = binding.remarks.text.toString()
         uploadSignature()
     }
 
@@ -316,7 +310,7 @@ class ServiceFormFragment : Fragment() {
         feedbacks.forEach { feedback ->
             val item = FeedbackItemView(context, feedback)
             binding.feedbackViewHandler.addView(item)
-            item.setup()
+            item.setup(false)
         }
     }
 
@@ -367,6 +361,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Service Form")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()

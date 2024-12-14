@@ -31,7 +31,7 @@ data class SalesOrder(
     @SerializedName("ProfitMargin") var ProfitMargin: Double? = null,
     @SerializedName("Remarks") var Remarks: String? = null,
     @SerializedName("CreditDays") var CreditDays: Int? = null,
-    @SerializedName("Status") var Status: String? = null,
+    @SerializedName("Status") var Status: String? = "A",
     @SerializedName("SalesOrderStatusId") var SalesOrderStatusId: String? = null,
     @SerializedName("PaymentTermId") var PaymentTermId: Int? = null,
     @SerializedName("TenantId") var TenantId: Int? = null,

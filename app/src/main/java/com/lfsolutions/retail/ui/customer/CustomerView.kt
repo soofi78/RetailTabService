@@ -31,4 +31,6 @@ class CustomerView : LinearLayout {
         binding?.txtCustomerName?.text = customer.name
         binding?.txtAddress?.text = customer.address1
     }
+
+
 }

@@ -51,7 +51,9 @@ class OutGoingStockBottomNavigationFragment : Fragment() {
                         requireActivity().supportFragmentManager.beginTransaction()
                     ft.replace(
                         R.id.nav_host_fragment_activity,
-                        OutGoingStockSummaryFragment(),
+                        OutGoingStockSummaryFragment {
+                            openEquipmentList()
+                        },
                         "NewFragmentTag"
                     )
                     ft.commit()
@@ -68,7 +70,10 @@ class OutGoingStockBottomNavigationFragment : Fragment() {
         } else {
             mBinding.navView.selectedItemId = R.id.navigation_outgoing_summary_menu
         }
+    }
 
+    private fun openEquipmentList() {
+        mBinding.navView.selectedItemId = R.id.navigation_outgoing_equipment_list_menu
     }
 
 }

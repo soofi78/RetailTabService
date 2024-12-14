@@ -21,7 +21,7 @@ data class StockTransferProduct(
     @SerializedName("qtyOnHand") var qtyOnHand: Long = 0,
     @SerializedName("cost") var cost: Double = 0.0,
     @SerializedName("imagePath") var imagePath: String? = null,
-    @SerializedName("isAsset") var isAsset: Boolean? = null,
+    @SerializedName("isAsset") var isAsset: Boolean? = false,
     @SerializedName("type") var type: String? = null,
     @SerializedName("price") var price: Double = 0.0,
     @SerializedName("subTotal") var subTotal: Double = 0.0,
@@ -108,6 +108,11 @@ data class StockTransferProduct(
 
     override fun getSerializedNumber(): String {
         return slNo.toString()
+    }
+
+    fun calculateAmount() {
+        totalCost = cost * qty
+        totalPrice = price * qty
     }
 }
 

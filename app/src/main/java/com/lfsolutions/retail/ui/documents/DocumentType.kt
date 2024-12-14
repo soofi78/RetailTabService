@@ -14,6 +14,7 @@ sealed class DocumentType {
         DocumentType()
 
     data class DriverMemo(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class CurrentStock(override val label: Int, override val iconResId: Int) : DocumentType()
     data class Payment(override val label: Int, override val iconResId: Int) : DocumentType()
     data class History(override val label: Int, override val iconResId: Int) : DocumentType()
 

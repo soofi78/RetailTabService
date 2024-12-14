@@ -1,78 +1,185 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import android.util.Log
-import com.lfsolutions.retail.model.memo.ProductBatchList
-
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.ApplicableTaxes
+import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.model.sale.TaxForProduct
+import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 
 data class SalesInvoiceDetail(
 
-    @SerializedName("Id") var Id: String? = null,
-    @SerializedName("SalesInvoiceId") var SalesInvoiceId: Int? = 0,
-    @SerializedName("ProductId") var ProductId: Int? = null,
-    @SerializedName("InventoryCode") var InventoryCode: String? = null,
-    @SerializedName("ProductName") var ProductName: String? = null,
-    @SerializedName("ProductImage") @Transient var ProductImage: String? = null,
-    @SerializedName("Qty") var Qty: Double = 0.0,
-    @SerializedName("Price") var Price: Double? = null,
-    @SerializedName("UnitId") var UnitId: Int? = null,
-    @SerializedName("UnitName") var UnitName: String? = null,
-    @SerializedName("ItemDiscountPerc") var ItemDiscountPerc: Double? = 0.0,
-    @SerializedName("ItemDiscount") var ItemDiscount: Double? = null,
-    @SerializedName("SubTotal") var SubTotal: Double = 0.0,
-    @SerializedName("Tax") var Tax: Double = 0.0,
-    @SerializedName("TaxRate") @Transient var TaxRate: Double = 0.0,
-    @SerializedName("NetTotal") var NetTotal: Double = 0.0,
-    @SerializedName("HSNCode") var HSNCode: String? = null,
-    @SerializedName("SlNo") var SlNo: Int? = null,
-    @SerializedName("Remarks") var Remarks: String? = null,
-    @SerializedName("TaxForProduct") var TaxForProduct: ArrayList<ApplicableTaxes> = arrayListOf(),
-    @SerializedName("ApplicableTaxes") var ApplicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
-    @SerializedName("ProductBarcode") var ProductBarcode: String? = null,
-    @SerializedName("AverageCost") var AverageCost: Int? = 0,
-    @SerializedName("NetCost") var NetCost: Double? = 0.0,
-    @SerializedName("CostWithoutTax") @Transient var CostWithoutTax: Double = 0.0,
-    @SerializedName("DepartmentId") var DepartmentId: Int? = null,
-    @SerializedName("SalesAccountId") var SalesAccountId: String? = null,
-    @SerializedName("QtyStock") var QtyStock: Double? = 0.0,
-    @SerializedName("LastPurchasePrice") var LastPurchasePrice: Double? = null,
-    @SerializedName("SellingPrice") var SellingPrice: Double? = 0.0,
-    @SerializedName("MRP") var MRP: Int? = null,
-    @SerializedName("Locations") var Locations: String? = null,
-    @SerializedName("Vendors") var Vendors: String? = null,
-    @SerializedName("Departments") var Departments: String? = null,
-    @SerializedName("Categories") var Categories: String? = null,
-    @SerializedName("Brands") var Brands: String? = null,
-    @SerializedName("Publishers") var Publishers: String? = null,
-    @SerializedName("Authors") var Authors: String? = null,
-    @SerializedName("Products") var Products: String? = null,
-    @SerializedName("LocationGroup") var LocationGroup: String? = null,
-    @SerializedName("Payments") var Payments: String? = null,
-    @SerializedName("Type") var Type: String? = null,
-    @SerializedName("ProductBatchList") var ProductBatchList: ArrayList<ProductBatchList> = arrayListOf(),
-    @SerializedName("ItemSerialNumber") var ItemSerialNumber: String? = null,
-    @SerializedName("TotalValue") var TotalValue: Double = 0.0,
-    @SerializedName("NetDiscount") var NetDiscount: Double = 0.0,
-    @SerializedName("IsExchange") var IsExchange: Boolean? = null,
-    @SerializedName("IsExpire") var IsExpire: Boolean? = null,
-    @SerializedName("IsBatch") var IsBatch: Boolean? = null,
-    @SerializedName("IsFOC") var IsFOC: Boolean? = null,
-    @SerializedName("PriceGroupId") var PriceGroupId: String? = null,
-    @SerializedName("TransactionRemarks") var TransactionRemarks: String? = null,
-    @SerializedName("IsDeleted") var IsDeleted: Boolean? = false,
-    @SerializedName("DeleterUserId") var DeleterUserId: String? = null,
-    @SerializedName("DeletionTime") var DeletionTime: String? = null,
-    @SerializedName("LastModificationTime") var LastModificationTime: String? = null,
-    @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
-    @SerializedName("CreationTime") var CreationTime: String? = null,
-    @SerializedName("CreatorUserId") var CreatorUserId: Int? = null
+    @SerializedName("Id", alternate = arrayOf("id")) var id: Int? = null,
+    @SerializedName(
+        "SalesInvoiceId",
+        alternate = arrayOf("salesInvoiceId")
+    ) var salesInvoiceId: Int? = null,
+    @SerializedName("ProductId", alternate = arrayOf("productId")) var productId: Int? = null,
+    @SerializedName(
+        "InventoryCode",
+        alternate = arrayOf("inventoryCode")
+    ) var inventoryCode: String? = null,
+    @SerializedName(
+        "ProductName",
+        alternate = arrayOf("productName")
+    ) var productName: String? = null,
+    @SerializedName("productImage") var productImage: String? = null,
+    @SerializedName("Qty", alternate = arrayOf("qty")) var qty: Double? = 0.0,
+    @SerializedName("Price", alternate = arrayOf("price")) var price: Double? = 0.0,
+    @SerializedName("UnitId", alternate = arrayOf("unitId")) var unitId: Int? = null,
+    @SerializedName("UnitName", alternate = arrayOf("unitName")) var unitName: String? = null,
+    @SerializedName(
+        "ItemDiscountPerc",
+        alternate = arrayOf("itemDiscountPerc")
+    ) var itemDiscountPerc: Double? = null,
+    @SerializedName(
+        "ItemDiscount",
+        alternate = arrayOf("itemDiscount")
+    ) var itemDiscount: Double? = null,
+    @SerializedName("SubTotal", alternate = arrayOf("subTotal")) var subTotal: Double? = null,
+    @SerializedName("Tax", alternate = arrayOf("tax")) var tax: Double? = null,
+    @SerializedName("TaxRate", alternate = arrayOf("taxRate")) var taxRate: Double = 0.0,
+    @SerializedName(
+        "CostWithoutTax",
+        alternate = arrayOf("costWithoutTax")
+    ) var costWithoutTax: Double = 0.0,
+    @SerializedName("NetTotal", alternate = arrayOf("netTotal")) var netTotal: Double? = null,
+    @SerializedName("HsnCode", alternate = arrayOf("hsnCode")) var hsnCode: String? = null,
+    @SerializedName("SlNo", alternate = arrayOf("slNo")) var slNo: Int? = null,
+    @SerializedName("Remarks", alternate = arrayOf("remarks")) var remarks: String? = null,
+    @SerializedName(
+        "TaxForProduct",
+        alternate = arrayOf("taxForProduct")
+    ) var taxForProduct: ArrayList<ApplicableTaxes> = arrayListOf(),
+    @SerializedName(
+        "ApplicableTaxes",
+        alternate = arrayOf("applicableTaxes")
+    ) var applicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
+    @SerializedName(
+        "ProductBarcode",
+        alternate = arrayOf("productBarcode")
+    ) var productBarcode: String? = null,
+    @SerializedName(
+        "AverageCost",
+        alternate = arrayOf("averageCost")
+    ) var averageCost: Double? = null,
+    @SerializedName("NetCost", alternate = arrayOf("netCost")) var netCost: Double? = null,
+    @SerializedName(
+        "DepartmentId",
+        alternate = arrayOf("departmentId")
+    ) var departmentId: Int? = null,
+    @SerializedName(
+        "SalesAccountId",
+        alternate = arrayOf("salesAccountId")
+    ) var salesAccountId: String? = null,
+    @SerializedName("QtyStock", alternate = arrayOf("qtyStock")) var qtyStock: Double? = null,
+    @SerializedName(
+        "LastPurchasePrice",
+        alternate = arrayOf("lastPurchasePrice")
+    ) var lastPurchasePrice: Double? = null,
+    @SerializedName(
+        "SellingPrice",
+        alternate = arrayOf("sellingPrice")
+    ) var sellingPrice: Double? = null,
+    @SerializedName("MRP", alternate = arrayOf("mrp")) var mrp: Int? = null,
+    @SerializedName("Locations", alternate = arrayOf("locations")) var locations: String? = null,
+    @SerializedName("Vendors", alternate = arrayOf("vendors")) var vendors: String? = null,
+    @SerializedName(
+        "Departments",
+        alternate = arrayOf("departments")
+    ) var departments: String? = null,
+    @SerializedName("Categories", alternate = arrayOf("categories")) var categories: String? = null,
+    @SerializedName("Brands", alternate = arrayOf("brands")) var brands: String? = null,
+    @SerializedName("Publishers", alternate = arrayOf("publishers")) var publishers: String? = null,
+    @SerializedName("Authors", alternate = arrayOf("authors")) var authors: String? = null,
+    @SerializedName("Products", alternate = arrayOf("products")) var products: String? = null,
+    @SerializedName(
+        "LocationGroup",
+        alternate = arrayOf("locationGroup")
+    ) var locationGroup: String? = null,
+    @SerializedName("Payments", alternate = arrayOf("payments")) var payments: String? = null,
+    @SerializedName("Type", alternate = arrayOf("type")) var type: String? = null,
+    @SerializedName(
+        "ProductBatchList",
+        alternate = arrayOf("productBatchList")
+    ) var productBatchList: ArrayList<ProductBatchList>? = null,
+    @SerializedName(
+        "ItemSerialNumber",
+        alternate = arrayOf("itemSerialNumber")
+    ) var itemSerialNumber: String? = null,
+    @SerializedName("TotalValue", alternate = arrayOf("totalValue")) var totalValue: Double? = null,
+    @SerializedName(
+        "NetDiscount",
+        alternate = arrayOf("netDiscount")
+    ) var netDiscount: Double? = 0.0,
+    @SerializedName(
+        "IsExchange",
+        alternate = arrayOf("isExchange")
+    ) var isExchange: Boolean? = false,
 
-) {
+    @SerializedName(
+        "changeunitflag"
+    ) var changeunitflag: Boolean? = false,
+    @SerializedName("IsExpire", alternate = arrayOf("isExpire")) var isExpire: Boolean? = false,
+    @SerializedName("IsBatch", alternate = arrayOf("isBatch")) var isBatch: Boolean? = false,
+    @SerializedName("IsFOC", alternate = arrayOf("isFOC")) var isFOC: Boolean? = false,
+    @SerializedName(
+        "PriceGroupId",
+        alternate = arrayOf("priceGroupId")
+    ) var priceGroupId: String? = null,
+    @SerializedName(
+        "TransactionRemarks",
+        alternate = arrayOf("transactionRemarks")
+    ) var transactionRemarks: String? = null,
+    @SerializedName("IsDeleted", alternate = arrayOf("isDeleted")) var isDeleted: Boolean? = null,
+    @SerializedName(
+        "DeleterUserId",
+        alternate = arrayOf("deleterUserId")
+    ) var deleterUserId: String? = null,
+    @SerializedName(
+        "DeletionTime",
+        alternate = arrayOf("deletionTime")
+    ) var deletionTime: String? = null,
+    @SerializedName(
+        "LastModificationTime",
+        alternate = arrayOf("lastModificationTime")
+    ) var lastModificationTime: String? = null,
+    @SerializedName(
+        "LastModifierUserId",
+        alternate = arrayOf("lastModifierUserId")
+    ) var lastModifierUserId: String? = null,
+    @SerializedName(
+        "CreationTime",
+        alternate = arrayOf("creationTime")
+    ) var creationTime: String? = null,
+    @SerializedName(
+        "CreatorUserId",
+        alternate = arrayOf("creatorUserId")
+    ) var creatorUserId: String? = null,
+) : HistoryItemInterface {
+    override fun getTitle(): String {
+        return productName.toString()
+    }
+
+    override fun getDescription(): String {
+        return "$unitName x$qty"
+    }
+
+    override fun getAmount(): String {
+        return Main.app.getSession().currencySymbol + netTotal?.formatDecimalSeparator()
+    }
+
+    override fun getSerializedNumber(): String {
+        return slNo.toString()
+    }
+
     fun getSerialNumbers(): String {
         var serials = ""
-        ProductBatchList?.forEach {
+        productBatchList?.forEach {
             Log.d("Serial", it.SerialNumber.toString())
             serials +=
                 if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber
@@ -81,8 +188,9 @@ data class SalesInvoiceDetail(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (ProductId == (other as SalesInvoiceDetail).ProductId)
+        if (productId == (other as SalesInvoiceDetail).productId)
             return true
         return super.equals(other)
     }
+
 }

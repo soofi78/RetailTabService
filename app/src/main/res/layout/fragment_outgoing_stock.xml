@@ -388,14 +388,28 @@
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinnerLocations"
+                    <TextView
+                        android:id="@+id/toWareHouseName"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
+                        android:layout_gravity="start"
                         android:layout_weight="1"
-                        android:background="@drawable/spinner_background"
-                        android:padding="3dp"
-                        android:textAlignment="center" />
+                        android:background="@drawable/rounded_corner_gray_background"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:text="Ware House"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+<!--                    <androidx.appcompat.widget.AppCompatSpinner-->
+<!--                        android:id="@+id/spinnerLocations"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:background="@drawable/spinner_background"-->
+<!--                        android:padding="3dp"-->
+<!--                        android:textAlignment="center" />-->
 
 
                 </LinearLayout>
@@ -428,6 +442,14 @@
                     android:layout_marginTop="15dp"
                     android:background="@drawable/rounded_corner_yellow_background"
                     android:text="@string/label_open_equipment_list" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnLoadCurrentStock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rounded_corner_yellow_background"
+                    android:text="@string/label_load_current_stock" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnViewOrder"

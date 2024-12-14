@@ -9,13 +9,13 @@ import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
+import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 
 class HistoryListAdapter(
     private val items: ArrayList<HistoryItemInterface>,
     private val mListener: OnItemClickedListener,
     private val onChecked: OnCheckedChangeListener? = null,
     private val clone: Boolean = false,
-    private val checkable: Boolean = false
 ) :
     RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
@@ -30,14 +30,23 @@ class HistoryListAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items.get(position)
+        val item = items[position]
         holder.itemView.tag = item
         holder.binding.clone.tag = item
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
-        holder.binding.check.visibility =
-            if (checkable && item.getImageUrl().isEmpty()) View.VISIBLE else View.GONE
+        if (item is SaleOrderListItem) {
+            holder.binding.check.visibility = View.VISIBLE
+        } else {
+            holder.binding.check.visibility = View.GONE
+        }
+        if (item is SaleOrderListItem && item.isStockTransfer == true) {
+            holder.binding.check.visibility=View.GONE
+            holder.binding.parentss.setBackgroundColor(holder.binding.parentss.resources.getColor(R.color.light_red))
+        } else {
+            holder.binding.parentss.setBackgroundColor(holder.binding.parentss.resources.getColor(R.color.white))
+        }
         holder.binding.image.visibility =
             if (item.getImageUrl().isEmpty()) View.GONE else View.VISIBLE
         Glide.with(holder.itemView).load(item.getImageUrl()).centerCrop()

@@ -179,6 +179,7 @@ object DateTime {
             today.get(Calendar.YEAR),
             today.get(Calendar.MONTH)
         )
+        builder.setMaxYear(today.get(Calendar.YEAR) + 2)
         builder.build().show()
     }
 

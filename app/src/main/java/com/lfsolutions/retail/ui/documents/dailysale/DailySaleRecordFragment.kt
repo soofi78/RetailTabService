@@ -8,14 +8,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentDailySaleRecordBinding
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.dailysale.DailySaleRecord
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.widgets.SaleRecordItemView
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
@@ -63,8 +68,45 @@ class DailySaleRecordFragment : Fragment() {
         selectedDate = (requireActivity() as DailySaleFlowActivity).getSelectedDate().toString()
         binding.date.text = selectedDate
         binding.header.setBackText("Daily Sale Record")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
+        binding.pdf.setOnClickListener {
+            getPdf()
+        }
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         fetchDailySale()
+    }
+
+    private fun getPdf() {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val downloadPath =
+                        (response?.body() as BaseResponse<String>).result?.split("develop\\")
+                            ?.last()
+                    val name =
+                        DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
+                            "Upload/"
+                        )?.last().toString()
+                    DocumentDownloader.download(
+                        name,
+                        AppSession[Constants.baseUrl] + downloadPath,
+                        requireActivity()
+                    )
+                    Notify.toastLong("Downloading Started")
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Download Failed")
+                }
+            }).enque(
+                Network.api()?.getDailySaleRecordPdf(
+                    UserIdDateRequestBody(
+                        userId = Main.app.getSession().userId,
+                        date = selectedDate
+                    )
+                )
+            ).execute()
     }
 
 

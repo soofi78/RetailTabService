@@ -24,6 +24,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
@@ -180,15 +181,25 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
             if (product?.isSerialEquipment() == true) View.VISIBLE else View.GONE
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         product?.productName?.let { mBinding.header.setBackText(it) }
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
     }
 
 
     private fun addOnClickListener() {
         mBinding.btnSub.setOnClickListener {
-            openQuantityUpdateDialog()
+            if (mBinding.txtQty.text.toString().toDouble() <= 1) {
+                return@setOnClickListener
+            }
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
+            updateTotal()
         }
 
         mBinding.btnAdd.setOnClickListener {
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
+            updateTotal()
+        }
+
+        mBinding.txtQty.setOnClickListener {
             openQuantityUpdateDialog()
         }
 

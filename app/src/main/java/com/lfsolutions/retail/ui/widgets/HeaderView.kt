@@ -34,6 +34,10 @@ class HeaderView : LinearLayout {
         binding?.txtBack?.setText(txt)
     }
 
+    fun setAccountClick(onClickListener: OnClickListener){
+        binding?.icoAccount?.setOnClickListener(onClickListener)
+    }
+
     fun setOnBackClick(onClickListener: OnClickListener) {
         binding?.icoBack?.setOnClickListener(onClickListener)
     }

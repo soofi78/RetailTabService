@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 
 data class CustomersResult(
-
     @SerializedName("items") var items: ArrayList<CustomersItem> = arrayListOf()
-
 ) {
     fun getUrgentCustomersList(): ArrayList<Customer> {
         val index = items.indexOf(CustomersItem("Urgent"))

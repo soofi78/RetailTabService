@@ -1,27 +1,23 @@
 package com.lfsolutions.retail.ui.stocktransfer
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.FragmentInvoiceDetailsBinding
 import com.lfsolutions.retail.databinding.FragmentStockTransferDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.outgoingstock.StockTransfer
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
-import com.lfsolutions.retail.model.sale.invoice.response.SaleInvoiceResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
@@ -63,6 +59,7 @@ class StockTransferDetailsFragment : Fragment() {
 
     private fun setData() {
         stockTransfer?.stockTransfer?.transferNo?.let { binding.header.setBackText(it) }
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
         binding.transferNo.text = stockTransfer?.stockTransfer?.transferNo
@@ -97,7 +94,7 @@ class StockTransferDetailsFragment : Fragment() {
                             ?.last()
                     val name =
                         DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
+                            "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
                         name,

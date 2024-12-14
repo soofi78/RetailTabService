@@ -2,12 +2,13 @@ package com.lfsolutions.retail
 
 import android.app.Application
 import android.content.Intent
+import android.webkit.URLUtil
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceRequest
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
@@ -20,7 +21,7 @@ class Main : Application() {
 
     private var saleOrder: SaleOrderRequest? = null
     private var deliveryOrder: DeliveryOrderDTO? = null
-    private var taxInvoice: SaleInvoiceRequest? = null
+    private var taxInvoice: SaleInvoiceObject? = null
     private var inComingStockTransferRequest: StockTransferRequestBody? = null
     private var outGoingStockTransferRequest: StockTransferRequestBody? = null
     private var complaintService: ServiceFormBody? = null
@@ -55,8 +56,8 @@ class Main : Application() {
         return driverMemo!!
     }
 
-    fun getTaxInvoice(): SaleInvoiceRequest? {
-        if (taxInvoice == null) taxInvoice = SaleInvoiceRequest()
+    fun getTaxInvoice(): SaleInvoiceObject? {
+        if (taxInvoice == null) taxInvoice = SaleInvoiceObject()
         return taxInvoice
     }
 

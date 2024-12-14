@@ -68,6 +68,7 @@ data class SaleOrderListItem(
     @SerializedName("lastModifierUserId") var lastModifierUserId: String? = null,
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: Int? = null,
+    @SerializedName("isStockTransfer") var isStockTransfer: Boolean? = null,
     @SerializedName("id") var id: Int? = null
 
 ) : HistoryItemInterface {

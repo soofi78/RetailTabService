@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
@@ -64,6 +65,7 @@ class DriverMemoDetailsFragment : Fragment() {
 
     private fun setData() {
         binding.header.setBackText(item.driverMemo.agreementNo.toString())
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
         binding.orderNo.text = item.driverMemo.agreementNo
@@ -97,7 +99,7 @@ class DriverMemoDetailsFragment : Fragment() {
                             ?.last()
                     val name =
                         DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
+                            "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
                         name,

@@ -208,7 +208,7 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_corner_yellow_background"
-            android:text="Save" />
+            android:text="Complete" />
 
     </LinearLayout>
 

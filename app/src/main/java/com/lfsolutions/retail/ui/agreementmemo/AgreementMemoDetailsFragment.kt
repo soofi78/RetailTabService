@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
@@ -63,6 +64,7 @@ class AgreementMemoDetailsFragment : Fragment() {
 
     private fun setData() {
         memo?.AgreementMemo?.AgreementNo?.let { binding.header.setBackText(it) }
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         binding.header.setOnBackClick { findNavController().popBackStack() }
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         Glide.with(binding.signature).load(memo?.AgreementMemo?.signatureUrl()).centerCrop()
@@ -98,7 +100,7 @@ class AgreementMemoDetailsFragment : Fragment() {
                             ?.last()
                     val name =
                         DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
+                            "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
                         name,

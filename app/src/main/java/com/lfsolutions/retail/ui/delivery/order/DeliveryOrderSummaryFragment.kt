@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentDeliveryOrderSummaryBinding
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
@@ -49,6 +50,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Delivery Order Summary")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
     }
@@ -109,7 +111,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.txtQTY.text =
             Main.app.getDeliveryOrder()?.deliveryOrder?.totalDeliveredQty.toString()
         mBinding.btnComplete.isEnabled =
-            Main.app.getDeliveryOrder()?.deliveryOrder?.totalQty != 0.0
+            Main.app.getDeliveryOrder()?.deliveryOrder?.totalDeliveredQty != 0.0
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {

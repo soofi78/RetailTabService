@@ -34,21 +34,21 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
     override fun getItemCount(): Int = salveInvoiceDetails?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.txtQty.text = salveInvoiceDetails?.get(position)?.Qty.toString()
+        holder.binding.txtQty.text = salveInvoiceDetails?.get(position)?.qty.toString()
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + salveInvoiceDetails?.get(position)?.SubTotal?.formatDecimalSeparator()
-        holder.binding.txtProductName.text = salveInvoiceDetails?.get(position)?.ProductName
+            Main.app.getSession().currencySymbol + salveInvoiceDetails?.get(position)?.subTotal?.formatDecimalSeparator()
+        holder.binding.txtProductName.text = salveInvoiceDetails?.get(position)?.productName
         Glide.with(holder.binding.imgProduct.context)
-            .load(Main.app.getBaseUrl() + salveInvoiceDetails?.get(position)?.ProductImage)
+            .load(Main.app.getBaseUrl() + salveInvoiceDetails?.get(position)?.productImage)
             .centerCrop()
             .placeholder(R.drawable.no_image)
             .into(holder.binding.imgProduct)
         holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text =
-            if (salveInvoiceDetails?.get(position)?.IsFOC == true) "FOC" else if (salveInvoiceDetails?.get(
+            if (salveInvoiceDetails?.get(position)?.isFOC == true) "FOC" else if (salveInvoiceDetails?.get(
                     position
-                )?.IsExchange == true
-            ) "Exchange" else if (salveInvoiceDetails?.get(position)?.IsExpire == true) "Expire" else "None"
+                )?.isExchange == true
+            ) "Exchange" else if (salveInvoiceDetails?.get(position)?.isExpire == true) "Sale" else "None"
 
         holder.binding.txtTag.visibility =
             if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE

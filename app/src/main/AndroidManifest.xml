@@ -57,6 +57,10 @@
             android:name=".ui.documents.payment.PaymentFlowActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.documents.CurrentStockFlowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.documents.dailysale.DailySaleFlowActivity"

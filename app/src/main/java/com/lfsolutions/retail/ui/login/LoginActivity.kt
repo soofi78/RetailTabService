@@ -7,11 +7,14 @@ import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import com.google.gson.Gson
+import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityLoginBinding
 import com.lfsolutions.retail.model.LoginRequest
@@ -43,6 +46,10 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        if (BuildConfig.DEBUG) {
+            _binding?.inputServerAddress?.setText("http://rtlconnect.net/MyBossTest/")
+        }
         _binding?.buttonSignin?.setOnClickListener {
             signIn()
         }
@@ -61,12 +68,17 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
     private fun signIn() {
         if (validated().not())
             return
-        prepareNetworkLayer()
-        login()
+        try {
+            prepareNetworkLayer()
+            login()
+        } catch (e: Exception) {
+            Notify.toastLong(e.message)
+        }
     }
 
     private fun prepareNetworkLayer() {
         AppSession.put(Constants.baseUrl, _binding?.inputServerAddress?.text.toString())
+        Network.clearInstance()
         Network.getInstance()
     }
 

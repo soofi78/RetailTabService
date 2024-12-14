@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentTaxInvoiceSummaryBinding
 import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
@@ -52,6 +53,7 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Sale Order Summary")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
     }

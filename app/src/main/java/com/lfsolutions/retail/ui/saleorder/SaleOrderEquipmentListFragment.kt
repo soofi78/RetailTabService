@@ -25,6 +25,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.OnCategoryItemClicked
 import com.lfsolutions.retail.ui.adapter.ProductCategoryAdapter
 import com.lfsolutions.retail.util.Constants
@@ -145,6 +146,7 @@ class SaleOrderEquipmentListFragment : Fragment() {
 
     private fun setData() {
         binding.header.setBackText("Product List")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()

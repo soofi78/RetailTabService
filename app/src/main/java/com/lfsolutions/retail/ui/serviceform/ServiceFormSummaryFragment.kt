@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentServiceFormSummaryBinding
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 
@@ -46,6 +47,7 @@ class ServiceFormSummaryFragment : Fragment() {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Order Summary")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
     }

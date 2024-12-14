@@ -15,9 +15,9 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.LocationIdRequestObject
-import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.SaleOrderToStockReceive
+import com.lfsolutions.retail.model.deliveryorder.DeliveryOrderHistoryItem
+import com.lfsolutions.retail.model.deliveryorder.DeliveryOrderHistoryList
 import com.lfsolutions.retail.model.memo.AgreementMemo
 import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
@@ -36,6 +36,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
@@ -65,7 +66,7 @@ class HistoryFragmentListing : Fragment() {
     private val outgoing = ArrayList<HistoryItemInterface>()
     private val agreementMemo = ArrayList<HistoryItemInterface>()
     private val complaintService = ArrayList<HistoryItemInterface>()
-    private val currentStock = ArrayList<HistoryItemInterface>()
+    private val deliveryOrder = ArrayList<HistoryItemInterface>()
     private var historyTypeAdapter: HistoryTypeAdapter? = null
 
     private fun setCustomerFromIntent() {
@@ -110,6 +111,7 @@ class HistoryFragmentListing : Fragment() {
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { requireActivity().finish() }
         binding.header.setBackText("Customer History")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
     }
 
     private fun setCustomerData() {
@@ -121,8 +123,7 @@ class HistoryFragmentListing : Fragment() {
                     override fun onOptionItemClick(optionItem: OptionItem) {
                         customer?.let { it1 ->
                             CustomerDetailActivity.start(
-                                requireActivity(),
-                                it1
+                                requireActivity(), it1
                             )
                         }
                     }
@@ -151,8 +152,7 @@ class HistoryFragmentListing : Fragment() {
         binding.date.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    stockReceiveDate =
-                        year + "-" + month + "-" + day + "T00:00:00Z"
+                    stockReceiveDate = year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
         }
@@ -168,8 +168,7 @@ class HistoryFragmentListing : Fragment() {
             Notify.toastLong("Please select date")
             return
         }
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     Notify.toastLong("Stock Received Successfully")
@@ -197,24 +196,20 @@ class HistoryFragmentListing : Fragment() {
     }
 
     private fun setHistoryTabAdapter() {
-        if (historyTypeAdapter == null)
-            historyTypeAdapter =
-                HistoryTypeAdapter(
-                    getHistoryTypeList(selectedType),
-                    object : OnHistoryTypeClicked {
-                        override fun onHistoryTypeClicked(type: HistoryType) {
-                            getHistory(type)
-                        }
-                    },
-                )
+        if (historyTypeAdapter == null) historyTypeAdapter = HistoryTypeAdapter(
+            getHistoryTypeList(selectedType),
+            object : OnHistoryTypeClicked {
+                override fun onHistoryTypeClicked(type: HistoryType) {
+                    getHistory(type)
+                }
+            },
+        )
         binding.types.adapter = historyTypeAdapter
     }
 
     private fun getHistoryTypeList(selectedType: HistoryType?): java.util.ArrayList<HistoryType> {
         val historyList = arrayListOf(
-            HistoryType.Order,
-            HistoryType.Invoices,
-            HistoryType.Receipts
+            HistoryType.Order, HistoryType.DeliveryOrder, HistoryType.Invoices, HistoryType.Receipts
         )
 
 
@@ -226,8 +221,6 @@ class HistoryFragmentListing : Fragment() {
         if (isCustomerSpecificHistory.not()) {
             historyList.add(HistoryType.OutgoingTransfer)
         }
-
-        historyList.add(HistoryType.CurrentStock)
 
         selectedType?.let { selected ->
             historyList.forEach {
@@ -271,6 +264,10 @@ class HistoryFragmentListing : Fragment() {
                 getOrderHistory(force)
             }
 
+            HistoryType.DeliveryOrder -> {
+                getDeliveryOrderHistory(force)
+            }
+
             HistoryType.Invoices -> {
                 getInvoicesHistory(force)
             }
@@ -294,34 +291,7 @@ class HistoryFragmentListing : Fragment() {
             HistoryType.ServiceForm -> {
                 getComplaintServiceHistory(force)
             }
-
-            HistoryType.CurrentStock -> {
-                getCurrentProductStock(force)
-            }
         }
-    }
-
-    private fun getCurrentProductStock(force: Boolean) {
-        if (currentStock.isEmpty() || force) NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading current products"))
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val res = response?.body() as BaseResponse<ArrayList<Product>>
-                    currentStock.clear()
-                    res.result?.forEach {
-                        currentStock.add(it)
-                    }
-                    setAdapter(currentStock)
-                }
-
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get current stock")
-                }
-            }).enque(
-                Network.api()
-                    ?.getCurrentProductStockQuantity(LocationIdRequestObject(Main.app.getSession().defaultLocationId))
-            ).execute()
-        else setAdapter(currentStock, true)
     }
 
     private fun getComplaintServiceHistory(force: Boolean) {
@@ -474,31 +444,25 @@ class HistoryFragmentListing : Fragment() {
         else setAdapter(invoices)
     }
 
-    private fun getOrderHistory(force: Boolean = false) {
-        if (order.isEmpty() || force)
-            callSaleOrderApi()
-        else setAdapter(order, false, Main.app.getSession().isSupervisor?.not() == true)
-    }
-
-    private fun callSaleOrderApi() {
-        if (Main.app.getSession().isSupervisor == true) {
+    private fun getDeliveryOrderHistory(force: Boolean = false) {
+        if (deliveryOrder.isEmpty() || force) {
             NetworkCall.make()
                 .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
                 .setCallback(object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        val res = response?.body() as BaseResponse<SaleOrderListResult>
-                        order.clear()
+                        val res = response?.body() as BaseResponse<DeliveryOrderHistoryList>
+                        deliveryOrder.clear()
                         res.result?.items?.forEach {
-                            order.add(it)
+                            deliveryOrder.add(it)
                         }
-                        setAdapter(order)
+                        setAdapter(deliveryOrder)
                     }
 
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                         Notify.toastLong("Unable to get sale receipt list")
                     }
                 }).enque(
-                    Network.api()?.getSalesOrder(HistoryRequest().apply {
+                    Network.api()?.getDeliveryOrder(HistoryRequest().apply {
                         locationId = Main.app.getSession().defaultLocationId
                         userId = Main.app.getSession().userId
                         startDate = this@HistoryFragmentListing.startDate
@@ -508,6 +472,43 @@ class HistoryFragmentListing : Fragment() {
                     })
                 ).execute()
         } else {
+            setAdapter(deliveryOrder)
+        }
+    }
+
+    private fun getOrderHistory(force: Boolean = false) {
+        if (order.isEmpty() || force) callSaleOrderApi()
+        else setAdapter(order, false)
+    }
+
+    private fun callSaleOrderApi() {
+//        if (Main.app.getSession().isSupervisor == true) {
+//            NetworkCall.make()
+//                .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
+//                .setCallback(object : OnNetworkResponse {
+//                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+//                        val res = response?.body() as BaseResponse<SaleOrderListResult>
+//                        order.clear()
+//                        res.result?.items?.forEach {
+//                            order.add(it)
+//                        }
+//                        setAdapter(order)
+//                    }
+//
+//                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+//                        Notify.toastLong("Unable to get sale receipt list")
+//                    }
+//                }).enque(
+//                    Network.api()?.getSalesOrder(HistoryRequest().apply {
+//                        locationId = Main.app.getSession().defaultLocationId
+//                        userId = Main.app.getSession().userId
+//                        startDate = this@HistoryFragmentListing.startDate
+//                        endDate = this@HistoryFragmentListing.endDate
+//                        filter = customer?.name
+//                        status = "X"
+//                    })
+//                ).execute()
+//        } else {
             NetworkCall.make()
                 .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
                 .setCallback(object : OnNetworkResponse {
@@ -517,37 +518,31 @@ class HistoryFragmentListing : Fragment() {
                         res.result?.items?.forEach {
                             order.add(it)
                         }
-                        setAdapter(order, false, Main.app.getSession().isSupervisor?.not() == true)
+                        setAdapter(order, false)
                     }
 
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                         Notify.toastLong("Unable to get sale receipt list")
                     }
-                }).enque(
-                    Network.api()?.getSaleOrderBySalePerson(
-                        HistoryRequest().apply {
-                            locationId = Main.app.getSession().defaultLocationId
-                            userId = Main.app.getSession().userId
-                            startDate = this@HistoryFragmentListing.startDate
-                            endDate = this@HistoryFragmentListing.endDate
-                            filter = customer?.name
-                            status = "X"
-                        }
-                    )
-                ).execute()
-        }
+                }).enque(Network.api()?.getSaleOrderBySalePerson(HistoryRequest().apply {
+                    locationId = Main.app.getSession().defaultLocationId
+                    userId = Main.app.getSession().userId
+                    startDate = this@HistoryFragmentListing.startDate
+                    endDate = this@HistoryFragmentListing.endDate
+                    filter = customer?.name
+                    status = "X"
+                })).execute()
+//        }
     }
 
     private fun setAdapter(
         items: ArrayList<HistoryItemInterface>,
-        clone: Boolean = false,
-        checkable: Boolean = false
+        clone: Boolean = false
     ) {
-        binding.items.adapter = HistoryListAdapter(
-            items,
-            object : HistoryListAdapter.OnItemClickedListener {
-                override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
-                    openDetailsFragment(saleOrderInvoiceItem)
+        binding.items.adapter =
+            HistoryListAdapter(items, object : HistoryListAdapter.OnItemClickedListener {
+                override fun onItemClickedListener(item: HistoryItemInterface) {
+                    openDetailsFragment(item)
                 }
 
                 override fun onCloneClicked(item: HistoryItemInterface) {
@@ -563,12 +558,10 @@ class HistoryFragmentListing : Fragment() {
                 } else {
                     orderStockReceiveId.remove((buttonView.tag as HistoryItemInterface).getId())
                 }
-            }, clone, checkable
-
-        )
+            }, clone)
 
 
-        if (checkable && selectedType == HistoryType.Order) {
+        if (selectedType == HistoryType.Order) {
             binding.remarks.visibility = View.VISIBLE
             binding.fabStockRecord.visibility = View.VISIBLE
             binding.date.visibility = View.VISIBLE
@@ -592,8 +585,7 @@ class HistoryFragmentListing : Fragment() {
                         complaintService.customerName
                     service?.complaintService?.customerId?.let {
                         getCustomerCompleteDetails(
-                            it,
-                            complaintService
+                            it, complaintService
                         )
                     }
                 }
@@ -672,22 +664,19 @@ class HistoryFragmentListing : Fragment() {
             )
         } else if (historyitem is SaleReceipt) {
             findNavController().navigate(
-                R.id.action_navigation_receipt_history_fragment_to_receipt_details,
-                bundleOf(
+                R.id.action_navigation_receipt_history_fragment_to_receipt_details, bundleOf(
                     Constants.Item to Gson().toJson(historyitem)
                 )
             )
         } else if (historyitem is AgreementMemo) {
             findNavController().navigate(
-                R.id.action_navigation_history_listing_to_agreement_memo_details,
-                bundleOf(
+                R.id.action_navigation_history_listing_to_agreement_memo_details, bundleOf(
                     Constants.Item to Gson().toJson(historyitem)
                 )
             )
         } else if (historyitem is ComplaintService) {
             findNavController().navigate(
-                R.id.action_navigation_history_listing_to_service_details,
-                bundleOf(
+                R.id.action_navigation_history_listing_to_service_details, bundleOf(
                     Constants.Item to Gson().toJson(historyitem)
                 )
             )
@@ -695,6 +684,12 @@ class HistoryFragmentListing : Fragment() {
             findNavController().navigate(
                 R.id.action_navigation_stock_transfer_history_fragment_to_transfer_details,
                 bundleOf(
+                    Constants.Item to Gson().toJson(historyitem)
+                )
+            )
+        } else if (historyitem is DeliveryOrderHistoryItem) {
+            findNavController().navigate(
+                R.id.action_navigation_history_listing_delivery_order_to_details, bundleOf(
                     Constants.Item to Gson().toJson(historyitem)
                 )
             )

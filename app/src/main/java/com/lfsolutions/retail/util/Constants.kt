@@ -12,9 +12,6 @@ object Constants {
         const val Price = "{{price}}"
         const val NetTotal = "{{netTotal}}"
         const val ProductName = "{{productName}}"
-        const val Index = "{{index}}"
-        const val InvoiceItemsStart = "{{#items}}"
-        const val InvoiceItemsEnd = "{{/items}}"
         const val InvoiceAddress1 = "{{customer.address1}}"
         const val InvoiceAddress2 = "{{customer.address2}}"
         const val InvoiceCustomerName = "{{&invoice.customerName}}"
@@ -22,6 +19,49 @@ object Constants {
         const val InvoiceDate = "{{invoice.invoiceDate}}"
         const val InvoiceNo = "{{invoice.invoiceNo}}"
         const val InvoiceQty = "{{invoice.qty}}"
+    }
+
+    object Common {
+        const val Index = "{{index}}"
+        const val ItemsStart = "{{#items}}"
+        const val ItemsEnd = "{{/items}}"
+    }
+
+    object Order {
+        const val OrderSubTotal = "{{order.subTotal}}"
+        const val OrderTax = "{{order.tax}}"
+        const val OrderNetTotal = "{{order.netTotal}}"
+        const val CustomerBalanceAmount = "{{customer.balanceAmount}}"
+        const val OrderSignature = "@#@{{&order.signature}}"
+        const val OrderQR = "###{{order.qrUrl}}"
+        const val Qty = "{{qty}}"
+        const val Price = "{{price}}"
+        const val NetTotal = "{{netTotal}}"
+        const val ProductName = "{{productName}}"
+        const val CustomerAddress1 = "{{customer.address1}}"
+        const val CustomerAddress2 = "{{customer.address2}}"
+        const val CustomerCustomerName = "{{customer.customerName}}"
+        const val OrderTerm = "{{order.terms}}"
+        const val OrderDate = "{{order.soDate}}"
+        const val OrderNo = "{{order.soNo}}"
+        const val OrderQty = "{{order.qty}}"
+    }
+
+    object Delivery {
+        const val DeliveredQty = "{{delivered.qty}}"
+        const val DeliverySignature = "@#@{{&delivery.signature}}"
+        const val DeliveryQR = "###{{delivery.qrUrl}}"
+        const val Qty = "{{qty}}"
+        const val UOM = "{{uom}}"
+        const val DeliveryQty = "{{delivery.qty}}"
+        const val ProductName = "{{productName}}"
+        const val CustomerAddress1 = "{{customer.address1}}"
+        const val CustomerAddress2 = "{{customer.address2}}"
+        const val CustomerName = "{{customer.name}}"
+        const val Term = "{{order.terms}}"
+        const val Date = "{{delivery.date}}"
+        const val OrderNo = "{{delivery.No}}"
+        const val OrderQty = "{{order.qty}}"
     }
 
     const val FormType: String = "FormType"
@@ -40,6 +80,7 @@ object Constants {
     const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
     const val InComingProducts: String = "in_coming_products"
+    const val CustomerId: String = "customer_id"
     val Logout: CharSequence = "Logout"
     val ViewProfile: CharSequence = "View Profile"
     const val Product: String = "product"

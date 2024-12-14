@@ -104,6 +104,13 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_navigation_history_listing_delivery_order_to_details"
+            app:destination="@id/navigation_delivery_order_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
 
         <action
             android:id="@+id/action_navigation_receipt_history_fragment_to_receipt_details"
@@ -166,6 +173,25 @@
             android:name="item"
             app:argType="string"
             app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_order_details_to_tax_invoice"
+            app:destination="@id/navigation_tax_invoice"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_detail"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDetailsFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_delivery_order_details">
+        <argument
+            android:name="item"
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
     <fragment
@@ -193,7 +219,7 @@
     <fragment
         android:id="@+id/navigation_tax_invoice"
         android:name="com.lfsolutions.retail.ui.taxinvoice.TaxInvoiceFragment"
-        android:label="Tax Invoice"
+        android:label="Sale Invoice"
         tools:layout="@layout/fragment_sale_order_tax_invoice">
         <argument
             android:name="customer"
@@ -221,7 +247,7 @@
     <fragment
         android:id="@+id/navigation_delivery_order"
         android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderFragment"
-        android:label="Tax Invoice"
+        android:label="Sale Invoice"
         tools:layout="@layout/fragment_sale_order_tax_invoice">
         <argument
             android:name="customer"
@@ -243,7 +269,6 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
-
     </fragment>
 
     <fragment
@@ -322,7 +347,7 @@
     <fragment
         android:id="@+id/navigation_sale_order"
         android:name="com.lfsolutions.retail.ui.saleorder.SaleOrderFragment"
-        android:label="Tax Invoice"
+        android:label="Sale Invoice"
         tools:layout="@layout/fragment_sale_order_tax_invoice">
         <argument
             android:name="customer"

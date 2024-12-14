@@ -19,6 +19,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
 import com.lfsolutions.retail.ui.widgets.options.OptionItem
@@ -86,7 +87,7 @@ class SaleOrderFragment : Fragment() {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.setText("$day-$month-$year")
-                    Main.app.getTaxInvoice()?.SalesInvoice?.InvoiceDate =
+                    Main.app.getTaxInvoice()?.salesInvoice?.invoiceDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
@@ -95,6 +96,7 @@ class SaleOrderFragment : Fragment() {
 
     private fun setHeaderData() {
         binding.header.setBackText("Sale Order")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
@@ -131,27 +133,43 @@ class SaleOrderFragment : Fragment() {
             binding.signaturePad.clear()
         }
         binding.btnSave.setOnClickListener {
-            if (Main.app.getSaleOrder()?.SalesOrderDetail?.size == 0) {
-                Notify.toastLong("Please add products")
-                return@setOnClickListener
-            }
+            save(false)
+        }
 
-            if (binding.signaturePad.isEmpty) {
-                Notify.toastLong("Please add your signature")
-                return@setOnClickListener
-            }
-
-            Main.app.getSaleOrder()?.serializeItems()
-            Main.app.getSaleOrder()?.SalesOrder?.CustomerName =
-                binding.inputCustomerName.text.toString()
-            Main.app.getSaleOrder()?.SalesOrder?.PaymentTermId = customer.paymentTermId
-            uploadSignature()
+        binding.btnSaveApprove.setOnClickListener {
+            save(true)
         }
 
         binding.btnCancel.setOnClickListener {
             findNavController().popBackStack()
         }
 
+        if (Main.app.getSession().isSupervisor == true) {
+            binding.btnSaveApprove.visibility = View.VISIBLE
+        } else {
+            binding.btnSaveApprove.visibility = View.GONE
+        }
+
+
+    }
+
+    private fun save(approve: Boolean = false) {
+        if (Main.app.getSaleOrder()?.SalesOrderDetail?.size == 0) {
+            Notify.toastLong("Please add products")
+            return
+        }
+
+        if (binding.signaturePad.isEmpty) {
+            Notify.toastLong("Please add your signature")
+            return
+        }
+
+        Main.app.getSaleOrder()?.serializeItems()
+        Main.app.getSaleOrder()?.SalesOrder?.CustomerName =
+            binding.inputCustomerName.text.toString()
+        Main.app.getSaleOrder()?.SalesOrder?.PaymentTermId = customer.paymentTermId
+        Main.app.getSaleOrder()?.SalesOrder?.Status = if (approve) "A" else null
+        uploadSignature()
     }
 
     private fun uploadSignature() {

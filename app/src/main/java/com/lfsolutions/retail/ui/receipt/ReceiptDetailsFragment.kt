@@ -16,6 +16,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
@@ -57,6 +58,7 @@ class ReceiptDetailsFragment : Fragment() {
 
     private fun setData() {
         binding.header.setBackText(receipt?.receiptNo ?: "Back")
+        binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             findNavController().popBackStack()
@@ -118,7 +120,7 @@ class ReceiptDetailsFragment : Fragment() {
                             ?.last()
                     val name =
                         DateTime.getCurrentDateTime(DateTime.DateFormatWithDayNameMonthNameAndTime) + "-" + downloadPath?.split(
-                            "Upload\\"
+                            "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
                         name,

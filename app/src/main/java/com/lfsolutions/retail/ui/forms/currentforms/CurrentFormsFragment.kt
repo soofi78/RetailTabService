@@ -20,6 +20,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormAdapter
@@ -68,6 +69,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick { requireActivity().finish() }
         mBinding.header.setBackText("Customer Forms")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
     }
 
     private fun setCustomerData() {

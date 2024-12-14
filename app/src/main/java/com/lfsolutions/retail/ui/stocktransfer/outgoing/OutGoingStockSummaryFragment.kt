@@ -10,14 +10,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOutGoingStockSummaryBinding
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.videotel.digital.util.Notify
 
 
-class OutGoingStockSummaryFragment : Fragment() {
+class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment() {
     private lateinit var mBinding: FragmentOutGoingStockSummaryBinding
     private var itemSwipeHelper: ItemTouchHelper? = null
     private lateinit var mAdapter: OutGoingStockSummaryAdapter
@@ -53,6 +55,7 @@ class OutGoingStockSummaryFragment : Fragment() {
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Back")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
@@ -172,6 +175,10 @@ class OutGoingStockSummaryFragment : Fragment() {
         mBinding.btnCancel.setOnClickListener {
             Notify.toastLong("Cleared all items")
             requireActivity().finish()
+        }
+
+        mBinding.addEquipment.setOnClickListener {
+            openEquipmentList.invoke()
         }
 
         mBinding.header.setOnBackClick {

@@ -35,6 +35,8 @@ class IncomingStockFlowActivity : BaseActivity() {
                 type
             )
         )
+        Main.app.getInComingStockTransferRequestObject().customerId =
+            intent.getIntExtra(Constants.CustomerId, 0)
     }
 
     override fun onStart() {

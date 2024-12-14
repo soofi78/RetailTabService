@@ -25,6 +25,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
@@ -88,7 +89,8 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun setHeaderData() {
-        mBinding.header.setBackText("Tax Invoice")
+        mBinding.header.setBackText("Sale Invoice")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         mBinding.header.setOnBackClick {
             findNavController().popBackStack()
@@ -154,10 +156,20 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun addOnClickListener() {
         mBinding.btnSub.setOnClickListener {
-            openQuantityUpdateDialog()
+            if (mBinding.txtQty.text.toString().toDouble() <= 0) {
+                mBinding.txtQty.text = "1"
+                return@setOnClickListener
+            }
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
+            updateTotal()
         }
 
         mBinding.btnAdd.setOnClickListener {
+            mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
+            updateTotal()
+        }
+
+        mBinding.txtQty.setOnClickListener {
             openQuantityUpdateDialog()
         }
 
@@ -234,42 +246,42 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         val netTotal = (subTotal - discount) + taxAmount
         val total = (subTotal + taxAmount)
         Main.app.getTaxInvoice()?.addEquipment(SalesInvoiceDetail(
-            ProductId = product.productId?.toInt() ?: 0,
-            InventoryCode = product.inventoryCode,
-            ProductName = product.productName,
-            ProductImage = product.imagePath,
-            UnitId = product.unitId,
-            UnitName = product.unitName,
-            Qty = qty,
-            QtyStock = product.qtyOnHand,
-            Price = subTotal,
-            NetCost = total,
-            CostWithoutTax = product.cost ?: 0.0,
-            TaxRate = product.getApplicableTaxRate().toDouble(),
-            DepartmentId = 0,
-            LastPurchasePrice = 0.0,
-            SellingPrice = 0.0,
-            MRP = 0,
-            IsBatch = false,
-            ItemDiscount = 0.0,
-            ItemDiscountPerc = 0.0,
-            AverageCost = 0,
-            NetDiscount = 0.0,
-            SubTotal = subTotal,
-            NetTotal = netTotal,
-            Tax = taxAmount,
-            TotalValue = subTotal,
-            IsFOC = mBinding.checkboxFOC.isChecked,
-            IsExchange = mBinding.checkboxExchange.isChecked,
-            IsExpire = mBinding.checkboxIsExpired.isChecked,
-            CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+            productId = product.productId?.toInt() ?: 0,
+            inventoryCode = product.inventoryCode,
+            productName = product.productName,
+            productImage = product.imagePath,
+            unitId = product.unitId,
+            unitName = product.unitName,
+            qty = qty,
+            qtyStock = product.qtyOnHand,
+            price = subTotal,
+            netCost = total,
+            costWithoutTax = product.cost ?: 0.0,
+            taxRate = product.getApplicableTaxRate().toDouble(),
+            departmentId = 0,
+            lastPurchasePrice = 0.0,
+            sellingPrice = 0.0,
+            mrp = 0,
+            isBatch = false,
+            itemDiscount = 0.0,
+            itemDiscountPerc = 0.0,
+            averageCost = 0.0,
+            netDiscount = 0.0,
+            subTotal = subTotal,
+            netTotal = netTotal,
+            tax = taxAmount,
+            totalValue = subTotal,
+            isFOC = mBinding.checkboxFOC.isChecked,
+            isExchange = mBinding.checkboxExchange.isChecked,
+            isExpire = mBinding.checkboxIsExpired.isChecked,
+            creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                 .replace(" ", "T").plus("Z"),
-            CreatorUserId = Main.app.getSession().userId,
-            ProductBatchList = batchList
+            creatorUserId = Main.app.getSession().userId.toString(),
+            productBatchList = batchList
         ).apply {
             product.applicableTaxes?.let {
-                ApplicableTaxes = it
-                TaxForProduct = it
+                applicableTaxes = it
+                taxForProduct = it
             }
         })
     }

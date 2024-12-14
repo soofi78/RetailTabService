@@ -20,14 +20,18 @@ object Api {
         const val UPLOAD_SIGNATURE = "File/UploadAgreementMemoSignature"
         const val AUTHENTICATE = "Account/Authenticate"
         const val GET_CUSTOMERS = "Service/ApiGetCustomers"
+        const val GET_ALL_CUSTOMERS = "Customer/apigetCustomers"
         const val GET_CUSTOMERS_FORMS = "Service/GetCustomerForm"
         const val GET_CUSTOMERS_FOR_PAYMENT = "Service/ApiGetCustomersForPayments"
         const val CREATE_SALE_RECEIPT = "SalesReceipt/CreateOrUpdateSalesReceipt"
         const val GET_SALES_TRANSACTIONS = "SalesTransaction/GetSalesTransactions"
         const val GET_RECEIPT_TEMPLATE_PRINT = "ReceiptTemplate/GetReceiptTemplateByLocation"
         const val GET_SALES_ORDERS = "SalesOrder/GetAll"
+        const val GET_DELIVERY_ORDERS = "DeliveryOrder/GetAll"
+        const val GET_DELIVERY_ORDER_DETAIL = "deliveryOrder/GetDeliveryOrderForEdit"
         const val GET_SALES_ORDER_DETAIL = "SalesOrder/GetSalesOrderForEdit"
         const val GET_SALES_ORDER_PDF = "salesOrder/GetSalesOrderPrintPdfAttachment"
+        const val GET_DELIVERY_ORDER_PDF = "deliveryOrder/GetDeliveryOrderPrintPdfAttachment"
         const val GET_SALES_INVOICES = "SalesInvoice/GetAll"
         const val GET_SALE_INVOICE_DETAIL = "SalesInvoice/GetSalesInvoiceForEdit"
         const val GET_SALE_INVOICE_FOR_PRINT = "SalesInvoice/SalesInvoiceForPrint"
@@ -55,6 +59,7 @@ object Api {
             "ComplaintService/GetComplaintServicePrintPdfAttachment"
         const val GET_AGREEMENT_MEMO_PDF = "AgreementMemo/GetAgreementMemoPrintPdfAttachment"
         const val GET_SALE_RECEIPT_PDF = "SalesReceipt/GetSalesReceiptPrintPdfAttachment"
+        const val GET_DAILY_SALE_RECORD_PDF = "service/GetApiDailySaleRecordPrintPdfAttachment"
         const val GET_DAILY_SALE_RECORD = "Service/GetDailySales"
         const val SALE_ORDER_BY_SALES_PERSON = "service/GetSalesOrderBySalesPerson"
         const val SALE_ORDER_STOCK_RECEIVE_FOR_DRIVER = "service/SalesOrderToStockReceiveForDriver"
@@ -74,5 +79,9 @@ object Api {
             "Service/DeleteCustomerVisitationSchedule"
         const val GET_PRODUCT_CURRENT_STOCK =
             "Product/GetApiProductStocksForLocation"
+        const val SALE_ORDER_FOR_INVOICE =
+            "salesOrder/GetApiSalesOrderForInvoice"
+        const val SALE_ORDER_FOR_DELIVERY_ORDER =
+            "deliveryOrder/GetApiSalesOrderDetailItems"
     }
 }

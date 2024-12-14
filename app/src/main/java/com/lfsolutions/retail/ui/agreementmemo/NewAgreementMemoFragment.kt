@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
+import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
@@ -93,6 +94,7 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.customerName.text = customer?.name
         mBinding.address.text = customer?.address1
         mBinding.header.setBackText("New Agreement Memo")
+        mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
     }
 

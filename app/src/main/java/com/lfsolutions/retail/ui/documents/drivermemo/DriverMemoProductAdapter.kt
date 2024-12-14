@@ -53,12 +53,32 @@ class DriverMemoProductAdapter(
         holder.binding.txtProductName.text = item.productName
 
         holder.binding.btnAdd.tag = position
-        holder.binding.btnAdd.setOnClickListener {
-            openQuantityUpdateDialog(it.tag as Int)
+        holder.binding.btnSub.tag = position
+        holder.binding.txtQty.tag = position
+
+        holder.binding.btnSub.setOnClickListener {
+            if (holder.binding.txtQty.text.toString().toDouble() <= 0) {
+                holder.binding.txtQty.text = "1"
+                return@setOnClickListener
+            }
+            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
+            items?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            items?.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) items?.get(it.tag as Int)
+                ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
+            notifyItemChanged(it.tag as Int)
         }
 
-        holder.binding.btnSub.tag = position
-        holder.binding.btnSub.setOnClickListener {
+        holder.binding.btnAdd.setOnClickListener {
+            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
+            items?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            items?.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) items?.get(it.tag as Int)
+                ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
+            notifyItemChanged(it.tag as Int)
+        }
+
+        holder.binding.txtQty.setOnClickListener {
             openQuantityUpdateDialog(it.tag as Int)
         }
     }

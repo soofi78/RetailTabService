@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/agreement_navigation"
+    app:startDestination="@id/navigation_current_stock">
+
+    <fragment
+        android:id="@+id/navigation_current_stock"
+        android:name="com.lfsolutions.retail.ui.documents.CurrentStockFragment"
+        android:label="Customers"
+        tools:layout="@layout/fragment_current_stock" />
+
+</navigation>
