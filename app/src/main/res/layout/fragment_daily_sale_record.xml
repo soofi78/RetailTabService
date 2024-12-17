@@ -84,17 +84,40 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/pdf"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="?attr/primary"
-                android:src="@drawable/ic_pdf" />
+                android:background="?attr/secondary"
+                android:gravity="end|center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/pdf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/primary"
+                    android:src="@drawable/ic_pdf" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/print"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:layout_toStartOf="@+id/pdf"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/primary"
+                    android:src="@drawable/ic_print" />
+            </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

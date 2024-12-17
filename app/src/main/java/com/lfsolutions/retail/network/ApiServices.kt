@@ -58,9 +58,9 @@ import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
+import com.lfsolutions.retail.model.service.ReportTypeResult
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
-import com.lfsolutions.retail.ui.delivery.order.DeliveryOrder
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
@@ -98,6 +98,9 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_COMPLAINT_TYPES))
     fun getServiceType(): Call<RetailResponse<ServiceTypeResult>>
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_REPORT_TYPES))
+    fun getReportType(): Call<RetailResponse<ReportTypeResult>>
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_PAYMENTS_TYPES))
     fun getPaymentTerms(): Call<BaseResponse<PaymentTermsResult>>
 
@@ -108,8 +111,8 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
     fun getEquipmentList(@Body productListRB: ProductListRB): Call<RetailResponse<EquipmentListResult>>
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_FOR_TAX_INVOICE))
-    fun getProductForTaxInvoice(@Body request: LocationIdCustomerIdRequestObject): Call<RetailResponse<EquipmentListResult>>
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMER_PRODUCT))
+    fun getCustomerProduct(@Body request: LocationIdCustomerIdRequestObject): Call<RetailResponse<EquipmentListResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_OUT_GOING_PRODUCT))
     fun getOutGoingStockTransferProductList(@Body customerIdsList: CustomerIdsList): Call<RetailResponse<OutGoingStockProductsResults>>
@@ -233,6 +236,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_ORDER_PDF))
     fun getSaleOrderPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DRIVER_MEMO_PDF))
+    fun getDriverMemoPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_DELIVERY_ORDER_PDF))
     fun getDeliveryOrderPDF(@Body idRequest: IdRequest): Call<BaseResponse<String>>?

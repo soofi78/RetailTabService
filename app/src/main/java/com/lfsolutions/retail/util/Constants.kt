@@ -22,9 +22,18 @@ object Constants {
     }
 
     object Common {
+        const val Date = "{{date}}"
         const val Index = "{{index}}"
         const val ItemsStart = "{{#items}}"
         const val ItemsEnd = "{{/items}}"
+        const val TotalAmount = "{{totalAmount}}"
+    }
+
+    object Payment {
+        const val Amount= "{{amount}}"
+        const val TermStart = "{{#paymentTerm}}"
+        const val Term = "{{paymentTerm}}"
+        const val TermEnd = "{{/paymentTerm}}"
     }
 
     object Order {

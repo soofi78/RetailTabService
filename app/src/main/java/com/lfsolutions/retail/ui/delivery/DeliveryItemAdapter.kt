@@ -19,6 +19,7 @@ class DeliveryItemAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mListener: OnItemClickListener? = null
+    private var mProductInfoClick: OnItemClickListener? = null
 
     class SimpleCustomerHolder(val binding: ItemDeliveryBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -141,6 +142,11 @@ class DeliveryItemAdapter(
         binding.root.setOnClickListener {
             mListener?.onItemClick(it.tag as Customer)
         }
+        binding.productInfo.visibility=View.VISIBLE
+        binding.productInfo.tag = customer
+        binding.productInfo.setOnClickListener {
+            mProductInfoClick?.onItemClick(it.tag as Customer)
+        }
     }
 
 
@@ -154,6 +160,10 @@ class DeliveryItemAdapter(
 
     fun setListener(listener: OnItemClickListener) {
         mListener = listener
+    }
+
+    fun setProductInfoClick(listener: OnItemClickListener) {
+        mProductInfoClick = listener
     }
 
     interface OnItemClickListener {

@@ -249,6 +249,32 @@
                         android:textAlignment="center"
                         app:layout_constraintTop_toBottomOf="@id/type" />
 
+                    <TextView
+                        android:id="@+id/reportType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Report Type"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/spinnerType" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/reportTypeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/spinner_background"
+                        android:entries="@array/equipment_type"
+                        android:padding="3dp"
+                        android:textAlignment="center"
+                        app:layout_constraintTop_toBottomOf="@id/reportType" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

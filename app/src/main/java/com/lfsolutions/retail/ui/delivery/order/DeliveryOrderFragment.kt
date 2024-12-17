@@ -196,7 +196,7 @@ class DeliveryOrderFragment : Fragment() {
                     Notify.toastLong("Unable to load products")
                 }
             }).enque(
-                Network.api()?.getProductForTaxInvoice(
+                Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
                         Main.app.getSession().defaultLocationId,
                         customer.id

@@ -20,6 +20,8 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.service.ReportTypeResult
+import com.lfsolutions.retail.model.service.ReportTypes
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.model.service.ServiceTypes
 import com.lfsolutions.retail.network.BaseResponse
@@ -52,6 +54,7 @@ class ServiceFormFragment : Fragment() {
     private val feedbacks = ArrayList<Feedback>()
     private lateinit var binding: FragmentServiceFormBinding
     private var serviceTypes = ArrayList<ServiceTypes>()
+    private var reportTypes = ArrayList<ReportTypes>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +100,7 @@ class ServiceFormFragment : Fragment() {
                             serviceTypes.addAll(it)
                         }
                         setServiceTypeAdapter()
+                        getReportTypeData()
                     }
 
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -110,9 +114,36 @@ class ServiceFormFragment : Fragment() {
         }
     }
 
+    private fun getReportTypeData() {
+        if (reportTypes.isEmpty()) {
+            NetworkCall.make()
+                .setCallback(object : OnNetworkResponse {
+                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                        (response?.body() as RetailResponse<ReportTypeResult>).result?.items?.let {
+                            reportTypes.addAll(it)
+                        }
+                        setReportTypeAdapter()
+                    }
+
+                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+
+                    }
+                })
+                .autoLoadigCancel(Loading().forApi(requireActivity()))
+                .enque(Network.api()?.getReportType()).execute()
+        } else {
+            setReportTypeAdapter()
+        }
+    }
+
     private fun setServiceTypeAdapter() {
         val adapter = ArrayAdapter(requireActivity(), R.layout.simple_text_item, serviceTypes)
         binding.spinnerType.adapter = adapter
+    }
+
+    private fun setReportTypeAdapter() {
+        val adapter = ArrayAdapter(requireActivity(), R.layout.simple_text_item, reportTypes)
+        binding.reportTypeSpinner.adapter = adapter
     }
 
     private fun setClickListener() {
@@ -245,6 +276,11 @@ class ServiceFormFragment : Fragment() {
         if (binding.spinnerType.selectedItemPosition > -1) {
             Main.app.getComplaintService()?.complaintService?.type =
                 serviceTypes.get(binding.spinnerType.selectedItemPosition).value
+        }
+
+        if (binding.reportTypeSpinner.selectedItemPosition > -1) {
+            Main.app.getComplaintService()?.complaintService?.reportType =
+                reportTypes.get(binding.reportTypeSpinner.selectedItemPosition).value
         }
 
         NetworkCall.make()

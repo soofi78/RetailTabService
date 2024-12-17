@@ -56,6 +56,12 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
                 binding.type.visibility = View.VISIBLE
                 binding.type.text = it
             }
+
+            binding.reportType.visibility = View.GONE
+            form?.reportType?.let {
+                binding.reportType.visibility = View.VISIBLE
+                binding.reportType.text = it
+            }
         }
         holder.itemView.tag = form
         holder.itemView.setOnClickListener {

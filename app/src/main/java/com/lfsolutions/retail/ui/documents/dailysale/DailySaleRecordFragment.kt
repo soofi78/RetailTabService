@@ -1,14 +1,16 @@
 package com.lfsolutions.retail.ui.documents.dailysale
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentDailySaleRecordBinding
-import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.PrintTemplate
+import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.UserIdDateRequestBody
 import com.lfsolutions.retail.model.dailysale.DailySaleRecord
 import com.lfsolutions.retail.network.BaseResponse
@@ -16,6 +18,7 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
+import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.ui.widgets.SaleRecordItemView
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -30,6 +33,7 @@ import retrofit2.Response
 
 class DailySaleRecordFragment : Fragment() {
 
+    private var saleRecord: DailySaleRecord? = null
     private var selectedDate: String = ""
     private lateinit var binding: FragmentDailySaleRecordBinding
 
@@ -121,8 +125,8 @@ class DailySaleRecordFragment : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity()))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val saleRecord = (response?.body() as BaseResponse<DailySaleRecord>).result
-                    setDailySaleRecordData(saleRecord)
+                    saleRecord = (response?.body() as BaseResponse<DailySaleRecord>).result
+                    setDailySaleRecordData()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -140,7 +144,7 @@ class DailySaleRecordFragment : Fragment() {
 
     }
 
-    private fun setDailySaleRecordData(saleRecord: DailySaleRecord?) {
+    private fun setDailySaleRecordData() {
         binding.recordItems.removeAllViews()
         saleRecord?.dailySalesItem?.forEach { dailySalesItem ->
             val view = SaleRecordItemView(requireContext())
@@ -151,6 +155,84 @@ class DailySaleRecordFragment : Fragment() {
         binding.netTotal.text =
             Main.app.getSession().currencySymbol + saleRecord?.netTotal.toString()
                 .formatDecimalSeparator()
+
+        binding.print.setOnClickListener {
+            printDailySaleRecord()
+        }
     }
 
+
+    private fun printDailySaleRecord() {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
+                if ((res.result?.size ?: 0) > 0) {
+                    preparePrintTemplate(res.result?.get(0))
+                }
+            }
+
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to get order template")
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading order template..."))
+            .enque(
+                Network.api()?.getReceiptTemplatePrint(TypeRequest(9))
+            ).execute()
+    }
+
+    private fun preparePrintTemplate(template: PrintTemplate?) {
+        var templateText = template?.template
+
+
+        templateText = templateText?.replace(
+            Constants.Common.Date, selectedDate
+        )
+
+
+        val paymentTermTemplateList = templateText?.substring(
+            templateText.indexOf(Constants.Payment.TermStart),
+            templateText.indexOf(Constants.Payment.TermEnd) + 16
+        )
+        var items = ""
+
+        saleRecord?.dailySalesItem?.forEach { term ->
+            val paymentTermClean =
+                paymentTermTemplateList?.replace(Constants.Payment.TermStart, "")
+                    ?.replace(Constants.Payment.TermEnd, "")
+
+            val itemsTemplate =
+                paymentTermClean?.substring(
+                    paymentTermClean.indexOf(Constants.Common.ItemsStart),
+                    paymentTermClean.indexOf(Constants.Common.ItemsEnd) + 10
+                )
+            val itemsTemplateClean = itemsTemplate?.replace(Constants.Common.ItemsStart, "")
+                ?.replace(Constants.Common.ItemsEnd, "")?.replace("\n", "")
+
+            var count = 1
+            var termItems = ""
+            term.dailySalesInvoices.forEach {
+                termItems += itemsTemplateClean?.replace(Constants.Common.Index, count.toString())
+                    ?.replace(Constants.Invoice.InvoiceNo, it.invoiceNo.toString())
+                    ?.replace(
+                        Constants.Payment.Amount,
+                        Main.app.getSession().currencySymbol + it.netTotal?.formatDecimalSeparator()
+                    )
+                termItems += "\n"
+                count += 1
+            }
+
+            items += paymentTermClean?.replace(itemsTemplate.toString(), termItems)
+                ?.replace(Constants.Payment.Term, term.paymentTerm.toString())
+            items += "\n"
+        }
+
+        templateText = templateText?.replace(paymentTermTemplateList.toString(), items)
+
+        templateText = templateText?.replace(
+            Constants.Common.TotalAmount,
+            Main.app.getSession().currencySymbol + saleRecord?.netTotal?.formatDecimalSeparator()
+        )
+        templateText?.let { PrinterManager.print(it) }
+        Log.d("Print", templateText.toString())
+    }
 }

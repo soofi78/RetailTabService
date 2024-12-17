@@ -113,7 +113,7 @@ class DriverMemoDetailsFragment : Fragment() {
                     Notify.toastLong("Download Failed")
                 }
             }).enque(
-                Network.api()?.getSaleOrderPDF(IdRequest(id = item.driverMemo.id))
+                Network.api()?.getDriverMemoPDF(IdRequest(id = item.driverMemo.id))
             ).execute()
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -17,8 +16,6 @@ import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
-import com.lfsolutions.retail.model.PaymentTermsResult
-import com.lfsolutions.retail.model.PaymentType
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
@@ -47,7 +44,7 @@ import java.util.Date
 
 class TaxInvoiceFragment : Fragment() {
 
-//    private lateinit var paymentTypes: ArrayList<PaymentType>
+    //    private lateinit var paymentTypes: ArrayList<PaymentType>
     private lateinit var binding: FragmentSaleOrderTaxInvoiceBinding
     private val args by navArgs<TaxInvoiceFragmentArgs>()
     private lateinit var customer: Customer
@@ -82,7 +79,6 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.salesInvoice?.invoiceDueDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
-//            getPaymentTerms()
         }
         return binding.root
 
@@ -195,6 +191,7 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.salesInvoice?.customerName =
                 binding.inputCustomerName.text.toString()
             Main.app.getTaxInvoice()?.salesInvoice?.paymentTermId = customer.paymentTermId
+            Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName = customer.paymentTerm
             uploadSignature()
         }
     }
@@ -215,7 +212,7 @@ class TaxInvoiceFragment : Fragment() {
                     Notify.toastLong("Unable to load products")
                 }
             }).enque(
-                Network.api()?.getProductForTaxInvoice(
+                Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
                         Main.app.getSession().defaultLocationId,
                         customer.id
@@ -229,7 +226,7 @@ class TaxInvoiceFragment : Fragment() {
             val qty = product.qty ?: 0.0
             val subTotal = (qty * (product.cost ?: 0.0))
             val discount = 0.0
-            val taxAmount = (product.getApplicableTaxRate().toDouble() / 100.0)
+            val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
             val total = (subTotal + taxAmount)
             Main.app.getTaxInvoice()?.addEquipment(

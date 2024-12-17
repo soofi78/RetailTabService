@@ -13,14 +13,13 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.CustomerOptionsSheetBinding
 import com.lfsolutions.retail.model.AllCustomersResult
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.LocationTenantIdRequestObject
-import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.delivery.DeliveryItemAdapter
+import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -29,7 +28,6 @@ import retrofit2.Response
 class CustomerOptionView : BottomSheetDialogFragment() {
 
     private lateinit var onItemClicked: DeliveryItemAdapter.OnItemClickListener
-    private var selectedCustomer: Customer? = null
     private lateinit var customers: ArrayList<Customer>
     private lateinit var binding: CustomerOptionsSheetBinding
     private lateinit var customerAdapter: DeliveryItemAdapter
@@ -92,10 +90,24 @@ class CustomerOptionView : BottomSheetDialogFragment() {
                 }
             }
         })
+        customerAdapter.setProductInfoClick(object : DeliveryItemAdapter.OnItemClickListener {
+            override fun onItemClick(customer: Customer) {
+                openCustomerProducts(customer)
+            }
+        })
         binding.customers.adapter = customerAdapter
         binding.customers.visibility = View.VISIBLE
     }
 
+    private fun openCustomerProducts(customer: Customer) {
+        val filterSheet = CustomerProductsBottomSheet()
+        filterSheet.customer = customer
+        requireActivity().supportFragmentManager.let {
+            filterSheet.show(
+                it, HistoryFilterSheet.TAG
+            )
+        }
+    }
 
     private fun isCandidateForFilter(query: String, customer: Customer): Boolean {
         if (query.isEmpty())
@@ -104,10 +116,13 @@ class CustomerOptionView : BottomSheetDialogFragment() {
         query.split(" ").toSet().forEach {
             contains =
                 contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.customerCode?.lowercase()?.contains(it) == true
-                        || customer.address1?.lowercase()?.contains(it) == true
-                        || customer.address2?.lowercase()?.contains(it) == true
-                        || customer.address3?.lowercase()?.contains(it) == true)
+                        || customer.customerCode?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.group?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.customerWorkArea?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.area?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.address1?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.address2?.lowercase()?.contains(it.lowercase()) == true
+                        || customer.address3?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }

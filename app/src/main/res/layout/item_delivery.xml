@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?selectableItemBackground"
@@ -17,6 +18,18 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/productInfo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:clickable="true"
+        android:foreground="?selectableItemBackground"
+        android:src="@drawable/ic_info"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtAddress"
@@ -39,43 +52,43 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtGroup"
         android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
         android:text="Group - BKE"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_weight="1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtAccountNo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
         android:text="A/C No. AZ0001"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_weight="1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtArea"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
         android:text="Area - -"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_weight="1" />
 
     <androidx.constraintlayout.helper.widget.Flow
-        app:layout_constraintStart_toStartOf="@id/txtName"
-        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/flowInfo"
         android:layout_width="0dp"
-        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         app:constraint_referenced_ids="txtGroup,txtAccountNo,txtArea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/txtName"
         app:layout_constraintTop_toBottomOf="@+id/txtPincode" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_right_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/arrow_right_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

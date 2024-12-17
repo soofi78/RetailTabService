@@ -11,7 +11,8 @@ data class Form(
     @SerializedName("date") var date: String? = null,
     @SerializedName("serialNo") var serialNo: String? = null,
     @SerializedName("lastModificationTime") var lastModificationTime: String? = null,
-    @SerializedName("type") var type: String? = null
+    @SerializedName("type") var type: String? = null,
+    @SerializedName("reportType") var reportType: String? = null
 
 ) {
     fun getType(): FormType? {
