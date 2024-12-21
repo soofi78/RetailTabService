@@ -82,6 +82,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
             customers.filter { isCandidateForFilter(query, it) } as ArrayList<Customer>?,
             DeliveryItemAdapter.CustomerItemType.All
         )
+        customerAdapter.enableProductInfo = true
         customerAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 dialog?.dismiss()

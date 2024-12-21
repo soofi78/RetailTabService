@@ -85,6 +85,7 @@ class CustomerProductsBottomSheet : BottomSheetDialogFragment() {
 
     private fun setProductAdapter(query: String = "") {
         productAdapter = ProductListAdapter(getFilteredProducts(query))
+        productAdapter.quantityOnly=true
         binding.products.adapter = productAdapter
     }
 

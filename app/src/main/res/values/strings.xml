@@ -128,5 +128,7 @@
     <string name="sign_in">Sign In</string>
     <string name="save_amp_approve"><![CDATA[Save & Approve]]></string>
     <string name="submit_for_approval">SUBMIT FOR APPROVAL</string>
+    <string name="label_confirm">Confirm</string>
+    <string name="confirm_selection">Confirm Selection</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,6 +15,7 @@ class ProductListAdapter(private val products: List<Product>) :
     RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     private var mListener: OnProductClickListener? = null
+    var quantityOnly = false
 
     class ViewHolder(val binding: ItemProductBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -27,13 +29,18 @@ class ProductListAdapter(private val products: List<Product>) :
         val equipment = products?.get(position)
         holder.itemView.tag = equipment
         holder.binding.txtProductName.text = equipment?.productName
+        Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
+            .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
+        if (quantityOnly) {
+            holder.binding.txtCategory.visibility = View.GONE
+            holder.binding.txtPrice.text = equipment?.qtyOnHand.toString()
+            return
+        }
+        holder.binding.txtCategory.visibility = View.VISIBLE
         holder.binding.txtCategory.text =
             """${equipment?.categoryName} | QTY Available: ${equipment?.qtyOnHand}"""
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
-
-        Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
-            .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
         holder.itemView.setOnClickListener {
             mListener?.onProductClick(it.tag as Product)
