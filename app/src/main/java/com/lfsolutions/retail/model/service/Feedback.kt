@@ -6,6 +6,7 @@ data class Feedback(
     @SerializedName("id") var id: String? = null,
     @SerializedName("title") var title: String? = null,
     @SerializedName("values") var values: String? = null,
+    @SerializedName("type") var type: String? = null,
     @SerializedName("selected") var selected: String? = null,
     @SerializedName("active") var active: Boolean? = null,
     @SerializedName("valueList") var feedbackValue: ArrayList<FeedbackValue> = arrayListOf(),

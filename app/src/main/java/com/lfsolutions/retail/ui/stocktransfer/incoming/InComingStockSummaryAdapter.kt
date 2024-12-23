@@ -167,7 +167,7 @@ class InComingStockSummaryAdapter(
             }).enque(
                 Network.api()?.getSerialNumbers(
                     stockTransferProducts?.get(position)?.productId,
-                    Main.app.getSession().defaultLocationId?.toLong()
+                    Main.app.getSession().wareHouseLocationId?.toLong()
                 )
             ).execute()
     }

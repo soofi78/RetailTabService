@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.CustomerOptionsSheetBinding
 import com.lfsolutions.retail.model.AllCustomersResult
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.CustomerWorkAreaTypeResult
 import com.lfsolutions.retail.model.LocationTenantIdRequestObject
+import com.lfsolutions.retail.model.WorkAreaTypes
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -29,6 +35,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
 
     private lateinit var onItemClicked: DeliveryItemAdapter.OnItemClickListener
     private lateinit var customers: ArrayList<Customer>
+    private var customersWorkAreas = ArrayList<WorkAreaTypes>()
     private lateinit var binding: CustomerOptionsSheetBinding
     private lateinit var customerAdapter: DeliveryItemAdapter
     override fun onCreateView(
@@ -50,11 +57,50 @@ class CustomerOptionView : BottomSheetDialogFragment() {
                 return true
             }
         })
-        getCustomerDetails()
+        getCustomerWorkAreas()
+    }
+
+    private fun getCustomerWorkAreas() {
+        NetworkCall.make()
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    customersWorkAreas.clear()
+                    customersWorkAreas.add(WorkAreaTypes(value = "0", displayText = "All"))
+                    (response?.body() as BaseResponse<CustomerWorkAreaTypeResult>).result?.items?.let {
+                        customersWorkAreas.addAll(it)
+                    }
+                    setCustomerWorkAreaAdapter()
+                    getCustomerDetails()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get customer work area")
+                }
+            }).autoLoadigCancel(Loading().forApi(requireActivity()))
+            .enque(Network.api()?.getAllCustomerWorkAreas()).execute()
+    }
+
+    private fun setCustomerWorkAreaAdapter() {
+        val adapter = ArrayAdapter(requireActivity(), R.layout.simple_text_item, customersWorkAreas)
+        binding.customerWorkArea.adapter = adapter
+        binding.customerWorkArea.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                getCustomerDetails()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
     }
 
     private fun getCustomerDetails() {
-        if (::customers.isInitialized.not()) NetworkCall.make()
+        NetworkCall.make()
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     customers =
@@ -70,11 +116,18 @@ class CustomerOptionView : BottomSheetDialogFragment() {
                 Network.api()?.getAllCustomers(
                     LocationTenantIdRequestObject(
                         Main.app.getSession().defaultLocationId,
-                        Main.app.getSession().tenantId
+                        Main.app.getSession().tenantId,
+                        getSelectedWorkArea().toInt()
                     )
                 )
             ).execute()
-        else setCustomerAdapter(customers, binding.searchView.query.toString())
+    }
+
+    private fun getSelectedWorkArea(): String {
+        val position =
+            if (binding.customerWorkArea.selectedItemPosition <= -1) 0 else binding.customerWorkArea.selectedItemPosition
+        return customersWorkAreas[position].value.toString()
+
     }
 
     private fun setCustomerAdapter(customers: ArrayList<Customer>, query: String = "") {

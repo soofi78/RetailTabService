@@ -92,7 +92,7 @@ class DeliveryItemAdapter(
 
         binding.txtArea.text =
             makeTextBold(
-                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
+                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.customerWorkArea),
                 startIndex = 6
             )
 
@@ -135,7 +135,7 @@ class DeliveryItemAdapter(
 
         binding.txtArea.text =
             makeTextBold(
-                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
+                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.customerWorkArea),
                 startIndex = 7
             )
 

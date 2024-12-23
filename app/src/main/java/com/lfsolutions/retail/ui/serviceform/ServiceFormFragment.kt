@@ -1,11 +1,13 @@
 package com.lfsolutions.retail.ui.serviceform
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -20,6 +22,8 @@ import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.service.FeedbackTypeResult
+import com.lfsolutions.retail.model.service.FeedbackTypes
 import com.lfsolutions.retail.model.service.ReportTypeResult
 import com.lfsolutions.retail.model.service.ReportTypes
 import com.lfsolutions.retail.model.service.ServiceTypeResult
@@ -52,6 +56,7 @@ class ServiceFormFragment : Fragment() {
     private val args by navArgs<ServiceFormFragmentArgs>()
     private lateinit var customer: Customer
     private val feedbacks = ArrayList<Feedback>()
+    private val feedbacksTypes = ArrayList<FeedbackTypes>()
     private lateinit var binding: FragmentServiceFormBinding
     private var serviceTypes = ArrayList<ServiceTypes>()
     private var reportTypes = ArrayList<ReportTypes>()
@@ -88,7 +93,31 @@ class ServiceFormFragment : Fragment() {
         setData()
         getServiceTypeData()
         setClickListener()
-        getFeedbackData()
+        getFeedbackTypeData()
+    }
+
+    private fun getFeedbackTypeData() {
+        if (feedbacksTypes.isEmpty().not())
+            return
+
+        val loading = Loading().forApi(requireActivity())
+        NetworkCall.make()
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    feedbacksTypes.clear()
+                    (response?.body() as RetailResponse<FeedbackTypeResult>).result?.items?.let {
+                        feedbacksTypes.addAll(it)
+                    }
+                    getFeedbackData()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+
+                }
+            })
+            .setTag("FEEDBACK")
+            .autoLoadigCancel(loading)
+            .enque(Network.api()?.getFeedbackTypes()).execute()
     }
 
     private fun getServiceTypeData() {
@@ -343,10 +372,23 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun setFeedbackData() {
-        feedbacks.forEach { feedback ->
-            val item = FeedbackItemView(context, feedback)
-            binding.feedbackViewHandler.addView(item)
-            item.setup(false)
+        feedbacksTypes.forEach { feedbackType ->
+            val feedbackTypeTitle = TextView(this@ServiceFormFragment.requireActivity()).apply {
+                id = View.generateViewId()
+                text = feedbackType.displayText
+                textSize = 18f
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setPadding(5, 5, 5, 5)
+                setTextColor(Color.BLACK)
+            }
+            binding.feedbackViewHandler.addView(feedbackTypeTitle)
+            feedbacks.forEach { feedback ->
+                if (feedback.type == feedbackType.displayText) {
+                    val item = FeedbackItemView(context, feedback)
+                    binding.feedbackViewHandler.addView(item)
+                    item.setup(false)
+                }
+            }
         }
     }
 

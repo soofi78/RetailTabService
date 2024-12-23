@@ -9,6 +9,7 @@ import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
+import com.lfsolutions.retail.model.CustomerWorkAreaTypeResult
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FilterRequest
@@ -58,6 +59,7 @@ import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
+import com.lfsolutions.retail.model.service.FeedbackTypeResult
 import com.lfsolutions.retail.model.service.ReportTypeResult
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
@@ -81,6 +83,8 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_CUSTOMERS))
     fun getAllCustomers(@Body location: LocationTenantIdRequestObject): Call<BaseResponse<AllCustomersResult>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ALL_CUSTOMERS_WORK_AREA))
+    fun getAllCustomerWorkAreas(): Call<BaseResponse<CustomerWorkAreaTypeResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
     fun getCustomerForm(@Body formRequest: FormsRequest): Call<RetailResponse<FormResult>>?
@@ -106,6 +110,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
     fun getFeedback(@Query("isDeliverySchedule") isDeliverySchedule: Boolean = false): Call<RetailResponse<ArrayList<Feedback>>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_FEEDBACK_FOR_COMPLAINT_SERVICE))
+    fun getFeedbackTypes(): Call<RetailResponse<FeedbackTypeResult>>
 
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_EQUIPMENT))
