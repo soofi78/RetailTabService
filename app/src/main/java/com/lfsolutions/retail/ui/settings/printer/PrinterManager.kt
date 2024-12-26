@@ -6,6 +6,10 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.provider.Settings
 import com.bumptech.glide.Glide
 import com.dantsu.escposprinter.EscPosPrinter
@@ -133,6 +137,31 @@ object PrinterManager {
             }
             var printText = printableText
             val urls = extractUrls(printText)
+
+            val foreignTextRegex =
+                "(?<=<a>)(.*?)(?=</a>)".toRegex()  // Regex to find text inside <a></a>
+            val printableText = "<a>111</a><a>222</a><a>333</a>"  // Sample input text
+
+
+            // Use findAll to get all matches
+            val matchResults = foreignTextRegex.findAll(printText)
+            if (matchResults != null) {
+                matchResults.forEach { matchResult ->
+                    // Replace each matched text inside <a></a> with an <img> tag
+                    val imgTag = "<img>${
+                        PrinterTextParserImg.bitmapToHexadecimalString(
+                            printer,
+                            getMultiLangTextAsImage(matchResult.value)
+                        )
+                    }</img>"
+                    // Replace the matched text with the <img> tag in printText
+                    printText = printText.replace(matchResult.value, imgTag)
+                }
+                // Finally, remove the <a></a> tags
+                printText = printText.replace("<a>", "").replace("</a>", "")
+
+            }
+
             urls.forEach {
                 try {
                     val bitmap: Bitmap = Glide.with(Main.app).asBitmap().load(it).submit().get()
@@ -174,5 +203,146 @@ object PrinterManager {
         return containedUrls
     }
 
+    fun getMultiLangTextAsImage(
+        text: String,
+        align: Paint.Align = Paint.Align.CENTER,
+        textSize: Float = 32f,
+        typeface: Typeface? = Typeface.SERIF
+    ): Bitmap? {
+        val paint = Paint()
+        paint.isAntiAlias = true
+        paint.color = Color.BLACK
+        paint.textSize = textSize
+        if (typeface != null) paint.typeface = typeface
+
+        // A real printlabel width (pixel)
+        val xWidth = 385f
+
+        // A height per text line (pixel)
+        var xHeight = textSize + 5
+
+        // it can be changed if the align's value is CENTER or RIGHT
+        var xPos = 0f
+
+        // If the original string data's length is over the width of print label,
+        // or '\n' character included,
+        // it will be increased per line gerneating.
+        var yPos = 27f
+
+        // If the original string data's length is over the width of print label,
+        // or '\n' character included,
+        // each lines splitted from the original string are added in this list
+        // 'PrintData' class has 3 members, x, y, and splitted string data.
+        val printDataList: MutableList<PrintData> = java.util.ArrayList()
+
+        // if '\n' character included in the original string
+        val tmpSplitList = text.split("\\n".toRegex()).toTypedArray()
+        for (i in 0..tmpSplitList.size - 1) {
+            val tmpString = tmpSplitList[i]
+
+            // calculate a width in each split string item.
+            var widthOfString = paint.measureText(tmpString)
+
+            // If the each split string item's length is over the width of print label,
+            if (widthOfString > xWidth) {
+                var lastString = tmpString
+                while (!lastString.isEmpty()) {
+                    var tmpSubString = ""
+
+                    // retrieve repeatedly until each split string item's length is
+                    // under the width of print label
+                    while (widthOfString > xWidth) {
+                        tmpSubString =
+                            if (tmpSubString.isEmpty()) lastString.substring(
+                                0,
+                                lastString.length - 1
+                            ) else tmpSubString.substring(0, tmpSubString.length - 1)
+                        widthOfString = paint.measureText(tmpSubString)
+                    }
+
+                    // this each split string item is finally done.
+                    if (tmpSubString.isEmpty()) {
+                        // this last string to print is need to adjust align
+                        if (align == Paint.Align.CENTER) {
+                            if (widthOfString < xWidth) {
+                                xPos = (xWidth - widthOfString) / 2
+                            }
+                        } else if (align == Paint.Align.RIGHT) {
+                            if (widthOfString < xWidth) {
+                                xPos = xWidth - widthOfString
+                            }
+                        }
+                        printDataList.add(PrintData(xPos, yPos, lastString))
+                        lastString = ""
+                    } else {
+                        // When this logic is reached out here, it means,
+                        // it's not necessary to calculate the x position
+                        // 'cause this string line's width is almost the same
+                        // with the width of print label
+                        printDataList.add(PrintData(0f, yPos, tmpSubString))
+
+                        // It means line is needed to increase
+                        yPos += 27f
+                        xHeight += 30f
+                        lastString = lastString.replaceFirst(tmpSubString.toRegex(), "")
+                        widthOfString = paint.measureText(lastString)
+                    }
+                }
+            } else {
+                // This split string item's length is
+                // under the width of print label already at first.
+                if (align == Paint.Align.CENTER) {
+                    if (widthOfString < xWidth) {
+                        xPos = (xWidth - widthOfString) / 2
+                    }
+                } else if (align == Paint.Align.RIGHT) {
+                    if (widthOfString < xWidth) {
+                        xPos = xWidth - widthOfString
+                    }
+                }
+                printDataList.add(PrintData(xPos, yPos, tmpString))
+            }
+            if (i != tmpSplitList.size - 1) {
+                // It means the line is needed to increase
+                yPos += 27f
+                xHeight += 30f
+            }
+        }
+
+        // If you want to print the text bold
+        //paint.setTypeface(Typeface.create(null as String?, Typeface.BOLD))
+
+        // create bitmap by calculated width and height as upper.
+        val bm: Bitmap =
+            Bitmap.createBitmap(xWidth.toInt(), xHeight.toInt(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bm)
+        canvas.drawColor(Color.WHITE)
+        for (tmpItem in printDataList) canvas.drawText(
+            tmpItem.text,
+            tmpItem.xPos,
+            tmpItem.yPos,
+            paint
+        )
+        return bm
+    }
+
+    internal class PrintData(var xPos: Float, var yPos: Float, var text: String) {
+
+        fun getxPos(): Float {
+            return xPos
+        }
+
+        fun setxPos(xPos: Float) {
+            this.xPos = xPos
+        }
+
+        fun getyPos(): Float {
+            return yPos
+        }
+
+        fun setyPos(yPos: Float) {
+            this.yPos = yPos
+        }
+    }
 
 }
