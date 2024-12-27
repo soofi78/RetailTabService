@@ -287,7 +287,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
                 }
             }).enque(
                 Network.api()?.getSerialNumbers(
-                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
+                    product.productId, Main.app.getSession().wareHouseLocationId?.toLong()
                 )
             ).execute()
     }
