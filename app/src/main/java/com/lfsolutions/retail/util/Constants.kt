@@ -30,7 +30,7 @@ object Constants {
     }
 
     object Payment {
-        const val Amount= "{{amount}}"
+        const val Amount = "{{amount}}"
         const val TermStart = "{{#paymentTerm}}"
         const val Term = "{{paymentTerm}}"
         const val TermEnd = "{{/paymentTerm}}"
@@ -78,6 +78,8 @@ object Constants {
     const val QRTagEnd = "</qrcode>"
     const val PrinterSettings = "Select Printer"
     const val SELECTED_BLUETOOTH: String = "Selected Bluetooth"
+    const val PRINTER_WIDTH: String = "printer_paper_width"
+    const val CHARACTER_PER_LINE = "character_per_line"
     const val AppTheme: String = "App Theme"
     const val ASCENDING = "Ascending"
     const val DESCENDING = "Descending"

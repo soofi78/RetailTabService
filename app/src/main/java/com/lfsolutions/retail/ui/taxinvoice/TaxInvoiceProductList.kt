@@ -193,7 +193,8 @@ class TaxInvoiceProductList : Fragment() {
     }
 
     private fun updateEquipmentListView(products: List<Product>) {
-        mAdapter = ProductListAdapter(products.filter { it.isAsset == false })
+        //products.filter { it.isAsset == false }
+        mAdapter = ProductListAdapter(products)
         mAdapter.setListener(object : ProductListAdapter.OnProductClickListener {
             override fun onProductClick(product: Product) {
                 findNavController().navigate(

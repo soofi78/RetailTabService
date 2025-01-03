@@ -55,7 +55,12 @@ object PrinterManager {
                 }
                 return false
             }
-            this.printer = EscPosPrinter(connection, 203, 48f, 32)
+            this.printer = EscPosPrinter(
+                connection,
+                203,
+                AppSession[Constants.PRINTER_WIDTH].replace("mm", "").trim().toFloat(),
+                AppSession.getInt(Constants.CHARACTER_PER_LINE)
+            )
         }
         val rawText = """  
         [C]<b><font size='big'>Test Print</font></b>
@@ -133,7 +138,12 @@ object PrinterManager {
         GlobalScope.launch(Dispatchers.IO) {
             if (printer == null || connection == null) {
                 this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
-                this@PrinterManager.printer = EscPosPrinter(connection, 203, 48f, 32)
+                this@PrinterManager.printer = EscPosPrinter(
+                    connection,
+                    203,
+                    AppSession[Constants.PRINTER_WIDTH].replace("mm", "").trim().toFloat(),
+                    AppSession.getInt(Constants.CHARACTER_PER_LINE)
+                )
             }
             var printText = printableText
             val urls = extractUrls(printText)

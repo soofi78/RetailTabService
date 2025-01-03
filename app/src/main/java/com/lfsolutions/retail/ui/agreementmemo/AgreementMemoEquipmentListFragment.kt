@@ -121,9 +121,6 @@ class AgreementMemoEquipmentListFragment : Fragment() {
                     query.split(" ").toSet()
                 )
             } as ArrayList<Product>
-
-
-
         updateEquipmentListView(filteredList)
     }
 
