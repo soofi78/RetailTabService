@@ -1,57 +1,23 @@
 package com.lfsolutions.retail.ui.documents
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
+import androidx.fragment.app.Fragment
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentCurrentStockBinding
-import com.lfsolutions.retail.databinding.FragmentHistoryListingBinding
-import com.lfsolutions.retail.model.CategoryItem
-import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.CustomerResponse
-import com.lfsolutions.retail.model.HistoryRequest
-import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.Product
-import com.lfsolutions.retail.model.SaleOrderToStockReceive
-import com.lfsolutions.retail.model.memo.AgreementMemo
-import com.lfsolutions.retail.model.memo.AgreementMemoHistoryResult
-import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
-import com.lfsolutions.retail.model.outgoingstock.StockTransfer
-import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
-import com.lfsolutions.retail.model.sale.SaleReceipt
-import com.lfsolutions.retail.model.sale.SaleReceiptResult
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
-import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
-import com.lfsolutions.retail.model.service.ComplaintService
-import com.lfsolutions.retail.model.service.ServiceFormBody
-import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.documents.history.HistoryListAdapter
-import com.lfsolutions.retail.ui.documents.history.HistoryTypeAdapter
-import com.lfsolutions.retail.ui.forms.FormsActivity
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
-import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -102,6 +68,7 @@ class CurrentStockFragment : Fragment() {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
                         || product.categoryName?.lowercase()?.contains(it) == true
+                        || product.inventoryCode?.lowercase()?.contains(it) == true
                         || product.unitName?.lowercase()?.contains(it) == true)
         }
         return contains

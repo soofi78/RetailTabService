@@ -46,7 +46,7 @@ class ServiceFormSummaryFragment : Fragment() {
         itemSwipeHelper?.attachToRecyclerView(mBinding.recyclerView)
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
-        mBinding.header.setBackText("Order Summary")
+        mBinding.header.setBackText("Service Form Summary")
         mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()

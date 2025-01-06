@@ -144,5 +144,11 @@
     <string name="paper_width">Paper Width</string>
     <string name="character_per_line">Character Per Line</string>
     <string name="test_print">Test Print</string>
+    <string name="po_no">PO No</string>
+    <string name="order_date">Order Date</string>
+    <string name="remarks_action"><![CDATA[Remarks & Action]]></string>
+    <string name="customer_basic_details">Customer Basic Details</string>
+    <string name="product_name">Product Name:</string>
+    <string name="allocated_assets">Allocated Assets</string>
 
 </resources>

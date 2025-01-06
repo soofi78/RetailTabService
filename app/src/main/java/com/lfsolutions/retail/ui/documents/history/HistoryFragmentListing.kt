@@ -1,11 +1,11 @@
 package com.lfsolutions.retail.ui.documents.history
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -30,21 +30,18 @@ import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListResult
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.model.sale.order.SaleOrderListResult
 import com.lfsolutions.retail.model.service.ComplaintService
-import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
+import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.ui.forms.FormsActivity
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
 import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -117,17 +114,7 @@ class HistoryFragmentListing : Fragment() {
     private fun setCustomerData() {
         customer?.let { binding.customerView.setCustomer(it) }
         binding.customerView.setOnClickListener {
-            OptionsBottomSheet.show(requireActivity().supportFragmentManager,
-                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
-                object : OnOptionItemClick {
-                    override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer?.let { it1 ->
-                            CustomerDetailActivity.start(
-                                requireActivity(), it1
-                            )
-                        }
-                    }
-                })
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 
@@ -438,6 +425,7 @@ class HistoryFragmentListing : Fragment() {
                     userId = Main.app.getSession().userId
                     startDate = this@HistoryFragmentListing.startDate
                     endDate = this@HistoryFragmentListing.endDate
+                    customerId = customer?.id.toString()
                     filter = customer?.name
                 })
             ).execute()
@@ -468,6 +456,7 @@ class HistoryFragmentListing : Fragment() {
                         startDate = this@HistoryFragmentListing.startDate
                         endDate = this@HistoryFragmentListing.endDate
                         filter = customer?.name
+                        customerId = customer?.id.toString()
                         status = "X"
                     })
                 ).execute()
@@ -509,29 +498,30 @@ class HistoryFragmentListing : Fragment() {
 //                    })
 //                ).execute()
 //        } else {
-            NetworkCall.make()
-                .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
-                .setCallback(object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        val res = response?.body() as BaseResponse<SaleOrderListResult>
-                        order.clear()
-                        res.result?.items?.forEach {
-                            order.add(it)
-                        }
-                        setAdapter(order, false)
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading sale orders"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val res = response?.body() as BaseResponse<SaleOrderListResult>
+                    order.clear()
+                    res.result?.items?.forEach {
+                        order.add(it)
                     }
+                    setAdapter(order, false)
+                }
 
-                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                        Notify.toastLong("Unable to get sale receipt list")
-                    }
-                }).enque(Network.api()?.getSaleOrderBySalePerson(HistoryRequest().apply {
-                    locationId = Main.app.getSession().defaultLocationId
-                    userId = Main.app.getSession().userId
-                    startDate = this@HistoryFragmentListing.startDate
-                    endDate = this@HistoryFragmentListing.endDate
-                    filter = customer?.name
-                    status = "X"
-                })).execute()
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get sale receipt list")
+                }
+            }).enque(Network.api()?.getSaleOrderBySalePerson(HistoryRequest().apply {
+                locationId = Main.app.getSession().defaultLocationId
+                userId = Main.app.getSession().userId
+                startDate = this@HistoryFragmentListing.startDate
+                endDate = this@HistoryFragmentListing.endDate
+                filter = customer?.name
+                customerId = customer?.id.toString()
+                status = "X"
+            })).execute()
 //        }
     }
 

@@ -7,9 +7,9 @@ import com.lfsolutions.retail.model.CustomerIdRequest
 import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomerPaymentsResult
 import com.lfsolutions.retail.model.CustomerResponse
-import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.model.CustomerWorkAreaTypeResult
+import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FilterRequest
@@ -46,6 +46,7 @@ import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.outgoingstock.StockTransferHistoryResult
 import com.lfsolutions.retail.model.outgoingstock.StockTransferRequestBody
+import com.lfsolutions.retail.model.product.AssetResult
 import com.lfsolutions.retail.model.profile.UserProfile
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.SaleReceiptResult
@@ -56,11 +57,11 @@ import com.lfsolutions.retail.model.sale.order.SaleOrderRequest
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.model.service.ActionTypeResult
 import com.lfsolutions.retail.model.service.ComplaintServiceHistoryResult
-import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ComplaintTypeResult
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.FeedbackTypeResult
 import com.lfsolutions.retail.model.service.ReportTypeResult
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
@@ -83,7 +84,10 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_CUSTOMERS))
     fun getAllCustomers(@Body location: LocationTenantIdRequestObject): Call<BaseResponse<AllCustomersResult>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ALL_CUSTOMERS_WORK_AREA))
+    @POST(
+        Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup)
+            .plus(Api.Name.GET_ALL_CUSTOMERS_WORK_AREA)
+    )
     fun getAllCustomerWorkAreas(): Call<BaseResponse<CustomerWorkAreaTypeResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
@@ -111,7 +115,10 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Feedback).plus(Api.Name.GET_FEEDBACK))
     fun getFeedback(@Query("isDeliverySchedule") isDeliverySchedule: Boolean = false): Call<RetailResponse<ArrayList<Feedback>>>
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_FEEDBACK_FOR_COMPLAINT_SERVICE))
+    @POST(
+        Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup)
+            .plus(Api.Name.GET_FEEDBACK_FOR_COMPLAINT_SERVICE)
+    )
     fun getFeedbackTypes(): Call<RetailResponse<FeedbackTypeResult>>
 
 
@@ -303,6 +310,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.SALE_ORDER_FOR_DELIVERY_ORDER))
     fun convertToDeliveryOrder(@Body idRequest: IdRequest): Call<BaseResponse<DeliveryOrderDTO>>
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.AssetManagement))
+    fun getAllocatedAssets(@Body idRequest: HistoryRequest): Call<BaseResponse<AssetResult>>
 }
 
 

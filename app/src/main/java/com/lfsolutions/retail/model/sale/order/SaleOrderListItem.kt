@@ -90,7 +90,7 @@ data class SaleOrderListItem(
     }
 
     override fun getDescription(): String {
-        return customerName ?: ""
+        return (customerName ?: "") + "\nPO No. " + (poNo ?: "")
     }
 
     override fun getAmount(): String {

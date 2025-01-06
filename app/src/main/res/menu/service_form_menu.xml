@@ -8,6 +8,6 @@
     <item
         android:id="@+id/navigation_service_form_summary"
         android:icon="@drawable/order"
-        android:title="@string/label_order" />
+        android:title="@string/label_summary" />
 
 </menu>

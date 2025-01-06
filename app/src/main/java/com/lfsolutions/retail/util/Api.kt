@@ -87,5 +87,7 @@ object Api {
             "salesOrder/GetApiSalesOrderForInvoice"
         const val SALE_ORDER_FOR_DELIVERY_ORDER =
             "deliveryOrder/GetApiSalesOrderDetailItems"
+        const val AssetManagement =
+            "AssetManagement/GetAll"
     }
 }

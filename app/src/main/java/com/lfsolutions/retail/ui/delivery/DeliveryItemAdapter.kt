@@ -14,9 +14,7 @@ import com.lfsolutions.retail.util.makeTextBold
 class DeliveryItemAdapter(
     var customers: ArrayList<Customer>? = ArrayList(),
     val type: CustomerItemType,
-) :
-
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mListener: OnItemClickListener? = null
     private var mProductInfoClick: OnItemClickListener? = null
@@ -90,11 +88,22 @@ class DeliveryItemAdapter(
                 ), startIndex = 8
             )
 
-        binding.txtArea.text =
-            makeTextBold(
-                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.customerWorkArea),
-                startIndex = 6
-            )
+        if (customer?.area != null) {
+            binding.txtArea.text =
+                makeTextBold(
+                    text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
+                    startIndex = 6
+                )
+        } else {
+            binding.txtArea.text =
+                makeTextBold(
+                    text = binding.txtArea.context.getString(
+                        R.string.prefix_area,
+                        customer?.customerWorkArea
+                    ),
+                    startIndex = 6
+                )
+        }
 
         binding.root.tag = customer
         binding.root.setOnClickListener {
@@ -135,7 +144,10 @@ class DeliveryItemAdapter(
 
         binding.txtArea.text =
             makeTextBold(
-                text = binding.txtArea.context.getString(R.string.prefix_area, customer?.customerWorkArea),
+                text = binding.txtArea.context.getString(
+                    R.string.prefix_area,
+                    customer?.customerWorkArea
+                ),
                 startIndex = 7
             )
 

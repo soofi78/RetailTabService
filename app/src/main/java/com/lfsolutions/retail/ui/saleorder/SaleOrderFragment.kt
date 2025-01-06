@@ -20,13 +20,10 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
+import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -81,13 +78,14 @@ class SaleOrderFragment : Fragment() {
         addOnClickListener()
         setHeaderData()
         setCustomerData()
+        binding.dateLabel.text= getString(R.string.order_date)
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.setText("$day-$month-$year")
-                    Main.app.getTaxInvoice()?.salesInvoice?.invoiceDate =
+                    Main.app.getSaleOrder()?.SalesOrder?.SoDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
             })
@@ -106,14 +104,7 @@ class SaleOrderFragment : Fragment() {
     private fun setCustomerData() {
         customer?.let { binding.customerView.setCustomer(it) }
         binding.customerView.setOnClickListener {
-            OptionsBottomSheet.show(
-                requireActivity().supportFragmentManager,
-                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
-                object : OnOptionItemClick {
-                    override fun onOptionItemClick(optionItem: OptionItem) {
-                        CustomerDetailActivity.start(requireActivity(), customer)
-                    }
-                })
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager,customer)
         }
     }
 
@@ -165,6 +156,7 @@ class SaleOrderFragment : Fragment() {
         }
 
         Main.app.getSaleOrder()?.serializeItems()
+        Main.app.getSaleOrder()?.SalesOrder?.PoNo = binding.poNumber.text.toString()
         Main.app.getSaleOrder()?.SalesOrder?.CustomerName =
             binding.inputCustomerName.text.toString()
         Main.app.getSaleOrder()?.SalesOrder?.PaymentTermId = customer.paymentTermId

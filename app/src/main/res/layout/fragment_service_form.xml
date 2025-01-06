@@ -421,11 +421,11 @@
 
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/boilerCard"
+                android:id="@+id/allocatedAssets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardCornerRadius="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -436,53 +436,27 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp">
 
-                    <ImageView
-                        android:id="@+id/ivIdentity"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/labelAllocatedAssets"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_identity"
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:text="@string/allocated_assets"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/lblboilderIdty"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="Boiler Identity"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
-                        app:layout_constraintTop_toTopOf="parent" />
-
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvBoilerList"
-                        android:layout_width="0dp"
+                        android:id="@+id/allocatedAssetsList"
+                        android:layout_width="match_parent"
+                        android:layout_margin="5dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
-                        app:layout_constraintTop_toBottomOf="@+id/lblboilderIdty"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/boilerlist_item" />
+                        app:layout_constraintTop_toBottomOf="@+id/labelAllocatedAssets"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="vertical"
+                        tools:listitem="@layout/allocated_asset_item" />
 
-                    <TextView
-                        android:id="@+id/txtSelectMore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="Tap to select More"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/ivIdentity"
-                        app:layout_constraintTop_toBottomOf="@+id/rvBoilerList" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/btnAdd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/round_yellow_background"
-                        android:src="@drawable/add_black"
-                        app:layout_constraintBottom_toBottomOf="@+id/txtSelectMore"
-                        app:layout_constraintStart_toEndOf="@+id/txtSelectMore"
-                        app:layout_constraintTop_toBottomOf="@+id/rvBoilerList" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -494,7 +468,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                app:layout_constraintTop_toBottomOf="@+id/boilerCard">
+                app:layout_constraintTop_toBottomOf="@+id/allocatedAssets">
 
                 <LinearLayout
                     android:id="@+id/feedbackViewHandler"
@@ -617,7 +591,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@android:color/transparent"
-                    android:hint="Remarks"
+                    android:hint="@string/remarks_action"
                     android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:padding="10dp"

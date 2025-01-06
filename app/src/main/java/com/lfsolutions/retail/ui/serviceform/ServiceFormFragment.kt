@@ -19,9 +19,12 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentServiceFormBinding
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.service.Feedback
+import com.lfsolutions.retail.model.HistoryRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.product.Asset
+import com.lfsolutions.retail.model.product.AssetResult
+import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.model.service.FeedbackTypeResult
 import com.lfsolutions.retail.model.service.FeedbackTypes
 import com.lfsolutions.retail.model.service.ReportTypeResult
@@ -33,14 +36,11 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
+import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
 import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -53,6 +53,7 @@ import java.util.Date
 
 class ServiceFormFragment : Fragment() {
 
+    private val allocatedAssets = ArrayList<Asset>()
     private val args by navArgs<ServiceFormFragmentArgs>()
     private lateinit var customer: Customer
     private val feedbacks = ArrayList<Feedback>()
@@ -94,6 +95,7 @@ class ServiceFormFragment : Fragment() {
         getServiceTypeData()
         setClickListener()
         getFeedbackTypeData()
+        getAllocatedAssets()
     }
 
     private fun getFeedbackTypeData() {
@@ -118,6 +120,50 @@ class ServiceFormFragment : Fragment() {
             .setTag("FEEDBACK")
             .autoLoadigCancel(loading)
             .enque(Network.api()?.getFeedbackTypes()).execute()
+    }
+
+    private fun getAllocatedAssets() {
+        if (allocatedAssets.isEmpty().not()) {
+            setAssetData()
+            return
+        }
+
+        val loading = Loading().forApi(requireActivity())
+        NetworkCall.make()
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    allocatedAssets.clear()
+                    (response?.body() as BaseResponse<AssetResult>).result?.items?.let {
+                        allocatedAssets.addAll(it)
+                    }
+                    setAssetData()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+
+                }
+            })
+            .setTag("Allocated Assets")
+            .autoLoadigCancel(loading)
+            .enque(
+                Network.api()?.getAllocatedAssets(
+                    HistoryRequest(
+                        sorting = "Id ASC",
+                        status = null,
+                        invoiceType = null,
+                        maxResultCount = 1000,
+                        locationId = Main.app.getSession().defaultLocationId,
+                        filter = null,
+                        customerId = customer.id.toString()
+                    )
+                )
+            ).execute()
+    }
+
+    private fun setAssetData() {
+        binding.allocatedAssets.visibility =
+            if (allocatedAssets.isEmpty()) View.GONE else View.VISIBLE
+        binding.allocatedAssetsList.adapter = AllocatedAssetsAdapter(allocatedAssets)
     }
 
     private fun getServiceTypeData() {
@@ -256,11 +302,6 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun onPrintAndSave() {
-        if (isAllFeedbackSelected().not()) {
-            Notify.toastLong("Please select all feedbacks")
-            return
-        }
-
         if (Main.app.getComplaintService()?.complaintServiceDetails?.size == 0) {
             Notify.toastLong("Please add products")
             return
@@ -395,19 +436,7 @@ class ServiceFormFragment : Fragment() {
     private fun setCustomerData() {
         customer.let { binding.cardCustomerInfo.setCustomer(it) }
         binding.cardCustomerInfo.setOnClickListener {
-            OptionsBottomSheet.show(
-                requireActivity().supportFragmentManager,
-                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
-                object : OnOptionItemClick {
-                    override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer.let { it1 ->
-                            CustomerDetailActivity.start(
-                                requireActivity(),
-                                it1
-                            )
-                        }
-                    }
-                })
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 

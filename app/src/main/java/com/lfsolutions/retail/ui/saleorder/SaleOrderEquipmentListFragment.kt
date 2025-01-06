@@ -139,6 +139,7 @@ class SaleOrderEquipmentListFragment : Fragment() {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
                         || product.categoryName?.lowercase()?.contains(it) == true
+                        || product.inventoryCode?.lowercase()?.contains(it) == true
                         || product.unitName?.lowercase()?.contains(it) == true)
         }
         return contains

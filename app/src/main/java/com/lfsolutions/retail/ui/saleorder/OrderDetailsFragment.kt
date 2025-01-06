@@ -77,6 +77,7 @@ class OrderDetailsFragment : Fragment() {
         binding.orderNo.text = order?.salesOrder?.soNo
         binding.orderDate.text = order?.salesOrder?.InvoiceDateFormatted()
         binding.status.text = order?.salesOrder?.StatusFormatted()
+        binding.poNumber.text = order?.salesOrder?.poNo
         binding.invoiceAmount.text = order?.salesOrder?.InvoiceNetTotalFromatted()
         binding.balance.text = order?.salesOrder?.BalanceFormatted()
         binding.customer.text = order?.salesOrder?.customerName

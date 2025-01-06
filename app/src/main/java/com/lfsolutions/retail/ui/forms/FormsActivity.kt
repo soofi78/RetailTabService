@@ -44,6 +44,10 @@ class FormsActivity : BaseActivity() {
         )
     }
 
+    fun getCustomerId(): Int? {
+        return customer?.id
+    }
+
     private fun showBottomNavigationBar() {
         mBinding.navView.visibility = View.VISIBLE
     }

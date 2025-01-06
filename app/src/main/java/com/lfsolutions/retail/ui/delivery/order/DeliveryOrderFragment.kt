@@ -26,10 +26,7 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.ui.customer.CustomerDetailActivity
-import com.lfsolutions.retail.ui.widgets.options.OnOptionItemClick
-import com.lfsolutions.retail.ui.widgets.options.OptionItem
-import com.lfsolutions.retail.ui.widgets.options.OptionsBottomSheet
+import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
@@ -114,19 +111,7 @@ class DeliveryOrderFragment : Fragment() {
     private fun setCustomerData() {
         customer.let { binding.customerView.setCustomer(it) }
         binding.customerView.setOnClickListener {
-            OptionsBottomSheet.show(
-                requireActivity().supportFragmentManager,
-                arrayListOf(OptionItem("View Customer", R.drawable.person_black)),
-                object : OnOptionItemClick {
-                    override fun onOptionItemClick(optionItem: OptionItem) {
-                        customer.let { it1 ->
-                            CustomerDetailActivity.start(
-                                requireActivity(),
-                                it1
-                            )
-                        }
-                    }
-                })
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 
