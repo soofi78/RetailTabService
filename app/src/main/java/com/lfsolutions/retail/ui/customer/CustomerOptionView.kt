@@ -64,13 +64,17 @@ class CustomerOptionView : BottomSheetDialogFragment() {
         NetworkCall.make()
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    customersWorkAreas.clear()
-                    customersWorkAreas.add(WorkAreaTypes(value = "0", displayText = "All"))
-                    (response?.body() as BaseResponse<CustomerWorkAreaTypeResult>).result?.items?.let {
-                        customersWorkAreas.addAll(it)
+                    try {
+                        customersWorkAreas.clear()
+                        customersWorkAreas.add(WorkAreaTypes(value = "0", displayText = "All"))
+                        (response?.body() as BaseResponse<CustomerWorkAreaTypeResult>).result?.items?.let {
+                            customersWorkAreas.addAll(it)
+                        }
+                        setCustomerWorkAreaAdapter()
+                        getCustomerDetails()
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
                     }
-                    setCustomerWorkAreaAdapter()
-                    getCustomerDetails()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {

@@ -58,7 +58,7 @@ class Network private constructor() {
         apiServices = networkClient!!.create(ApiServices::class.java)
     }
 
-    public fun getApis(): ApiServices? {
+    fun getApis(): ApiServices? {
         return instance?.apiServices
     }
 

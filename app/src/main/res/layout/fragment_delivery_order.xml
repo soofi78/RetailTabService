@@ -263,8 +263,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/rounded_corner_yellow_background"
-                        android:text="Load Products"
-                        android:visibility="gone" />
+                        android:text="Load Products" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnViewOrder"

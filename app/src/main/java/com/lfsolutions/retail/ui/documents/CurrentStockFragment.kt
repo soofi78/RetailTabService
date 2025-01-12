@@ -67,9 +67,9 @@ class CurrentStockFragment : Fragment() {
         query.forEach {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it) == true
-                        || product.inventoryCode?.lowercase()?.contains(it) == true
-                        || product.unitName?.lowercase()?.contains(it) == true)
+                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
+                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }

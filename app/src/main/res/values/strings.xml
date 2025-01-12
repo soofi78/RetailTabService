@@ -150,5 +150,6 @@
     <string name="customer_basic_details">Customer Basic Details</string>
     <string name="product_name">Product Name:</string>
     <string name="allocated_assets">Allocated Assets</string>
+    <string name="foc">FOC</string>
 
 </resources>

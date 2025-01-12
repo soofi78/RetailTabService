@@ -15,10 +15,9 @@ import com.lfsolutions.retail.databinding.FragmentSaleOrderInvoiceStockEquipment
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.FilterRequest
-import com.lfsolutions.retail.model.LocationIdRequestObject
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
@@ -117,8 +116,8 @@ class DeliveryOrderProductList : Fragment() {
         var filteredList = ArrayList<Product>()
         filteredList.addAll(productList.filter { it.categoryName == categoryItem.name })
 
-        if (categoryItem.name.equals("ALL",true))
-            categories.forEach { cat->
+        if (categoryItem.name.equals("ALL", true))
+            categories.forEach { cat ->
                 filteredList.addAll(productList.filter { it.categoryName == cat.name })
             }
 
@@ -143,9 +142,9 @@ class DeliveryOrderProductList : Fragment() {
         query.forEach {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it) == true
-                        || product.inventoryCode?.lowercase()?.contains(it) == true
-                        || product.unitName?.lowercase()?.contains(it) == true)
+                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
+                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }
@@ -189,7 +188,12 @@ class DeliveryOrderProductList : Fragment() {
                 }
             }).enque(
                 Network.api()
-                    ?.getEquipmentList(ProductListRB(Main.app.getSession().defaultLocationId,filter))
+                    ?.getEquipmentList(
+                        ProductListRB(
+                            Main.app.getSession().defaultLocationId,
+                            filter
+                        )
+                    )
             ).execute()
     }
 

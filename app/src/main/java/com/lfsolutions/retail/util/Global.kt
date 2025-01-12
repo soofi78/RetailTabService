@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -33,6 +34,7 @@ fun String.formatDecimalSeparator(): String {
     else {
         val fmt = NumberFormat.getCurrencyInstance(Locale.getDefault())
         fmt.maximumFractionDigits = 2
+        fmt.roundingMode = RoundingMode.HALF_UP
         return fmt.format(this.toDouble()).replace(fmt.currency.symbol, "")
     }
 }

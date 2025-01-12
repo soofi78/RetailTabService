@@ -38,7 +38,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
     private var equipmentlist: List<Product> = arrayListOf()
     private lateinit var customer: Customer
     private lateinit var _binding: ProductListBinding
-    private val mBinding get() = _binding!!
+    private val mBinding get() = _binding
     private lateinit var mAdapter: EquipmentAdapter
     private lateinit var categoryAdapter: ProductCategoryAdapter
     private var categories = ArrayList<CategoryItem>()
@@ -46,7 +46,7 @@ class AgreementMemoEquipmentListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (::_binding.isInitialized.not()) {
             _binding = ProductListBinding.inflate(inflater, container, false)
             customer =
@@ -134,9 +134,9 @@ class AgreementMemoEquipmentListFragment : Fragment() {
         query.forEach {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it) == true
-                        || product.inventoryCode?.lowercase()?.contains(it) == true
-                        || product.unitName?.lowercase()?.contains(it) == true)
+                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
+                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }
@@ -180,7 +180,12 @@ class AgreementMemoEquipmentListFragment : Fragment() {
                 }
             }).enque(
                 Network.api()
-                    ?.getEquipmentList(ProductListRB(Main.app.getSession().defaultLocationId,filter))
+                    ?.getEquipmentList(
+                        ProductListRB(
+                            Main.app.getSession().defaultLocationId,
+                            filter
+                        )
+                    )
             ).execute()
     }
 

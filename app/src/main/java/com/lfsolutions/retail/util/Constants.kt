@@ -73,6 +73,12 @@ object Constants {
         const val OrderQty = "{{order.qty}}"
     }
 
+    object Receipt {
+        const val TransactionNo = "{{receipt.transactionNo}}"
+        const val TransactionDate = "{{receipt.transactionDate}}"
+        const val TransactionAmount = "{{receipt.transactionAmount}}"
+    }
+
     const val FormType: String = "FormType"
     const val QRTagStart = "<qrcode>"
     const val QRTagEnd = "</qrcode>"

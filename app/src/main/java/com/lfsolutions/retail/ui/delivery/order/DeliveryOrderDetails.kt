@@ -30,7 +30,7 @@ data class DeliveryOrderDetails(
     }
 
     override fun getDescription(): String {
-        return "$uom x$qty"
+        return "$uom x$deliveredQty"
     }
 
     override fun getAmount(): String {

@@ -11,7 +11,11 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ItemTouchHelper.END
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
+import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+import androidx.recyclerview.widget.ItemTouchHelper.START
+import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -21,8 +25,8 @@ import com.lfsolutions.retail.model.CustomerIdsList
 import com.lfsolutions.retail.model.CustomersResult
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.model.outgoingstock.OutGoingStockProductsResults
+import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -167,7 +171,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     ) {
         startActivity(Intent(requireActivity(), IncomingStockFlowActivity::class.java).apply {
             putExtra(Constants.InComingProducts, Gson().toJson(stockTransferProducts))
-            putExtra(Constants.CustomerId,customerId)
+            putExtra(Constants.CustomerId, customerId)
         })
     }
 
@@ -279,7 +283,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ) {
-                getDefaultUIUtil().clearView((viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView())
+                val view = (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView()
+                    ?: return
+                getDefaultUIUtil().clearView(view)
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -297,10 +303,12 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
+                val view = (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView()
+                    ?: return
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
-                    (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView(),
+                    view,
                     dX,
                     dY,
                     actionState,

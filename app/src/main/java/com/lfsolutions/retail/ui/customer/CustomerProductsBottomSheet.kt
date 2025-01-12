@@ -85,7 +85,7 @@ class CustomerProductsBottomSheet : BottomSheetDialogFragment() {
 
     private fun setProductAdapter(query: String = "") {
         productAdapter = ProductListAdapter(getFilteredProducts(query))
-        productAdapter.quantityOnly=true
+        productAdapter.quantityOnly = true
         binding.products.adapter = productAdapter
     }
 
@@ -108,9 +108,9 @@ class CustomerProductsBottomSheet : BottomSheetDialogFragment() {
         query.forEach {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it) == true
-                        || product.inventoryCode?.lowercase()?.contains(it) == true
-                        || product.unitName?.lowercase()?.contains(it) == true)
+                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
+                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }

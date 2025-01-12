@@ -2,10 +2,10 @@ package com.lfsolutions.retail.ui.taxinvoice
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -52,10 +52,6 @@ class InvoiceDetailsFragment : Fragment() {
     private lateinit var item: SaleInvoiceListItem
     private val args by navArgs<InvoiceDetailsFragmentArgs>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -97,6 +93,7 @@ class InvoiceDetailsFragment : Fragment() {
                 }
             })
 
+
         binding.pdf.setOnClickListener {
             getPDFLink()
         }
@@ -106,6 +103,14 @@ class InvoiceDetailsFragment : Fragment() {
 
         binding.print.setOnClickListener {
             printSaleInvoice()
+        }
+
+        if (invoice?.salesInvoice?.type == "F") {
+            binding.pay.text = getString(R.string.foc)
+            binding.pay.setOnClickListener {
+
+            }
+            binding.balance.text = """${Main.app.getSession().currencySymbol}0"""
         }
     }
 
@@ -163,7 +168,7 @@ class InvoiceDetailsFragment : Fragment() {
             ?.replace(Constants.Common.ItemsEnd, "")
 
         var items = ""
-        var count = 0;
+        var count = 0
         invoice?.salesInvoiceDetail?.forEach {
             items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
                 ?.replace(Constants.Invoice.ProductName, it.productName.toString())

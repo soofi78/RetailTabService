@@ -15,10 +15,9 @@ import com.lfsolutions.retail.databinding.FragmentServiceFormEquipmentListBindin
 import com.lfsolutions.retail.model.CategoryItem
 import com.lfsolutions.retail.model.CategoryResult
 import com.lfsolutions.retail.model.Customer
-import com.lfsolutions.retail.model.Product
-import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.FilterRequest
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.ProductListRB
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.network.BaseResponse
@@ -41,12 +40,12 @@ class ServiceFormEquipmentListFragment : Fragment() {
     private var equipmentlist: List<Product> = arrayListOf()
     private lateinit var customer: Customer
     private lateinit var _binding: FragmentServiceFormEquipmentListBinding
-    private val mBinding get() = _binding!!
+    private val mBinding get() = _binding
     private lateinit var mAdapter: EquipmentAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (::_binding.isInitialized.not()) {
             _binding = FragmentServiceFormEquipmentListBinding.inflate(inflater, container, false)
             customer =
@@ -109,8 +108,8 @@ class ServiceFormEquipmentListFragment : Fragment() {
         var filteredList = ArrayList<Product>()
         filteredList.addAll(equipmentlist.filter { it.categoryName == categoryItem.name })
 
-        if (categoryItem.name.equals("ALL",true))
-            categories.forEach { cat->
+        if (categoryItem.name.equals("ALL", true))
+            categories.forEach { cat ->
                 filteredList.addAll(equipmentlist.filter { it.categoryName == cat.name })
             }
 
@@ -137,9 +136,9 @@ class ServiceFormEquipmentListFragment : Fragment() {
         query.forEach {
             contains =
                 contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it) == true
-                        || product.inventoryCode?.lowercase()?.contains(it) == true
-                        || product.unitName?.lowercase()?.contains(it) == true)
+                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
+                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
+                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
         }
         return contains
     }
@@ -185,7 +184,12 @@ class ServiceFormEquipmentListFragment : Fragment() {
                 }
             }).enque(
                 Network.api()
-                    ?.getEquipmentList(ProductListRB(Main.app.getSession().defaultLocationId,filter))
+                    ?.getEquipmentList(
+                        ProductListRB(
+                            Main.app.getSession().defaultLocationId,
+                            filter
+                        )
+                    )
             ).execute()
     }
 

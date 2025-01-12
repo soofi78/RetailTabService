@@ -32,9 +32,14 @@ data class SaleReceipt(
     @SerializedName("addOn") var addOn: String? = null,
     @SerializedName("apiThirdPartyResponse") var apiThirdPartyResponse: String? = null,
     @SerializedName("salesReceiptDetail") var salesReceiptDetail: String? = null,
-    @SerializedName("items") var items: ArrayList<ReceiptItemDetails>? = null
+    @SerializedName("items") var items: ArrayList<ReceiptItemDetails>? = null,
+    @SerializedName("address1") var address1: String? = null,
+    @SerializedName("address2") var address2: String? = null,
+    @SerializedName("zatcaQRCode") var zatcaQRCode: String? = null,
 
-) : HistoryItemInterface {
+    ) : HistoryItemInterface {
+
+
     override fun getTitle(): String {
         return receiptNo + " / " + getFormattedDate()
     }
