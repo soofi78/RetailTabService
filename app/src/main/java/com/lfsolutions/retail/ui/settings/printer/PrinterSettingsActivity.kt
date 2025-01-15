@@ -33,7 +33,7 @@ class PrinterSettingsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPrinterSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        widths = getResources().getStringArray(R.array.paperWidth);
+        widths = getResources().getStringArray(R.array.paperWidth)
         setHeader()
         checkPermissions()
     }
@@ -47,7 +47,7 @@ class PrinterSettingsActivity : BaseActivity() {
             requestPermissions(
                 arrayOf(Manifest.permission.BLUETOOTH),
                 1
-            );
+            )
         } else if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S && checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_ADMIN
@@ -56,7 +56,7 @@ class PrinterSettingsActivity : BaseActivity() {
             requestPermissions(
                 arrayOf(Manifest.permission.BLUETOOTH_ADMIN),
                 2
-            );
+            )
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_CONNECT
@@ -65,7 +65,7 @@ class PrinterSettingsActivity : BaseActivity() {
             requestPermissions(
                 arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
                 3
-            );
+            )
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
             && checkSelfPermission(
                 this,
@@ -89,13 +89,13 @@ class PrinterSettingsActivity : BaseActivity() {
             binding.instructions.visibility = View.GONE
             binding.printerSettingsView.visibility = View.VISIBLE
             binding.printers.adapter = ArrayAdapter(this, R.layout.simple_text_item, names)
-            names.indexOf(PrinterManager.getDefaultPrinterBluetoothDevice()?.name).let {
-                if (it > -1) binding.printers.setSelection(it)
-            }
+            names.indexOf(PrinterManager.getDefaultPrinterBluetoothDevice()?.name)
+                .let { if (it > -1) binding.printers.setSelection(it) }
 
-            widths.indexOf(AppSession[Constants.PRINTER_WIDTH]).let {
-                if (it > -1) binding.width.setSelection(it)
-            }
+            widths.indexOf(AppSession[Constants.PRINTER_WIDTH])
+                .let { if (it > -1) binding.width.setSelection(it) }
+
+            binding.characters.setText(AppSession.getInt(Constants.CHARACTER_PER_LINE).toString())
 
 
             binding.printers.onItemSelectedListener = object : OnItemSelectedListener {
@@ -124,7 +124,11 @@ class PrinterSettingsActivity : BaseActivity() {
                     Notify.toastLong("Please select a printer")
                     return@setOnClickListener
                 }
-                AppSession.put(Constants.PRINTER_WIDTH, widths[binding.width.selectedItemPosition])
+
+                AppSession.put(
+                    Constants.PRINTER_WIDTH,
+                    widths[binding.width.selectedItemPosition]
+                )
                 AppSession.put(
                     Constants.CHARACTER_PER_LINE,
                     binding.characters.text.toString().toInt()

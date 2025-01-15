@@ -2,12 +2,14 @@ package com.lfsolutions.retail.ui.customer
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -53,6 +55,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (::customers.isInitialized.not()) return false
                 setCustomerAdapter(customers, newText ?: "")
                 return true
             }
@@ -61,26 +64,27 @@ class CustomerOptionView : BottomSheetDialogFragment() {
     }
 
     private fun getCustomerWorkAreas() {
-        NetworkCall.make()
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    try {
-                        customersWorkAreas.clear()
-                        customersWorkAreas.add(WorkAreaTypes(value = "0", displayText = "All"))
-                        (response?.body() as BaseResponse<CustomerWorkAreaTypeResult>).result?.items?.let {
-                            customersWorkAreas.addAll(it)
-                        }
-                        setCustomerWorkAreaAdapter()
-                        getCustomerDetails()
-                    } catch (ex: Exception) {
-                        ex.printStackTrace()
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                try {
+                    if (isAdded.not()) return
+                    customersWorkAreas.clear()
+                    customersWorkAreas.add(WorkAreaTypes(value = "0", displayText = "All"))
+                    (response?.body() as BaseResponse<CustomerWorkAreaTypeResult>).result?.items?.let {
+                        customersWorkAreas.addAll(it)
                     }
+                    setCustomerWorkAreaAdapter()
+                    getCustomerDetails()
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
                 }
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get customer work area")
-                }
-            }).autoLoadigCancel(Loading().forApi(requireActivity()))
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                if (isAdded.not()) return
+                Notify.toastLong("Unable to get customer work area")
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity()))
             .enque(Network.api()?.getAllCustomerWorkAreas()).execute()
     }
 
@@ -89,10 +93,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
         binding.customerWorkArea.adapter = adapter
         binding.customerWorkArea.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 getCustomerDetails()
             }
@@ -104,27 +105,24 @@ class CustomerOptionView : BottomSheetDialogFragment() {
     }
 
     private fun getCustomerDetails() {
-        NetworkCall.make()
-            .setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    customers =
-                        (response?.body() as BaseResponse<AllCustomersResult>).result?.items!!
-                    setCustomerAdapter(customers, binding.searchView.query.toString())
-                }
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                customers = (response?.body() as BaseResponse<AllCustomersResult>).result?.items!!
+                setCustomerAdapter(customers, binding.searchView.query.toString())
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get customer data")
-                }
-            }).autoLoadigCancel(Loading().forApi(requireActivity()))
-            .enque(
-                Network.api()?.getAllCustomers(
-                    LocationTenantIdRequestObject(
-                        Main.app.getSession().defaultLocationId,
-                        Main.app.getSession().tenantId,
-                        getSelectedWorkArea().toInt()
-                    )
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to get customer data")
+            }
+        }).autoLoadigCancel(Loading().forApi(requireActivity())).enque(
+            Network.api()?.getAllCustomers(
+                LocationTenantIdRequestObject(
+                    Main.app.getSession().defaultLocationId,
+                    Main.app.getSession().tenantId,
+                    getSelectedWorkArea().toInt()
                 )
-            ).execute()
+            )
+        ).execute()
     }
 
     private fun getSelectedWorkArea(): String {
@@ -135,10 +133,11 @@ class CustomerOptionView : BottomSheetDialogFragment() {
     }
 
     private fun setCustomerAdapter(customers: ArrayList<Customer>, query: String = "") {
-        customerAdapter = DeliveryItemAdapter(
-            customers.filter { isCandidateForFilter(query, it) } as ArrayList<Customer>?,
-            DeliveryItemAdapter.CustomerItemType.All
-        )
+        customerAdapter = DeliveryItemAdapter(customers.filter {
+            isCandidateForFilter(
+                query, it
+            )
+        } as ArrayList<Customer>?, DeliveryItemAdapter.CustomerItemType.All)
         customerAdapter.enableProductInfo = true
         customerAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
@@ -168,35 +167,49 @@ class CustomerOptionView : BottomSheetDialogFragment() {
     }
 
     private fun isCandidateForFilter(query: String, customer: Customer): Boolean {
-        if (query.isEmpty())
-            return true
+        if (query.isEmpty()) return true
         var contains = true
         query.split(" ").toSet().forEach {
-            contains =
-                contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.customerCode?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.group?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.customerWorkArea?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.area?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.address1?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.address2?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.address3?.lowercase()?.contains(it.lowercase()) == true)
+            contains = contains && (customer.name?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.customerCode?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.group?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.customerWorkArea?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.area?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.address1?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.address2?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.address3?.lowercase()
+                ?.contains(it.lowercase()) == true)
         }
         return contains
     }
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialog?.setOnShowListener { it ->
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener { it ->
             val d = it as BottomSheetDialog
             val bottomSheet =
                 d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
+                val layoutParams = bottomSheet.layoutParams
+
+                val windowHeight = getWindowHeight()
+                if (layoutParams != null) {
+                    layoutParams.height = windowHeight
+                }
+                bottomSheet.layoutParams = layoutParams
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
-        return super.onCreateDialog(savedInstanceState)
+        return dialog
+    }
+
+    private fun getWindowHeight(): Int {
+        // Calculate window height for fullscreen use
+        val displayMetrics = DisplayMetrics()
+        (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
     }
 
     fun setOnItemClicked(onItemClickListener: DeliveryItemAdapter.OnItemClickListener) {

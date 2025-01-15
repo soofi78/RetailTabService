@@ -163,9 +163,10 @@ class TaxInvoiceProductList : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    filterProducts(categoryAdapter.getSelectedItem(), newText)
+                if (::categoryAdapter.isInitialized.not()) {
+                    return false
                 }
+                newText?.let { filterProducts(categoryAdapter.getSelectedItem(), it) }
                 return true
             }
         })

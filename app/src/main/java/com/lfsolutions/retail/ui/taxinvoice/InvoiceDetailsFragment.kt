@@ -159,10 +159,14 @@ class InvoiceDetailsFragment : Fragment() {
         )
 
 
-        val itemTemplate = templateText?.substring(
-            templateText.indexOf(Constants.Common.ItemsStart),
-            templateText.indexOf(Constants.Common.ItemsEnd) + 10
-        )
+        val itemTemplate = try {
+            templateText?.substring(
+                templateText.indexOf(Constants.Common.ItemsStart),
+                templateText.indexOf(Constants.Common.ItemsEnd) + 10
+            )
+        } catch (ex: Exception) {
+            templateText
+        }
 
         val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
             ?.replace(Constants.Common.ItemsEnd, "")

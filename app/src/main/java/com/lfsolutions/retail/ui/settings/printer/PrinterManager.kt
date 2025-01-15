@@ -36,32 +36,36 @@ object PrinterManager {
 
     @SuppressLint("MissingPermission")
     suspend fun sendConnectionPrint(device: BluetoothDevice): Boolean {
-
-        if (printer == null || connection?.device?.address != device.address) {
-            connection?.disconnect()
-            connection = try {
-                BluetoothConnection(device)
-            } catch (exception: EscPosConnectionException) {
-                exception.printStackTrace()
-                null
-            } catch (exception: Exception) {
-                exception.printStackTrace()
-                null
-            }
-
-            if (connection == null) {
-                withContext(Dispatchers.Main) {
-                    Notify.toastLong("Unable to connect printer")
-                }
-                return false
-            }
-            this.printer = EscPosPrinter(
-                connection,
-                203,
-                AppSession[Constants.PRINTER_WIDTH].replace("mm", "").trim().toFloat(),
-                AppSession.getInt(Constants.CHARACTER_PER_LINE)
-            )
+        printer?.disconnectPrinter()
+        printer = null
+        connection?.disconnect()
+        connection = try {
+            BluetoothConnection(device)
+        } catch (exception: EscPosConnectionException) {
+            exception.printStackTrace()
+            null
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            null
         }
+
+        if (connection == null) {
+            withContext(Dispatchers.Main) {
+                Notify.toastLong("Unable to connect printer")
+            }
+            return false
+        }
+        val printerWidth =
+            AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
+                ?.toFloat() ?: 48f
+        val dpi = (203 / 48) * printerWidth
+        this.printer = EscPosPrinter(
+            connection,
+            300,
+            printerWidth,
+            AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
+        )
+
         val rawText = """  
         [C]<b><font size='big'>Test Print</font></b>
         [C]================================
@@ -138,11 +142,14 @@ object PrinterManager {
         GlobalScope.launch(Dispatchers.IO) {
             if (printer == null || connection == null) {
                 this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
+                val printerWidth =
+                    AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
+                        ?.toFloat() ?: 48f
                 this@PrinterManager.printer = EscPosPrinter(
                     connection,
                     203,
-                    AppSession[Constants.PRINTER_WIDTH].replace("mm", "").trim().toFloat(),
-                    AppSession.getInt(Constants.CHARACTER_PER_LINE)
+                    printerWidth,
+                    AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
                 )
             }
             var printText = printableText
@@ -218,7 +225,7 @@ object PrinterManager {
         align: Paint.Align = Paint.Align.CENTER,
         textSize: Float = 32f,
         typeface: Typeface? = Typeface.SERIF
-    ): Bitmap? {
+    ): Bitmap {
         val paint = Paint()
         paint.isAntiAlias = true
         paint.color = Color.BLACK

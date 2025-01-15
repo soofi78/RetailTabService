@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,7 +27,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
     private var unitName: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ProductQuantityUpdateSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,11 +46,18 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
             binding.etPrice.text?.length?.let { it1 -> binding.etPrice.setSelection(it1) }
             SoftKeyBoard.show(requireActivity(), binding.etPrice)
         }
-        binding.etPrice.addTextChangedListener {
-            if (binding.etPrice.text?.isNotEmpty() == true)
-                onProductDetailsChangeListener.onPriceChanged(
-                    binding.etPrice.text.toString().replace(",", "").toDouble()
-                )
+        binding.done.setOnClickListener {
+            onProductDetailsChangeListener.onPriceChanged(
+                binding.etPrice.text.toString().replace(",", "").toDouble()
+            )
+            onProductDetailsChangeListener.onQuantityChanged(
+                binding.txtQty.text.toString().toDouble()
+            )
+            dismiss()
+        }
+
+        binding.cancel.setOnClickListener {
+            dismiss()
         }
 
         binding.etPrice.isEnabled = Main.app.getSession().isEditPrice
@@ -61,19 +67,11 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         if (Main.app.getSession().isEditPrice) {
             binding.txtUnitName.setCompoundDrawables(
                 null, null, ContextCompat.getDrawable(
-                    binding.root.context,
-                    R.drawable.ic_edit
+                    binding.root.context, R.drawable.ic_edit
                 ), null
             )
         } else {
             binding.txtUnitName.setCompoundDrawables(null, null, null, null)
-        }
-
-        binding.txtQty.addTextChangedListener {
-            if (binding.txtQty.text?.isNotEmpty() == true)
-                onProductDetailsChangeListener.onQuantityChanged(
-                    binding.txtQty.text.toString().toDouble()
-                )
         }
 
         binding.btnSub.setOnClickListener {

@@ -102,7 +102,7 @@ class ReceiptDetailsFragment : Fragment() {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
                 if ((res.result?.size ?: 0) > 0) {
-                    preparePrintTemplate(res.result?.get(4))
+                    preparePrintTemplate(res.result?.get(0))
                 }
             }
 
@@ -111,7 +111,7 @@ class ReceiptDetailsFragment : Fragment() {
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading order template..."))
             .enque(
-                Network.api()?.getReceiptTemplatePrint(TypeRequest(13))
+                Network.api()?.getReceiptTemplatePrint(TypeRequest(4))
             ).execute()
     }
 

@@ -47,12 +47,8 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     private lateinit var itemSwipeHelper: ItemTouchHelper
     private var getCustomersResponse: RetailResponse<CustomersResult>? = null
-    private var _binding: FragmentDeliveryBinding? = null
-
-    private val mBinding get() = _binding!!
-
+    private lateinit var binding: FragmentDeliveryBinding
     private lateinit var mUrgentAdapter: DeliveryItemAdapter
-
     private lateinit var mToVisitAdapter: DeliveryItemAdapter
     private lateinit var mScheduleAdapter: DeliveryItemAdapter
 
@@ -60,8 +56,8 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentDeliveryBinding.inflate(inflater, container, false)
-        return mBinding.root
+        binding = FragmentDeliveryBinding.inflate(inflater, container, false)
+        return binding.root
 
     }
 
@@ -69,16 +65,16 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         super.onViewCreated(view, savedInstanceState)
         setAdapters(null, "")
         if (Main.app.getSession().isSupervisor == false) {
-            mBinding.recyclerViewUrgent.visibility = View.GONE
-            mBinding.cardUrgent.visibility = View.GONE
+            binding.recyclerViewUrgent.visibility = View.GONE
+            binding.cardUrgent.visibility = View.GONE
         }
-        addVerticalItemDecoration(mBinding.recyclerViewToVisit, requireContext())
-        addVerticalItemDecoration(mBinding.recyclerViewUrgent, requireContext())
-        addVerticalItemDecoration(mBinding.recyclerViewSchedule, requireContext())
-        mBinding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
+        addVerticalItemDecoration(binding.recyclerViewToVisit, requireContext())
+        addVerticalItemDecoration(binding.recyclerViewUrgent, requireContext())
+        addVerticalItemDecoration(binding.recyclerViewSchedule, requireContext())
+        binding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
 
 
-        mBinding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -89,8 +85,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }
         })
 
-        mBinding.fabSelectCustomer.setOnClickListener {
+        binding.fabSelectCustomer.setOnClickListener {
             val filterSheet = CustomerOptionView()
+
             filterSheet.setOnItemClicked(object : DeliveryItemAdapter.OnItemClickListener {
                 override fun onItemClick(customer: Customer) {
                     createNewFormFor(customer)
@@ -116,16 +113,14 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun isCandidateForFilter(query: String, customer: Customer): Boolean {
-        if (query.isNullOrEmpty())
-            return true
+        if (query.isNullOrEmpty()) return true
         var contains = true
         query.split(" ").toSet().forEach {
-            contains =
-                contains && (customer.name?.lowercase()?.contains(it.lowercase()) == true
-                        || customer.customerCode?.lowercase()?.contains(it) == true
-                        || customer.address1?.lowercase()?.contains(it) == true
-                        || customer.address2?.lowercase()?.contains(it) == true
-                        || customer.address3?.lowercase()?.contains(it) == true)
+            contains = contains && (customer.name?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.customerCode?.lowercase()
+                ?.contains(it) == true || customer.address1?.lowercase()
+                ?.contains(it) == true || customer.address2?.lowercase()
+                ?.contains(it) == true || customer.address3?.lowercase()?.contains(it) == true)
         }
         return contains
     }
@@ -166,8 +161,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun openInStockProductSummaryActivity(
-        stockTransferProducts: java.util.ArrayList<StockTransferProduct>?,
-        customerId: Int
+        stockTransferProducts: java.util.ArrayList<StockTransferProduct>?, customerId: Int
     ) {
         startActivity(Intent(requireActivity(), IncomingStockFlowActivity::class.java).apply {
             putExtra(Constants.InComingProducts, Gson().toJson(stockTransferProducts))
@@ -191,11 +185,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         getCustomerDetails()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-
-    }
 
     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
         getCustomersResponse = response?.body() as RetailResponse<CustomersResult>
@@ -203,26 +192,22 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun setAdapters(getCustomersResponse: RetailResponse<CustomersResult>?, s: String) {
-        mUrgentAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getUrgentCustomersList()
+        mUrgentAdapter = DeliveryItemAdapter(getCustomersResponse?.result?.getUrgentCustomersList()
+            ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+            DeliveryItemAdapter.CustomerItemType.Urgent)
+        mToVisitAdapter =
+            DeliveryItemAdapter(getCustomersResponse?.result?.getToVisitsCustomersList()
                 ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
-            DeliveryItemAdapter.CustomerItemType.Urgent
-        )
-        mToVisitAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getToVisitsCustomersList()
+                DeliveryItemAdapter.CustomerItemType.ToVisit)
+        mScheduleAdapter =
+            DeliveryItemAdapter(getCustomersResponse?.result?.getScheduledCustomersList()
                 ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
-            DeliveryItemAdapter.CustomerItemType.ToVisit
-        )
-        mScheduleAdapter = DeliveryItemAdapter(
-            getCustomersResponse?.result?.getScheduledCustomersList()
-                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
-            DeliveryItemAdapter.CustomerItemType.Scheduled
-        )
-        mBinding.recyclerViewUrgent.adapter = mUrgentAdapter
-        mBinding.recyclerViewToVisit.adapter = mToVisitAdapter
+                DeliveryItemAdapter.CustomerItemType.Scheduled)
+        binding.recyclerViewUrgent.adapter = mUrgentAdapter
+        binding.recyclerViewToVisit.adapter = mToVisitAdapter
         itemSwipeHelper = ItemTouchHelper(getSwipeToDeleteListener())
-        itemSwipeHelper.attachToRecyclerView(mBinding.recyclerViewSchedule)
-        mBinding.recyclerViewSchedule.adapter = mScheduleAdapter
+        itemSwipeHelper.attachToRecyclerView(binding.recyclerViewSchedule)
+        binding.recyclerViewSchedule.adapter = mScheduleAdapter
         mUrgentAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 displayItemDetails(customer)
@@ -250,11 +235,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun getSwipeToDeleteListener(): SimpleCallback {
-        return object :
-            SimpleCallback(
-                0,
-                LEFT or RIGHT
-            ) {
+        return object : SimpleCallback(
+            0, LEFT or RIGHT
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -269,8 +252,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }
 
             override fun getMovementFlags(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
                 if (viewHolder is DeliveryItemAdapter.ViewHolderScheduled) {
@@ -280,8 +262,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }
 
             override fun clearView(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
             ) {
                 val view = (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView()
                     ?: return
@@ -306,13 +287,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 val view = (viewHolder as DeliveryItemAdapter.ViewHolderScheduled).getSwipableView()
                     ?: return
                 getDefaultUIUtil().onDraw(
-                    c,
-                    recyclerView,
-                    view,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
+                    c, recyclerView, view, dX, dY, actionState, isCurrentlyActive
                 )
             }
 
@@ -349,14 +324,13 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 Notify.toastLong("Unable to delete")
                 getCustomerDetails()
             }
-        }).autoLoadigCancel(Loading().forApi(requireActivity()))
-            .enque(
-                Network.api()?.deleteCustomerFromVisitationSchedule(
-                    IdRequest(
-                        mScheduleAdapter.customers?.get(position)?.id
-                    )
+        }).autoLoadigCancel(Loading().forApi(requireActivity())).enque(
+            Network.api()?.deleteCustomerFromVisitationSchedule(
+                IdRequest(
+                    mScheduleAdapter.customers?.get(position)?.id
                 )
-            ).execute()
+            )
+        ).execute()
     }
 
 

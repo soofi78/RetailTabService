@@ -47,8 +47,15 @@ class AppSession {
         fun clearSharedPref(): Boolean {
             val editor = Main.app
                 .getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit()
+            val printerWidth = AppSession[Constants.PRINTER_WIDTH]
+            val characters = getInt(Constants.CHARACTER_PER_LINE, 32)
+            val bluetooth = AppSession[Constants.SELECTED_BLUETOOTH]
             editor.clear()
-            return editor.commit()
+            val cleared = editor.commit()
+            put(Constants.PRINTER_WIDTH, printerWidth)
+            put(Constants.CHARACTER_PER_LINE, characters)
+            put(Constants.SELECTED_BLUETOOTH, bluetooth)
+            return cleared
         }
 
         fun put(key: String?, value: Int): Boolean {
@@ -112,7 +119,7 @@ class AppSession {
             return savedSession.getBoolean(key, defaultValue)
         }
 
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun remove(key: String?) {
             val editor = Main.app
                 .getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit()
