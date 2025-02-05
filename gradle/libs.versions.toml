@@ -29,6 +29,7 @@ googleFirebaseCrashlytics = "3.0.2"
 firebasePerf = "21.0.1"
 googleFirebaseFirebasePerf = "1.4.2"
 firebaseAnalytics = "22.1.2"
+chukker = "4.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,8 @@ printer = { group = "com.github.DantSu", name = "ESCPOS-ThermalPrinter-Android",
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf", version.ref = "firebasePerf" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+chukker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chukker" }
+chukkerRelease = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chukker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

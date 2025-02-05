@@ -64,7 +64,7 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             salesOrderDetail.ProductImage.toString(),
             salesOrderDetail.ProductName.toString(),
             salesOrderDetail.Qty,
-            salesOrderDetail.NetTotal / salesOrderDetail.Qty,
+            salesOrderDetail.CostWithoutTax,
             salesOrderDetail.UnitName.toString()
         )
         modal.setOnProductDetailsChangedListener(object :

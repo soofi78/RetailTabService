@@ -50,6 +50,7 @@ data class Customer(
     @SerializedName("picName") var picName: String? = null,
     @SerializedName("customerWorkArea") var customerWorkArea: String? = null,
     @SerializedName("isVisitationSchedule") var isVisitationSchedule: Boolean? = null,
+    @SerializedName("salesOrderId") var saleOrderId: Int? = null,
     @SerializedName("visitDate") var visitDate: String? = null
 
 ) : Serializable

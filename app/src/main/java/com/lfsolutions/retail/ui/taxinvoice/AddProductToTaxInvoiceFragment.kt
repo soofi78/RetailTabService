@@ -29,12 +29,12 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
+import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
-import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -70,14 +70,14 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun setData() {
         mBinding.txtQty.text = "1"
-        product?.qtyOnHand?.let {
+        product.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
-        mBinding.txtProductName.text = product?.productName
-        mBinding.txtCategory.text = product?.categoryName
+        mBinding.txtProductName.text = product.productName
+        mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product?.cost?.formatDecimalSeparator()
-        Glide.with(this).load(Main.app.getBaseUrl() + product?.imagePath).centerCrop()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+        Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility =
             if (product.isSerialEquipment()) View.VISIBLE else View.GONE
@@ -86,6 +86,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
+        mBinding.checkboxIsExpired.text = "Return"
     }
 
     private fun setHeaderData() {
@@ -98,7 +99,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun setApplicableTaxAdapter() {
-        val adapter = product?.applicableTaxes?.let {
+        val adapter = product.applicableTaxes?.let {
             ArrayAdapter(
                 requireActivity(), R.layout.simple_text_item, it
             )
@@ -107,8 +108,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun getApplicableTax(): Int {
-        if (product.applicableTaxes == null || product.applicableTaxes?.isEmpty() == true)
-            return 0
+        if (product.applicableTaxes == null || product.applicableTaxes?.isEmpty() == true) return 0
 
         var tax = 0
         product.applicableTaxes?.forEach {
@@ -156,10 +156,6 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun addOnClickListener() {
         mBinding.btnSub.setOnClickListener {
-            if (mBinding.txtQty.text.toString().toDouble() <= 0) {
-                mBinding.txtQty.text = "1"
-                return@setOnClickListener
-            }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
         }
@@ -185,7 +181,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             }
 
             if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
-                    .toInt() != selectedSerialNumbers.size
+                    .toDouble() != selectedSerialNumbers.size.toDouble()
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
                 return@setOnClickListener
@@ -200,11 +196,11 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     private fun openQuantityUpdateDialog() {
         val modal = ProductQuantityUpdateSheet()
         modal.setProductDetails(
-            product?.imagePath.toString(),
-            product?.productName.toString(),
+            product.imagePath.toString(),
+            product.productName.toString(),
             mBinding.txtQty.text.toString().toDouble(),
-            product?.cost ?: 0.0,
-            product?.unitName.toString()
+            product.cost ?: 0.0,
+            product.unitName.toString()
         )
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
@@ -214,7 +210,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             }
 
             override fun onPriceChanged(price: Double) {
-                product?.cost = price
+                product.cost = price
                 updateTotal()
             }
         })
@@ -238,9 +234,12 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             }
         }
 
-        val qty = mBinding.txtQty.text.toString().toDouble()
-        val subTotal =
-            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0))
+
+        var qty = mBinding.txtQty.text.toString().toDouble()
+        if (mBinding.checkboxIsExpired.isChecked) {
+            qty *= -1
+        }
+        val subTotal = (qty * (product.cost ?: 0.0))
         val discount = 0.0
         val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
         val netTotal = (subTotal - discount) + taxAmount
@@ -293,7 +292,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
 
     private fun addSerialNumberClick() {
         mBinding.addSerialNumber.setOnClickListener {
-            if (serialNumbers == null || serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
+            getSerialNumbersList()
         }
     }
 
@@ -345,6 +344,11 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun getSerialNumbersList() {
+        val call = if (mBinding.checkboxIsExpired.isChecked) Network.api()?.getSerialNumbersReturn(
+            product.productId, Main.app.getSession().defaultLocationId?.toLong()
+        ) else Network.api()?.getSerialNumbers(
+            product.productId, Main.app.getSession().defaultLocationId?.toLong()
+        )
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading serial numbers"))
             .setCallback(object : OnNetworkResponse {
@@ -358,11 +362,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get serial numbers list")
                 }
-            }).enque(
-                Network.api()?.getSerialNumbers(
-                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
-                )
-            ).execute()
+            }).enque(call).execute()
     }
 
 }

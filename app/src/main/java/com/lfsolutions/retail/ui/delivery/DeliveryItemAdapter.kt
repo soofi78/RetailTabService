@@ -21,7 +21,11 @@ class DeliveryItemAdapter(
     var enableProductInfo = false
 
     class SimpleCustomerHolder(val binding: ItemDeliveryBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+        fun getSwipableView(): View {
+            return binding.swipeAble
+        }
+    }
 
     class ViewHolderScheduled(val binding: ItemScheduledBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -71,13 +75,28 @@ class DeliveryItemAdapter(
         } else {
             binding.swipeAble.setBackgroundColor(binding.swipeAble.resources.getColor(R.color.white))
         }
-        binding.txtGroup.text =
-            makeTextBold(
-                text = binding.txtGroup.context.getString(
-                    R.string.prefix_group,
-                    customer?.group
-                ), startIndex = 8
-            )
+
+        binding.saleOrderLabel.visibility =
+            if ((customer?.saleOrderId ?: 0) > 0) View.VISIBLE else View.GONE
+
+        customer?.group?.let {
+            binding.txtGroup.text =
+                makeTextBold(
+                    text = binding.txtGroup.context.getString(
+                        R.string.prefix_group,
+                        customer.group
+                    ), startIndex = 8
+                )
+        } ?: run {
+            binding.txtGroup.text =
+                makeTextBold(
+                    text = binding.txtGroup.context.getString(
+                        R.string.prefix_group,
+                        ""
+                    ), startIndex = 8
+                )
+        }
+
         binding.txtName.text = customer?.name
         binding.txtAddress.text = customer?.address1
         binding.txtAccountNo.text =
@@ -91,7 +110,7 @@ class DeliveryItemAdapter(
         if (customer?.area != null) {
             binding.txtArea.text =
                 makeTextBold(
-                    text = binding.txtArea.context.getString(R.string.prefix_area, customer?.area),
+                    text = binding.txtArea.context.getString(R.string.prefix_area, customer.area),
                     startIndex = 6
                 )
         } else {
@@ -125,13 +144,24 @@ class DeliveryItemAdapter(
     }
 
     private fun setUergentToVisitData(binding: ItemDeliveryBinding, customer: Customer?) {
-        binding.txtGroup.text =
-            makeTextBold(
-                text = binding.txtGroup.context.getString(
-                    R.string.prefix_group,
-                    customer?.group
-                ), startIndex = 8
-            )
+        customer?.group?.let {
+            binding.txtGroup.text =
+                makeTextBold(
+                    text = binding.txtGroup.context.getString(
+                        R.string.prefix_group,
+                        customer.group
+                    ), startIndex = 8
+                )
+        } ?: run {
+            binding.txtGroup.text =
+                makeTextBold(
+                    text = binding.txtGroup.context.getString(
+                        R.string.prefix_group,
+                        "-"
+                    ), startIndex = 8
+                )
+        }
+
         binding.txtName.text = customer?.name
         binding.txtAddress.text = customer?.address1
         binding.txtAccountNo.text =

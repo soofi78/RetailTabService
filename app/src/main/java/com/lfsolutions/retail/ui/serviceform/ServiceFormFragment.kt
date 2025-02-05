@@ -43,6 +43,7 @@ import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
+
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -68,8 +69,7 @@ class ServiceFormFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentServiceFormBinding.inflate(layoutInflater, container, false)
@@ -99,12 +99,10 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun getFeedbackTypeData() {
-        if (feedbacksTypes.isEmpty().not())
-            return
+        if (feedbacksTypes.isEmpty().not()) return
 
         val loading = Loading().forApi(requireActivity())
-        NetworkCall.make()
-            .setCallback(object : OnNetworkResponse {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     feedbacksTypes.clear()
                     (response?.body() as RetailResponse<FeedbackTypeResult>).result?.items?.let {
@@ -116,10 +114,8 @@ class ServiceFormFragment : Fragment() {
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                 }
-            })
-            .setTag("FEEDBACK")
-            .autoLoadigCancel(loading)
-            .enque(Network.api()?.getFeedbackTypes()).execute()
+            }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedbackTypes())
+            .execute()
     }
 
     private fun getAllocatedAssets() {
@@ -129,8 +125,7 @@ class ServiceFormFragment : Fragment() {
         }
 
         val loading = Loading().forApi(requireActivity())
-        NetworkCall.make()
-            .setCallback(object : OnNetworkResponse {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     allocatedAssets.clear()
                     (response?.body() as BaseResponse<AssetResult>).result?.items?.let {
@@ -142,17 +137,14 @@ class ServiceFormFragment : Fragment() {
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                 }
-            })
-            .setTag("Allocated Assets")
-            .autoLoadigCancel(loading)
-            .enque(
+            }).setTag("Allocated Assets").autoLoadigCancel(loading).enque(
                 Network.api()?.getAllocatedAssets(
                     HistoryRequest(
                         sorting = "Id ASC",
                         status = null,
                         invoiceType = null,
                         maxResultCount = 1000,
-                        locationId = Main.app.getSession().defaultLocationId,
+                        locationId = 0,
                         filter = null,
                         customerId = customer.id.toString()
                     )
@@ -168,8 +160,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun getServiceTypeData() {
         if (serviceTypes.isEmpty()) {
-            NetworkCall.make()
-                .setCallback(object : OnNetworkResponse {
+            NetworkCall.make().setCallback(object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         (response?.body() as RetailResponse<ServiceTypeResult>).result?.items?.let {
                             serviceTypes.addAll(it)
@@ -181,8 +172,7 @@ class ServiceFormFragment : Fragment() {
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                     }
-                })
-                .autoLoadigCancel(Loading().forApi(requireActivity()))
+                }).autoLoadigCancel(Loading().forApi(requireActivity()))
                 .enque(Network.api()?.getServiceType()).execute()
         } else {
             setServiceTypeAdapter()
@@ -191,8 +181,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun getReportTypeData() {
         if (reportTypes.isEmpty()) {
-            NetworkCall.make()
-                .setCallback(object : OnNetworkResponse {
+            NetworkCall.make().setCallback(object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                         (response?.body() as RetailResponse<ReportTypeResult>).result?.items?.let {
                             reportTypes.addAll(it)
@@ -203,8 +192,7 @@ class ServiceFormFragment : Fragment() {
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                     }
-                })
-                .autoLoadigCancel(Loading().forApi(requireActivity()))
+                }).autoLoadigCancel(Loading().forApi(requireActivity()))
                 .enque(Network.api()?.getReportType()).execute()
         } else {
             setReportTypeAdapter()
@@ -225,8 +213,7 @@ class ServiceFormFragment : Fragment() {
         binding.btnCheckIn.setOnClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
-            val dateTimeObject =
-                DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime =
                 DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkinTime.text = formattedDateTime
@@ -239,8 +226,7 @@ class ServiceFormFragment : Fragment() {
         binding.btnCheckOut.setOnClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
-            val dateTimeObject =
-                DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime =
                 DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkoutTime.text = formattedDateTime
@@ -252,12 +238,9 @@ class ServiceFormFragment : Fragment() {
                 requireActivity(), Main.app.getComplaintService()?.complaintService?.complaintBy,
                 Main.app.getComplaintService()?.complaintService?.designation,
                 Main.app.getComplaintService()?.complaintService?.mobileNo,
-            )
-                .show(object : ComplainantInformationDialog.OnConfirmListener {
+            ).show(object : ComplainantInformationDialog.OnConfirmListener {
                     override fun onConfirm(
-                        name: String,
-                        designation: String,
-                        mobileNumber: String
+                        name: String, designation: String, mobileNumber: String
                     ) {
                         Main.app.getComplaintService()?.complaintService?.complaintBy = name
                         Main.app.getComplaintService()?.complaintService?.designation = designation
@@ -275,12 +258,10 @@ class ServiceFormFragment : Fragment() {
 
         binding.btnOpenEquipmentList.setOnClickListener {
             val bundle = bundleOf(
-                "IsEquipment" to true,
-                Constants.Customer to args.customer
+                "IsEquipment" to true, Constants.Customer to args.customer
             )
             it.findNavController().navigate(
-                R.id.action_navigation_service_form_to_service_form_bottom_navigation,
-                bundle
+                R.id.action_navigation_service_form_to_service_form_bottom_navigation, bundle
             )
         }
 
@@ -291,12 +272,10 @@ class ServiceFormFragment : Fragment() {
 
         binding.btnViewOrder.setOnClickListener {
             val bundle = bundleOf(
-                "IsEquipment" to false,
-                Constants.Customer to args.customer
+                "IsEquipment" to false, Constants.Customer to args.customer
             )
             it.findNavController().navigate(
-                R.id.action_navigation_service_form_to_service_form_bottom_navigation,
-                bundle
+                R.id.action_navigation_service_form_to_service_form_bottom_navigation, bundle
             )
         }
     }
@@ -319,25 +298,21 @@ class ServiceFormFragment : Fragment() {
     private fun uploadSignature() {
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Uploading Signature..."))
-            .setCallback(
-                object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        val result = (response?.body() as RetailResponse<SignatureUploadResult>)
-                        val signature = result.result
-                        Main.app.getComplaintService()?.complaintService?.signature =
-                            signature?.filePath
-                        saveComplaint()
-                    }
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val result = (response?.body() as RetailResponse<SignatureUploadResult>)
+                    val signature = result.result
+                    Main.app.getComplaintService()?.complaintService?.signature =
+                        signature?.filePath
+                    saveComplaint()
+                }
 
-                    override fun onFailure(
-                        call: Call<*>?,
-                        response: BaseResponse<*>?,
-                        tag: Any?
-                    ) {
-                        Notify.toastLong("Unable to upload signature")
-                    }
-                }).enque(Network.api()?.uploadSignature(getMultipartSignatureFile()))
-            .execute()
+                override fun onFailure(
+                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
+                ) {
+                    Notify.toastLong("Unable to upload signature")
+                }
+            }).enque(Network.api()?.uploadSignature(getMultipartSignatureFile())).execute()
     }
 
     private fun saveComplaint() {
@@ -353,30 +328,25 @@ class ServiceFormFragment : Fragment() {
                 reportTypes.get(binding.reportTypeSpinner.selectedItemPosition).value
         }
 
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
-            .setCallback(
-                object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        val result = response?.body() as BaseResponse<ComplaintServiceResponse>
-                        if (result.success == true) {
-                            Notify.toastLong("Service Form Created: ${result.result?.id}")
-                            findNavController().popBackStack()
-                            Main.app.clearComplaintService()
-                        } else {
-                            Notify.toastLong("Unable create or update memo")
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<*>?,
-                        response: BaseResponse<*>?,
-                        tag: Any?
-                    ) {
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val result = response?.body() as BaseResponse<ComplaintServiceResponse>
+                    if (result.success == true) {
+                        Notify.toastLong("Service Form Created: ${result.result?.id}")
+                        findNavController().popBackStack()
+                        Main.app.clearComplaintService()
+                    } else {
                         Notify.toastLong("Unable create or update memo")
                     }
-                })
-            .enque(Network.api()?.createUpdateComplaintService(Main.app.getComplaintService()!!))
+                }
+
+                override fun onFailure(
+                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
+                ) {
+                    Notify.toastLong("Unable create or update memo")
+                }
+            }).enque(Network.api()?.createUpdateComplaintService(Main.app.getComplaintService()!!))
             .execute()
     }
 
@@ -441,12 +411,10 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun getFeedbackData() {
-        if (feedbacks.isEmpty().not())
-            return
+        if (feedbacks.isEmpty().not()) return
 
         val loading = Loading().forApi(requireActivity())
-        NetworkCall.make()
-            .setCallback(object : OnNetworkResponse {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     feedbacks.clear()
                     (response?.body() as RetailResponse<ArrayList<Feedback>>).result?.let {
@@ -460,10 +428,8 @@ class ServiceFormFragment : Fragment() {
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
                 }
-            })
-            .setTag("FEEDBACK")
-            .autoLoadigCancel(loading)
-            .enque(Network.api()?.getFeedback()).execute()
+            }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedback())
+            .execute()
     }
 
     private fun setHeaderData() {

@@ -31,12 +31,18 @@ class IncomingStockFlowActivity : BaseActivity() {
         ).type
         Main.app.getInComingStockTransferRequestObject().stockTransferDetails.addAll(
             Gson().fromJson(
-                json,
-                type
+                json, type
             )
         )
-        Main.app.getInComingStockTransferRequestObject().customerId =
-            intent.getIntExtra(Constants.CustomerId, 0)
+        Main.app.getInComingStockTransferRequestObject().customerIds =
+            intent.getIntegerArrayListExtra(Constants.CustomerId)
+        intent.getIntegerArrayListExtra(
+            Constants.OrderIds
+        )?.let {
+            Main.app.getInComingStockTransferRequestObject().SalesOrderIds.addAll(
+                it
+            )
+        }
     }
 
     override fun onStart() {

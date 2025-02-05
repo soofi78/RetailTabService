@@ -18,7 +18,7 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = BottomSheetNewFormsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -26,7 +26,7 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (Main.app.getSession().isSupervisor?.not() == true) {
+        if (Main.app.getSession().isSuperVisor?.not() == true) {
             binding.newServiceForm.visibility = View.GONE
             binding.newAgreementMemo.visibility = View.GONE
             binding.newSaleOrder.visibility = View.GONE

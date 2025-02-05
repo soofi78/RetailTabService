@@ -56,14 +56,11 @@ object PrinterManager {
             return false
         }
         val printerWidth =
-            AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
-                ?.toFloat() ?: 48f
+            AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()?.toFloat()
+                ?: 48f
         val dpi = (203 / 48) * printerWidth
         this.printer = EscPosPrinter(
-            connection,
-            300,
-            printerWidth,
-            AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
+            connection, 300, printerWidth, AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
         )
 
         val rawText = """  
@@ -114,8 +111,7 @@ object PrinterManager {
 
     @Synchronized
     fun getDefaultPrinterBluetoothConnection(): BluetoothConnection? {
-        if (connection != null && connection?.isConnected == true)
-            return connection else connection?.disconnect()
+        if (connection != null && connection?.isConnected == true) return connection else connection?.disconnect()
 
         connection = try {
             BluetoothConnection(getDefaultPrinterBluetoothDevice())
@@ -140,70 +136,74 @@ object PrinterManager {
     @Synchronized
     fun print(printableText: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            if (printer == null || connection == null) {
-                this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
-                val printerWidth =
-                    AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
-                        ?.toFloat() ?: 48f
-                this@PrinterManager.printer = EscPosPrinter(
-                    connection,
-                    203,
-                    printerWidth,
-                    AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
-                )
-            }
-            var printText = printableText
-            val urls = extractUrls(printText)
-
-            val foreignTextRegex =
-                "(?<=<a>)(.*?)(?=</a>)".toRegex()  // Regex to find text inside <a></a>
-            val printableText = "<a>111</a><a>222</a><a>333</a>"  // Sample input text
-
-
-            // Use findAll to get all matches
-            val matchResults = foreignTextRegex.findAll(printText)
-            if (matchResults != null) {
-                matchResults.forEach { matchResult ->
-                    // Replace each matched text inside <a></a> with an <img> tag
-                    val imgTag = "<img>${
-                        PrinterTextParserImg.bitmapToHexadecimalString(
-                            printer,
-                            getMultiLangTextAsImage(matchResult.value)
-                        )
-                    }</img>"
-                    // Replace the matched text with the <img> tag in printText
-                    printText = printText.replace(matchResult.value, imgTag)
-                }
-                // Finally, remove the <a></a> tags
-                printText = printText.replace("<a>", "").replace("</a>", "")
-
-            }
-
-            urls.forEach {
-                try {
-                    val bitmap: Bitmap = Glide.with(Main.app).asBitmap().load(it).submit().get()
-                    val targetWidth = 383 // 48mm printing zone with 203dpi => 383px
-                    val rescaledBitmap = Bitmap.createScaledBitmap(
-                        bitmap,
-                        targetWidth,
-                        Math.round(
-                            (bitmap.getHeight()
-                                .toFloat()) * (targetWidth.toFloat()) / (bitmap.getWidth()
-                                .toFloat())
-                        ),
-                        true
+            try {
+                if (printer == null || connection == null) {
+                    this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
+                    val printerWidth =
+                        AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
+                            ?.toFloat() ?: 48f
+                    this@PrinterManager.printer = EscPosPrinter(
+                        connection,
+                        203,
+                        printerWidth,
+                        AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
                     )
-                    val imageBase64 =
-                        PrinterTextParserImg.bitmapToHexadecimalString(printer, rescaledBitmap)
-                    printText = printText.replace("@@@$it", "[C]<img>$imageBase64</img>\n")
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    printText = printText.replace("@@@$it", "")
+                }
+                var printText = printableText
+                val urls = extractUrls(printText)
+
+                val foreignTextRegex =
+                    "(?<=<a>)(.*?)(?=</a>)".toRegex()  // Regex to find text inside <a></a>
+                val printableText = "<a>111</a><a>222</a><a>333</a>"  // Sample input text
+
+
+                // Use findAll to get all matches
+                val matchResults = foreignTextRegex.findAll(printText)
+                if (matchResults != null) {
+                    matchResults.forEach { matchResult ->
+                        // Replace each matched text inside <a></a> with an <img> tag
+                        val imgTag = "[C]<img>${
+                            PrinterTextParserImg.bitmapToHexadecimalString(
+                                printer, getMultiLangTextAsImage(matchResult.value)
+                            )
+                        }</img>"
+                        // Replace the matched text with the <img> tag in printText
+                        printText = printText.replace(matchResult.value, imgTag)
+                    }
+                    // Finally, remove the <a></a> tags
+                    printText = printText.replace("<a>", "").replace("</a>", "")
+
+                }
+
+                urls.forEach {
+                    try {
+                        val bitmap: Bitmap =
+                            Glide.with(Main.app).asBitmap().load(it.replace("\\", "/").trim())
+                                .submit().get()
+                        val targetWidth = 383 // 48mm printing zone with 203dpi => 383px
+                        val rescaledBitmap = Bitmap.createScaledBitmap(
+                            bitmap, targetWidth, Math.round(
+                                (bitmap.getHeight()
+                                    .toFloat()) * (targetWidth.toFloat()) / (bitmap.getWidth()
+                                    .toFloat())
+                            ), true
+                        )
+                        val imageBase64 =
+                            PrinterTextParserImg.bitmapToHexadecimalString(printer, rescaledBitmap)
+                        printText =
+                            printText.replace("@@@$it", "[C]<img>$imageBase64</img>\n".trim())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        printText = printText.replace("@@@$it", "")
+                    }
+                }
+                printer?.printFormattedTextAndCut(printText, 40f)
+                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Notify.toastLong("Unable to print please check connection")
                 }
             }
-            printer?.printFormattedTextAndCut(printText, 40f)
-            connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
-
         }
     }
 
@@ -269,11 +269,9 @@ object PrinterManager {
                     // retrieve repeatedly until each split string item's length is
                     // under the width of print label
                     while (widthOfString > xWidth) {
-                        tmpSubString =
-                            if (tmpSubString.isEmpty()) lastString.substring(
-                                0,
-                                lastString.length - 1
-                            ) else tmpSubString.substring(0, tmpSubString.length - 1)
+                        tmpSubString = if (tmpSubString.isEmpty()) lastString.substring(
+                            0, lastString.length - 1
+                        ) else tmpSubString.substring(0, tmpSubString.length - 1)
                         widthOfString = paint.measureText(tmpSubString)
                     }
 
@@ -335,10 +333,7 @@ object PrinterManager {
         val canvas = Canvas(bm)
         canvas.drawColor(Color.WHITE)
         for (tmpItem in printDataList) canvas.drawText(
-            tmpItem.text,
-            tmpItem.xPos,
-            tmpItem.yPos,
-            paint
+            tmpItem.text, tmpItem.xPos, tmpItem.yPos, paint
         )
         return bm
     }

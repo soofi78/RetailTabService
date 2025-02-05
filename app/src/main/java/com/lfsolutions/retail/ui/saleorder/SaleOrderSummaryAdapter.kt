@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
-import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
 import com.lfsolutions.retail.util.formatDecimalSeparator
 
@@ -18,7 +17,7 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
     private var mListener: OnOrderSummarySelectListener? = null
 
     class ViewHolder(val binding: ItemOrderSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -37,7 +36,7 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.txtQty.text = salesOrderDetails?.get(position)?.Qty.toString()
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + salesOrderDetails?.get(position)?.NetTotal?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + salesOrderDetails?.get(position)?.SubTotal?.formatDecimalSeparator()
         holder.binding.txtProductName.text = salesOrderDetails?.get(position)?.ProductName
         Glide.with(holder.binding.imgProduct.context)
             .load(Main.app.getBaseUrl() + salesOrderDetails?.get(position)?.ProductImage)

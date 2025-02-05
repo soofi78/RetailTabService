@@ -17,7 +17,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
     private var mListener: OnOrderSummarySelectListener? = null
 
     class ViewHolder(val binding: ItemOrderSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -48,7 +48,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
             if (salveInvoiceDetails?.get(position)?.isFOC == true) "FOC" else if (salveInvoiceDetails?.get(
                     position
                 )?.isExchange == true
-            ) "Exchange" else if (salveInvoiceDetails?.get(position)?.isExpire == true) "Sale" else "None"
+            ) "Exchange" else if (salveInvoiceDetails?.get(position)?.isExpire == true) "Return" else "None"
 
         holder.binding.txtTag.visibility =
             if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE

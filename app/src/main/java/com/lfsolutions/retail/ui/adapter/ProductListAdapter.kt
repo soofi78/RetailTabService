@@ -38,7 +38,7 @@ class ProductListAdapter(private val products: List<Product>) :
         }
         holder.binding.txtCategory.visibility = View.VISIBLE
         holder.binding.txtCategory.text =
-            """SKU: ${equipment.inventoryCode} | ${equipment.categoryName} | QTY Available: ${equipment.qtyOnHand}"""
+            """SKU: ${equipment.inventoryCode} | QTY Available: ${equipment.qtyOnHand}"""
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + equipment.cost?.formatDecimalSeparator()
 

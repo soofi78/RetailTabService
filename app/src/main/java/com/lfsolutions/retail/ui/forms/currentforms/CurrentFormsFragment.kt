@@ -72,7 +72,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     private fun setCustomerData() {
         customer?.let { mBinding.customerView.setCustomer(it) }
         mBinding.customerView.setOnClickListener {
-            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager,customer)
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 
@@ -131,7 +131,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun setAdapter(forms: ArrayList<Form>?) {
         var filtered = arrayListOf<Form>()
-        if (Main.app.getSession().isSupervisor == true) {
+        if (Main.app.getSession().isSuperVisor == true) {
             forms?.let { filtered.addAll(it) }
         } else {
             forms?.filter {

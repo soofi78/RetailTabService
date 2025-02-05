@@ -2,9 +2,11 @@ package com.lfsolutions.retail.ui.widgets
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,6 +27,8 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
     private var quantity: Double = 0.0
     private var price: Double = 0.0
     private var unitName: String = ""
+    private var negativeQuantity: Boolean = false
+    private var showPrice: Boolean = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -64,6 +68,9 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         binding.priceView.isEnabled = Main.app.getSession().isEditPrice
         binding.priceView.isClickable = Main.app.getSession().isEditPrice
 
+
+        binding.priceView.visibility = if (showPrice) View.VISIBLE else View.GONE
+        
         if (Main.app.getSession().isEditPrice) {
             binding.txtUnitName.setCompoundDrawables(
                 null, null, ContextCompat.getDrawable(
@@ -76,7 +83,8 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
 
         binding.btnSub.setOnClickListener {
             binding.txtQty.text.toString().toDouble().let { qty ->
-                if (qty > 1) binding.txtQty.setText((qty - 1.0).toString())
+                if (negativeQuantity) binding.txtQty.setText((qty - 1.0).toString())
+                else if (qty > 1) binding.txtQty.setText((qty - 1.0).toString())
             }
         }
 
@@ -89,16 +97,31 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialog?.setOnShowListener { it ->
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener { it ->
             val d = it as BottomSheetDialog
             val bottomSheet =
                 d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
+                val layoutParams = bottomSheet.layoutParams
+
+                val windowHeight = getWindowHeight()
+                if (layoutParams != null) {
+                    layoutParams.height = windowHeight
+                }
+                bottomSheet.layoutParams = layoutParams
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
-        return super.onCreateDialog(savedInstanceState)
+        return dialog
+    }
+
+    private fun getWindowHeight(): Int {
+        // Calculate window height for fullscreen use
+        val displayMetrics = DisplayMetrics()
+        (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
     }
 
     fun setOnProductDetailsChangedListener(onProductDetailsChangeListener: OnProductDetailsChangeListener) {
@@ -117,6 +140,14 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         this.quantity = quantity
         this.price = price
         this.unitName = unitName
+    }
+
+    fun allowNegativeQuantity(negativeQuantity: Boolean) {
+        this.negativeQuantity = negativeQuantity
+    }
+
+    fun showPrice(showPrice: Boolean) {
+        this.showPrice = showPrice
     }
 
     companion object {

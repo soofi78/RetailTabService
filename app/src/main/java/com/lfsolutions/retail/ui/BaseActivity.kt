@@ -15,8 +15,8 @@ import androidx.core.content.ContextCompat
 import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.ui.login.ProfileActivity
-import com.lfsolutions.retail.ui.settings.printer.PrinterSettingsActivity
+import com.lfsolutions.retail.ui.login.ProfileViewSheet
+import com.lfsolutions.retail.ui.settings.printer.PrinterSettingsSheet
 import com.lfsolutions.retail.ui.theme.RetailThemes
 import com.lfsolutions.retail.ui.theme.recreateSmoothly
 import com.lfsolutions.retail.ui.widgets.theme.OnThemeSelected
@@ -150,11 +150,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     private fun selectPrinter() {
-        startActivity(Intent(this, PrinterSettingsActivity::class.java))
+        PrinterSettingsSheet.show(this)
     }
 
     private fun openProfile() {
-        startActivity(Intent(this, ProfileActivity::class.java))
+        ProfileViewSheet.show(this)
     }
 
     companion object {

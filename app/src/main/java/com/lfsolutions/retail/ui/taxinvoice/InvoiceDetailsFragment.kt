@@ -1,7 +1,6 @@
 package com.lfsolutions.retail.ui.taxinvoice
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentInvoiceDetailsBinding
 import com.lfsolutions.retail.model.CustomerSaleTransaction
@@ -18,10 +18,9 @@ import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.PaymentRequest
 import com.lfsolutions.retail.model.PaymentTermsResult
 import com.lfsolutions.retail.model.PaymentType
-import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
-import com.lfsolutions.retail.model.TypeRequest
+import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.network.BaseResponse
@@ -31,7 +30,6 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
-import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.AppSession
@@ -78,15 +76,14 @@ class InvoiceDetailsFragment : Fragment() {
         binding.invoiceNo.text = invoice?.salesInvoice?.invoiceNo
         binding.invoiceDate.text = invoice?.salesInvoice?.InvoiceDateFormatted()
         binding.status.text = invoice?.salesInvoice?.StatusFormatted()
-        binding.invoiceAmount.text = invoice?.salesInvoice?.InvoiceNetTotalFromatted()
+        binding.invoiceAmount.text = invoice?.salesInvoice?.InvoiceGrandTotalFromatted()
         binding.balance.text = invoice?.salesInvoice?.BalanceFormatted()
         binding.customer.text = invoice?.salesInvoice?.customerName
         val items = ArrayList<HistoryItemInterface>()
         invoice?.salesInvoiceDetail?.forEach {
             items.add(it)
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
-            items,
+        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
@@ -102,7 +99,7 @@ class InvoiceDetailsFragment : Fragment() {
         }
 
         binding.print.setOnClickListener {
-            printSaleInvoice()
+            Printer.printInvoice(requireActivity(), invoice)
         }
 
         if (invoice?.salesInvoice?.type == "F") {
@@ -112,114 +109,10 @@ class InvoiceDetailsFragment : Fragment() {
             }
             binding.balance.text = """${Main.app.getSession().currencySymbol}0"""
         }
-    }
 
-    private fun printSaleInvoice() {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
-            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
-                if ((res.result?.size ?: 0) > 0) {
-                    preparePrintTemplate(res.result?.get(0))
-                }
-            }
-
-            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get receipt template")
-            }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading receipt template..."))
-            .enque(
-                Network.api()?.getReceiptTemplatePrint(TypeRequest())
-            ).execute()
-    }
-
-    private fun preparePrintTemplate(template: PrintTemplate?) {
-        var templateText = template?.template
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNo, invoice?.salesInvoice?.invoiceNo.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, invoice?.salesInvoice?.invoiceDate.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, invoice?.salesInvoice?.paymentTermName.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoice?.customerName.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress1, invoice?.salesInvoice?.address1 ?: ""
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress2, invoice?.salesInvoice?.address2 ?: ""
-        )
-
-
-        val itemTemplate = try {
-            templateText?.substring(
-                templateText.indexOf(Constants.Common.ItemsStart),
-                templateText.indexOf(Constants.Common.ItemsEnd) + 10
-            )
-        } catch (ex: Exception) {
-            templateText
+        if (invoice?.salesInvoice?.balance == 0.0) {
+            binding.pay.visibility = View.GONE
         }
-
-        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
-            ?.replace(Constants.Common.ItemsEnd, "")
-
-        var items = ""
-        var count = 0
-        invoice?.salesInvoiceDetail?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Invoice.ProductName, it.productName.toString())
-                ?.replace(Constants.Invoice.Qty, it.qty.toString())
-                ?.replace(Constants.Invoice.Price, it.price.toString())
-                ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
-            count += 1
-            if (count < (invoice?.salesInvoiceDetail?.size ?: 0)) {
-                items += "\n"
-            }
-        }
-
-        templateText = templateText?.replace(itemTemplate.toString(), items)
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceSubTotal, invoice?.salesInvoice?.invoiceSubTotal.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.invoiceTax.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNetTotal, invoice?.salesInvoice?.invoiceNetTotal.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceQty, invoice?.salesInvoice?.invoiceQty.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceBalanceAmount, invoice?.salesInvoice?.balance.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceSignature,
-            "@@@" + invoice?.salesInvoice?.signatureUrl().toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceQR,
-            Constants.QRTagStart + invoice?.salesInvoice?.zatcaQRCode.toString() + Constants.QRTagEnd
-        )
-
-        templateText?.let { PrinterManager.print(it) }
-
-        Log.d("Print", templateText.toString())
     }
 
     private fun getTransactionReference() {
@@ -295,10 +188,14 @@ class InvoiceDetailsFragment : Fragment() {
 
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val result = response?.body() as BaseResponse<String>
+                val result = response?.body() as BaseResponse<Invoice>
                 if (result.success == true) {
                     Notify.toastLong("Payment Successful: ${result.result}")
-                    findNavController().popBackStack()
+                    Printer.askForPrint(requireActivity(), {
+                        result.result?.id?.let { getReceiptDetail(it) }
+                    }, {
+                        findNavController().popBackStack()
+                    })
                 } else {
                     Notify.toastLong("Payment Failed")
                 }
@@ -309,6 +206,25 @@ class InvoiceDetailsFragment : Fragment() {
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity()))
             .enque(Network.api()?.createSaleReceipt(request)).execute()
+    }
+
+    private fun getReceiptDetail(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading receipt details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val receipt = (response?.body() as BaseResponse<SaleReceipt>).result
+                    Printer.printReceipt(requireActivity(), receipt)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to print receipt")
+                    findNavController().popBackStack()
+                }
+            }).enque(
+                Network.api()?.getReceiptDetails(IdRequest(id))
+            ).execute()
     }
 
     private fun getPDFLink() {

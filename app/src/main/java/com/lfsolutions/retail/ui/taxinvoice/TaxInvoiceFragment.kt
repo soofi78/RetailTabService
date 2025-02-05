@@ -11,14 +11,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -56,8 +59,7 @@ class TaxInvoiceFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentSaleOrderTaxInvoiceBinding.inflate(inflater, container, false)
-            if (Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId == null)
-                Main.app.clearTaxInvoice()
+            if (Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId == null) Main.app.clearTaxInvoice()
             Main.app.getTaxInvoice()?.salesInvoice?.creatorUserId = Main.app.getSession().userId
             Main.app.getTaxInvoice()?.salesInvoice?.customerId = customer.id
             Main.app.getTaxInvoice()?.salesInvoice?.locationId =
@@ -91,7 +93,7 @@ class TaxInvoiceFragment : Fragment() {
         binding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    binding.date.setText("$day-$month-$year")
+                    binding.date.text = "$day-$month-$year"
                     Main.app.getTaxInvoice()?.salesInvoice?.invoiceDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -199,8 +201,7 @@ class TaxInvoiceFragment : Fragment() {
             }).enque(
                 Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
-                        Main.app.getSession().defaultLocationId,
-                        customer.id
+                        Main.app.getSession().defaultLocationId, customer.id
                     )
                 )
             ).execute()
@@ -214,44 +215,44 @@ class TaxInvoiceFragment : Fragment() {
             val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
             val total = (subTotal + taxAmount)
-            Main.app.getTaxInvoice()?.addEquipment(
-                SalesInvoiceDetail(
-                    productId = product.productId?.toInt() ?: 0,
-                    inventoryCode = product.inventoryCode,
-                    productName = product.productName,
-                    productImage = product.imagePath,
-                    unitId = product.unitId,
-                    unitName = product.unitName,
-                    qty = qty,
-                    qtyStock = product.qtyOnHand,
-                    price = subTotal,
-                    netCost = total,
-                    costWithoutTax = product.cost ?: 0.0,
-                    departmentId = 0,
-                    lastPurchasePrice = 0.0,
-                    sellingPrice = 0.0,
-                    mrp = 0,
-                    isBatch = false,
-                    itemDiscount = 0.0,
-                    itemDiscountPerc = 0.0,
-                    averageCost = 0.0,
-                    netDiscount = 0.0,
-                    subTotal = subTotal,
-                    netTotal = netTotal,
-                    tax = taxAmount,
-                    totalValue = subTotal,
-                    isFOC = false,
-                    isExchange = false,
-                    isExpire = false,
-                    creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                        .replace(" ", "T").plus("Z"),
-                    creatorUserId = Main.app.getSession().userId.toString()
-                ).apply {
-                    product.applicableTaxes?.let {
-                        applicableTaxes = it
-                        taxForProduct = it
-                    }
-                })
+            Main.app.getTaxInvoice()?.addEquipment(SalesInvoiceDetail(
+                productId = product.productId?.toInt() ?: 0,
+                inventoryCode = product.inventoryCode,
+                productName = product.productName,
+                productImage = product.imagePath,
+                unitId = product.unitId,
+                unitName = product.unitName,
+                qty = qty,
+                qtyStock = product.qtyOnHand,
+                price = subTotal,
+                netCost = total,
+                costWithoutTax = product.cost ?: 0.0,
+                taxRate = product.getApplicableTaxRate().toDouble(),
+                departmentId = 0,
+                lastPurchasePrice = 0.0,
+                sellingPrice = 0.0,
+                mrp = 0,
+                isBatch = false,
+                itemDiscount = 0.0,
+                itemDiscountPerc = 0.0,
+                averageCost = 0.0,
+                netDiscount = 0.0,
+                subTotal = subTotal,
+                netTotal = netTotal,
+                tax = taxAmount,
+                totalValue = subTotal,
+                isFOC = false,
+                isExchange = false,
+                isExpire = false,
+                creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                    .replace(" ", "T").plus("Z"),
+                creatorUserId = Main.app.getSession().userId.toString()
+            ).apply {
+                product.applicableTaxes?.let {
+                    applicableTaxes = it
+                    taxForProduct = it
+                }
+            })
         }
     }
 
@@ -279,22 +280,43 @@ class TaxInvoiceFragment : Fragment() {
         NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val result = response?.body() as BaseResponse<Any>
+                    val result = response?.body() as BaseResponse<Invoice>
                     if (result.success == true) {
                         Main.app.clearTaxInvoice()
-                        Notify.toastLong("Sale Invoice Created")
-                        findNavController().popBackStack()
+                        Notify.toastLong("Sale Invoice: " + result.result?.transactionNo)
+                        Printer.askForPrint(requireActivity(), {
+                            result.result?.id?.let { getSaleInvoiceDetail(it) }
+                        }, {
+                            findNavController().popBackStack()
+                        })
                     } else {
                         Notify.toastLong("Unable create Sale invoice: ${result.result}")
                     }
                 }
 
-                override fun onFailure(
-                    call: Call<*>?, response: BaseResponse<*>?, tag: Any?
-                ) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable create sale invoice")
                 }
             }).enque(Network.api()?.createUpdateSaleInvoice(Main.app.getTaxInvoice()!!)).execute()
+    }
+
+    private fun getSaleInvoiceDetail(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Invoice Details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
+                    Printer.printInvoice(requireActivity(), invoice)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to print, Please go to details and try again!")
+                    findNavController().popBackStack()
+                }
+            }).enque(
+                Network.api()?.getSaleInvoiceDetail(IdRequest(id))
+            ).execute()
     }
 
     private fun getMultipartSignatureFile(): MultipartBody.Part {

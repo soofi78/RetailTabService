@@ -1,7 +1,6 @@
 package com.lfsolutions.retail.ui.saleorder
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,11 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.PrintTemplate
-import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
@@ -30,7 +27,6 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
-import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
@@ -46,10 +42,6 @@ class OrderDetailsFragment : Fragment() {
     private lateinit var item: SaleOrderListItem
     private val args by navArgs<OrderDetailsFragmentArgs>()
     private lateinit var binding: FragmentOrderDetailsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,7 +88,7 @@ class OrderDetailsFragment : Fragment() {
             getPDFLink()
         }
         binding.print.setOnClickListener {
-            printSaleOrder()
+            Printer.printSaleOrder(requireActivity(), order)
         }
 
         if (order?.salesOrder?.status.equals("H") ||
@@ -202,110 +194,6 @@ class OrderDetailsFragment : Fragment() {
             .enque(
                 Network.api()?.convertToDeliveryOrder(IdRequest(order?.salesOrder?.id))
             ).execute()
-    }
-
-    private fun printSaleOrder() {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
-            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
-                if ((res.result?.size ?: 0) > 0) {
-                    preparePrintTemplate(res.result?.get(0))
-                }
-            }
-
-            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get order template")
-            }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading order template..."))
-            .enque(
-                Network.api()?.getReceiptTemplatePrint(TypeRequest(13))
-            ).execute()
-    }
-
-    private fun preparePrintTemplate(template: PrintTemplate?) {
-        var templateText = template?.template
-        templateText = templateText?.replace(
-            Constants.Order.OrderNo, order?.salesOrder?.soNo.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderDate, order?.salesOrder?.soDate.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderTerm, order?.salesOrder?.paymentReference.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.CustomerCustomerName, order?.salesOrder?.customerName.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.CustomerAddress1, order?.salesOrder?.address1 ?: ""
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.CustomerAddress2, order?.salesOrder?.address2 ?: ""
-        )
-
-
-        val itemTemplate = templateText?.substring(
-            templateText.indexOf(Constants.Common.ItemsStart),
-            templateText.indexOf(Constants.Common.ItemsEnd) + 10
-        )
-
-        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
-            ?.replace(Constants.Common.ItemsEnd, "")
-
-        var items = ""
-        var count = 0;
-        order?.salesOrderDetail?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Invoice.ProductName, it.productName.toString())
-                ?.replace(Constants.Invoice.Qty, it.qty.toString())
-                ?.replace(Constants.Invoice.Price, it.price.toString())
-                ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
-            count += 1
-            if (count < (order?.salesOrderDetail?.size ?: 0)) {
-                items += "\n"
-            }
-        }
-
-        templateText = templateText?.replace(itemTemplate.toString(), items)
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderSubTotal, order?.salesOrder?.soSubTotal.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderTax, order?.salesOrder?.soTax.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderNetTotal, order?.salesOrder?.soNetTotal.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderQty, order?.salesOrder?.orderedQty.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.CustomerBalanceAmount, order?.salesOrder?.balance.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderSignature,
-            "@@@" + order?.salesOrder?.signatureUrl().toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderQR,
-            Constants.QRTagStart + order?.salesOrder?.zatcaQRCode.toString() + Constants.QRTagEnd
-        )
-
-        templateText?.let { PrinterManager.print(it) }
-
-        Log.d("Print", templateText.toString())
     }
 
     private fun getPDFLink() {

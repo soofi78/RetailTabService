@@ -7,6 +7,7 @@ import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 data class DeliveryOrderDetails(
     var changeunitflag: Boolean? = false,
     var cost: Double? = 0.0,
+    var costWithoutTax: Double? = 0.0,
     var deliverQty: Double? = null,
     var deliveredQty: Double? = null,
     var focQty: Int? = 0,

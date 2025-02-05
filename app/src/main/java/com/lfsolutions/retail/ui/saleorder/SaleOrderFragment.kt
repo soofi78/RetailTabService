@@ -10,11 +10,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentSaleOrderTaxInvoiceBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -46,10 +49,8 @@ class SaleOrderFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentSaleOrderTaxInvoiceBinding.inflate(inflater, container, false)
             Main.app.clearSaleOrder()
@@ -78,13 +79,13 @@ class SaleOrderFragment : Fragment() {
         addOnClickListener()
         setHeaderData()
         setCustomerData()
-        binding.dateLabel.text= getString(R.string.order_date)
+        binding.dateLabel.text = getString(R.string.order_date)
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    binding.date.setText("$day-$month-$year")
+                    binding.date.text = "$day-$month-$year"
                     Main.app.getSaleOrder()?.SalesOrder?.SoDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -102,21 +103,22 @@ class SaleOrderFragment : Fragment() {
     }
 
     private fun setCustomerData() {
-        customer?.let { binding.customerView.setCustomer(it) }
+        customer.let { binding.customerView.setCustomer(it) }
         binding.customerView.setOnClickListener {
-            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager,customer)
+            CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 
     private fun addOnClickListener() {
         binding.btnOpenEquipmentList.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_sale_order_to_product_list,
+            findNavController().navigate(
+                R.id.action_navigation_sale_order_to_product_list,
                 Bundle().apply {
                     putString(Constants.Customer, Gson().toJson(customer))
                 })
         }
         binding.btnLoadProducts.visibility = View.GONE
-        binding.btnViewOrder.setText("View Sale Order")
+        binding.btnViewOrder.text = "View Sale Order"
         binding.btnViewOrder.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_sale_order_to_product_summary)
         }
@@ -135,7 +137,7 @@ class SaleOrderFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        if (Main.app.getSession().isSupervisor == true) {
+        if (Main.app.getSession().isSuperVisor == true) {
             binding.btnSaveApprove.visibility = View.VISIBLE
         } else {
             binding.btnSaveApprove.visibility = View.GONE
@@ -187,11 +189,14 @@ class SaleOrderFragment : Fragment() {
         NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    val result = response?.body() as BaseResponse<Any>
+                    val result = response?.body() as BaseResponse<Order>
                     if (result.success == true) {
                         Main.app.clearSaleOrder()
-                        Notify.toastLong("Sale Order Created")
-                        findNavController().popBackStack()
+                        Printer.askForPrint(requireActivity(), {
+                            result.result?.id?.let { getSaleOrderDetail(it) }
+                        }, {
+                            findNavController().popBackStack()
+                        })
                     } else {
                         Notify.toastLong("Unable create Sale Order: ${result.result}")
                     }
@@ -203,6 +208,25 @@ class SaleOrderFragment : Fragment() {
                     Notify.toastLong("Unable create Sale Order")
                 }
             }).enque(Network.api()?.createUpdateSaleOrder(Main.app.getSaleOrder()!!)).execute()
+    }
+
+    private fun getSaleOrderDetail(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Order Details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val order = (response?.body() as BaseResponse<SaleOrderResponse>).result
+                    Printer.printSaleOrder(requireActivity(), order)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get print order")
+                    findNavController().popBackStack()
+                }
+            }).enque(
+                Network.api()?.getSalesOrderDetail(IdRequest(id))
+            ).execute()
     }
 
     private fun getMultipartSignatureFile(): MultipartBody.Part {

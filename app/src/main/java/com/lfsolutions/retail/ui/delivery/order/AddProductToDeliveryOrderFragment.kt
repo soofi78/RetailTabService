@@ -53,8 +53,8 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     ): View {
         _binding = FragmentAddToCartBinding.inflate(inflater, container, false)
         product = Gson().fromJson(args.product, Product::class.java)
-        mBinding.txtSaleOption.visibility=View.GONE
-        mBinding.saleOptionTypeViewHolder.visibility=View.GONE
+        mBinding.txtSaleOption.visibility = View.GONE
+        mBinding.saleOptionTypeViewHolder.visibility = View.GONE
         return mBinding.root
     }
 
@@ -72,13 +72,13 @@ class AddProductToDeliveryOrderFragment : Fragment() {
 
     private fun setData() {
         mBinding.txtQty.text = "1"
-        product?.qtyOnHand?.let {
+        product.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
-        mBinding.txtProductName.text = product?.productName
-        mBinding.txtCategory.text = product?.categoryName
+        mBinding.txtProductName.text = product.productName
+        mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product?.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility = View.GONE
@@ -98,7 +98,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun setApplicableTaxAdapter() {
-        val adapter = product?.applicableTaxes?.let {
+        val adapter = product.applicableTaxes?.let {
             ArrayAdapter(
                 requireActivity(), R.layout.simple_text_item, it
             )
@@ -200,11 +200,11 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     private fun openQuantityUpdateDialog() {
         val modal = ProductQuantityUpdateSheet()
         modal.setProductDetails(
-            product?.imagePath.toString(),
-            product?.productName.toString(),
+            product.imagePath.toString(),
+            product.productName.toString(),
             mBinding.txtQty.text.toString().toDouble(),
-            product?.cost ?: 0.0,
-            product?.unitName.toString()
+            product.cost ?: 0.0,
+            product.unitName.toString()
         )
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
@@ -214,7 +214,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
             }
 
             override fun onPriceChanged(price: Double) {
-                product?.cost = price
+                product.cost = price
                 updateTotal()
             }
         })
@@ -254,6 +254,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 unitId = product.unitId,
                 uom = product.unitName,
                 deliverQty = qty,
+                qty = 0.0,
 //            IsFOC = mBinding.checkboxFOC.isChecked,
 //            IsExchange = mBinding.checkboxExchange.isChecked,
 //            IsExpire = mBinding.checkboxIsExpired.isChecked,
@@ -338,7 +339,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 }
             }).enque(
                 Network.api()?.getSerialNumbers(
-                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
+                    product.productId, Main.app.getSession().defaultLocationId?.toLong()
                 )
             ).execute()
     }

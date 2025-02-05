@@ -2,17 +2,18 @@ package com.lfsolutions.retail.ui.stocktransfer.incoming
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.databinding.OutgoingStockRecordBottomSheetBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.ui.delivery.DeliveryItemAdapter
-import java.util.ArrayList
 
 class GenerateInComingStockBottomSheet : BottomSheetDialogFragment() {
 
@@ -41,24 +42,39 @@ class GenerateInComingStockBottomSheet : BottomSheetDialogFragment() {
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        dialog?.setOnShowListener { it ->
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener { it ->
             val d = it as BottomSheetDialog
             val bottomSheet =
                 d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
+                val layoutParams = bottomSheet.layoutParams
+
+                val windowHeight = getWindowHeight()
+                if (layoutParams != null) {
+                    layoutParams.height = windowHeight
+                }
+                bottomSheet.layoutParams = layoutParams
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
-        return super.onCreateDialog(savedInstanceState)
+        return dialog
     }
 
-    fun setOnConfirmClickListener(onClickListener: View.OnClickListener) {
+    private fun getWindowHeight(): Int {
+        // Calculate window height for fullscreen use
+        val displayMetrics = DisplayMetrics()
+        (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
+    }
+
+    fun setOnConfirmClickListener(onClickListener: OnClickListener) {
         onConfirmClick = onClickListener
     }
 
     fun setList(scheduledList: ArrayList<Customer>) {
-        list = scheduledList;
+        list = scheduledList
     }
 
     companion object {

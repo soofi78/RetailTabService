@@ -25,8 +25,8 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -45,7 +45,7 @@ class NewAgreementMemoFragment : Fragment() {
     private val args by navArgs<NewAgreementMemoFragmentArgs>()
     private val feedbacks = ArrayList<Feedback>()
 
-    private val mBinding get() = _binding!!
+    private val mBinding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +85,7 @@ class NewAgreementMemoFragment : Fragment() {
         mBinding.dateText.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    mBinding.dateText.setText(day + "-" + month + "-" + year)
+                    mBinding.dateText.text = day + "-" + month + "-" + year
                     Main.app.getAgreementMemo()?.AgreementMemo?.AgreementDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }

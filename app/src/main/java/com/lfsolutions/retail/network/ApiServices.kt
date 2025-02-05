@@ -10,6 +10,7 @@ import com.lfsolutions.retail.model.CustomerResponse
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.model.CustomerWorkAreaTypeResult
 import com.lfsolutions.retail.model.CustomersResult
+import com.lfsolutions.retail.model.DateRequest
 import com.lfsolutions.retail.model.EquipmentListResult
 import com.lfsolutions.retail.model.EquipmentTypeResult
 import com.lfsolutions.retail.model.FilterRequest
@@ -65,6 +66,8 @@ import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
+import com.lfsolutions.retail.ui.saleorder.Order
+import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -79,7 +82,7 @@ interface ApiServices {
     fun login(@Body request: LoginRequest): Call<UserSession>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS))
-    fun getCustomers(): Call<RetailResponse<CustomersResult>>?
+    fun getCustomers(@Body dateRequest: DateRequest): Call<RetailResponse<CustomersResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_CUSTOMERS))
     fun getAllCustomers(@Body location: LocationTenantIdRequestObject): Call<BaseResponse<AllCustomersResult>>?
@@ -141,6 +144,13 @@ interface ApiServices {
         @Query("isSold") isSold: Boolean = false
     ): Call<RetailResponse<ArrayList<SerialNumber>>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS_RETURN))
+    fun getSerialNumbersReturn(
+        @Query("productId") productId: Long?,
+        @Query("locationId") locationId: Long?,
+        @Query("isSold") isSold: Boolean = false
+    ): Call<RetailResponse<ArrayList<SerialNumber>>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_MEMO))
     fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
 
@@ -150,14 +160,13 @@ interface ApiServices {
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleOrder).plus(Api.Name.CREATE_UPDATE_SALE_ORDER)
     )
-    fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Any>>?
+    fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Order>>?
 
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
             .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
     )
-    fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<String>>?
-
+    fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<Invoice>>?
 
     @POST(
         Api.Base.plus(Api.ServicesApp).plus(Api.DeliveryOrder)
@@ -182,7 +191,7 @@ interface ApiServices {
     fun getCustomersForPayment(): Call<RetailResponse<CustomerPaymentsResult>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_SALE_RECEIPT))
-    fun createSaleReceipt(@Body paymentRequest: PaymentRequest): Call<BaseResponse<String>>
+    fun createSaleReceipt(@Body paymentRequest: PaymentRequest): Call<BaseResponse<Invoice>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SALES_TRANSACTIONS))
     fun getSalesTransactions(@Body saleTransactions: SaleTransactionRequestBody): Call<RetailResponse<ArrayList<CustomerSaleTransaction>>>
@@ -301,6 +310,9 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_CUSTOMER_FROM_VISITATION_SCHEDULE))
     fun deleteCustomerFromVisitationSchedule(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.DELETE_CUSTOMER_FROM_TO_VISIT))
+    fun deleteCustomerFromToVisit(@Body idRequest: IdRequest): Call<BaseResponse<Any>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_PRODUCT_CURRENT_STOCK))
     fun getCurrentProductStockQuantity(@Body location: LocationIdRequestObject): Call<BaseResponse<ArrayList<Product>>>?

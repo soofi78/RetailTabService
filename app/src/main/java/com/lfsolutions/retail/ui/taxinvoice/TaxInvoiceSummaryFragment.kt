@@ -31,8 +31,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
     private val mBinding get() = _binding!!
     private lateinit var mAdapter: TaxInvoiceSummaryAdapter
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTaxInvoiceSummaryBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -64,9 +63,10 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             salesInvoiceDetail.productImage.toString(),
             salesInvoiceDetail.productName.toString(),
             salesInvoiceDetail.qty ?: 0.0,
-            (salesInvoiceDetail.netTotal ?: 0.0) / (salesInvoiceDetail.qty ?: 0.0),
+            salesInvoiceDetail.costWithoutTax,
             salesInvoiceDetail.unitName.toString()
         )
+        modal.allowNegativeQuantity(salesInvoiceDetail.isExpire == true)
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
             override fun onQuantityChanged(quantity: Double) {
@@ -121,30 +121,28 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         Main.app.getTaxInvoice()?.serializeItems()
         val currency = Main.app.getSession().currencySymbol
         mBinding.txtQTY.text = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty.toString()
-        mBinding.txtTotalAmount.text = "$currency " +
-                Main.app.getTaxInvoice()?.salesInvoice?.invoiceTotalValue.toString()
-                    .formatDecimalSeparator()
-        mBinding.txtDiscounts.text = "$currency " +
-                Main.app.getTaxInvoice()?.salesInvoice?.invoiceNetDiscount.toString()
-                    .formatDecimalSeparator()
-        mBinding.txtSubTotal.text = "$currency " +
-                Main.app.getTaxInvoice()?.salesInvoice?.invoiceSubTotal.toString()
-                    .formatDecimalSeparator()
-        mBinding.txtTaxAmount.text = "$currency " +
-                Main.app.getTaxInvoice()?.salesInvoice?.invoiceTax.toString()
-                    .formatDecimalSeparator()
-        mBinding.txtTotal.text = "$currency " +
-                Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString()
-                    .formatDecimalSeparator()
+        mBinding.txtTotalAmount.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceTotalValue.toString()
+                .formatDecimalSeparator()
+        mBinding.txtDiscounts.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceNetDiscount.toString()
+                .formatDecimalSeparator()
+        mBinding.txtSubTotal.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceSubTotal.toString()
+                .formatDecimalSeparator()
+        mBinding.txtTaxAmount.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceTax.toString()
+                .formatDecimalSeparator()
+        mBinding.txtTotal.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString()
+                .formatDecimalSeparator()
         mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty != 0.0
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {
-        return object :
-            ItemTouchHelper.SimpleCallback(
-                0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            ) {
+        return object : ItemTouchHelper.SimpleCallback(
+            0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -160,8 +158,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             }
 
             override fun getMovementFlags(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
             ): Int {
                 super.getMovementFlags(recyclerView, viewHolder)
                 if (viewHolder is TaxInvoiceSummaryAdapter.ViewHolder) {
@@ -171,8 +168,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             }
 
             override fun clearView(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
+                recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
             ) {
                 getDefaultUIUtil().clearView((viewHolder as TaxInvoiceSummaryAdapter.ViewHolder).getSwipableView())
             }

@@ -24,11 +24,11 @@ class InComingStockEquipmentAdapter(private val products: List<Product>) :
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val equipment = products?.get(position)
+        val equipment = products.get(position)
         holder.itemView.tag = equipment
         holder.binding.txtProductName.text = equipment?.productName
         holder.binding.txtCategory.text =
-            """${equipment?.categoryName} | QTY Available: ${equipment?.qtyOnHand}"""
+            """SKU: ${equipment?.inventoryCode} | QTY Available: ${equipment?.qtyOnHand}"""
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
 

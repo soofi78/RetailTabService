@@ -8,11 +8,14 @@ data class StockTransferRequestBody(
     @SerializedName("ToLocationId") var ToLocationId: Int? = null,
     @SerializedName("date") var date: String? = null,
     @SerializedName("remarks") var remarks: String? = null,
-    @Transient var customerId: Int? = null,
+    @SerializedName("customerIds") var customerIds: ArrayList<Int>? = null,
+    @SerializedName("SalesOrderIds") var SalesOrderIds: ArrayList<Int> = arrayListOf(),
     @SerializedName("stockTransferDetails") var stockTransferDetails: ArrayList<StockTransferProduct> = arrayListOf()
 ) {
     fun addEquipment(product: StockTransferProduct) {
-        product.customerId = customerId
+        if ((customerIds?.size ?: 0) > 0) {
+            product.customerId = customerIds?.get(0)
+        }
         stockTransferDetails.add(product)
     }
 

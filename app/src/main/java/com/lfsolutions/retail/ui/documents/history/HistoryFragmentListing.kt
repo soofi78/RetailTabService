@@ -200,7 +200,7 @@ class HistoryFragmentListing : Fragment() {
         )
 
 
-        if (Main.app.getSession().isSupervisor == true) {
+        if (Main.app.getSession().isSuperVisor == true) {
             historyList.add(HistoryType.AgreementMemo)
             historyList.add(HistoryType.ServiceForm)
         }
@@ -427,6 +427,7 @@ class HistoryFragmentListing : Fragment() {
                     endDate = this@HistoryFragmentListing.endDate
                     customerId = customer?.id.toString()
                     filter = customer?.name
+                    status = null
                 })
             ).execute()
         else setAdapter(invoices)

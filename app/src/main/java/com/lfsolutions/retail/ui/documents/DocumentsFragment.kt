@@ -9,21 +9,12 @@ import androidx.fragment.app.Fragment
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentDocumentsBinding
-import com.lfsolutions.retail.model.UserIdDateRequestBody
-import com.lfsolutions.retail.network.BaseResponse
-import com.lfsolutions.retail.network.Network
-import com.lfsolutions.retail.network.NetworkCall
-import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.documents.dailysale.DailySaleFlowActivity
 import com.lfsolutions.retail.ui.documents.drivermemo.DriverMemoFlowActivity
 import com.lfsolutions.retail.ui.documents.history.HistoryFlowActivity
 import com.lfsolutions.retail.ui.documents.payment.PaymentFlowActivity
 import com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockFlowActivity
 import com.lfsolutions.retail.util.DateTime
-import com.lfsolutions.retail.util.Loading
-import retrofit2.Call
-import retrofit2.Response
-import java.util.ArrayList
 
 class DocumentsFragment : Fragment() {
 
@@ -134,7 +125,7 @@ class DocumentsFragment : Fragment() {
             )
         )
 
-        if (Main.app.getSession().isSupervisor == true) {
+        if (Main.app.getSession().isSuperVisor == true) {
             docs.add(
                 DocumentType.DriverMemo(
                     R.string.label_driver_memo,

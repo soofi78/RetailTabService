@@ -7,15 +7,12 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
-import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -97,17 +94,17 @@ class Network private constructor() {
             return logging.setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
-    inner class BasicAuthInterceptor(user: String?, password: String?) : Interceptor {
-        private val credentials: String = Credentials.basic(user, password)
-
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request()
-            val authenticatedRequest = request.newBuilder()
-                .header("Authorization", credentials).build()
-            return chain.proceed(authenticatedRequest)
-        }
-    }
+//    inner class BasicAuthInterceptor(user: String?, password: String?) : Interceptor {
+//        private val credentials: String = Credentials.basic(user, password)
+//
+//        @Throws(IOException::class)
+//        override fun intercept(chain: Interceptor.Chain): Response {
+//            val request = chain.request()
+//            val authenticatedRequest = request.newBuilder()
+//                .header("Authorization", credentials).build()
+//            return chain.proceed(authenticatedRequest)
+//        }
+//    }
 
     companion object {
         private var instance: Network? = null

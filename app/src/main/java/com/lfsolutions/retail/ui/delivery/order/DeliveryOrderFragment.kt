@@ -12,10 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentDeliveryOrderBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.EquipmentListResult
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.LocationIdCustomerIdRequestObject
 import com.lfsolutions.retail.model.PaymentType
 import com.lfsolutions.retail.model.Product
@@ -32,6 +34,7 @@ import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
+
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -57,8 +60,7 @@ class DeliveryOrderFragment : Fragment() {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentDeliveryOrderBinding.inflate(inflater, container, false)
-            if (Main.app.getDeliveryOrder()?.deliveryOrder?.salesOrderId == null)
-                Main.app.clearDeliveryOrder()
+            if (Main.app.getDeliveryOrder()?.deliveryOrder?.salesOrderId == null) Main.app.clearDeliveryOrder()
             Main.app.getDeliveryOrder()?.deliveryOrder?.creatorUserId = Main.app.getSession().userId
             Main.app.getDeliveryOrder()?.deliveryOrder?.customerId = customer.id
             Main.app.getDeliveryOrder()?.deliveryOrder?.locationId =
@@ -86,7 +88,7 @@ class DeliveryOrderFragment : Fragment() {
         binding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    binding.date.setText("$day-$month-$year")
+                    binding.date.text = "$day-$month-$year"
                     Main.app.getDeliveryOrder()?.deliveryOrder?.deliveryDate =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -172,7 +174,7 @@ class DeliveryOrderFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val result = (response?.body() as RetailResponse<EquipmentListResult>)
                     Notify.toastLong("Product List Updated")
-                    result.result?.items?.let { updateSaleInvoiceDetails(it) }
+                    result.result?.items?.let { mapProduct(it) }
                 }
 
                 override fun onFailure(
@@ -183,14 +185,13 @@ class DeliveryOrderFragment : Fragment() {
             }).enque(
                 Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
-                        Main.app.getSession().defaultLocationId,
-                        customer.id
+                        Main.app.getSession().defaultLocationId, customer.id
                     )
                 )
             ).execute()
     }
 
-    private fun updateSaleInvoiceDetails(result: ArrayList<Product>) {
+    private fun mapProduct(result: ArrayList<Product>) {
         result.forEach { product ->
             val qty = product.qty ?: 0.0
             val subTotal = (qty * (product.cost ?: 0.0))
@@ -199,74 +200,23 @@ class DeliveryOrderFragment : Fragment() {
             val netTotal = (subTotal - discount) + taxAmount
             val total = (subTotal + taxAmount)
             Main.app.getDeliveryOrder()?.addEquipment(
-                deliveryOrderDetail(
-                    ProductId = product.productId?.toInt() ?: 0,
-                    InventoryCode = product.inventoryCode,
-                    ProductName = product.productName,
-                    ProductImage = product.imagePath,
-                    UnitId = product.unitId,
-                    UnitName = product.unitName,
-                    Qty = qty,
-                    QtyStock = product.qtyOnHand,
-                    Price = subTotal,
-                    NetCost = total,
-                    CostWithoutTax = product.cost ?: 0.0,
-                    DepartmentId = 0,
-                    LastPurchasePrice = 0.0,
-                    SellingPrice = 0.0,
-                    MRP = 0,
-                    IsBatch = false,
-                    ItemDiscount = 0.0,
-                    ItemDiscountPerc = 0.0,
-                    AverageCost = 0,
-                    NetDiscount = 0.0,
-                    SubTotal = subTotal,
-                    NetTotal = netTotal,
-                    Tax = taxAmount,
-                    TotalValue = subTotal,
-                    IsFOC = false,
-                    IsExchange = false,
-                    IsExpire = false,
-                    CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                DeliveryOrderDetails(
+                    productId = product.productId?.toInt() ?: 0,
+                    inventoryCode = product.inventoryCode,
+                    productName = product.productName,
+                    productImage = product.imagePath,
+                    unitId = product.unitId,
+                    uom = product.unitName,
+                    deliverQty = qty,
+                    qty = 0.0,
+                    cost = product.cost,
+                    costWithoutTax = product.cost ?: 0.0,
+                    creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                         .replace(" ", "T").plus("Z"),
-                    CreatorUserId = Main.app.getSession().userId
+                    creatorUserId = Main.app.getSession().userId
                 )
             )
         }
-    }
-
-    private fun deliveryOrderDetail(
-        ProductId: Int,
-        InventoryCode: String?,
-        ProductName: String?,
-        ProductImage: String?,
-        UnitId: Int?,
-        UnitName: String?,
-        Qty: Double,
-        QtyStock: Double?,
-        Price: Double,
-        NetCost: Double,
-        CostWithoutTax: Double,
-        DepartmentId: Int,
-        LastPurchasePrice: Double,
-        SellingPrice: Double,
-        MRP: Int,
-        IsBatch: Boolean,
-        ItemDiscount: Double,
-        ItemDiscountPerc: Double,
-        AverageCost: Int,
-        NetDiscount: Double,
-        SubTotal: Double,
-        NetTotal: Double,
-        Tax: Double,
-        TotalValue: Double,
-        IsFOC: Boolean,
-        IsExchange: Boolean,
-        IsExpire: Boolean,
-        CreationTime: String,
-        CreatorUserId: Int?
-    ): DeliveryOrderDetails {
-        return DeliveryOrderDetails()
     }
 
 
@@ -297,7 +247,11 @@ class DeliveryOrderFragment : Fragment() {
                     if (result.success == true) {
                         Main.app.clearDeliveryOrder()
                         Notify.toastLong("Delivery order Created " + result.result?.transactionNo)
-                        findNavController().popBackStack()
+                        Printer.askForPrint(requireActivity(), {
+                            result.result?.id?.let { getSaleOrderDetail(it) }
+                        }, {
+                            findNavController().popBackStack()
+                        })
                     } else {
                         Notify.toastLong("Unable create delivery order: ${result.result}")
                     }
@@ -308,8 +262,26 @@ class DeliveryOrderFragment : Fragment() {
                 ) {
                     Notify.toastLong("Unable create delivery order")
                 }
-            }).enque(Network.api()?.createDeliveryOrder(Main.app.getDeliveryOrder()!!))
-            .execute()
+            }).enque(Network.api()?.createDeliveryOrder(Main.app.getDeliveryOrder()!!)).execute()
+    }
+
+    private fun getSaleOrderDetail(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Order Details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val order = (response?.body() as BaseResponse<DeliveryOrderDTO>).result
+                    Printer.printDeliveryOrder(requireActivity(), order)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to print delivery order")
+                    findNavController().popBackStack()
+                }
+            }).enque(
+                Network.api()?.getDeliveryOrderDetails(IdRequest(id))
+            ).execute()
     }
 
     private fun getMultipartSignatureFile(): MultipartBody.Part {

@@ -33,7 +33,7 @@ class HomeActivity : BaseActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
         navView.setupWithNavController(navController)
-        Main.app.getSession().isSupervisor?.let {
+        Main.app.getSession().isSuperVisor?.let {
             navView.menu.findItem(R.id.navigation_schedule)
                 .setVisible(it)
         }

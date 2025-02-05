@@ -1,7 +1,6 @@
 package com.lfsolutions.retail.ui.receipt
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.databinding.FragmentReceiptDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
-import com.lfsolutions.retail.model.PrintTemplate
-import com.lfsolutions.retail.model.RetailResponse
-import com.lfsolutions.retail.model.TypeRequest
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -23,7 +20,6 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.SaleOrderInvoiceDetailsListAdapter
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
-import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
@@ -93,92 +89,8 @@ class ReceiptDetailsFragment : Fragment() {
             deleteSaleReceipt()
         }
         binding.print.setOnClickListener {
-            printReceipt()
+            Printer.printReceipt(requireActivity(), receipt)
         }
-    }
-
-    private fun printReceipt() {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
-            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
-                if ((res.result?.size ?: 0) > 0) {
-                    preparePrintTemplate(res.result?.get(0))
-                }
-            }
-
-            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get order template")
-            }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Loading order template..."))
-            .enque(
-                Network.api()?.getReceiptTemplatePrint(TypeRequest(4))
-            ).execute()
-    }
-
-    private fun preparePrintTemplate(template: PrintTemplate?) {
-        var templateText = template?.template
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNo, receipt?.receiptNo.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, receipt?.receiptDate.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, receipt?.paymentTypeName.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, receipt?.customerName.toString()
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress1, receipt?.address1 ?: ""
-        )
-
-        templateText = templateText?.replace(
-            Constants.Invoice.InvoiceAddress2, receipt?.address2 ?: ""
-        )
-
-
-        val itemTemplate = templateText?.substring(
-            templateText.indexOf(Constants.Common.ItemsStart),
-            templateText.indexOf(Constants.Common.ItemsEnd) + 10
-        )
-
-        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
-            ?.replace(Constants.Common.ItemsEnd, "")
-
-        var items = ""
-        var count = 0
-        receipt?.items?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Receipt.TransactionNo, it.transactionNo.toString())
-                ?.replace(Constants.Receipt.TransactionDate, it.transactionDate.toString())
-                ?.replace(Constants.Receipt.TransactionAmount, it.transactionAmount.toString())
-            count += 1
-            if (count < (receipt?.items?.size ?: 0)) {
-                items += "\n"
-            }
-        }
-
-        templateText = templateText?.replace(itemTemplate.toString(), items)
-
-//
-//        templateText = templateText?.replace(
-//            Constants.Order.OrderSignature,
-//            "@@@" + order?.salesOrder?.signatureUrl().toString()
-//        )
-
-        templateText = templateText?.replace(
-            Constants.Order.OrderQR,
-            Constants.QRTagStart + receipt?.zatcaQRCode.toString() + Constants.QRTagEnd
-        )
-
-        templateText?.let { PrinterManager.print(it) }
-
-        Log.d("Print", templateText.toString())
     }
 
     private fun deleteSaleReceipt() {

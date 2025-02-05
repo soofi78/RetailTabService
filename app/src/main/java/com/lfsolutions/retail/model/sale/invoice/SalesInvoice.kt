@@ -2,8 +2,8 @@ package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 
 data class SalesInvoice(
@@ -67,7 +67,7 @@ data class SalesInvoice(
     @SerializedName(
         "OtherCharges",
         alternate = arrayOf("otherCharges")
-    ) var otherCharges: Double? =0.0,
+    ) var otherCharges: Double? = 0.0,
     @SerializedName(
         "NetDiscount",
         alternate = arrayOf("netDiscount")
@@ -134,7 +134,7 @@ data class SalesInvoice(
     @SerializedName(
         "ProfitMargin",
         alternate = arrayOf("profitMargin")
-    ) var profitMargin: Double? = null,
+    ) var profitMargin: Double? = 0.0,
     @SerializedName("TaxName", alternate = arrayOf("taxName")) var taxName: String? = null,
     @SerializedName("Signature", alternate = arrayOf("signature")) var signature: String? = null,
     @SerializedName(
@@ -215,8 +215,16 @@ data class SalesInvoice(
         }
     }
 
-    fun InvoiceNetTotalFromatted(): String {
-        return Main.app.getSession().currencySymbol + invoiceNetTotal?.formatDecimalSeparator()
+    fun InvoiceSubTotalFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceSubTotal?.formatDecimalSeparator()
+    }
+
+    fun InvoiceTaxFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceTax?.formatDecimalSeparator()
+    }
+
+    fun InvoiceGrandTotalFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceGrandTotal?.formatDecimalSeparator()
     }
 
     fun BalanceFormatted(): String {

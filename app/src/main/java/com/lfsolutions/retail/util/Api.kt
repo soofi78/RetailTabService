@@ -56,6 +56,7 @@ object Api {
         const val GET_CATEGORIES = "category/GetServiceProductCategories"
         const val GET_OUT_GOING_PRODUCT = "Service/GetOutGoingStockTransferProduct"
         const val GET_SERIAL_NUMBERS = "product/GetProductSerialNumbers"
+        const val GET_SERIAL_NUMBERS_RETURN = "product/getApiSoldProductSerialNumbers"
         const val CREATE_UPDATE_MEMO = "agreementMemo/CreateOrUpdateAgreementMemo"
         const val CREATE_UPDATE_COMPLAINT_SERVICE =
             "complaintService/CreateOrUpdateComplaintService"
@@ -81,6 +82,8 @@ object Api {
         const val ADD_CUSTOMER_TO_VISITATION_SCHEDULE = "Service/AddCustomerVisitationSchedule"
         const val DELETE_CUSTOMER_FROM_VISITATION_SCHEDULE =
             "Service/DeleteCustomerVisitationSchedule"
+        const val DELETE_CUSTOMER_FROM_TO_VISIT =
+            "Service/DeleteCustomerToVisits"
         const val GET_PRODUCT_CURRENT_STOCK =
             "Product/GetApiProductStocksForLocation"
         const val SALE_ORDER_FOR_INVOICE =

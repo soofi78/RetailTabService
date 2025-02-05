@@ -64,6 +64,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             0.0,
             salesInvoiceDetail.uom.toString()
         )
+        modal.showPrice(false)
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
             override fun onQuantityChanged(quantity: Double) {

@@ -1,11 +1,15 @@
 package com.lfsolutions.retail.ui.login
 
+import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentUserProfileBinding
 import com.lfsolutions.retail.model.IdRequest
@@ -19,7 +23,7 @@ import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
-class ProfileFragment : Fragment() {
+class ProfileViewSheet : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentUserProfileBinding
 
@@ -53,7 +57,7 @@ class ProfileFragment : Fragment() {
     private fun setHeader() {
         binding.header.setBackText("Profile")
         binding.header.setOnBackClick {
-            requireActivity().finish()
+            this.dismiss()
         }
     }
 
@@ -65,5 +69,44 @@ class ProfileFragment : Fragment() {
         binding.username.text = userProfile?.user?.userName
         binding.phoneNumber.text = userProfile?.user?.phoneNumber
         binding.email.text = userProfile?.user?.emailAddress
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener { it ->
+            val d = it as BottomSheetDialog
+            val bottomSheet =
+                d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let {
+                val behavior = BottomSheetBehavior.from(it)
+                val layoutParams = bottomSheet.layoutParams
+
+                val windowHeight = getWindowHeight()
+                if (layoutParams != null) {
+                    layoutParams.height = windowHeight
+                }
+                bottomSheet.layoutParams = layoutParams
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+        return dialog
+    }
+
+    private fun getWindowHeight(): Int {
+        // Calculate window height for fullscreen use
+        val displayMetrics = DisplayMetrics()
+        (context as AppCompatActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
+    }
+
+    companion object {
+        fun show(activity: AppCompatActivity) {
+            val printerSettings = ProfileViewSheet()
+            activity.supportFragmentManager.let {
+                printerSettings.show(
+                    it, "Profile"
+                )
+            }
+        }
     }
 }
