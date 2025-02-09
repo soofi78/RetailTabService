@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceProductListItemBinding
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class SaleOrderInvoiceDetailsListAdapter(
     private val items: ArrayList<HistoryItemInterface>,
@@ -32,7 +33,7 @@ class SaleOrderInvoiceDetailsListAdapter(
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }
     }

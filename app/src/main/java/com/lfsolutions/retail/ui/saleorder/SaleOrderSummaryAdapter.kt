@@ -10,6 +10,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>?) :
     RecyclerView.Adapter<SaleOrderSummaryAdapter.ViewHolder>() {
@@ -46,7 +47,7 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
         holder.binding.txtSerials.text = salesOrderDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.visibility = View.GONE
         holder.itemView.tag = salesOrderDetails?.get(position)
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesOrderDetail)
         }
 

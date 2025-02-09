@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.BottomSheetNewFormsBinding
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class NewFormsBottomSheet : BottomSheetDialogFragment() {
 
@@ -32,23 +33,23 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
             binding.newSaleOrder.visibility = View.GONE
         }
 
-        binding.newServiceForm.setOnClickListener {
+        binding.newServiceForm.setDebouncedClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newServiceForm)
         }
-        binding.newAgreementMemo.setOnClickListener {
+        binding.newAgreementMemo.setDebouncedClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newAgreementMemo)
         }
-        binding.newSaleOrder.setOnClickListener {
+        binding.newSaleOrder.setDebouncedClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newSaleOrder)
         }
-        binding.newTaxInvoice.setOnClickListener {
+        binding.newTaxInvoice.setDebouncedClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newTaxInvoice)
         }
-        binding.newDeliveryOrder.setOnClickListener {
+        binding.newDeliveryOrder.setDebouncedClickListener {
             dialog?.dismiss()
             this.onClickListener?.onClick(binding.newDeliveryOrder)
         }

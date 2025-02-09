@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.ThemeItemBinding
 import com.lfsolutions.retail.ui.theme.RetailThemes
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class ThemeAdapter(val options: ArrayList<RetailThemes>, val onThemeSelected: OnThemeSelected) :
     RecyclerView.Adapter<ThemeAdapter.ViewHolder>() {
@@ -31,7 +32,7 @@ class ThemeAdapter(val options: ArrayList<RetailThemes>, val onThemeSelected: On
         binding.primary.setCardBackgroundColor(Color.parseColor(theme.primary))
         binding.secondary.setCardBackgroundColor(Color.parseColor(theme.secondary))
         binding.tertiary.setCardBackgroundColor(Color.parseColor(theme.tertiary))
-        binding.parent.setOnClickListener { _ ->
+        binding.parent.setDebouncedClickListener { _ ->
             binding.colors.visibility = View.VISIBLE
             lastChecked?.let {
                 it.binding.colors.visibility = View.GONE

@@ -32,6 +32,7 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -90,7 +91,7 @@ class TaxInvoiceFragment : Fragment() {
         setCustomerData()
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
-        binding.dateSelectionView.setOnClickListener {
+        binding.dateSelectionView.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.text = "$day-$month-$year"
@@ -123,12 +124,12 @@ class TaxInvoiceFragment : Fragment() {
         binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick { findNavController().popBackStack() }
-        binding.btnCancel.setOnClickListener { findNavController().popBackStack() }
+        binding.btnCancel.setDebouncedClickListener { findNavController().popBackStack() }
     }
 
     private fun setCustomerData() {
         customer.let { binding.customerView.setCustomer(it) }
-        binding.customerView.setOnClickListener {
+        binding.customerView.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
@@ -139,39 +140,39 @@ class TaxInvoiceFragment : Fragment() {
 //    }
 
     private fun addOnClickListener() {
-        binding.btnLoadProducts.setOnClickListener {
+        binding.btnLoadProducts.setDebouncedClickListener {
             if (Main.app.getTaxInvoice()?.salesInvoiceDetail.isNullOrEmpty().not()) {
                 Notify.toastLong("Please clear the cart first!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             loadProducts()
         }
-        binding.btnOpenEquipmentList.setOnClickListener {
+        binding.btnOpenEquipmentList.setDebouncedClickListener {
             findNavController().navigate(
                 R.id.action_navigation_tax_invoice_to_open_tax_invoice_product_list,
                 bundleOf(Constants.Customer to Gson().toJson(customer))
             )
         }
 
-        binding.btnViewOrder.setOnClickListener {
+        binding.btnViewOrder.setDebouncedClickListener {
             findNavController().navigate(
                 R.id.action_navigation_tax_invoice_to_open_products_summary
             )
         }
 
-        binding.btnClearSign.setOnClickListener {
+        binding.btnClearSign.setDebouncedClickListener {
             binding.signaturePad.clear()
         }
 
-        binding.btnSave.setOnClickListener {
+        binding.btnSave.setDebouncedClickListener {
             if (Main.app.getTaxInvoice()?.salesInvoiceDetail?.size == 0) {
                 Notify.toastLong("Please add products")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (binding.signaturePad.isEmpty) {
                 Notify.toastLong("Please add your signature")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             Main.app.getTaxInvoice()?.serializeItems()

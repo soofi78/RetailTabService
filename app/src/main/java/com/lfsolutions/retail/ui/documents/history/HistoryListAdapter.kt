@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class HistoryListAdapter(
     private val items: ArrayList<HistoryItemInterface>,
@@ -42,7 +42,7 @@ class HistoryListAdapter(
             holder.binding.check.visibility = View.GONE
         }
         if (item is SaleOrderListItem && item.isStockTransfer == true) {
-            holder.binding.check.visibility=View.GONE
+            holder.binding.check.visibility = View.GONE
             holder.binding.parentss.setBackgroundColor(holder.binding.parentss.resources.getColor(R.color.light_red))
         } else {
             holder.binding.parentss.setBackgroundColor(holder.binding.parentss.resources.getColor(R.color.white))
@@ -52,13 +52,13 @@ class HistoryListAdapter(
         Glide.with(holder.itemView).load(item.getImageUrl()).centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.image)
         holder.binding.parent.tag = item
-        holder.binding.parent.setOnClickListener {
+        holder.binding.parent.setDebouncedClickListener {
             mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }
         holder.binding.check.tag = item
         holder.binding.check.setOnCheckedChangeListener(onChecked)
         holder.binding.clone.visibility = if (clone) View.VISIBLE else View.GONE
-        holder.binding.clone.setOnClickListener {
+        holder.binding.clone.setDebouncedClickListener {
             mListener.onCloneClicked(it.tag as HistoryItemInterface)
         }
     }

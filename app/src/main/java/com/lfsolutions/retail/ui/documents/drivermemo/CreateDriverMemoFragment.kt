@@ -22,6 +22,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -107,7 +108,7 @@ class CreateDriverMemoFragment : Fragment() {
         val today = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.text = today
         Main.app.getDriverMemo().driverMemo.agreementDate = today + "T00:00:00Z"
-        binding.deliveryDate.setOnClickListener {
+        binding.deliveryDate.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.deliveryDate.text = "$year-$month-$day"
@@ -117,7 +118,7 @@ class CreateDriverMemoFragment : Fragment() {
             })
         }
 
-        binding.addProduct.setOnClickListener {
+        binding.addProduct.setDebouncedClickListener {
             findNavController().navigate(R.id.navigation_driver_product_list)
         }
     }
@@ -223,20 +224,20 @@ class CreateDriverMemoFragment : Fragment() {
         binding.header.setOnBackClick {
             findNavController().popBackStack()
         }
-        binding.btnCancel.setOnClickListener {
+        binding.btnCancel.setDebouncedClickListener {
             findNavController().popBackStack()
         }
 
-        binding.btnSave.setOnClickListener {
+        binding.btnSave.setDebouncedClickListener {
 
             if (Main.app.getDriverMemo().driverMemo.deliveryDate == null) {
                 Notify.toastLong("Please select delivery date")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (Main.app.getDriverMemo().driverMemoDetail.isEmpty()) {
                 Notify.toastLong("Please add products")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             Main.app.getDriverMemo().updatePriceAndQty()
             Main.app.getDriverMemo().serializeItems()

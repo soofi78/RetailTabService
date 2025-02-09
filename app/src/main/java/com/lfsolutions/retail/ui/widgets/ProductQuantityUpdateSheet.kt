@@ -16,6 +16,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ProductQuantityUpdateSheetBinding
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.SoftKeyBoard
 
 class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
@@ -45,12 +46,12 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
         binding.etPrice.setText(price.formatDecimalSeparator())
         binding.txtCurrency.text = Main.app.getSession().currencySymbol.toString()
         binding.txtUnitName.text = " /$unitName"
-        binding.priceView.setOnClickListener {
+        binding.priceView.setDebouncedClickListener {
             binding.etPrice.requestFocus()
             binding.etPrice.text?.length?.let { it1 -> binding.etPrice.setSelection(it1) }
             SoftKeyBoard.show(requireActivity(), binding.etPrice)
         }
-        binding.done.setOnClickListener {
+        binding.done.setDebouncedClickListener {
             onProductDetailsChangeListener.onPriceChanged(
                 binding.etPrice.text.toString().replace(",", "").toDouble()
             )
@@ -60,7 +61,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        binding.cancel.setOnClickListener {
+        binding.cancel.setDebouncedClickListener {
             dismiss()
         }
 
@@ -70,7 +71,7 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
 
 
         binding.priceView.visibility = if (showPrice) View.VISIBLE else View.GONE
-        
+
         if (Main.app.getSession().isEditPrice) {
             binding.txtUnitName.setCompoundDrawables(
                 null, null, ContextCompat.getDrawable(
@@ -81,14 +82,14 @@ class ProductQuantityUpdateSheet : BottomSheetDialogFragment() {
             binding.txtUnitName.setCompoundDrawables(null, null, null, null)
         }
 
-        binding.btnSub.setOnClickListener {
+        binding.btnSub.setDebouncedClickListener {
             binding.txtQty.text.toString().toDouble().let { qty ->
                 if (negativeQuantity) binding.txtQty.setText((qty - 1.0).toString())
                 else if (qty > 1) binding.txtQty.setText((qty - 1.0).toString())
             }
         }
 
-        binding.btnAdd.setOnClickListener {
+        binding.btnAdd.setDebouncedClickListener {
             binding.txtQty.text.toString().toDouble().let { qty ->
                 binding.txtQty.setText((qty + 1.0).toString())
             }

@@ -2,17 +2,11 @@ package com.lfsolutions.retail.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.webkit.URLUtil
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.doAfterTextChanged
 import com.google.gson.Gson
 import com.lfsolutions.retail.BuildConfig
 import com.lfsolutions.retail.R
@@ -28,6 +22,7 @@ import com.lfsolutions.retail.ui.HomeActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -50,7 +45,7 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
         if (BuildConfig.DEBUG) {
             _binding?.inputServerAddress?.setText("http://rtlconnect.net/MyBossTest/")
         }
-        _binding?.buttonSignin?.setOnClickListener {
+        _binding?.buttonSignin?.setDebouncedClickListener {
             signIn()
         }
 
@@ -87,21 +82,21 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
                 .isEmpty() || URLUtil.isValidUrl(_binding?.inputServerAddress?.text.toString())
                 .not()
         ) {
-            _binding?.inputServerAddress?.setError("Invalid or empty Server Address")
+            _binding?.inputServerAddress?.error = "Invalid or empty Server Address"
             return false
         }
 
         if (_binding?.inputTenant?.text.toString().isEmpty()) {
-            _binding?.inputTenant?.setError("Tenant can't be null or empty")
+            _binding?.inputTenant?.error = "Tenant can't be null or empty"
             return false
         }
 
         if (_binding?.inputUserName?.text.toString().isEmpty()) {
-            _binding?.inputUserName?.setError("username can't be null or empty")
+            _binding?.inputUserName?.error = "username can't be null or empty"
             return false
         }
         if (_binding?.inputPassword?.text.toString().isEmpty()) {
-            _binding?.inputPassword?.setError("password can't be null or empty")
+            _binding?.inputPassword?.error = "password can't be null or empty"
             return false
         }
         return true

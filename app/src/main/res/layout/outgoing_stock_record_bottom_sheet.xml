@@ -23,9 +23,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customers"
         android:layout_width="match_parent"
-        android:layout_below="@+id/title"
-        android:layout_above="@+id/bottomButtons"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomButtons"
+        android:layout_below="@+id/title"
         android:background="@color/white"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_scheduled" />
@@ -33,35 +33,53 @@
     <LinearLayout
         android:id="@+id/bottomButtons"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?attr/secondary"
-        android:gravity="end|center_vertical">
+        android:gravity="end|center_vertical"
+        android:orientation="vertical"
+        android:weightSum="2">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/white"
-            android:elevation="5dp"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
-            android:text="@string/label_cancel"
-            android:textColor="@color/gray" />
+            android:background="?attr/secondary"
+            android:gravity="end|center_vertical"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:text="@string/label_cancel"
+                android:textColor="@color/gray" />
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="?attr/primary"
-            android:elevation="5dp"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
-            android:text="@string/label_confirm"
-            android:textColor="@color/black" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/primary"
+                android:elevation="5dp"
+                android:text="@string/label_confirm"
+                android:textColor="@color/black" />
 
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
     </LinearLayout>
 </RelativeLayout>

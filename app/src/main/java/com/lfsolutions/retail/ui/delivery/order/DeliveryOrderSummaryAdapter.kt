@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
     RecyclerView.Adapter<DeliveryOrderSummaryAdapter.ViewHolder>() {
@@ -15,7 +16,7 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
     private var mListener: OnOrderSummarySelectListener? = null
 
     class ViewHolder(val binding: ItemOrderSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -52,7 +53,7 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
 //            if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
 
         holder.itemView.tag = items?.get(position)
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as DeliveryOrderDetails)
         }
 

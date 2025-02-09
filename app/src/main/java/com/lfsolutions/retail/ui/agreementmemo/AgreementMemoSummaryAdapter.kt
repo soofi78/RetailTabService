@@ -8,7 +8,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import kotlinx.coroutines.MainScope
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMemoDetail>?) :
     RecyclerView.Adapter<AgreementMemoSummaryAdapter.ViewHolder>() {
@@ -16,7 +16,7 @@ class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMe
     private var mListener: OnOrderSummarySelectListener? = null
 
     class ViewHolder(val binding: ItemOrderSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -39,7 +39,7 @@ class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMe
         holder.binding.txtProductName.text = agreementMemoDetail?.get(position)?.ProductName
         holder.binding.txtSerials.text = agreementMemoDetail?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text = agreementMemoDetail?.get(position)?.AgreementTypeDisplayText
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect()
         }
 

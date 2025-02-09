@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lfsolutions.retail.databinding.OutgoingStockRecordBottomSheetBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.ui.delivery.DeliveryItemAdapter
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class GenerateInComingStockBottomSheet : BottomSheetDialogFragment() {
 
@@ -30,7 +31,7 @@ class GenerateInComingStockBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.confirm.setOnClickListener {
+        binding.confirm.setDebouncedClickListener {
             if (::onConfirmClick.isInitialized)
                 onConfirmClick.onClick(it)
             dialog?.dismiss()

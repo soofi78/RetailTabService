@@ -219,6 +219,10 @@ data class SalesInvoice(
         return Main.app.getSession().currencySymbol + invoiceSubTotal?.formatDecimalSeparator()
     }
 
+    fun InvoiceDiscountFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceNetDiscount?.formatDecimalSeparator()
+    }
+
     fun InvoiceTaxFromatted(): String {
         return Main.app.getSession().currencySymbol + invoiceTax?.formatDecimalSeparator()
     }

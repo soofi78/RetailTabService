@@ -15,6 +15,7 @@ import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class HomeActivity : BaseActivity() {
 
@@ -42,8 +43,12 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun setClickListener() {
-        mBinding.icoAccount.setOnClickListener(optionsClick)
-        mBinding.detailsFlow.setOnClickListener(optionsClick)
+        mBinding.icoAccount.setDebouncedClickListener({
+            optionsClick.onClick(it)
+        })
+        mBinding.detailsFlow.setDebouncedClickListener({
+            optionsClick.onClick(it)
+        })
     }
 
     private fun setData() {

@@ -27,6 +27,7 @@ import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -82,7 +83,7 @@ class NewAgreementMemoFragment : Fragment() {
         val today = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         mBinding.dateText.text = today
         Main.app.getAgreementMemo()?.AgreementMemo?.AgreementDate = today + "T00:00:00Z"
-        mBinding.dateText.setOnClickListener {
+        mBinding.dateText.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     mBinding.dateText.text = day + "-" + month + "-" + year
@@ -140,11 +141,11 @@ class NewAgreementMemoFragment : Fragment() {
             findNavController().popBackStack()
             Main.app.clearAgreementMemo()
         }
-        mBinding.btnClearSign.setOnClickListener {
+        mBinding.btnClearSign.setDebouncedClickListener {
             mBinding.signaturePad.clear()
         }
 
-        mBinding.btnOpenEquipmentList.setOnClickListener {
+        mBinding.btnOpenEquipmentList.setDebouncedClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to true,
                 Constants.Customer to args.customer
@@ -156,7 +157,7 @@ class NewAgreementMemoFragment : Fragment() {
 
         }
 
-        mBinding.btnViewOrder.setOnClickListener {
+        mBinding.btnViewOrder.setDebouncedClickListener {
             val bundle = bundleOf(Constants.Customer to Gson().toJson(customer))
             it.findNavController().navigate(
                 R.id.action_navigation_agreement_memo_to_navigation_agreement_memo_bottom_navigation,
@@ -164,26 +165,26 @@ class NewAgreementMemoFragment : Fragment() {
             )
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
 
             if (isAllFeedbackSelected().not()) {
                 Notify.toastLong("Please select all feedbacks")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (mBinding.agressTermsAndService.isChecked.not()) {
                 Notify.toastLong("Please agree terms & conditions")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (Main.app.getAgreementMemo()?.AgreementMemoDetail?.size == 0) {
                 Notify.toastLong("No Product added into the list")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (mBinding.signaturePad.isEmpty) {
                 Notify.toastLong("Please add your signature")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             NetworkCall.make()
                 .autoLoadigCancel(Loading().forApi(requireActivity(), "Uploading Signature..."))
@@ -208,7 +209,7 @@ class NewAgreementMemoFragment : Fragment() {
                 .execute()
         }
 
-        mBinding.btnCancel.setOnClickListener {
+        mBinding.btnCancel.setDebouncedClickListener {
             findNavController().popBackStack()
             Main.app.clearAgreementMemo()
         }

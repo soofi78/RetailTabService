@@ -12,12 +12,9 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoDetailsBinding
-import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.memo.AgreementMemo
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
-import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -30,7 +27,7 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
-import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -41,10 +38,6 @@ class AgreementMemoDetailsFragment : Fragment() {
     private lateinit var item: AgreementMemo
     private val args by navArgs<AgreementMemoDetailsFragmentArgs>()
     private lateinit var binding: FragmentAgreementMemoDetailsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,7 +78,7 @@ class AgreementMemoDetailsFragment : Fragment() {
                 }
             })
 
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPDFLink()
         }
     }

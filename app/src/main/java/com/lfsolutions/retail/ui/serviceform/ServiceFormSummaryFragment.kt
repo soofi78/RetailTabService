@@ -13,6 +13,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentServiceFormSummaryBinding
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 
 
@@ -150,7 +151,7 @@ class ServiceFormSummaryFragment : Fragment() {
     }
 
     private fun addOnClickListener() {
-        mBinding.btnCancel.setOnClickListener {
+        mBinding.btnCancel.setDebouncedClickListener {
             Notify.toastLong("Cleared all items")
             Main.app.getComplaintService()?.complaintServiceDetails?.clear()
             findNavController().popBackStack()
@@ -160,7 +161,7 @@ class ServiceFormSummaryFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        mBinding.btnComplete.setOnClickListener {
+        mBinding.btnComplete.setDebouncedClickListener {
             findNavController().popBackStack()
         }
     }

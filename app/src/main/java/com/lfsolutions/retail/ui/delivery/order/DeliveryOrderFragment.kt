@@ -32,6 +32,7 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 
@@ -85,7 +86,7 @@ class DeliveryOrderFragment : Fragment() {
         setCustomerData()
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
-        binding.dateSelectionView.setOnClickListener {
+        binding.dateSelectionView.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.text = "$day-$month-$year"
@@ -104,7 +105,7 @@ class DeliveryOrderFragment : Fragment() {
             Main.app.clearDeliveryOrder()
             findNavController().popBackStack()
         }
-        binding.btnCancel.setOnClickListener {
+        binding.btnCancel.setDebouncedClickListener {
             Main.app.clearDeliveryOrder()
             findNavController().popBackStack()
         }
@@ -112,7 +113,7 @@ class DeliveryOrderFragment : Fragment() {
 
     private fun setCustomerData() {
         customer.let { binding.customerView.setCustomer(it) }
-        binding.customerView.setOnClickListener {
+        binding.customerView.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
@@ -125,39 +126,39 @@ class DeliveryOrderFragment : Fragment() {
     }
 
     private fun addOnClickListener() {
-        binding.btnLoadProducts.setOnClickListener {
+        binding.btnLoadProducts.setDebouncedClickListener {
             if (Main.app.getDeliveryOrder()?.deliveryOrderDetail.isNullOrEmpty().not()) {
                 Notify.toastLong("Please clear the cart first!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             loadProducts()
         }
-        binding.btnOpenEquipmentList.setOnClickListener {
+        binding.btnOpenEquipmentList.setDebouncedClickListener {
             findNavController().navigate(
                 R.id.action_navigation_delivery_order_to_delivery_order_product_list,
                 bundleOf(Constants.Customer to Gson().toJson(customer))
             )
         }
 
-        binding.btnViewOrder.setOnClickListener {
+        binding.btnViewOrder.setDebouncedClickListener {
             findNavController().navigate(
                 R.id.action_navigation_delivery_order_to_open_products_summary
             )
         }
 
-        binding.btnClearSign.setOnClickListener {
+        binding.btnClearSign.setDebouncedClickListener {
             binding.signaturePad.clear()
         }
 
-        binding.btnSave.setOnClickListener {
+        binding.btnSave.setDebouncedClickListener {
             if (Main.app.getDeliveryOrder()?.deliveryOrderDetail?.size == 0) {
                 Notify.toastLong("Please add products")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (binding.signaturePad.isEmpty) {
                 Notify.toastLong("Please add your signature")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             Main.app.getDeliveryOrder()?.serializeItems()

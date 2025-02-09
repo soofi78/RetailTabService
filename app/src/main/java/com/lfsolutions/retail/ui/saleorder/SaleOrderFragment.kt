@@ -27,6 +27,7 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -82,7 +83,7 @@ class SaleOrderFragment : Fragment() {
         binding.dateLabel.text = getString(R.string.order_date)
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
-        binding.dateSelectionView.setOnClickListener {
+        binding.dateSelectionView.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     binding.date.text = "$day-$month-$year"
@@ -104,13 +105,13 @@ class SaleOrderFragment : Fragment() {
 
     private fun setCustomerData() {
         customer.let { binding.customerView.setCustomer(it) }
-        binding.customerView.setOnClickListener {
+        binding.customerView.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
 
     private fun addOnClickListener() {
-        binding.btnOpenEquipmentList.setOnClickListener {
+        binding.btnOpenEquipmentList.setDebouncedClickListener {
             findNavController().navigate(
                 R.id.action_navigation_sale_order_to_product_list,
                 Bundle().apply {
@@ -119,21 +120,21 @@ class SaleOrderFragment : Fragment() {
         }
         binding.btnLoadProducts.visibility = View.GONE
         binding.btnViewOrder.text = "View Sale Order"
-        binding.btnViewOrder.setOnClickListener {
+        binding.btnViewOrder.setDebouncedClickListener {
             findNavController().navigate(R.id.action_navigation_sale_order_to_product_summary)
         }
-        binding.btnClearSign.setOnClickListener {
+        binding.btnClearSign.setDebouncedClickListener {
             binding.signaturePad.clear()
         }
-        binding.btnSave.setOnClickListener {
+        binding.btnSave.setDebouncedClickListener {
             save(false)
         }
 
-        binding.btnSaveApprove.setOnClickListener {
+        binding.btnSaveApprove.setDebouncedClickListener {
             save(true)
         }
 
-        binding.btnCancel.setOnClickListener {
+        binding.btnCancel.setDebouncedClickListener {
             findNavController().popBackStack()
         }
 

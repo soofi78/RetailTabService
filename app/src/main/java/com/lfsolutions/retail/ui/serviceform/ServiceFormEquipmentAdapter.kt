@@ -9,6 +9,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemEquipmentBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class EquipmentAdapter(val productList: List<Product>?) :
     RecyclerView.Adapter<EquipmentAdapter.ViewHolder>() {
@@ -39,7 +40,7 @@ class EquipmentAdapter(val productList: List<Product>?) :
         Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onEquipmentClick(it.tag as Product)
         }
     }

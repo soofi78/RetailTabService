@@ -26,6 +26,7 @@ import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -60,7 +61,7 @@ class DailySaleRecordFragment : Fragment() {
 
 
     private fun setData() {
-        binding.dateHolder.setOnClickListener {
+        binding.dateHolder.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     selectedDate = "$year-$month-$day"
@@ -73,7 +74,7 @@ class DailySaleRecordFragment : Fragment() {
         binding.date.text = selectedDate
         binding.header.setBackText("Daily Sale Record")
         binding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPdf()
         }
         Main.app.getSession().userName?.let { binding.header.setName(it) }
@@ -156,7 +157,7 @@ class DailySaleRecordFragment : Fragment() {
             Main.app.getSession().currencySymbol + saleRecord?.netTotal.toString()
                 .formatDecimalSeparator()
 
-        binding.print.setOnClickListener {
+        binding.print.setDebouncedClickListener {
             printDailySaleRecord()
         }
     }

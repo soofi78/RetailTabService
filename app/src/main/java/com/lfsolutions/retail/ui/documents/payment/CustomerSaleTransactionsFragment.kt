@@ -29,10 +29,11 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.Calculator
+import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
-import com.lfsolutions.retail.util.DateTime
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -107,8 +108,8 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
     fun updateSelectedAmount() {
         var amount = getSelectedItemsAmount()
-        binding.header.binding?.txtName?.setText("Pay " + Main.app.getSession().currencySymbol + amount.formatDecimalSeparator())
-        binding.header.binding?.txtName?.setOnClickListener {
+        binding.header.binding?.txtName?.text = "Pay " + Main.app.getSession().currencySymbol + amount.formatDecimalSeparator()
+        binding.header.binding?.txtName?.setDebouncedClickListener {
             onPayClickListener()
         }
     }

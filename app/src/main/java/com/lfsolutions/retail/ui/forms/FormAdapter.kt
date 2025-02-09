@@ -8,6 +8,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemFormBinding
 import com.lfsolutions.retail.model.Form
 import com.lfsolutions.retail.util.formatToDate
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapter.ViewHolder>() {
 
@@ -35,7 +36,7 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
                     )
                 ) View.GONE else View.VISIBLE
             val serialNumberText =
-                if (form?.serialNo?.startsWith("VAN") == true) form?.serialNo else "VAN-" + form?.serialNo
+                if (form?.serialNo?.startsWith("VAN") == true) form.serialNo else "VAN-" + form?.serialNo
             binding.txtSerialNo.text = "Serial no. $serialNumberText"
             binding.txtEditedDate.visibility =
                 if (form?.lastModificationTime == null) View.GONE else View.VISIBLE
@@ -64,7 +65,7 @@ class FormAdapter(val forms: ArrayList<Form>?) : RecyclerView.Adapter<FormAdapte
             }
         }
         holder.itemView.tag = form
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onFormSelected(holder.itemView.tag as Form)
         }
     }

@@ -99,6 +99,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
+            Constants.Invoice.InvoiceDiscount,
+            invoice?.salesInvoice?.InvoiceDiscountFromatted().toString()
+        )
+
+        templateText = templateText?.replace(
             Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.InvoiceTaxFromatted().toString()
         )
 
@@ -402,7 +407,7 @@ object Printer {
             items += itemTemplateClean?.replace(Constants.Common.Index, count.toString())
                 ?.replace(Constants.Receipt.TransactionNo, it.transactionNo.toString())
                 ?.replace(Constants.Receipt.TransactionDate, it.transactionDate.toString())
-                ?.replace(Constants.Receipt.TransactionAmount, it.transactionAmount.toString())
+                ?.replace(Constants.Receipt.TransactionAmount, it.getAmount().toString())
             count += 1
             if (count < (receipt.items?.size ?: 0)) {
                 items += "\n"

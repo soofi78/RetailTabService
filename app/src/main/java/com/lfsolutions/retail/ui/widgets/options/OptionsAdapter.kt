@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.OptionItemBinding
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class OptionsAdapter(val options: ArrayList<OptionItem>?, val optionItemClick: OnOptionItemClick) :
     RecyclerView.Adapter<OptionsAdapter.ViewHolder>() {
@@ -21,6 +22,6 @@ class OptionsAdapter(val options: ArrayList<OptionItem>?, val optionItemClick: O
         option?.icon?.let { holder.binding.icon.setImageResource(it) }
         option?.title?.let { holder.binding.text.text = it }
         holder.itemView.tag = option
-        holder.itemView.setOnClickListener { optionItemClick.onOptionItemClick(holder.itemView.tag as OptionItem) }
+        holder.itemView.setDebouncedClickListener { optionItemClick.onOptionItemClick(holder.itemView.tag as OptionItem) }
     }
 }

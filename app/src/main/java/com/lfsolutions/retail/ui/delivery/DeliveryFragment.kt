@@ -41,6 +41,7 @@ import com.lfsolutions.retail.ui.stocktransfer.incoming.IncomingStockFlowActivit
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -73,10 +74,10 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             binding.cardUrgent.visibility = View.GONE
         }
         binding.dateText.text = scheduledDate
-        binding.dateText.setOnClickListener {
+        binding.dateText.setDebouncedClickListener {
             scheduleDateSelection()
         }
-        binding.scheduleDate.setOnClickListener {
+        binding.scheduleDate.setDebouncedClickListener {
             scheduleDateSelection()
         }
 
@@ -88,7 +89,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         addVerticalItemDecoration(binding.recyclerViewToVisit, requireContext())
         addVerticalItemDecoration(binding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(binding.recyclerViewSchedule, requireContext())
-        binding.fabStockRecord.setOnClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
+        binding.fabStockRecord.setDebouncedClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
 
 
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
@@ -102,7 +103,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             }
         })
 
-        binding.fabSelectCustomer.setOnClickListener {
+        binding.fabSelectCustomer.setDebouncedClickListener {
             val filterSheet = CustomerOptionView()
 
             filterSheet.setOnItemClicked(object : DeliveryItemAdapter.OnItemClickListener {
@@ -323,7 +324,6 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-
                 getDefaultUIUtil().onDraw(
                     c,
                     recyclerView,
@@ -440,11 +440,13 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 mToVisitAdapter.remove(position)
+                mToVisitAdapter.notifyDataSetChanged()
                 Notify.toastLong("Success")
             }
 
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                 Notify.toastLong("Unable to delete")
+                mToVisitAdapter.notifyDataSetChanged()
                 getCustomerDetails()
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity())).enque(
@@ -460,12 +462,14 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 mScheduleAdapter.remove(position)
+                mScheduleAdapter.notifyDataSetChanged()
                 Notify.toastLong("Success")
             }
 
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                 Notify.toastLong("Unable to delete")
                 getCustomerDetails()
+                mScheduleAdapter.notifyDataSetChanged()
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity())).enque(
             Network.api()?.deleteCustomerFromVisitationSchedule(

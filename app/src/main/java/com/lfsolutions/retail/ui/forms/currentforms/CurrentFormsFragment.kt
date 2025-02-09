@@ -28,6 +28,7 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -71,7 +72,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
 
     private fun setCustomerData() {
         customer?.let { mBinding.customerView.setCustomer(it) }
-        mBinding.customerView.setOnClickListener {
+        mBinding.customerView.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
@@ -157,7 +158,7 @@ class CurrentFormsFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun addOnClickListener() {
-        mBinding.addNewForms.setOnClickListener {
+        mBinding.addNewForms.setDebouncedClickListener {
             val modal = NewFormsBottomSheet()
             modal.setOnClickListener {
                 openSelectedForm(FormType.find(it.tag.toString()))

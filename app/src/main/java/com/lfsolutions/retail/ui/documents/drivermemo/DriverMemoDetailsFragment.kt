@@ -7,17 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentDriverMemoDetailsBinding
-import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.memo.CreateUpdateDriverMemoRequestBody
-import com.lfsolutions.retail.model.memo.DriverMemo
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
-import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -31,21 +25,16 @@ import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
-import kotlinx.coroutines.MainScope
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.system.measureTimeMillis
 
 class DriverMemoDetailsFragment : Fragment() {
 
     private lateinit var item: CreateUpdateDriverMemoRequestBody
     private val args by navArgs<DriverMemoDetailsFragmentArgs>()
     private lateinit var binding: FragmentDriverMemoDetailsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,7 +73,7 @@ class DriverMemoDetailsFragment : Fragment() {
                 }
             })
 
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPDFLink()
         }
     }

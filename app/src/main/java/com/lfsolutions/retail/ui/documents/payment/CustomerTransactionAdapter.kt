@@ -8,6 +8,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemSaleTransactionBinding
 import com.lfsolutions.retail.model.CustomerSaleTransaction
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -31,7 +32,7 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val transaction = transactions?.get(position)
+        val transaction = transactions.get(position)
         val binding = (holder as TransactionHolder).binding
         transaction?.let { setData(binding, it) }
     }
@@ -60,12 +61,12 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
             binding.editIcon.visibility = View.VISIBLE
         }
         binding.root.tag = transaction
-        binding.root.setOnClickListener {
+        binding.root.setDebouncedClickListener {
             mListener?.onAmountEdit(binding.root.tag as CustomerSaleTransaction)
         }
     }
 
-    override fun getItemCount(): Int = transactions.size ?: 0
+    override fun getItemCount(): Int = transactions.size
     fun setListener(listener: OnTransactionCallback) {
         mListener = listener
     }

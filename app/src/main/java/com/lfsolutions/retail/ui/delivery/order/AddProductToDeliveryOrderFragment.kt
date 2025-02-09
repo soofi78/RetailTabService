@@ -34,6 +34,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -155,28 +156,28 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun addOnClickListener() {
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 0) {
                 mBinding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
         }
 
-        mBinding.btnAdd.setOnClickListener {
+        mBinding.btnAdd.setDebouncedClickListener {
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
             updateTotal()
         }
 
-        mBinding.txtQty.setOnClickListener {
+        mBinding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog()
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
 //            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
@@ -271,7 +272,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun addSerialNumberClick() {
-        mBinding.addSerialNumber.setOnClickListener {
+        mBinding.addSerialNumber.setDebouncedClickListener {
             if (serialNumbers == null || serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
         }
     }

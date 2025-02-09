@@ -42,6 +42,7 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -80,7 +81,7 @@ class HistoryFragmentListing : Fragment() {
         if (::binding.isInitialized.not()) {
             binding = FragmentHistoryListingBinding.inflate(inflater)
         }
-        binding.filterView.setOnClickListener {
+        binding.filterView.setDebouncedClickListener {
             val filterSheet = HistoryFilterSheet()
             filterSheet.setFilteredData(customer, startDate, endDate)
             filterSheet.setOnProductDetailsChangedListener(object :
@@ -113,7 +114,7 @@ class HistoryFragmentListing : Fragment() {
 
     private fun setCustomerData() {
         customer?.let { binding.customerView.setCustomer(it) }
-        binding.customerView.setOnClickListener {
+        binding.customerView.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
@@ -132,11 +133,11 @@ class HistoryFragmentListing : Fragment() {
             binding.customerView.visibility = View.GONE
         }
 
-        binding.fabStockRecord.setOnClickListener {
+        binding.fabStockRecord.setDebouncedClickListener {
             stockReceived()
         }
 
-        binding.date.setOnClickListener {
+        binding.date.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     stockReceiveDate = year + "-" + month + "-" + day + "T00:00:00Z"

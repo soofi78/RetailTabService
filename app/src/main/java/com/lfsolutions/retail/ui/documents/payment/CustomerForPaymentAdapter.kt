@@ -8,6 +8,7 @@ import com.lfsolutions.retail.databinding.ItemDeliveryBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.makeTextBold
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class CustomerForPaymentAdapter(var customers: List<Customer>? = ArrayList()) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -64,7 +65,7 @@ class CustomerForPaymentAdapter(var customers: List<Customer>? = ArrayList()) :
             )
 
         binding.root.tag = customer
-        binding.root.setOnClickListener {
+        binding.root.setDebouncedClickListener {
             mListener?.onItemClick(it.tag as Customer)
         }
     }

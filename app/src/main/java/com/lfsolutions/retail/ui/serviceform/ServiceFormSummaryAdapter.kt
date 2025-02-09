@@ -8,6 +8,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.service.ComplaintServiceDetails
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDetails>?) :
     RecyclerView.Adapter<ServiceFormSummaryAdapter.ViewHolder>() {
@@ -15,7 +16,7 @@ class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDe
     private var mListener: OnOrderSummarySelectListener? = null
 
     class ViewHolder(val binding: ItemOrderSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -38,7 +39,7 @@ class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDe
         holder.binding.txtProductName.text = serviceDetails?.get(position)?.productName
         holder.binding.txtSerials.text = serviceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text = serviceDetails?.get(position)?.transTypeDisplayText
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect()
         }
 

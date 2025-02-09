@@ -21,6 +21,7 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -30,10 +31,6 @@ class IncomingStockSummaryFragment : Fragment() {
     private lateinit var mBinding: FragmentIncomingStockSummaryBinding
     private var itemSwipeHelper: ItemTouchHelper? = null
     private lateinit var mAdapter: InComingStockSummaryAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,10 +68,10 @@ class IncomingStockSummaryFragment : Fragment() {
         mBinding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         Main.app.getInComingStockTransferRequestObject().date =
             mBinding.date.text.toString() + "T00:00:00Z"
-        mBinding.dateSelectionView.setOnClickListener {
+        mBinding.dateSelectionView.setDebouncedClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    mBinding.date.setText("$day-$month-$year")
+                    mBinding.date.text = "$day-$month-$year"
                     Main.app.getInComingStockTransferRequestObject().date =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -127,6 +124,7 @@ class IncomingStockSummaryFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val position = viewHolder.adapterPosition
                 mAdapter.remove(position)
+                mAdapter.notifyDataSetChanged()
                 updateSummaryAmountAndQty()
             }
 

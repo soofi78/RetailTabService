@@ -41,6 +41,7 @@ import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
 
@@ -103,18 +104,18 @@ class ServiceFormFragment : Fragment() {
 
         val loading = Loading().forApi(requireActivity())
         NetworkCall.make().setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    feedbacksTypes.clear()
-                    (response?.body() as RetailResponse<FeedbackTypeResult>).result?.items?.let {
-                        feedbacksTypes.addAll(it)
-                    }
-                    getFeedbackData()
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                feedbacksTypes.clear()
+                (response?.body() as RetailResponse<FeedbackTypeResult>).result?.items?.let {
+                    feedbacksTypes.addAll(it)
                 }
+                getFeedbackData()
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
-                }
-            }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedbackTypes())
+            }
+        }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedbackTypes())
             .execute()
     }
 
@@ -126,30 +127,30 @@ class ServiceFormFragment : Fragment() {
 
         val loading = Loading().forApi(requireActivity())
         NetworkCall.make().setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    allocatedAssets.clear()
-                    (response?.body() as BaseResponse<AssetResult>).result?.items?.let {
-                        allocatedAssets.addAll(it)
-                    }
-                    setAssetData()
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                allocatedAssets.clear()
+                (response?.body() as BaseResponse<AssetResult>).result?.items?.let {
+                    allocatedAssets.addAll(it)
                 }
+                setAssetData()
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
-                }
-            }).setTag("Allocated Assets").autoLoadigCancel(loading).enque(
-                Network.api()?.getAllocatedAssets(
-                    HistoryRequest(
-                        sorting = "Id ASC",
-                        status = null,
-                        invoiceType = null,
-                        maxResultCount = 1000,
-                        locationId = 0,
-                        filter = null,
-                        customerId = customer.id.toString()
-                    )
+            }
+        }).setTag("Allocated Assets").autoLoadigCancel(loading).enque(
+            Network.api()?.getAllocatedAssets(
+                HistoryRequest(
+                    sorting = "Id ASC",
+                    status = null,
+                    invoiceType = null,
+                    maxResultCount = 1000,
+                    locationId = 0,
+                    filter = null,
+                    customerId = customer.id.toString()
                 )
-            ).execute()
+            )
+        ).execute()
     }
 
     private fun setAssetData() {
@@ -161,18 +162,18 @@ class ServiceFormFragment : Fragment() {
     private fun getServiceTypeData() {
         if (serviceTypes.isEmpty()) {
             NetworkCall.make().setCallback(object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        (response?.body() as RetailResponse<ServiceTypeResult>).result?.items?.let {
-                            serviceTypes.addAll(it)
-                        }
-                        setServiceTypeAdapter()
-                        getReportTypeData()
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as RetailResponse<ServiceTypeResult>).result?.items?.let {
+                        serviceTypes.addAll(it)
                     }
+                    setServiceTypeAdapter()
+                    getReportTypeData()
+                }
 
-                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
-                    }
-                }).autoLoadigCancel(Loading().forApi(requireActivity()))
+                }
+            }).autoLoadigCancel(Loading().forApi(requireActivity()))
                 .enque(Network.api()?.getServiceType()).execute()
         } else {
             setServiceTypeAdapter()
@@ -182,17 +183,17 @@ class ServiceFormFragment : Fragment() {
     private fun getReportTypeData() {
         if (reportTypes.isEmpty()) {
             NetworkCall.make().setCallback(object : OnNetworkResponse {
-                    override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        (response?.body() as RetailResponse<ReportTypeResult>).result?.items?.let {
-                            reportTypes.addAll(it)
-                        }
-                        setReportTypeAdapter()
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as RetailResponse<ReportTypeResult>).result?.items?.let {
+                        reportTypes.addAll(it)
                     }
+                    setReportTypeAdapter()
+                }
 
-                    override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
-                    }
-                }).autoLoadigCancel(Loading().forApi(requireActivity()))
+                }
+            }).autoLoadigCancel(Loading().forApi(requireActivity()))
                 .enque(Network.api()?.getReportType()).execute()
         } else {
             setReportTypeAdapter()
@@ -210,7 +211,7 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun setClickListener() {
-        binding.btnCheckIn.setOnClickListener {
+        binding.btnCheckIn.setDebouncedClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
             val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
@@ -223,7 +224,7 @@ class ServiceFormFragment : Fragment() {
         }
 
 
-        binding.btnCheckOut.setOnClickListener {
+        binding.btnCheckOut.setDebouncedClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
             val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
@@ -233,30 +234,30 @@ class ServiceFormFragment : Fragment() {
             binding.checkoutTime.tag = time
         }
 
-        binding.complainantCard.setOnClickListener {
+        binding.complainantCard.setDebouncedClickListener {
             ComplainantInformationDialog.make(
                 requireActivity(), Main.app.getComplaintService()?.complaintService?.complaintBy,
                 Main.app.getComplaintService()?.complaintService?.designation,
                 Main.app.getComplaintService()?.complaintService?.mobileNo,
             ).show(object : ComplainantInformationDialog.OnConfirmListener {
-                    override fun onConfirm(
-                        name: String, designation: String, mobileNumber: String
-                    ) {
-                        Main.app.getComplaintService()?.complaintService?.complaintBy = name
-                        Main.app.getComplaintService()?.complaintService?.designation = designation
-                        Main.app.getComplaintService()?.complaintService?.mobileNo = mobileNumber
-                        binding.txtCmplntName.text = name
-                        binding.txtCmplntDes.text = designation
-                    }
-                })
+                override fun onConfirm(
+                    name: String, designation: String, mobileNumber: String
+                ) {
+                    Main.app.getComplaintService()?.complaintService?.complaintBy = name
+                    Main.app.getComplaintService()?.complaintService?.designation = designation
+                    Main.app.getComplaintService()?.complaintService?.mobileNo = mobileNumber
+                    binding.txtCmplntName.text = name
+                    binding.txtCmplntDes.text = designation
+                }
+            })
         }
 
 
-        binding.printAndSend.setOnClickListener { onPrintAndSave() }
+        binding.printAndSend.setDebouncedClickListener { onPrintAndSave() }
 
-        binding.btnClearSign.setOnClickListener { binding.signaturePad.clear() }
+        binding.btnClearSign.setDebouncedClickListener { binding.signaturePad.clear() }
 
-        binding.btnOpenEquipmentList.setOnClickListener {
+        binding.btnOpenEquipmentList.setDebouncedClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to true, Constants.Customer to args.customer
             )
@@ -265,12 +266,12 @@ class ServiceFormFragment : Fragment() {
             )
         }
 
-        binding.btnCancel.setOnClickListener {
+        binding.btnCancel.setDebouncedClickListener {
             findNavController().popBackStack()
             Main.app.clearComplaintService()
         }
 
-        binding.btnViewOrder.setOnClickListener {
+        binding.btnViewOrder.setDebouncedClickListener {
             val bundle = bundleOf(
                 "IsEquipment" to false, Constants.Customer to args.customer
             )
@@ -281,11 +282,6 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun onPrintAndSave() {
-        if (Main.app.getComplaintService()?.complaintServiceDetails?.size == 0) {
-            Notify.toastLong("Please add products")
-            return
-        }
-
         if (binding.signaturePad.isEmpty) {
             Notify.toastLong("Please add your signature")
             return
@@ -405,7 +401,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun setCustomerData() {
         customer.let { binding.cardCustomerInfo.setCustomer(it) }
-        binding.cardCustomerInfo.setOnClickListener {
+        binding.cardCustomerInfo.setDebouncedClickListener {
             CustomerDetailsBottomSheet.show(requireActivity().supportFragmentManager, customer)
         }
     }
@@ -415,20 +411,20 @@ class ServiceFormFragment : Fragment() {
 
         val loading = Loading().forApi(requireActivity())
         NetworkCall.make().setCallback(object : OnNetworkResponse {
-                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    feedbacks.clear()
-                    (response?.body() as RetailResponse<ArrayList<Feedback>>).result?.let {
-                        feedbacks.addAll(
-                            it
-                        )
-                    }
-                    setFeedbackData()
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                feedbacks.clear()
+                (response?.body() as RetailResponse<ArrayList<Feedback>>).result?.let {
+                    feedbacks.addAll(
+                        it
+                    )
                 }
+                setFeedbackData()
+            }
 
-                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
 
-                }
-            }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedback())
+            }
+        }).setTag("FEEDBACK").autoLoadigCancel(loading).enque(Network.api()?.getFeedback())
             .execute()
     }
 

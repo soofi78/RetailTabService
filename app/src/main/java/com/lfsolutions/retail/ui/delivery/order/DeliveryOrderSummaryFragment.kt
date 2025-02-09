@@ -15,6 +15,7 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
 import com.videotel.digital.util.Notify
 import java.math.BigDecimal
@@ -205,10 +206,10 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
 //        mBinding.checkboxFOC.setOnCheckedChangeListener { _, isChecked ->
 //            Main.app.getDeliveryOrder()?.deliveryOrder?.Type = if (isChecked) "F" else "N"
 //        }
-        mBinding.flowDiscount.setOnClickListener {
+        mBinding.flowDiscount.setDebouncedClickListener {
             Calculator.show(this)
         }
-        mBinding.btnCancel.setOnClickListener {
+        mBinding.btnCancel.setDebouncedClickListener {
             Notify.toastLong("Cleared all items")
             Main.app.getDeliveryOrder()?.deliveryOrderDetail?.clear()
             findNavController().popBackStack()
@@ -218,7 +219,7 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             findNavController().popBackStack()
         }
 
-        mBinding.btnComplete.setOnClickListener {
+        mBinding.btnComplete.setDebouncedClickListener {
             findNavController().popBackStack()
         }
     }

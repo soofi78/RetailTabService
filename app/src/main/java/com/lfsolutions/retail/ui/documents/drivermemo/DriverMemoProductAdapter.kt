@@ -13,7 +13,7 @@ import com.lfsolutions.retail.model.memo.DriverMemoDetail
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockSummaryAdapter.OnItemUpdated
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
-import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class DriverMemoProductAdapter(
     val activity: FragmentActivity,
@@ -56,29 +56,31 @@ class DriverMemoProductAdapter(
         holder.binding.btnSub.tag = position
         holder.binding.txtQty.tag = position
 
-        holder.binding.btnSub.setOnClickListener {
+        holder.binding.btnSub.setDebouncedClickListener {
             if (holder.binding.txtQty.text.toString().toDouble() <= 0) {
                 holder.binding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
-            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
-            items?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
-            items?.get(it.tag as Int)?.updateTotal()
-            if (::onItemUpdate.isInitialized) items?.get(it.tag as Int)
+            holder.binding.txtQty.text =
+                holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
+            items.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            items.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) items.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
             notifyItemChanged(it.tag as Int)
         }
 
-        holder.binding.btnAdd.setOnClickListener {
-            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
-            items?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
-            items?.get(it.tag as Int)?.updateTotal()
-            if (::onItemUpdate.isInitialized) items?.get(it.tag as Int)
+        holder.binding.btnAdd.setDebouncedClickListener {
+            holder.binding.txtQty.text =
+                holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
+            items.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            items.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) items.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
             notifyItemChanged(it.tag as Int)
         }
 
-        holder.binding.txtQty.setOnClickListener {
+        holder.binding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog(it.tag as Int)
         }
     }
@@ -89,7 +91,7 @@ class DriverMemoProductAdapter(
         modal.setProductDetails(
             product.productImage.toString(),
             product.productName.toString(),
-            product.qty ?: 0.0,
+            product.qty,
             product.cost ?: 0.0,
             product.uom.toString()
         )
@@ -99,7 +101,7 @@ class DriverMemoProductAdapter(
                 items[position].qty = quantity
                 items[position].updateTotal()
                 if (::onItemUpdate.isInitialized) items[position]
-                    ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
+                    .let { it1 -> onItemUpdate.OnItemUpdated(it1) }
                 notifyItemChanged(position)
             }
 

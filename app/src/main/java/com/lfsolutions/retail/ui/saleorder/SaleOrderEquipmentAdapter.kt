@@ -9,6 +9,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemProductBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class SaleOrderEquipmentAdapter(private val products: List<Product>) :
     RecyclerView.Adapter<SaleOrderEquipmentAdapter.ViewHolder>() {
@@ -26,16 +27,16 @@ class SaleOrderEquipmentAdapter(private val products: List<Product>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val equipment = products.get(position)
         holder.itemView.tag = equipment
-        holder.binding.txtProductName.text = equipment?.productName
+        holder.binding.txtProductName.text = equipment.productName
         holder.binding.txtCategory.text =
-            """SKU: ${equipment?.inventoryCode} | QTY Available: ${equipment?.qtyOnHand}"""
+            """SKU: ${equipment.inventoryCode} | QTY Available: ${equipment.qtyOnHand}"""
         holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + equipment?.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + equipment.cost?.formatDecimalSeparator()
 
-        Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment?.imagePath).centerCrop()
+        Glide.with(holder.itemView).load(Main.app.getBaseUrl() + equipment.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onEquipmentClick(it.tag as Product)
         }
     }

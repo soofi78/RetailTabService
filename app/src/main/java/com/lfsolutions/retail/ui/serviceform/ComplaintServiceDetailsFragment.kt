@@ -27,6 +27,7 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -37,10 +38,6 @@ class ComplaintServiceDetailsFragment : Fragment() {
     private lateinit var item: ComplaintService
     private val args by navArgs<ComplaintServiceDetailsFragmentArgs>()
     private lateinit var binding: FragmentComplaintServiceDetailsBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +78,7 @@ class ComplaintServiceDetailsFragment : Fragment() {
                 }
             })
 
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPDFLink()
         }
     }

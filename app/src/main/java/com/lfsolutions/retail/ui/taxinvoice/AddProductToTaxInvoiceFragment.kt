@@ -35,6 +35,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -155,36 +156,36 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun addOnClickListener() {
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
         }
 
-        mBinding.btnAdd.setOnClickListener {
+        mBinding.btnAdd.setDebouncedClickListener {
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
             updateTotal()
         }
 
-        mBinding.txtQty.setOnClickListener {
+        mBinding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog()
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
                     .toDouble() != selectedSerialNumbers.size.toDouble()
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             addToCart()
@@ -291,7 +292,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
     }
 
     private fun addSerialNumberClick() {
-        mBinding.addSerialNumber.setOnClickListener {
+        mBinding.addSerialNumber.setDebouncedClickListener {
             getSerialNumbersList()
         }
     }

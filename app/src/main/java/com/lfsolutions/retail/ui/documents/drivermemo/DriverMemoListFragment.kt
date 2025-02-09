@@ -29,6 +29,7 @@ import com.lfsolutions.retail.ui.documents.history.HistoryListAdapter
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -66,7 +67,7 @@ class DriverMemoListFragment : Fragment() {
         binding.header.setOnBackClick {
             requireActivity().finish()
         }
-        binding.filterView.setOnClickListener {
+        binding.filterView.setDebouncedClickListener {
             val filterSheet = HistoryFilterSheet()
             filterSheet.setFilteredData(customer, startDate, endDate)
             filterSheet.setOnProductDetailsChangedListener(object :
@@ -87,7 +88,7 @@ class DriverMemoListFragment : Fragment() {
             }
         }
 
-        binding.addDriverMemo.setOnClickListener {
+        binding.addDriverMemo.setDebouncedClickListener {
             val filterSheet = CustomerOptionView()
             filterSheet.setOnItemClicked(object : DeliveryItemAdapter.OnItemClickListener {
                 override fun onItemClick(customer: Customer) {

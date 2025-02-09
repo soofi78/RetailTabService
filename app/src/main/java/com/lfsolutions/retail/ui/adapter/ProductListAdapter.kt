@@ -10,6 +10,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemProductBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class ProductListAdapter(private val products: List<Product>) :
     RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
@@ -42,7 +43,7 @@ class ProductListAdapter(private val products: List<Product>) :
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + equipment.cost?.formatDecimalSeparator()
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onProductClick(it.tag as Product)
         }
     }

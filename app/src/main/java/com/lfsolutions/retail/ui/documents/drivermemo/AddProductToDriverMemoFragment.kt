@@ -18,6 +18,7 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 
 
@@ -66,21 +67,21 @@ class AddProductToDriverMemoFragment : Fragment() {
 
 
     private fun addOnClickListener() {
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 0) {
                 mBinding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
         }
 
-        mBinding.btnAdd.setOnClickListener {
+        mBinding.btnAdd.setDebouncedClickListener {
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
             updateTotal()
         }
 
-        mBinding.txtQty.setOnClickListener {
+        mBinding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog()
         }
 
@@ -88,10 +89,10 @@ class AddProductToDriverMemoFragment : Fragment() {
             mBinding.root.findNavController().popBackStack()
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().equals("0")) {
                 Notify.toastLong("Can't add zero quantity!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             addToCart()

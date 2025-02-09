@@ -26,12 +26,13 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
+import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
-import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -50,7 +51,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentAddToCartBinding.inflate(inflater, container, false)
         product = Gson().fromJson(args.product, Product::class.java)
@@ -78,13 +79,13 @@ class SaleOrderAddProductToCartFragment : Fragment() {
 
     private fun setData() {
         mBinding.txtQty.text = "1.0"
-        product?.qtyOnHand?.let {
+        product.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product?.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility =
@@ -100,40 +101,40 @@ class SaleOrderAddProductToCartFragment : Fragment() {
 
     private fun addOnClickListener() {
 
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 0) {
                 mBinding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
         }
 
-        mBinding.btnAdd.setOnClickListener {
+        mBinding.btnAdd.setDebouncedClickListener {
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().plus(1).toString()
             updateTotal()
         }
 
-        mBinding.txtQty.setOnClickListener {
+        mBinding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog()
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             addToCart()
@@ -184,7 +185,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
 
         val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
-            (mBinding.txtQty.text.toString().toDouble() * (product?.cost ?: 0.0)).toDouble()
+            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0)).toDouble()
         val discount = 0.0
         val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
         val netTotal = (subTotal - discount) + taxAmount
@@ -201,7 +202,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 QtyStock = product.qtyOnHand,
                 Price = subTotal,
                 NetCost = total,
-                CostWithoutTax = product?.cost?.toDouble() ?: 0.0,
+                CostWithoutTax = product.cost?.toDouble() ?: 0.0,
                 TaxRate = product.getApplicableTaxRate().toDouble(),
                 DepartmentId = 0,
                 IsBatch = false,
@@ -298,7 +299,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 }
             }).enque(
                 Network.api()?.getSerialNumbers(
-                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
+                    product.productId, Main.app.getSession().defaultLocationId?.toLong()
                 )
             ).execute()
     }

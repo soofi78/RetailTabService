@@ -10,6 +10,7 @@ import com.lfsolutions.retail.databinding.ItemScheduledBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.ui.theme.getAppColor
 import com.lfsolutions.retail.util.makeTextBold
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class DeliveryItemAdapter(
     var customers: ArrayList<Customer>? = ArrayList(),
@@ -29,10 +30,8 @@ class DeliveryItemAdapter(
 
     class ViewHolderScheduled(val binding: ItemScheduledBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
-            return if (binding.swipeAble.tag != null && binding.swipeAble.tag == true)
-                binding.swipeAble
-            else null
+        fun getSwipableView(): View {
+            return binding.swipeAble
         }
     }
 
@@ -125,7 +124,7 @@ class DeliveryItemAdapter(
         }
 
         binding.root.tag = customer
-        binding.root.setOnClickListener {
+        binding.root.setDebouncedClickListener {
             binding.selected.isChecked = customer?.isSelected?.not() == true
         }
         binding.selected.isChecked = customer?.isSelected == true
@@ -182,14 +181,14 @@ class DeliveryItemAdapter(
             )
 
         binding.root.tag = customer
-        binding.root.setOnClickListener {
+        binding.root.setDebouncedClickListener {
             mListener?.onItemClick(it.tag as Customer)
         }
 
         if (enableProductInfo) {
             binding.productInfo.visibility = View.VISIBLE
             binding.productInfo.tag = customer
-            binding.productInfo.setOnClickListener {
+            binding.productInfo.setDebouncedClickListener {
                 mProductInfoClick?.onItemClick(it.tag as Customer)
             }
         }

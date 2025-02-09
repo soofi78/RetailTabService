@@ -10,6 +10,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDetail>?) :
     RecyclerView.Adapter<TaxInvoiceSummaryAdapter.ViewHolder>() {
@@ -54,7 +55,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
             if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
 
         holder.itemView.tag = salveInvoiceDetails?.get(position)
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesInvoiceDetail)
         }
 

@@ -17,6 +17,7 @@ import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
 
 import com.videotel.digital.util.Notify
@@ -225,10 +226,10 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.checkboxFOC.setOnCheckedChangeListener { _, isChecked ->
             Main.app.getTaxInvoice()?.salesInvoice?.type = if (isChecked) "F" else "N"
         }
-        mBinding.flowDiscount.setOnClickListener {
+        mBinding.flowDiscount.setDebouncedClickListener {
             Calculator.show(this)
         }
-        mBinding.btnCancel.setOnClickListener {
+        mBinding.btnCancel.setDebouncedClickListener {
             Notify.toastLong("Cleared all items")
             Main.app.getTaxInvoice()?.salesInvoiceDetail?.clear()
             findNavController().popBackStack()
@@ -238,7 +239,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             findNavController().popBackStack()
         }
 
-        mBinding.btnComplete.setOnClickListener {
+        mBinding.btnComplete.setDebouncedClickListener {
             findNavController().popBackStack()
         }
     }

@@ -13,6 +13,7 @@ import com.lfsolutions.retail.databinding.BottomSheetThemesBinding
 import com.lfsolutions.retail.ui.theme.RetailThemes
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 
 class ThemeSelectionSheet : BottomSheetDialogFragment() {
@@ -42,7 +43,7 @@ class ThemeSelectionSheet : BottomSheetDialogFragment() {
             }
         })
 
-        binding.save.setOnClickListener {
+        binding.save.setDebouncedClickListener {
             optionSheet?.dismiss()
             if (::theme.isInitialized) {
                 onThemeSelected.onThemeSelected(theme)

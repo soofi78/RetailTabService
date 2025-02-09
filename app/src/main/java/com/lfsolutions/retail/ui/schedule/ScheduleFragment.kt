@@ -24,6 +24,7 @@ import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -50,7 +51,7 @@ class ScheduleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.dateFilter.text =
             DateTime.getCurrentDateTime(DateTime.DateFormatWithMonthNameAndYear)
-        mBinding.dateFilter.setOnClickListener {
+        mBinding.dateFilter.setDebouncedClickListener {
             DateTime.showMonthYearPicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
                     super.onDateSelected(year, month, day)
@@ -82,11 +83,11 @@ class ScheduleFragment : Fragment() {
         })
         getScheduledVisitation()
 
-        mBinding.fabAddToScheduled.setOnClickListener {
+        mBinding.fabAddToScheduled.setDebouncedClickListener {
             val list = mScheduleAdapter?.getCheckedItemList()
             if (list.isNullOrEmpty()) {
                 Notify.toastLong("Please select items")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             val ids = arrayListOf<CustomerIdRequest>()
@@ -116,7 +117,7 @@ class ScheduleFragment : Fragment() {
                 }).execute()
         }
 
-        mBinding.sort.setOnClickListener {
+        mBinding.sort.setDebouncedClickListener {
             sort = if (sort == Constants.ASCENDING) Constants.DESCENDING else Constants.ASCENDING
             Notify.toastLong("Sort: $sort")
             setAdapters(res, (mBinding.searchView.query ?: "").toString())

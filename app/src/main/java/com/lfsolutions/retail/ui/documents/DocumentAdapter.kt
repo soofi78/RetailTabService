@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.databinding.ItemDocumentBinding
-import com.lfsolutions.retail.model.Documents
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class DocumentAdapter(
     val documentList: ArrayList<DocumentType>,
@@ -32,7 +32,7 @@ class DocumentAdapter(
         holder.binding.txtDocumentName.text = holder.itemView.context.getString(document.label)
         holder.binding.icoDocument.setImageResource(document.iconResId)
         holder.binding.root.tag = document
-        holder.binding.root.setOnClickListener {
+        holder.binding.root.setDebouncedClickListener {
             onDocumentClickedListener.onDocumentClicked(it.tag as DocumentType)
         }
     }

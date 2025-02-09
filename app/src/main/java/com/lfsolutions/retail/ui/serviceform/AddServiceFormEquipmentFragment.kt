@@ -13,9 +13,9 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentServiceFormAddEquipmentBinding
-import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentType
 import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.ProductBatchList
@@ -37,6 +37,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -46,7 +47,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
 
     private var product: Product? = null
     private lateinit var _binding: FragmentServiceFormAddEquipmentBinding
-    private val mBinding get() = _binding!!
+    private val mBinding get() = _binding
     private lateinit var serialNumberAdapter: MultiSelectListAdapter
     private lateinit var complaintTypeAdapter: MultiSelectListAdapter
     private val args by navArgs<AddServiceFormEquipmentFragmentArgs>()
@@ -60,7 +61,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (::_binding.isInitialized.not()) {
             _binding = FragmentServiceFormAddEquipmentBinding.inflate(inflater, container, false)
             product = Gson().fromJson(args.product, Product::class.java)
@@ -89,7 +90,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     actionType =
-                        (response?.body() as RetailResponse<ActionTypeResult>)?.result?.items
+                        (response?.body() as RetailResponse<ActionTypeResult>).result?.items
                     setActionTypesAdapter()
                 }
 
@@ -110,13 +111,13 @@ class AddServiceFormEquipmentFragment : Fragment() {
     }
 
     private fun addSerialNumberClick() {
-        mBinding.addSerialNumber.setOnClickListener {
+        mBinding.addSerialNumber.setDebouncedClickListener {
             if (serialNumbers == null || serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
         }
     }
 
     private fun addComplaintTypeClick() {
-        mBinding.addComplaintTypes.setOnClickListener {
+        mBinding.addComplaintTypes.setDebouncedClickListener {
             if (complaintTypes == null || complaintTypes.isEmpty()) getComplaintTypeList() else showComplaintTypes()
         }
     }
@@ -280,10 +281,10 @@ class AddServiceFormEquipmentFragment : Fragment() {
 
 
     private fun addOnClickListener() {
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 0) {
                 mBinding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
@@ -294,7 +295,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
             updateTotal()
         }
 
-        mBinding.txtQty.setOnClickListener {
+        mBinding.txtQty.setDebouncedClickListener {
             openQuantityUpdateDialog()
         }
 
@@ -302,22 +303,22 @@ class AddServiceFormEquipmentFragment : Fragment() {
             mBinding.root.findNavController().popBackStack()
         }
 
-        mBinding.btnSave.setOnClickListener {
+        mBinding.btnSave.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString() == "0") {
                 Notify.toastLong("Can't add zero quantity!")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product?.isSerialEquipment() == true && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
             if (product?.isSerialEquipment() == true && mBinding.txtQty.text.toString()
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
 
 //            if (selectedComplaintTypes.isEmpty()) {
@@ -396,7 +397,7 @@ class AddServiceFormEquipmentFragment : Fragment() {
         )
     }
 
-    private fun getComplaintServiceActionType(): String? {
+    private fun getComplaintServiceActionType(): String {
         return actionType?.get(mBinding.spinnerActionType.selectedItemPosition)?.value ?: ""
     }
 

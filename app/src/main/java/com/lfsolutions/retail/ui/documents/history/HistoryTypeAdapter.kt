@@ -2,12 +2,11 @@ package com.lfsolutions.retail.ui.documents.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ToggleButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
-import com.lfsolutions.retail.databinding.CategoryItemBinding
 import com.lfsolutions.retail.databinding.HistoryItemBinding
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class HistoryTypeAdapter(
     private val types: ArrayList<HistoryType>,
@@ -55,7 +54,7 @@ class HistoryTypeAdapter(
             ), null, null, null
         )
         holder.binding.item.tag = types[position]
-        holder.binding.item.setOnClickListener { buttonView ->
+        holder.binding.item.setDebouncedClickListener { buttonView ->
             (buttonView.tag as HistoryType).selected = true
             if (lastSelectedIndex > -1 && lastSelectedIndex != position)
                 types[lastSelectedIndex].selected = false

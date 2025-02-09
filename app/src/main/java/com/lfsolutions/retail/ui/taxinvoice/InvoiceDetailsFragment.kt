@@ -37,6 +37,7 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -91,20 +92,20 @@ class InvoiceDetailsFragment : Fragment() {
             })
 
 
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPDFLink()
         }
-        binding.pay.setOnClickListener {
+        binding.pay.setDebouncedClickListener {
             getTransactionReference()
         }
 
-        binding.print.setOnClickListener {
+        binding.print.setDebouncedClickListener {
             Printer.printInvoice(requireActivity(), invoice)
         }
 
         if (invoice?.salesInvoice?.type == "F") {
             binding.pay.text = getString(R.string.foc)
-            binding.pay.setOnClickListener {
+            binding.pay.setDebouncedClickListener {
 
             }
             binding.balance.text = """${Main.app.getSession().currencySymbol}0"""

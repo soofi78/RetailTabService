@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.view.View
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
@@ -45,4 +46,12 @@ fun Int.formatDecimalSeparator(): String {
 
 fun Double.formatDecimalSeparator(): String {
     return this.toString().formatDecimalSeparator()
+}
+
+fun View.setDebouncedClickListener(onClick: (View) -> Unit) {
+    setOnClickListener {
+        if (ClickDebouncer.canClick()) {
+            onClick(it)
+        }
+    }
 }

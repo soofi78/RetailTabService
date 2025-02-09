@@ -23,6 +23,7 @@ import com.lfsolutions.retail.databinding.ActivityPrinterSettingsBinding
 import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -132,12 +133,12 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
                 }
             }
 
-            binding.testPrint.setOnClickListener {
+            binding.testPrint.setDebouncedClickListener {
                 val position = binding.printers.selectedItemPosition - 1
                 if (position > -1) PrinterManager.setDefaultPrinter(devices[position])
                 else {
                     Notify.toastLong("Please select a printer")
-                    return@setOnClickListener
+                    return@setDebouncedClickListener
                 }
 
                 AppSession.put(
@@ -166,7 +167,7 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
         } else {
             binding.instructions.visibility = View.VISIBLE
             binding.printerSettingsView.visibility = View.GONE
-            binding.instructions.setOnClickListener {
+            binding.instructions.setDebouncedClickListener {
                 PrinterManager.openBluetoothSettings(requireActivity())
             }
         }

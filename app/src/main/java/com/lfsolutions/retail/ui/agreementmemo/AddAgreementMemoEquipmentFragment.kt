@@ -13,9 +13,9 @@ import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoAddEquipmentBinding
-import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.EquipmentType
 import com.lfsolutions.retail.model.EquipmentTypeResult
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.AgreementMemoDetail
@@ -33,6 +33,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -77,7 +78,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
     }
 
     private fun addSerialNumberClick() {
-        mBinding.addSerialNumber.setOnClickListener {
+        mBinding.addSerialNumber.setDebouncedClickListener {
             if (serialNumbers == null || serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
         }
     }
@@ -108,7 +109,7 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                 .titleSize(25f).positiveText("Done").negativeText("Cancel")
                 .setMinSelectionLimit(1) //you can set minimum checkbox selection limit (Optional)
                 .setMaxSelectionLimit(
-                    serialNumbers?.size ?: 0
+                    serialNumbers.size
                 ) //you can set maximum checkbox selection limit (Optional)
                 .preSelectIDsList(selectedSerialNumbers) //List of ids that you need to be selected
                 .multiSelectList(serialNumbers) // the multi select model list with ids and name
@@ -186,9 +187,9 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
 
 
     private fun addOnClickListener() {
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 1) {
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()

@@ -32,6 +32,7 @@ import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -84,10 +85,10 @@ class OrderDetailsFragment : Fragment() {
                 }
             })
 
-        binding.pdf.setOnClickListener {
+        binding.pdf.setDebouncedClickListener {
             getPDFLink()
         }
-        binding.print.setOnClickListener {
+        binding.print.setDebouncedClickListener {
             Printer.printSaleOrder(requireActivity(), order)
         }
 
@@ -114,11 +115,11 @@ class OrderDetailsFragment : Fragment() {
             binding.deliveryOrder.visibility = View.GONE
         }
 
-        binding.saleInvoice.setOnClickListener {
+        binding.saleInvoice.setDebouncedClickListener {
             convertToSaleInvoice()
         }
 
-        binding.deliveryOrder.setOnClickListener {
+        binding.deliveryOrder.setDebouncedClickListener {
             convertToDeliveryOrder()
         }
     }

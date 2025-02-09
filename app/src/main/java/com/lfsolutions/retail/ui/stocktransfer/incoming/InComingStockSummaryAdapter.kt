@@ -24,6 +24,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -40,7 +41,7 @@ class InComingStockSummaryAdapter(
 
     class ViewHolder(val binding: ItemOutStockSummaryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun getSwipableView(): View? {
+        fun getSwipableView(): View {
             return binding.swipeAble
         }
     }
@@ -67,7 +68,7 @@ class InComingStockSummaryAdapter(
             Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.price?.formatDecimalSeparator()
         holder.binding.txtProductName.text = stockTransferProducts?.get(position)?.productName
         holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
-        holder.itemView.setOnClickListener {
+        holder.itemView.setDebouncedClickListener {
             mListener?.onOutGoingStockItemClick()
         }
 
@@ -80,8 +81,10 @@ class InComingStockSummaryAdapter(
                 holder.binding.txtQty.text = "1"
                 return@setOnClickListener
             }
-            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
-            stockTransferProducts?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            holder.binding.txtQty.text =
+                holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
+            stockTransferProducts?.get(it.tag as Int)?.qty =
+                holder.binding.txtQty.text.toString().toDouble()
             stockTransferProducts?.get(it.tag as Int)?.updateTotal()
             if (::onItemUpdate.isInitialized) stockTransferProducts?.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
@@ -89,8 +92,10 @@ class InComingStockSummaryAdapter(
         }
 
         holder.binding.btnAdd.setOnClickListener {
-            holder.binding.txtQty.text = holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
-            stockTransferProducts?.get(it.tag as Int)?.qty = holder.binding.txtQty.text.toString().toDouble()
+            holder.binding.txtQty.text =
+                holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
+            stockTransferProducts?.get(it.tag as Int)?.qty =
+                holder.binding.txtQty.text.toString().toDouble()
             stockTransferProducts?.get(it.tag as Int)?.updateTotal()
             if (::onItemUpdate.isInitialized) stockTransferProducts?.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }

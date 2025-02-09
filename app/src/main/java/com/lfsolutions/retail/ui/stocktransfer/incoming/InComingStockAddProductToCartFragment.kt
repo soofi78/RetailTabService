@@ -31,6 +31,7 @@ import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -49,7 +50,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentAddToCartBinding.inflate(inflater, container, false)
         product = Gson().fromJson(args.product, Product::class.java)
@@ -83,7 +84,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product?.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility =
@@ -99,10 +100,10 @@ class InComingStockAddProductToCartFragment : Fragment() {
 
     private fun addOnClickListener() {
 
-        mBinding.btnSub.setOnClickListener {
+        mBinding.btnSub.setDebouncedClickListener {
             if (mBinding.txtQty.text.toString().toDouble() <= 0) {
                 mBinding.txtQty.text = "1"
-                return@setOnClickListener
+                return@setDebouncedClickListener
             }
             mBinding.txtQty.text = mBinding.txtQty.text.toString().toDouble().minus(1).toString()
             updateTotal()
@@ -246,11 +247,11 @@ class InComingStockAddProductToCartFragment : Fragment() {
     private fun openQuantityUpdateDialog() {
         val modal = ProductQuantityUpdateSheet()
         modal.setProductDetails(
-            product?.imagePath.toString(),
-            product?.productName.toString(),
+            product.imagePath.toString(),
+            product.productName.toString(),
             mBinding.txtQty.text.toString().toDouble(),
-            product?.cost ?: 0.0,
-            product?.unitName.toString()
+            product.cost ?: 0.0,
+            product.unitName.toString()
         )
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
@@ -260,7 +261,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
             }
 
             override fun onPriceChanged(price: Double) {
-                product?.cost = price
+                product.cost = price
                 updateTotal()
             }
         })
