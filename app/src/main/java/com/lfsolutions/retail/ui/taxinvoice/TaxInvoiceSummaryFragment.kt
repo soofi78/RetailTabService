@@ -231,6 +231,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         }
         mBinding.btnCancel.setDebouncedClickListener {
             Notify.toastLong("Cleared all items")
+            Main.app.getTaxInvoice()?.clear()
             Main.app.getTaxInvoice()?.salesInvoiceDetail?.clear()
             findNavController().popBackStack()
         }

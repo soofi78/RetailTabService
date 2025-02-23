@@ -26,6 +26,7 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
+import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.Calculator
@@ -108,7 +109,8 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
     fun updateSelectedAmount() {
         var amount = getSelectedItemsAmount()
-        binding.header.binding?.txtName?.text = "Pay " + Main.app.getSession().currencySymbol + amount.formatDecimalSeparator()
+        binding.header.binding?.txtName?.text =
+            "Pay " + Main.app.getSession().currencySymbol + amount.formatDecimalSeparator()
         binding.header.binding?.txtName?.setDebouncedClickListener {
             onPayClickListener()
         }
@@ -185,9 +187,9 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
 
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val result = response?.body() as BaseResponse<String>
+                val result = response?.body() as BaseResponse<Invoice>
                 if (result.success == true) {
-                    Notify.toastLong("Payment Successful ${result.result}")
+                    Notify.toastLong("Payment Successful ${result.result?.transactionNo}")
                     findNavController().popBackStack()
                 } else {
                     Notify.toastLong("Payment Failed")

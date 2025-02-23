@@ -9,7 +9,9 @@
         android:id="@+id/navigation_delivery"
         android:name="com.lfsolutions.retail.ui.delivery.DeliveryFragment"
         android:label="@string/title_delivery"
-        tools:layout="@layout/fragment_delivery" />
+        tools:layout="@layout/fragment_delivery">
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_documents"

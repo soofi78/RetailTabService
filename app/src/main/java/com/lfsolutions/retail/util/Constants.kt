@@ -99,7 +99,6 @@ object Constants {
     const val Item: String = "item"
     const val OutGoingProducts: String = "out_going_products"
     const val InComingProducts: String = "in_coming_products"
-    const val CustomerId: String = "customer_id"
     val Logout: CharSequence = "Logout"
     val ViewProfile: CharSequence = "View Profile"
     const val Product: String = "product"

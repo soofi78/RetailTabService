@@ -28,7 +28,7 @@ data class StockTransferProduct(
     @SerializedName("qty") var qty: Double = 0.0,
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
-    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList> = arrayListOf(),
+    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
     @SerializedName("unit") var unit: String? = null,
     @SerializedName("totalPrice") var totalPrice: Double? = null,
     @SerializedName("id") var id: Int? = null,
@@ -64,11 +64,11 @@ data class StockTransferProduct(
     }
 
     fun getApplicableTaxRate(): Int {
-        if (applicableTaxes == null || applicableTaxes?.isEmpty() == true)
+        if (applicableTaxes == null || applicableTaxes.isEmpty() == true)
             return 0
 
         var tax = 0
-        applicableTaxes?.forEach {
+        applicableTaxes.forEach {
             tax += it.taxRate ?: 0
         }
         return tax
@@ -76,16 +76,16 @@ data class StockTransferProduct(
 
     fun getSerialNumbers(): String {
         var serials = ""
-        productBatchList.forEach {
+        productBatchList?.forEach {
             Log.d("Serial", it.SerialNumber.toString())
             serials += if (serials.equals("")) it.SerialNumber.toString() else "\n" + it.SerialNumber
         }
         return serials
     }
 
-    fun getPreSelectedSerialNumbers(serialNumbersList: ArrayList<SerialNumber>): ArrayList<out MultiSelectModelInterface>? {
+    fun getPreSelectedSerialNumbers(serialNumbersList: ArrayList<SerialNumber>): ArrayList<out MultiSelectModelInterface> {
         val serials = ArrayList<MultiSelectModelInterface>()
-        productBatchList.forEach {
+        productBatchList?.forEach {
             val index = serialNumbersList.indexOf(SerialNumber(id = it.Id))
             if (index > -1) {
                 serials.add(serialNumbersList[index])

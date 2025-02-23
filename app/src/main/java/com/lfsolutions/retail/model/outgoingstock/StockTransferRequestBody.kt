@@ -1,20 +1,22 @@
 package com.lfsolutions.retail.model.outgoingstock
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.model.CustomerAndSaleId
 
 
 data class StockTransferRequestBody(
     @SerializedName("locationId") var locationId: Int? = null,
-    @SerializedName("ToLocationId") var ToLocationId: Int? = null,
+    @SerializedName("toLocationId") var ToLocationId: Int? = null,
     @SerializedName("date") var date: String? = null,
     @SerializedName("remarks") var remarks: String? = null,
-    @SerializedName("customerIds") var customerIds: ArrayList<Int>? = null,
-    @SerializedName("SalesOrderIds") var SalesOrderIds: ArrayList<Int> = arrayListOf(),
+    @SerializedName("customerSalesorderIds") var customerSalesorderIds: ArrayList<CustomerAndSaleId> = arrayListOf(),
+//    @SerializedName("customerIds") var customerIds: ArrayList<Int>? = null,
+//    @SerializedName("SalesOrderIds") var SalesOrderIds: ArrayList<Int> = arrayListOf(),
     @SerializedName("stockTransferDetails") var stockTransferDetails: ArrayList<StockTransferProduct> = arrayListOf()
 ) {
     fun addEquipment(product: StockTransferProduct) {
-        if ((customerIds?.size ?: 0) > 0) {
-            product.customerId = customerIds?.get(0)
+        if (customerSalesorderIds.size > 0) {
+            product.customerId = customerSalesorderIds.get(0).customerId
         }
         stockTransferDetails.add(product)
     }

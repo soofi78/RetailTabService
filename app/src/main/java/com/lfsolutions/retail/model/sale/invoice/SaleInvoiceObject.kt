@@ -14,10 +14,14 @@ data class SaleInvoiceObject(
 ) {
     fun addEquipment(product: SalesInvoiceDetail) {
         salesInvoiceDetail.add(product)
-        updatePriceAndQty()
+        salesInvoice?.invoiceNetDiscount?.let { updatePriceAndQty(it) }
     }
 
-    fun updatePriceAndQty(appliedDiscount: Double = 0.0) {
+    fun updatePriceAndQty(discountProvided: Double = 0.0) {
+        var appliedDiscount = discountProvided
+        if (discountProvided == 0.0) {
+            appliedDiscount = salesInvoice?.invoiceNetDiscount!!
+        }
         var qty = 0.0
         var netTotal = 0.0
         var discount = 0.0
@@ -127,6 +131,19 @@ data class SaleInvoiceObject(
         }
 
         return discounts
+    }
+
+    fun clear() {
+        salesInvoice?.invoiceQty = 0.0
+        salesInvoice?.invoiceTotalValue = 0.0
+        salesInvoice?.invoiceNetTotal = 0.0
+        salesInvoice?.invoiceSubTotal = 0.0
+        salesInvoice?.invoiceTax = 0.0
+        salesInvoice?.netDiscount = 0.0
+        salesInvoice?.invoiceNetDiscount = 0.0
+        salesInvoice?.invoiceItemDiscount = 0.0
+        salesInvoice?.invoiceGrandTotal = 0.0
+        salesInvoice?.balance = 0.0
     }
 
 }

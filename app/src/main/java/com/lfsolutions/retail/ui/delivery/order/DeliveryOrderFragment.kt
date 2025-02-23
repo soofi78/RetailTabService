@@ -53,7 +53,15 @@ class DeliveryOrderFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        customer = Gson().fromJson(args.customer, Customer::class.java)
+        try {
+            customer = Gson().fromJson(
+                args.customer, Customer::class.java
+            )
+        } catch (ex: Exception) {
+            customer = Gson().fromJson(
+                requireActivity().intent.getStringExtra(Constants.Customer), Customer::class.java
+            )
+        }
     }
 
     override fun onCreateView(
@@ -103,11 +111,11 @@ class DeliveryOrderFragment : Fragment() {
         Main.app.getSession().userName?.let { binding.header.setName(it) }
         binding.header.setOnBackClick {
             Main.app.clearDeliveryOrder()
-            findNavController().popBackStack()
+            close()
         }
         binding.btnCancel.setDebouncedClickListener {
             Main.app.clearDeliveryOrder()
-            findNavController().popBackStack()
+            close()
         }
     }
 
@@ -251,7 +259,7 @@ class DeliveryOrderFragment : Fragment() {
                         Printer.askForPrint(requireActivity(), {
                             result.result?.id?.let { getSaleOrderDetail(it) }
                         }, {
-                            findNavController().popBackStack()
+                            close()
                         })
                     } else {
                         Notify.toastLong("Unable create delivery order: ${result.result}")
@@ -266,6 +274,14 @@ class DeliveryOrderFragment : Fragment() {
             }).enque(Network.api()?.createDeliveryOrder(Main.app.getDeliveryOrder()!!)).execute()
     }
 
+    private fun close() {
+        if (requireActivity() is DeliveryOrderFlowActivity) {
+            requireActivity().finish()
+        } else {
+            findNavController().popBackStack()
+        }
+    }
+
     private fun getSaleOrderDetail(id: Int) {
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Order Details"))
@@ -273,12 +289,12 @@ class DeliveryOrderFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val order = (response?.body() as BaseResponse<DeliveryOrderDTO>).result
                     Printer.printDeliveryOrder(requireActivity(), order)
-                    findNavController().popBackStack()
+                    close()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to print delivery order")
-                    findNavController().popBackStack()
+                    close()
                 }
             }).enque(
                 Network.api()?.getDeliveryOrderDetails(IdRequest(id))

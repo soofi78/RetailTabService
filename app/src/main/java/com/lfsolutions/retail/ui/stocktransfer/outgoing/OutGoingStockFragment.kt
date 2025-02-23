@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -21,8 +20,8 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
-import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -90,7 +89,7 @@ class OutGoingStockFragment : Fragment() {
         binding.dateSelectionView.setOnClickListener {
             DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateSelected(year: String, month: String, day: String) {
-                    binding.date.setText("$year-$month-$day")
+                    binding.date.text = "$year-$month-$day"
                     Main.app.getOutGoingStockTransferRequestObject().date =
                         year + "-" + month + "-" + day + "T00:00:00Z"
                 }
@@ -127,7 +126,7 @@ class OutGoingStockFragment : Fragment() {
                 bundleOf("IsEquipment" to true)
             )
         }
-        binding.btnViewOrder.setText("View Summary")
+        binding.btnViewOrder.text = "View Summary"
         binding.btnViewOrder.setOnClickListener {
             findNavController().navigate(
                 R.id.navigation_outgoing_stock_bottom_navigation,
@@ -216,9 +215,9 @@ class OutGoingStockFragment : Fragment() {
         var verified = true
         Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.forEach {
             val serial = it.isAsset == true || it.type.equals("S")
-            val notBatched = it.productBatchList == null || it.productBatchList.size == 0
+            val notBatched = it.productBatchList == null || it.productBatchList?.size == 0
             val batchedAndQtyNotMatch =
-                it.productBatchList != null && it.qty.toInt() != it.productBatchList.size
+                it.productBatchList != null && it.qty.toInt() != it.productBatchList?.size
             if (serial && (notBatched || batchedAndQtyNotMatch)) {
                 verified = false
             }

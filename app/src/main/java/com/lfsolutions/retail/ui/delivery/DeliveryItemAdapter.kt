@@ -192,6 +192,9 @@ class DeliveryItemAdapter(
                 mProductInfoClick?.onItemClick(it.tag as Customer)
             }
         }
+
+        binding.saleOrderLabel.visibility =
+            if ((customer?.saleOrderId ?: 0) > 0) View.VISIBLE else View.GONE
     }
 
 

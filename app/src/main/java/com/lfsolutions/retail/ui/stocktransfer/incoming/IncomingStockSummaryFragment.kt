@@ -240,9 +240,9 @@ class IncomingStockSummaryFragment : Fragment() {
         var verified = true
         Main.app.getInComingStockTransferRequestObject().stockTransferDetails.forEach {
             val serial = it.isAsset == true || it.type.equals("S")
-            val notBatched = it.productBatchList == null || it.productBatchList.size == 0
+            val notBatched = it.productBatchList == null || it.productBatchList?.size == 0
             val batchedAndQtyNotMatch =
-                it.productBatchList != null && it.qty.toInt() != it.productBatchList.size
+                it.productBatchList != null && it.qty.toInt() != it.productBatchList?.size
             if (serial && (notBatched || batchedAndQtyNotMatch)) {
                 verified = false
             }

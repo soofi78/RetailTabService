@@ -33,16 +33,20 @@ import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.widgets.payment.OnPaymentOptionSelected
 import com.lfsolutions.retail.ui.widgets.payment.PaymentOptionsView
 import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.DocumentDownloader
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.maltaisn.calcdialog.CalcDialog
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
+import java.math.BigDecimal
 
-class InvoiceDetailsFragment : Fragment() {
+class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
     private lateinit var transaction: CustomerSaleTransaction
     private val paymentTypes = ArrayList<PaymentType>()
@@ -84,7 +88,8 @@ class InvoiceDetailsFragment : Fragment() {
         invoice?.salesInvoiceDetail?.forEach {
             items.add(it)
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
+        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
+            items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
@@ -96,7 +101,14 @@ class InvoiceDetailsFragment : Fragment() {
             getPDFLink()
         }
         binding.pay.setDebouncedClickListener {
-            getTransactionReference()
+            payFor()
+        }
+
+        binding.balance.setDebouncedClickListener {
+            Calculator.show(this@InvoiceDetailsFragment)
+        }
+        binding.balanceViewHolder.setDebouncedClickListener {
+            Calculator.show(this@InvoiceDetailsFragment)
         }
 
         binding.print.setDebouncedClickListener {
@@ -124,7 +136,7 @@ class InvoiceDetailsFragment : Fragment() {
                     res.result?.indexOf(CustomerSaleTransaction(transactionNo = invoice?.salesInvoice?.invoiceNo))
                         ?: -1
                 if (index > -1) {
-                    res.result?.get(index)?.let { payFor(it) }
+                    transaction = res.result?.get(index)!!
                     return
                 }
             }
@@ -139,8 +151,7 @@ class InvoiceDetailsFragment : Fragment() {
             ).execute()
     }
 
-    private fun payFor(transaction: CustomerSaleTransaction) {
-        this.transaction = transaction
+    private fun payFor() {
         if (paymentTypes.isEmpty()) NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val result = response?.body() as BaseResponse<PaymentTermsResult>
@@ -170,11 +181,14 @@ class InvoiceDetailsFragment : Fragment() {
     }
 
     private fun onPaymentTypeSelected(paymentType: PaymentType) {
+        if (::transaction.isInitialized.not()) {
+            Notify.toastLong("Unable to load transaction please close and open again")
+            return
+        }
         val session = Main.app.getSession()
         if (transaction.appliedAmount == null || transaction.appliedAmount == 0.0) {
             transaction.appliedAmount = transaction.balanceAmount
         }
-
         transaction.applied = true
         val request = PaymentRequest(
             locationId = session.defaultLocationId,
@@ -260,6 +274,7 @@ class InvoiceDetailsFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
                     setData()
+                    getTransactionReference()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
@@ -268,5 +283,13 @@ class InvoiceDetailsFragment : Fragment() {
             }).enque(
                 Network.api()?.getSaleInvoiceDetail(IdRequest(id = item.id))
             ).execute()
+    }
+
+    override fun onValueEntered(requestCode: Int, value: BigDecimal?) {
+        transaction.appliedAmount =
+            value?.toDouble()?.formatDecimalSeparator()?.replace(",", "")?.toDouble()
+        transaction.applied = true
+        binding.pay.text =
+            """Pay ${Main.app.getSession().currencySymbol}${transaction.appliedAmount}"""
     }
 }

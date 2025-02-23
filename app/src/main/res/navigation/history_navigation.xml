@@ -354,7 +354,7 @@
         <argument
             android:name="customer"
             app:argType="string"
-            app:nullable="false" />
+            app:nullable="true" />
 
         <action
             android:id="@+id/action_navigation_delivery_order_to_delivery_order_product_list"
