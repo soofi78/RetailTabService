@@ -35,7 +35,6 @@ import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
-
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -53,15 +52,7 @@ class DeliveryOrderFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            customer = Gson().fromJson(
-                args.customer, Customer::class.java
-            )
-        } catch (ex: Exception) {
-            customer = Gson().fromJson(
-                requireActivity().intent.getStringExtra(Constants.Customer), Customer::class.java
-            )
-        }
+        customer = Gson().fromJson(args.customer, Customer::class.java)
     }
 
     override fun onCreateView(
@@ -275,11 +266,7 @@ class DeliveryOrderFragment : Fragment() {
     }
 
     private fun close() {
-        if (requireActivity() is DeliveryOrderFlowActivity) {
-            requireActivity().finish()
-        } else {
-            findNavController().popBackStack()
-        }
+        findNavController().popBackStack()
     }
 
     private fun getSaleOrderDetail(id: Int) {

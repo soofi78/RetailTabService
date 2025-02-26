@@ -40,10 +40,18 @@ data class SaleInvoiceObject(
             qty = qty.plus(it.qty ?: 0.0)
             it.netDiscount = itemDiscount
             it.itemDiscount = itemDiscount
-            it.subTotal = it.qty?.times(it.costWithoutTax)?.minus(itemDiscount)
-            it.netTotal = it.subTotal
-            it.netTotal = (it.totalValue ?: 0.0)
-            it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
+            if (it.isFOC == true) {
+                it.subTotal = 0.0
+                it.tax = 0.0
+                it.netTotal = 0.0
+                it.netTotal = 0.0
+                it.totalValue = 0.0
+            } else {
+                it.subTotal = it.qty?.times(it.costWithoutTax)?.minus(itemDiscount)
+                it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
+                it.netTotal = it.subTotal
+                it.netTotal = (it.totalValue ?: 0.0)
+            }
             netTotal = netTotal.plus(it.netTotal ?: 0.0)
             discount = discount.plus(it.netDiscount ?: 0.0)
             subTotal = subTotal.plus(it.subTotal ?: 0.0)

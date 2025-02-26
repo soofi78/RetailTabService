@@ -215,7 +215,7 @@
         android:label="Customers"
         tools:layout="@layout/fragment_order_details">
         <argument
-            android:name="item"
+            android:name="order_id"
             app:argType="string"
             app:nullable="false" />
 

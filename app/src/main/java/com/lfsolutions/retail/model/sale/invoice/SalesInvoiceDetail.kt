@@ -37,9 +37,7 @@ data class SalesInvoiceDetail(
     @SerializedName("SubTotal", alternate = arrayOf("subTotal")) var subTotal: Double? = 0.0,
     @SerializedName("Tax", alternate = arrayOf("tax")) var tax: Double? = 0.0,
     @SerializedName("TaxRate", alternate = arrayOf("taxRate")) var taxRate: Double = 0.0,
-    @SerializedName(
-        "CostWithoutTax", alternate = arrayOf("costWithoutTax")
-    ) var costWithoutTax: Double = 0.0,
+    @SerializedName("cost") var costWithoutTax: Double = 0.0,
     @SerializedName("NetTotal", alternate = arrayOf("netTotal")) var netTotal: Double? = 0.0,
     @SerializedName("HsnCode", alternate = arrayOf("hsnCode")) var hsnCode: String? = null,
     @SerializedName("SlNo", alternate = arrayOf("slNo")) var slNo: Int? = null,
@@ -160,6 +158,17 @@ data class SalesInvoiceDetail(
     override fun equals(other: Any?): Boolean {
         if (localId == (other as SalesInvoiceDetail).localId) return true
         return super.equals(other)
+    }
+
+    fun getApplicableTaxRate(): Int {
+        if (applicableTaxes == null || applicableTaxes.isEmpty() == true)
+            return 0
+
+        var tax = 0
+        applicableTaxes.forEach {
+            tax += it.taxRate ?: 0
+        }
+        return tax
     }
 
 }

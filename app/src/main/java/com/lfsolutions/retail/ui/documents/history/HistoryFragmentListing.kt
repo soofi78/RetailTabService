@@ -644,7 +644,7 @@ class HistoryFragmentListing : Fragment() {
             findNavController().navigate(
                 R.id.action_navigation_sale_order_invoice_history_fragment_to_order_details,
                 bundleOf(
-                    Constants.Item to Gson().toJson(historyitem)
+                    Constants.OrderId to historyitem.id.toString()
                 )
             )
         } else if (historyitem is SaleInvoiceListItem) {

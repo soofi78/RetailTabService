@@ -56,6 +56,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
+        mBinding.checkboxFOC.isChecked = Main.app.getTaxInvoice()?.salesInvoice?.type.equals("F")
     }
 
     private fun openQuantityUpdateDialog(salesInvoiceDetail: SalesInvoiceDetail) {

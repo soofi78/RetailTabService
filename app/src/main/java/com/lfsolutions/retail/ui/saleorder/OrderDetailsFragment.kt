@@ -17,7 +17,6 @@ import com.lfsolutions.retail.databinding.FragmentOrderDetailsBinding
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
-import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -40,17 +39,16 @@ import retrofit2.Response
 class OrderDetailsFragment : Fragment() {
 
     private var order: SaleOrderResponse? = null
-    private lateinit var item: SaleOrderListItem
+    private var orderId: Int? = null
     private val args by navArgs<OrderDetailsFragmentArgs>()
     private lateinit var binding: FragmentOrderDetailsBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentOrderDetailsBinding.inflate(inflater)
-            item = Gson().fromJson(args.item, SaleOrderListItem::class.java)
+            orderId = args.orderId.toInt()
         }
         return binding.root
     }
@@ -78,7 +76,8 @@ class OrderDetailsFragment : Fragment() {
         order?.salesOrderDetail?.forEach {
             items.add(it)
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
+        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
+            items,
             object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
@@ -92,18 +91,17 @@ class OrderDetailsFragment : Fragment() {
             Printer.printSaleOrder(requireActivity(), order)
         }
 
-        if (order?.salesOrder?.status.equals("H") ||
-            order?.salesOrder?.status.equals("A") ||
-            order?.salesOrder?.status.equals("PA")
+        if (order?.salesOrder?.status.equals("H") || order?.salesOrder?.status.equals("A") || order?.salesOrder?.status.equals(
+                "PA"
+            )
         ) {
             binding.deliveryOrder.visibility = View.VISIBLE
         } else {
             binding.deliveryOrder.visibility = View.GONE
         }
 
-        if (order?.salesOrder?.status.equals("H").not() &&
-            order?.salesOrder?.status.equals("I").not() &&
-            order?.salesOrder?.status.equals("R").not()
+        if (order?.salesOrder?.status.equals("H").not() && order?.salesOrder?.status.equals("I")
+                .not() && order?.salesOrder?.status.equals("R").not()
         ) {
             binding.saleInvoice.visibility = View.VISIBLE
         } else {
@@ -130,11 +128,14 @@ class OrderDetailsFragment : Fragment() {
                 val res = response?.body() as BaseResponse<SaleInvoiceObject>
                 Main.app.getTaxInvoice()?.salesInvoice = res.result?.salesInvoice
                 Main.app.getTaxInvoice()?.salesInvoice?.deliveryOrderList = arrayListOf()
+                res.result?.salesInvoiceDetail?.forEach {
+                    it.taxRate = it.getApplicableTaxRate().toDouble()
+                }
                 Main.app.getTaxInvoice()?.salesInvoiceDetail = res.result?.salesInvoiceDetail!!
                 Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId = order?.salesOrder?.id
+                Main.app.getTaxInvoice()?.updatePriceAndQty()
                 findNavController().navigate(
-                    R.id.action_navigation_order_details_to_tax_invoice,
-                    bundleOf(
+                    R.id.action_navigation_order_details_to_tax_invoice, bundleOf(
                         Constants.Customer to Gson().toJson(
                             Customer(
                                 id = order?.salesOrder?.customerId,
@@ -150,8 +151,7 @@ class OrderDetailsFragment : Fragment() {
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                 Notify.toastLong("Unable to get convert to sale invoice")
             }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice..."))
-            .enque(
+        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice...")).enque(
                 Network.api()?.convertToSaleInvoice(IdRequest(order?.salesOrder?.id))
             ).execute()
     }
@@ -174,8 +174,7 @@ class OrderDetailsFragment : Fragment() {
                 }
 
                 findNavController().navigate(
-                    R.id.action_navigation_order_details_to_delivery_order,
-                    bundleOf(
+                    R.id.action_navigation_order_details_to_delivery_order, bundleOf(
                         Constants.Customer to Gson().toJson(
                             Customer(
                                 id = order?.salesOrder?.customerId,
@@ -191,15 +190,13 @@ class OrderDetailsFragment : Fragment() {
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                 Notify.toastLong("Unable to get convert to sale invoice")
             }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice..."))
-            .enque(
+        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice...")).enque(
                 Network.api()?.convertToDeliveryOrder(IdRequest(order?.salesOrder?.id))
             ).execute()
     }
 
     private fun getPDFLink() {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val downloadPath =
@@ -210,9 +207,7 @@ class OrderDetailsFragment : Fragment() {
                             "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
-                        name,
-                        AppSession[Constants.baseUrl] + downloadPath,
-                        requireActivity()
+                        name, AppSession[Constants.baseUrl] + downloadPath, requireActivity()
                     )
                     Notify.toastLong("Downloading Started")
                 }
@@ -221,7 +216,7 @@ class OrderDetailsFragment : Fragment() {
                     Notify.toastLong("Download Failed")
                 }
             }).enque(
-                Network.api()?.getSaleOrderPDF(IdRequest(id = item.id))
+                Network.api()?.getSaleOrderPDF(IdRequest(id = orderId))
             ).execute()
     }
 
@@ -238,7 +233,7 @@ class OrderDetailsFragment : Fragment() {
                     Notify.toastLong("Unable to get order detail")
                 }
             }).enque(
-                Network.api()?.getSalesOrderDetail(IdRequest(id = item.id))
+                Network.api()?.getSalesOrderDetail(IdRequest(id = orderId))
             ).execute()
     }
 }

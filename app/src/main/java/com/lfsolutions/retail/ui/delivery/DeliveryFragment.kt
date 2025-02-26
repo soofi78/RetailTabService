@@ -34,9 +34,8 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.customer.CustomerOptionView
-import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
-import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderFlowActivity
 import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
+import com.lfsolutions.retail.ui.documents.history.HistoryFlowActivity
 import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.stocktransfer.incoming.GenerateInComingStockBottomSheet
@@ -269,7 +268,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         mToVisitAdapter.setListener(object : DeliveryItemAdapter.OnItemClickListener {
             override fun onItemClick(customer: Customer) {
                 if ((customer.saleOrderId ?: 0) > 0) {
-                    convertToDeliveryOrder(customer)
+                    openOrderDetails(customer)
                 } else {
                     displayItemDetails(customer)
                 }
@@ -282,38 +281,14 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     }
 
-    private fun convertToDeliveryOrder(customer: Customer) {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
-            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val res = response?.body() as BaseResponse<DeliveryOrderDTO>
-                res.result?.deliveryOrder?.let {
-                    Main.app.getDeliveryOrder()?.deliveryOrder = it
-                    Main.app.getDeliveryOrder()?.deliveryOrder?.status = "R"
-                    Main.app.getDeliveryOrder()?.deliveryOrder?.salesOrderId = customer.saleOrderId
-                }
-                res.result?.deliveryOrderDetail?.let {
-                    Main.app.getDeliveryOrder()?.deliveryOrderDetail = it
-                    Main.app.getDeliveryOrder()?.deliveryOrderDetail?.forEach {
-                        it.creatorUserId = Main.app.getSession().userId
-                        it.productBatchList = arrayListOf()
-                    }
-                }
-
-                startActivity(
-                    Intent(
-                        requireActivity(),
-                        DeliveryOrderFlowActivity::class.java
-                    ).apply {
-                        putExtra(Constants.Customer, Gson().toJson(customer))
-                    })
-            }
-
-            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get convert to sale invoice")
-            }
-        }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice...")).enque(
-            Network.api()?.convertToDeliveryOrder(IdRequest(customer.saleOrderId))
-        ).execute()
+    private fun openOrderDetails(customer: Customer) {
+        startActivity(
+            Intent(
+                requireActivity(),
+                HistoryFlowActivity::class.java
+            ).apply {
+                putExtra(Constants.OrderId, customer.saleOrderId)
+            })
     }
 
     fun addVerticalItemDecoration(recyclerView: RecyclerView, context: Context) {

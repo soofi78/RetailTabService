@@ -37,7 +37,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.delivery.order.DeliveryOrderFlowActivity"
+            android:name=".ui.delivery.order.OrderDetailsFlowActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
