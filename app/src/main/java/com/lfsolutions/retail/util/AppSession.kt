@@ -48,7 +48,7 @@ class AppSession {
             val editor = Main.app
                 .getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE).edit()
             val printerWidth = AppSession[Constants.PRINTER_WIDTH]
-            val characters = getInt(Constants.CHARACTER_PER_LINE, 32)
+            val characters = getInt(Constants.CHARACTER_PER_LINE, 48)
             val bluetooth = AppSession[Constants.SELECTED_BLUETOOTH]
             editor.clear()
             val cleared = editor.commit()

@@ -24,11 +24,11 @@ data class SaleInvoiceObject(
         }
         var qty = 0.0
         var netTotal = 0.0
-        var discount = 0.0
+        var netDiscount = 0.0
         var subTotal = 0.0
         var taxAmount = 0.0
         var total = 0.0
-        var discounts = 0.0
+        var itemDiscounts = 0.0
         val productPrices = arrayListOf<Double>()
         salesInvoiceDetail.forEach {
             productPrices.add((it.totalValue ?: 0.0))
@@ -36,10 +36,14 @@ data class SaleInvoiceObject(
         val discountsPerItem = distributeDiscount(productPrices, appliedDiscount)
         var index = 0
         salesInvoiceDetail.forEach {
-            val itemDiscount = discountsPerItem[index]
+            it.netDiscount = discountsPerItem[index]
+            var discountValueBasedOnPercentage = 0.0
+            if (it.itemDiscountPerc != null && it.itemDiscountPerc!! > 0) {
+                val discountFactor = it.itemDiscountPerc!!.div(100)
+                discountValueBasedOnPercentage =
+                    it.qty?.times(it.costWithoutTax)?.times(discountFactor) ?: 0.0
+            }
             qty = qty.plus(it.qty ?: 0.0)
-            it.netDiscount = itemDiscount
-            it.itemDiscount = itemDiscount
             if (it.isFOC == true) {
                 it.subTotal = 0.0
                 it.tax = 0.0
@@ -47,13 +51,15 @@ data class SaleInvoiceObject(
                 it.netTotal = 0.0
                 it.totalValue = 0.0
             } else {
-                it.subTotal = it.qty?.times(it.costWithoutTax)?.minus(itemDiscount)
+                it.subTotal = it.qty?.times(it.costWithoutTax)?.minus((it.itemDiscount ?: 0.0))
+                    ?.minus(it.netDiscount ?: 0.0)?.minus(discountValueBasedOnPercentage)
                 it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
                 it.netTotal = it.subTotal
                 it.netTotal = (it.totalValue ?: 0.0)
             }
             netTotal = netTotal.plus(it.netTotal ?: 0.0)
-            discount = discount.plus(it.netDiscount ?: 0.0)
+            netDiscount = netDiscount.plus(it.netDiscount ?: 0.0)
+            itemDiscounts = itemDiscounts.plus(it.itemDiscount ?: 0.0)
             subTotal = subTotal.plus(it.subTotal ?: 0.0)
             taxAmount = taxAmount.plus(it.tax ?: 0.0)
             total = total.plus(it.totalValue ?: 0.0)
@@ -64,15 +70,15 @@ data class SaleInvoiceObject(
         salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount)
         salesInvoice?.invoiceSubTotal = subTotal
         salesInvoice?.invoiceTax = taxAmount
-        salesInvoice?.netDiscount = discount
-        salesInvoice?.invoiceNetDiscount = discount
-        salesInvoice?.invoiceItemDiscount = discount
+        salesInvoice?.netDiscount = netDiscount
+        salesInvoice?.invoiceNetDiscount = netDiscount
+        salesInvoice?.invoiceItemDiscount = itemDiscounts
         salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount)
         salesInvoice?.balance = salesInvoice?.invoiceGrandTotal
 
-        if (discount == 0.0) salesInvoice?.invoiceNetDiscountPerc = 0.0
+        if (netDiscount == 0.0) salesInvoice?.invoiceNetDiscountPerc = 0.0
         else salesInvoice?.invoiceNetDiscountPerc = (salesInvoice?.invoiceGrandTotal?.let {
-            discount.div(it)
+            netDiscount.div(it)
         })?.times(100)
 
 

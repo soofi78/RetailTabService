@@ -1,8 +1,8 @@
 package com.lfsolutions.retail
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
-import android.webkit.URLUtil
 import com.google.gson.Gson
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
@@ -51,8 +51,7 @@ class Main : Application() {
     }
 
     fun getDriverMemo(): CreateUpdateDriverMemoRequestBody {
-        if (driverMemo == null)
-            driverMemo = CreateUpdateDriverMemoRequestBody()
+        if (driverMemo == null) driverMemo = CreateUpdateDriverMemoRequestBody()
         return driverMemo!!
     }
 
@@ -181,6 +180,15 @@ class Main : Application() {
         }
         getAgreementMemo()?.updatePriceAndQty()
         getAgreementMemo()?.serializeItems()
+    }
+
+    fun restart(activity: Activity) {
+        activity.startActivity(Intent(app, LoginActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        })
+        activity.finishAffinity()
+
     }
 
 

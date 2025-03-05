@@ -82,6 +82,7 @@ object Printer {
             items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
                 ?.replace(Constants.Invoice.ProductName, it.productName.toString())
                 ?.replace(Constants.Invoice.Qty, it.qty.toString())
+                ?.replace(Constants.Invoice.UOM, it.unitName.toString())
                 ?.replace(Constants.Invoice.Price, it.price.toString())?.replace(
                     Constants.Invoice.NetTotal, it.getAmount()
                 ).toString()
@@ -305,6 +306,7 @@ object Printer {
             items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
                 ?.replace(Constants.Invoice.ProductName, it.productName.toString())
                 ?.replace(Constants.Invoice.Qty, it.qty.toString())
+                ?.replace(Constants.Invoice.UOM, it.unitName.toString())
                 ?.replace(Constants.Invoice.Price, it.price.toString())
                 ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
             count += 1

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityPrinterSettingsBinding
 import com.lfsolutions.retail.ui.documents.history.HistoryFilterSheet
@@ -55,36 +56,28 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
 
     private fun checkPermissions() {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S && checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.BLUETOOTH
+                requireActivity(), Manifest.permission.BLUETOOTH
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                arrayOf(Manifest.permission.BLUETOOTH),
-                1
+                arrayOf(Manifest.permission.BLUETOOTH), 1
             )
         } else if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S && checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.BLUETOOTH_ADMIN
+                requireActivity(), Manifest.permission.BLUETOOTH_ADMIN
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                arrayOf(Manifest.permission.BLUETOOTH_ADMIN),
-                2
+                arrayOf(Manifest.permission.BLUETOOTH_ADMIN), 2
             )
         } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.BLUETOOTH_CONNECT
+                requireActivity(), Manifest.permission.BLUETOOTH_CONNECT
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(
-                arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
-                3
+                arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 3
             )
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
-            && checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.BLUETOOTH_SCAN
+        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && checkSelfPermission(
+                requireActivity(), Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_SCAN), 4)
@@ -111,15 +104,14 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
             widths.indexOf(AppSession[Constants.PRINTER_WIDTH])
                 .let { if (it > -1) binding.width.setSelection(it) }
 
-            binding.characters.setText(AppSession.getInt(Constants.CHARACTER_PER_LINE).toString())
+            binding.characters.setText(
+                AppSession.getInt(Constants.CHARACTER_PER_LINE, 48).toString()
+            )
 
 
             binding.printers.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
                 ) {
                     if (position == 0) {
                         return
@@ -142,12 +134,10 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
                 }
 
                 AppSession.put(
-                    Constants.PRINTER_WIDTH,
-                    widths[binding.width.selectedItemPosition]
+                    Constants.PRINTER_WIDTH, widths[binding.width.selectedItemPosition]
                 )
                 AppSession.put(
-                    Constants.CHARACTER_PER_LINE,
-                    binding.characters.text.toString().toInt()
+                    Constants.CHARACTER_PER_LINE, binding.characters.text.toString().toInt()
                 )
                 GlobalScope.launch((Dispatchers.IO)) {
                     try {
@@ -155,6 +145,9 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
                             withContext(Dispatchers.Main) {
                                 Notify.toastLong("Unable to connect or print...")
                             }
+                        } else {
+                            this@PrinterSettingsSheet.dismiss()
+                            Main.app.restart(requireActivity())
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -183,13 +176,10 @@ class PrinterSettingsSheet : BottomSheetDialogFragment() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isEmpty())
-            checkPermissions()
+        if (grantResults.isEmpty()) checkPermissions()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

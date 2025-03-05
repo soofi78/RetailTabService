@@ -2,6 +2,7 @@ package com.lfsolutions.retail.util
 
 object Constants {
     object Invoice {
+        const val UOM = "{{uom}}"
         const val InvoiceSubTotal = "{{invoice.invoiceSubTotal}}"
         const val InvoiceDiscount = "{{invoice.invoiceDiscount}}"
         const val InvoiceTax = "{{invoice.tax}}"
