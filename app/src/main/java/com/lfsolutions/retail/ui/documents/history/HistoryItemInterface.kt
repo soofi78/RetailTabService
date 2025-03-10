@@ -8,6 +8,10 @@ interface HistoryItemInterface {
         return -1
     }
 
+    fun isSerialEquipment(): Boolean {
+        return false
+    }
+
     fun getSerializedNumber(): String {
         return ""
     }

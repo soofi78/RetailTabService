@@ -2,8 +2,8 @@ package com.lfsolutions.retail.model.sale.order.response
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
-import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.formatDecimalSeparator
 
 
 data class SalesOrderRes(
@@ -17,6 +17,7 @@ data class SalesOrderRes(
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("memberId") var memberId: String? = null,
     @SerializedName("customerName") var customerName: String? = null,
+    @SerializedName("customerCode") var customerCode: String? = null,
     @SerializedName("isCancelled") var isCancelled: Boolean? = null,
     @SerializedName("poNo") var poNo: String? = null,
     @SerializedName("soItemDiscount") var soItemDiscount: Double? = null,

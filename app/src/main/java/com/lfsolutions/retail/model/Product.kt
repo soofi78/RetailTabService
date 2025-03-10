@@ -22,13 +22,12 @@ data class Product(
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
     @SerializedName("type") var type: String? = null
 ) : HistoryItemInterface {
-    fun isSerialEquipment(): Boolean {
+    override fun isSerialEquipment(): Boolean {
         return type.equals("S", true)
     }
 
     fun getApplicableTaxRate(): Int {
-        if (applicableTaxes == null || applicableTaxes?.isEmpty() == true)
-            return 0
+        if (applicableTaxes == null || applicableTaxes?.isEmpty() == true) return 0
 
         var tax = 0
         applicableTaxes?.forEach {
@@ -51,5 +50,9 @@ data class Product(
 
     override fun getImageUrl(): String {
         return (Main.app.getBaseUrl() + imagePath)
+    }
+
+    override fun getId(): Int {
+        return productId?.toInt() ?: -1
     }
 }

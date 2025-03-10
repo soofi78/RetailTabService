@@ -10,6 +10,8 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentCurrentStockBinding
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.Product
+import com.lfsolutions.retail.model.RetailResponse
+import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -18,6 +20,9 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.documents.history.HistoryListAdapter
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
+import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
+import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -25,6 +30,7 @@ import retrofit2.Response
 class CurrentStockFragment : Fragment() {
     private val currentStock = ArrayList<HistoryItemInterface>()
     private lateinit var binding: FragmentCurrentStockBinding
+    private var serialNumbers = ArrayList<SerialNumber>()
 
 
     override fun onCreateView(
@@ -45,31 +51,26 @@ class CurrentStockFragment : Fragment() {
 
     private fun filterProducts() {
         val query = binding.searchView.query.toString().trim()
-        var filteredList = ArrayList<HistoryItemInterface>()
-        filteredList =
-            currentStock.filter {
-                isFilterCandidate(
-                    it as Product,
-                    query.split(" ").toSet()
-                )
-            } as ArrayList<HistoryItemInterface>
+        var filteredList: ArrayList<HistoryItemInterface> = currentStock.filter {
+            isFilterCandidate(
+                it as Product, query.split(" ").toSet()
+            )
+        } as ArrayList<HistoryItemInterface>
 
         setAdapter(filteredList)
     }
 
     private fun isFilterCandidate(
-        product: Product,
-        query: Set<String>
+        product: Product, query: Set<String>
     ): Boolean {
-        if (query.isEmpty())
-            return true
+        if (query.isEmpty()) return true
         var contains = true
         query.forEach {
-            contains =
-                contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
-                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
+            contains = contains && (product.productName?.lowercase()
+                ?.contains(it.lowercase()) == true || product.categoryName?.lowercase()
+                ?.contains(it.lowercase()) == true || product.inventoryCode?.lowercase()
+                ?.contains(it.lowercase()) == true || product.unitName?.lowercase()
+                ?.contains(it.lowercase()) == true)
         }
         return contains
     }
@@ -78,8 +79,7 @@ class CurrentStockFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupHeader()
         getCurrentProductStock()
-        binding.searchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 filterProducts()
                 return true
@@ -120,11 +120,56 @@ class CurrentStockFragment : Fragment() {
         items: ArrayList<HistoryItemInterface>,
     ) {
         binding.items.adapter = HistoryListAdapter(
-            items,
-            object : HistoryListAdapter.OnItemClickedListener {
-                override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
+            items, object : HistoryListAdapter.OnItemClickedListener {
+                override fun onItemClickedListener(item: HistoryItemInterface) {
 
                 }
-            })
+
+                override fun onShowSerialNumberClick(item: HistoryItemInterface) {
+                    getSerialNumbersList(item)
+                }
+            }, serialNumber = true
+        )
+    }
+
+    private fun showSerialNumbersList() {
+        val multiSelectDialog =
+            MultiSelectDialog().title("Current Stock serial numbers").titleSize(25f)
+                .negativeText("Close").setMinSelectionLimit(0).setMaxSelectionLimit(0)
+                .multiSelectList(serialNumbers).onSubmit(object : SubmitCallbackListener {
+                    override fun onSelected(
+                        selectedIds: ArrayList<MultiSelectModelInterface>?,
+                        selectedNames: ArrayList<String>?,
+                        commonSeperatedData: String?
+                    ) {
+
+                    }
+
+                    override fun onCancel() {
+
+                    }
+                })
+        multiSelectDialog.show(requireActivity().supportFragmentManager, "serialNumber")
+    }
+
+    private fun getSerialNumbersList(item: HistoryItemInterface) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading serial numbers"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    (response?.body() as RetailResponse<ArrayList<SerialNumber>>).result?.let {
+                        serialNumbers = it
+                    }
+                    showSerialNumbersList()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get serial numbers list")
+                }
+            }).enque(
+                Network.api()?.getSerialNumbers(
+                    item.getId().toLong(), Main.app.getSession().defaultLocationId?.toLong()
+                )
+            ).execute()
     }
 }

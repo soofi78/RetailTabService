@@ -1,6 +1,5 @@
 package com.lfsolutions.retail.ui.delivery.order
 
-import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.DateTime
 
@@ -11,6 +10,7 @@ data class DeliveryOrder(
     var currencyRate: Int? = 0,
     var customerId: Int? = null,
     var customerName: String? = null,
+    var customerCode: String? = null,
     var deleterUserId: Int? = null,
     var deletionTime: String? = null,
     var deliveryDate: String? = null,

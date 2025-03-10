@@ -22,9 +22,10 @@ import java.util.ArrayList;
 
 class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSelectDialogViewHolder> {
 
+    private final Context mContext;
     private ArrayList<? extends MultiSelectModelInterface> mDataSet = new ArrayList<>();
     private String mSearchQuery = "";
-    private Context mContext;
+    private Boolean checkBoxEnabled = true;
 
     MutliSelectAdapter(ArrayList<? extends MultiSelectModelInterface> dataSet, Context context) {
         this.mDataSet = dataSet;
@@ -52,11 +53,7 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
             }
         }
 
-        if (checkForSelection(mDataSet.get(position).getId())) {
-            holder.dialog_item_checkbox.setChecked(true);
-        } else {
-            holder.dialog_item_checkbox.setChecked(false);
-        }
+        holder.dialog_item_checkbox.setChecked(checkForSelection(mDataSet.get(position).getId()));
 
         /*holder.dialog_item_checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +68,12 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
                 }
             }
         });*/
+
+        if (checkBoxEnabled) {
+            holder.dialog_item_checkbox.setVisibility(View.VISIBLE);
+        } else {
+            holder.dialog_item_checkbox.setVisibility(View.GONE);
+        }
 
 
         holder.main_container.setOnClickListener(view -> {
@@ -156,16 +159,20 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
         mutliSelectAdapter.notifyDataSetChanged();
     }
 
+    public void setSelectionEnabled(boolean checkBoxEnabled) {
+        this.checkBoxEnabled = checkBoxEnabled;
+    }
+
     class MultiSelectDialogViewHolder extends RecyclerView.ViewHolder {
-        private TextView dialog_name_item;
-        private AppCompatCheckBox dialog_item_checkbox;
-        private LinearLayout main_container;
+        private final TextView dialog_name_item;
+        private final AppCompatCheckBox dialog_item_checkbox;
+        private final LinearLayout main_container;
 
         MultiSelectDialogViewHolder(View view) {
             super(view);
-            dialog_name_item = (TextView) view.findViewById(R.id.dialog_item_name);
-            dialog_item_checkbox = (AppCompatCheckBox) view.findViewById(R.id.dialog_item_checkbox);
-            main_container = (LinearLayout) view.findViewById(R.id.main_container);
+            dialog_name_item = view.findViewById(R.id.dialog_item_name);
+            dialog_item_checkbox = view.findViewById(R.id.dialog_item_checkbox);
+            main_container = view.findViewById(R.id.main_container);
         }
     }
 }

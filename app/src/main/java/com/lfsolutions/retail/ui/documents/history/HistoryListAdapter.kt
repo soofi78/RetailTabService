@@ -16,8 +16,8 @@ class HistoryListAdapter(
     private val mListener: OnItemClickedListener,
     private val onChecked: OnCheckedChangeListener? = null,
     private val clone: Boolean = false,
-) :
-    RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
+    private val serialNumber: Boolean = false,
+) : RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
 
     class ViewHolder(val binding: SaleOrderInvoiceListItemBinding) :
@@ -61,11 +61,25 @@ class HistoryListAdapter(
         holder.binding.clone.setDebouncedClickListener {
             mListener.onCloneClicked(it.tag as HistoryItemInterface)
         }
+
+        if (serialNumber && item.isSerialEquipment()) {
+            holder.binding.description.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, R.drawable.ic_serial_number, 0
+            )
+
+            holder.binding.description.setDebouncedClickListener {
+                mListener.onShowSerialNumberClick(item)
+            }
+        } else {
+            holder.binding.description.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            holder.binding.description.setDebouncedClickListener {}
+        }
     }
 
 
     interface OnItemClickedListener {
         fun onItemClickedListener(item: HistoryItemInterface)
         fun onCloneClicked(item: HistoryItemInterface) {}
+        fun onShowSerialNumberClick(item: HistoryItemInterface) {}
     }
 }

@@ -18,6 +18,7 @@ data class SaleReceipt(
     ) var paymentTypeName: String? = null,
     @SerializedName("paymentTypeId") var paymentTypeId: Int? = null,
     @SerializedName("customerName") var customerName: String? = null,
+    @SerializedName("customerCode") var customerCode: String? = null,
     @SerializedName("reference") var reference: String? = null,
     @SerializedName("createdByName") var createdByName: String? = null,
     @SerializedName(

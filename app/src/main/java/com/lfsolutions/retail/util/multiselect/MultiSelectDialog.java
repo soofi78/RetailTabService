@@ -22,18 +22,14 @@ import java.util.ArrayList;
 public class MultiSelectDialog extends AppCompatDialogFragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     public static ArrayList<MultiSelectModelInterface> selectedIdsForCallback = new ArrayList<>();
-
+    private final ArrayList<MultiSelectModelInterface> previouslySelectedIdsList = new ArrayList<>();
     public ArrayList<? extends MultiSelectModelInterface> mainListOfAdapter = new ArrayList<>();
     private MutliSelectAdapter mutliSelectAdapter;
-    //Default Values
     private String title;
     private float titleSize = 25;
     private String positiveText = "DONE";
     private String negativeText = "CANCEL";
     private TextView dialogTitle, dialogSubmit, dialogCancel;
-    private ArrayList<MultiSelectModelInterface> previouslySelectedIdsList = new ArrayList<>();
-
-
     private ArrayList<? extends MultiSelectModelInterface> tempPreviouslySelectedIdsList = new ArrayList<>();
     private ArrayList<? extends MultiSelectModelInterface> tempMainListOfAdapter = new ArrayList<>();
 
@@ -50,9 +46,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
 
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setFlags(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        dialog.getWindow().setFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         dialog.setContentView(R.layout.custom_multi_select);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -74,13 +68,19 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
 
         mainListOfAdapter = setCheckedIDS(mainListOfAdapter, previouslySelectedIdsList);
         mutliSelectAdapter = new MutliSelectAdapter(mainListOfAdapter, getContext());
+        mutliSelectAdapter.setSelectionEnabled(minSelectionLimit > 0);
         mrecyclerView.setAdapter(mutliSelectAdapter);
 
         searchView.setOnQueryTextListener(this);
         searchView.onActionViewExpanded();
         searchView.clearFocus();
 
-
+        if (minSelectionLimit == 0) {
+            dialogCancel.setVisibility(View.INVISIBLE);
+            dialogCancel.setOnClickListener(v -> {
+            });
+            dialogSubmit.setOnClickListener(v -> dialog.dismiss());
+        }
         return dialog;
     }
 
@@ -113,8 +113,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     public MultiSelectDialog multiSelectList(ArrayList<? extends MultiSelectModelInterface> list) {
         this.mainListOfAdapter = list;
         this.tempMainListOfAdapter = new ArrayList<>(mainListOfAdapter);
-        if (maxSelectionLimit == 0)
-            maxSelectionLimit = list.size();
+        if (maxSelectionLimit == 0) maxSelectionLimit = list.size();
         return this;
     }
 
@@ -222,8 +221,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
                     } else {
                         if (maxSelectionLimit > 1)
                             message = youCan + " " + maxSelectionLimit + " " + options;
-                        else
-                            message = youCan + " " + maxSelectionLimit + " " + option;
+                        else message = youCan + " " + maxSelectionLimit + " " + option;
                     }
                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
                 }
@@ -238,8 +236,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
                 } else {
                     if (minSelectionLimit > 1)
                         message = pleaseSelect + " " + minSelectionLimit + " " + options;
-                    else
-                        message = pleaseSelect + " " + minSelectionLimit + " " + option;
+                    else message = pleaseSelect + " " + minSelectionLimit + " " + option;
                 }
                 Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }

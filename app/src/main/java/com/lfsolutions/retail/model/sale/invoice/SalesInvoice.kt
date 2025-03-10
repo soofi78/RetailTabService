@@ -20,6 +20,10 @@ data class SalesInvoice(
         "CustomerName",
         alternate = arrayOf("customerName")
     ) var customerName: String? = null,
+    @SerializedName(
+        "CustomerCode",
+        alternate = arrayOf("customerCode")
+    ) var customerCode: String? = null,
     @SerializedName("Address1", alternate = arrayOf("address1")) var address1: String? = null,
     @SerializedName("Address2", alternate = arrayOf("address2")) var address2: String? = null,
     @SerializedName(

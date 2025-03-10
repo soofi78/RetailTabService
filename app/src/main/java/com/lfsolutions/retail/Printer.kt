@@ -56,6 +56,10 @@ object Printer {
         )
 
         templateText = templateText?.replace(
+            Constants.Invoice.InvoiceCustomerCode, invoice?.salesInvoice?.customerCode.toString()
+        )
+
+        templateText = templateText?.replace(
             Constants.Invoice.InvoiceAddress1, invoice?.salesInvoice?.address1 ?: ""
         )
 
@@ -193,11 +197,15 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress1, order?.deliveryOrder?.address1 ?: ""
+            Constants.Delivery.CustomerCode, order?.deliveryOrder?.customerCode.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress2, order?.deliveryOrder?.address2 ?: ""
+            Constants.Delivery.CustomerAddress1, order?.deliveryOrder?.address1 ?: ""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Delivery.CustomerAddress2, order?.deliveryOrder?.address2 ?: ""
         )
 
 
@@ -281,6 +289,10 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Order.CustomerCustomerName, order?.salesOrder?.customerName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerCustomerCode, order?.salesOrder?.customerCode.toString()
         )
 
         templateText = templateText?.replace(
@@ -384,6 +396,10 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceCustomerName, receipt?.customerName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceCustomerCode, receipt?.customerCode.toString()
         )
 
         templateText = templateText?.replace(

@@ -239,6 +239,7 @@ class CreateDriverMemoFragment : Fragment() {
                 Notify.toastLong("Please add products")
                 return@setDebouncedClickListener
             }
+            Main.app.getDriverMemo().driverMemo.remarks = binding.remarks.text.toString()
             Main.app.getDriverMemo().updatePriceAndQty()
             Main.app.getDriverMemo().serializeItems()
             NetworkCall.make()
