@@ -27,5 +27,7 @@ data class UserSession(
     @SerializedName("isSuperVisor") var isSuperVisor: Boolean? = true,
     @SerializedName("wareHouseLocationId") var wareHouseLocationId: Int? = null,
     @SerializedName("wareHouseLocationName") var wareHouseLocationName: String? = null,
-    @SerializedName("isEditPrice") var isEditPrice: Boolean = false
+    @SerializedName("isEditPrice") var isEditPrice: Boolean = false,
+    @SerializedName("hideDeliveryOrder") var hideDeliveryOrder: Boolean = false,
+    @SerializedName("hideScheduleTabWSSAppForDriver") var hideScheduleTabWSSAppForDriver: Boolean = false
 )

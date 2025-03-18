@@ -53,7 +53,11 @@ data class SaleInvoiceObject(
             } else {
                 it.subTotal = it.qty?.times(it.costWithoutTax)?.minus((it.itemDiscount ?: 0.0))
                     ?.minus(it.netDiscount ?: 0.0)?.minus(discountValueBasedOnPercentage)
-                it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
+                if (salesInvoice?.isTaxInclusive == true) {
+                    it.tax = (it.subTotal ?: 0.0) * it.taxRate / (it.taxRate + 100)
+                } else {
+                    it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
+                }
                 it.netTotal = it.subTotal
                 it.netTotal = (it.totalValue ?: 0.0)
             }

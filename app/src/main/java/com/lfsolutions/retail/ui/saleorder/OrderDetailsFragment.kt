@@ -77,8 +77,7 @@ class OrderDetailsFragment : Fragment() {
             items.add(it)
         }
         binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
-            items,
-            object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
+            items, object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
@@ -90,6 +89,7 @@ class OrderDetailsFragment : Fragment() {
         binding.print.setDebouncedClickListener {
             Printer.printSaleOrder(requireActivity(), order)
         }
+
 
         if (order?.salesOrder?.status.equals("H") || order?.salesOrder?.status.equals("A") || order?.salesOrder?.status.equals(
                 "PA"
@@ -110,6 +110,10 @@ class OrderDetailsFragment : Fragment() {
 
         if (order?.salesOrder?.isStockTransfer == false) {
             binding.saleInvoice.visibility = View.GONE
+            binding.deliveryOrder.visibility = View.GONE
+        }
+
+        if (Main.app.getSession().hideDeliveryOrder) {
             binding.deliveryOrder.visibility = View.GONE
         }
 
@@ -141,7 +145,8 @@ class OrderDetailsFragment : Fragment() {
                                 id = order?.salesOrder?.customerId,
                                 name = order?.salesOrder?.customerName,
                                 address1 = order?.salesOrder?.address1,
-                                address2 = order?.salesOrder?.address2
+                                address2 = order?.salesOrder?.address2,
+                                isTaxInclusive = res.result?.salesInvoice?.isTaxInclusive
                             )
                         )
                     )
@@ -152,8 +157,8 @@ class OrderDetailsFragment : Fragment() {
                 Notify.toastLong("Unable to get convert to sale invoice")
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice...")).enque(
-                Network.api()?.convertToSaleInvoice(IdRequest(order?.salesOrder?.id))
-            ).execute()
+            Network.api()?.convertToSaleInvoice(IdRequest(order?.salesOrder?.id))
+        ).execute()
     }
 
     private fun convertToDeliveryOrder() {
@@ -191,8 +196,8 @@ class OrderDetailsFragment : Fragment() {
                 Notify.toastLong("Unable to get convert to sale invoice")
             }
         }).autoLoadigCancel(Loading().forApi(requireActivity(), "Creating sale invoice...")).enque(
-                Network.api()?.convertToDeliveryOrder(IdRequest(order?.salesOrder?.id))
-            ).execute()
+            Network.api()?.convertToDeliveryOrder(IdRequest(order?.salesOrder?.id))
+        ).execute()
     }
 
     private fun getPDFLink() {

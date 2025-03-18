@@ -346,6 +346,10 @@
             android:name="product"
             app:argType="string"
             app:nullable="false" />
+        <argument
+            android:name="isTaxInclusive"
+            app:argType="boolean"
+            app:nullable="false" />
     </fragment>
 
     <fragment

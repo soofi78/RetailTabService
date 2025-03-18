@@ -68,12 +68,19 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewVisitationSchedule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/space"
         app:layout_constraintTop_toBottomOf="@+id/cardSearch"
         tools:itemCount="3"
         tools:layout_editor_absoluteX="-16dp"
         tools:listitem="@layout/item_delivery" />
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddToScheduled"

@@ -101,6 +101,9 @@ data class SalesInvoice(
         alternate = arrayOf("deliveryPersonId")
     ) var deliveryPersonId: Int? = null,
     @SerializedName(
+        "isTaxInclusive"
+    ) var isTaxInclusive: Boolean? = null,
+    @SerializedName(
         "DeliveryPersonName",
         alternate = arrayOf("deliveryPersonName")
     ) var deliveryPersonName: String? = null,

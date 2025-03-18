@@ -17,8 +17,7 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
     private var onClickListener: View.OnClickListener? = null
     private lateinit var binding: BottomSheetNewFormsBinding
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = BottomSheetNewFormsBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,6 +31,11 @@ class NewFormsBottomSheet : BottomSheetDialogFragment() {
             binding.newAgreementMemo.visibility = View.GONE
             binding.newSaleOrder.visibility = View.GONE
         }
+
+        if (Main.app.getSession().hideDeliveryOrder) {
+            binding.newDeliveryOrder.visibility = View.GONE
+        }
+
 
         binding.newServiceForm.setDebouncedClickListener {
             dialog?.dismiss()

@@ -80,6 +80,7 @@ class SaleOrderFragment : Fragment() {
         addOnClickListener()
         setHeaderData()
         setCustomerData()
+        binding.btnLoadProducts.visibility = View.GONE
         binding.dateLabel.text = getString(R.string.order_date)
         binding.date.text = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)
         binding.date.tag = DateTime.getCurrentDateTime(DateTime.DateFormatRetail)

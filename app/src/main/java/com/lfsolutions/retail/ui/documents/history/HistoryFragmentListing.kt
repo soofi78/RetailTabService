@@ -197,9 +197,12 @@ class HistoryFragmentListing : Fragment() {
 
     private fun getHistoryTypeList(selectedType: HistoryType?): java.util.ArrayList<HistoryType> {
         val historyList = arrayListOf(
-            HistoryType.Order, HistoryType.DeliveryOrder, HistoryType.Invoices, HistoryType.Receipts
+            HistoryType.Order, HistoryType.Invoices, HistoryType.Receipts
         )
 
+        if (Main.app.getSession().hideDeliveryOrder.not()) {
+            historyList.add(1, HistoryType.DeliveryOrder)
+        }
 
         if (Main.app.getSession().isSuperVisor == true) {
             historyList.add(HistoryType.AgreementMemo)
@@ -611,10 +614,12 @@ class HistoryFragmentListing : Fragment() {
 
     private fun navigateCloneObjectTo(item: HistoryItemInterface, customer: Customer?) {
         if (item is AgreementMemo) {
-            findNavController().navigate(R.id.action_navigation_history_listing_to_new_agreement_memo,
+            findNavController().navigate(
+                R.id.action_navigation_history_listing_to_new_agreement_memo,
                 Bundle().apply { putString(Constants.Customer, Gson().toJson(customer)) })
         } else if (item is ComplaintService) {
-            findNavController().navigate(R.id.action_navigation_history_listing_to_serviceFormFragment,
+            findNavController().navigate(
+                R.id.action_navigation_history_listing_to_serviceFormFragment,
                 Bundle().apply { putString(Constants.Customer, Gson().toJson(customer)) })
         }
 

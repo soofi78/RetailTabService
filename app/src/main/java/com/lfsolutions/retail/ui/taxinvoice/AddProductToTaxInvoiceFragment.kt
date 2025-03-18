@@ -242,48 +242,58 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         }
         val subTotal = (qty * (product.cost ?: 0.0))
         val discount = 0.0
-        val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
+
+        var taxAmount = 0.0
+        if (args.isTaxInclusive) {
+            taxAmount =
+                subTotal * product.getApplicableTaxRate()
+                    .toDouble() / product.getApplicableTaxRate() + 100
+        } else {
+            taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
+        }
+        //parseFloat(actualTotal * value.taxRate / (value.taxRate + 100))
         val netTotal = (subTotal - discount) + taxAmount
         val total = (subTotal + taxAmount)
-        Main.app.getTaxInvoice()?.addEquipment(SalesInvoiceDetail(
-            productId = product.productId?.toInt() ?: 0,
-            inventoryCode = product.inventoryCode,
-            productName = product.productName,
-            productImage = product.imagePath,
-            unitId = product.unitId,
-            unitName = product.unitName,
-            qty = qty,
-            qtyStock = product.qtyOnHand,
-            price = subTotal,
-            netCost = total,
-            costWithoutTax = product.cost ?: 0.0,
-            taxRate = product.getApplicableTaxRate().toDouble(),
-            departmentId = 0,
-            lastPurchasePrice = 0.0,
-            sellingPrice = 0.0,
-            mrp = 0,
-            isBatch = false,
-            itemDiscount = 0.0,
-            itemDiscountPerc = 0.0,
-            averageCost = 0.0,
-            netDiscount = 0.0,
-            subTotal = subTotal,
-            netTotal = netTotal,
-            tax = taxAmount,
-            totalValue = subTotal,
-            isFOC = mBinding.checkboxFOC.isChecked,
-            isExchange = mBinding.checkboxExchange.isChecked,
-            isExpire = mBinding.checkboxIsExpired.isChecked,
-            creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                .replace(" ", "T").plus("Z"),
-            creatorUserId = Main.app.getSession().userId.toString(),
-            productBatchList = batchList
-        ).apply {
-            product.applicableTaxes?.let {
-                applicableTaxes = it
-                taxForProduct = it
-            }
-        })
+        Main.app.getTaxInvoice()?.addEquipment(
+            SalesInvoiceDetail(
+                productId = product.productId?.toInt() ?: 0,
+                inventoryCode = product.inventoryCode,
+                productName = product.productName,
+                productImage = product.imagePath,
+                unitId = product.unitId,
+                unitName = product.unitName,
+                qty = qty,
+                qtyStock = product.qtyOnHand,
+                price = subTotal,
+                netCost = total,
+                costWithoutTax = product.cost ?: 0.0,
+                taxRate = product.getApplicableTaxRate().toDouble(),
+                departmentId = 0,
+                lastPurchasePrice = 0.0,
+                sellingPrice = 0.0,
+                mrp = 0,
+                isBatch = false,
+                itemDiscount = 0.0,
+                itemDiscountPerc = 0.0,
+                averageCost = 0.0,
+                netDiscount = 0.0,
+                subTotal = subTotal,
+                netTotal = netTotal,
+                tax = taxAmount,
+                totalValue = subTotal,
+                isFOC = mBinding.checkboxFOC.isChecked,
+                isExchange = mBinding.checkboxExchange.isChecked,
+                isExpire = mBinding.checkboxIsExpired.isChecked,
+                creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                    .replace(" ", "T").plus("Z"),
+                creatorUserId = Main.app.getSession().userId.toString(),
+                productBatchList = batchList
+            ).apply {
+                product.applicableTaxes?.let {
+                    applicableTaxes = it
+                    taxForProduct = it
+                }
+            })
     }
 
     private fun updateSerialNumbersAdapter() {

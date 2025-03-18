@@ -8,7 +8,11 @@ data class LocationTenantIdRequestObject(
     val customerWorkAreaId: Int = 0
 )
 
-data class ProductListRB(val locationId: Int? = null, val type: String? = null)
+data class ProductListRB(
+    val locationId: Int? = null,
+    val type: String? = null,
+    val isSaleInvoice: Boolean = false
+)
 
 data class LocationIdCustomerIdRequestObject(
     val locationId: Int? = null,

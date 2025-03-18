@@ -71,16 +71,35 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapters(null, "")
+        if (Main.app.getSession().isSuperVisor == false && Main.app.getSession().hideScheduleTabWSSAppForDriver) {
+            binding.cardSchedule.visibility = View.GONE
+            binding.dateTextToVisit.visibility = View.VISIBLE
+            binding.toVisitDate.visibility = View.VISIBLE
+            binding.dateTextToVisit.text = scheduledDate
+            binding.dateTextToVisit.setDebouncedClickListener {
+                scheduleDateSelection()
+            }
+            binding.toVisitDate.setDebouncedClickListener {
+                scheduleDateSelection()
+            }
+            binding.fabStockRecord.visibility = View.GONE
+        } else {
+            binding.cardSchedule.visibility = View.VISIBLE
+            binding.dateTextToVisit.visibility = View.GONE
+            binding.toVisitDate.visibility = View.GONE
+            binding.dateText.text = scheduledDate
+            binding.dateText.setDebouncedClickListener {
+                scheduleDateSelection()
+            }
+            binding.scheduleDate.setDebouncedClickListener {
+                scheduleDateSelection()
+            }
+            binding.fabStockRecord.visibility = View.VISIBLE
+        }
+
         if (Main.app.getSession().isSuperVisor == false) {
             binding.recyclerViewUrgent.visibility = View.GONE
             binding.cardUrgent.visibility = View.GONE
-        }
-        binding.dateText.text = scheduledDate
-        binding.dateText.setDebouncedClickListener {
-            scheduleDateSelection()
-        }
-        binding.scheduleDate.setDebouncedClickListener {
-            scheduleDateSelection()
         }
 
         if (Main.app.getSession().isSuperVisor == true) {
@@ -125,6 +144,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         DateTime.showDatePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
             override fun onDateSelected(year: String, month: String, day: String) {
                 binding.dateText.text = "$year-$month-$day"
+                binding.dateTextToVisit.text = "$year-$month-$day"
                 scheduledDate = "$year-$month-$day"
                 getCustomerDetails()
             }
@@ -241,16 +261,20 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     }
 
     private fun setAdapters(getCustomersResponse: RetailResponse<CustomersResult>?, s: String) {
-        mUrgentAdapter = DeliveryItemAdapter(getCustomersResponse?.result?.getUrgentCustomersList()
-            ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
-            DeliveryItemAdapter.CustomerItemType.Urgent)
+        mUrgentAdapter =
+            DeliveryItemAdapter(
+                getCustomersResponse?.result?.getUrgentCustomersList()
+                    ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+                DeliveryItemAdapter.CustomerItemType.Urgent)
         mToVisitAdapter =
-            DeliveryItemAdapter(getCustomersResponse?.result?.getToVisitsCustomersList()
-                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+            DeliveryItemAdapter(
+                getCustomersResponse?.result?.getToVisitsCustomersList()
+                    ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
                 DeliveryItemAdapter.CustomerItemType.ToVisit)
         mScheduleAdapter =
-            DeliveryItemAdapter(getCustomersResponse?.result?.getScheduledCustomersList()
-                ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
+            DeliveryItemAdapter(
+                getCustomersResponse?.result?.getScheduledCustomersList()
+                    ?.filter { isCandidateForFilter(s, it) } as ArrayList<Customer>?,
                 DeliveryItemAdapter.CustomerItemType.Scheduled)
         binding.recyclerViewUrgent.adapter = mUrgentAdapter
         binding.recyclerViewToVisit.adapter = mToVisitAdapter
@@ -284,8 +308,7 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
     private fun openOrderDetails(customer: Customer) {
         startActivity(
             Intent(
-                requireActivity(),
-                HistoryFlowActivity::class.java
+                requireActivity(), HistoryFlowActivity::class.java
             ).apply {
                 putExtra(Constants.OrderId, customer.saleOrderId)
             })

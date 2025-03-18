@@ -46,9 +46,7 @@ class TaxInvoiceProductList : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentSaleOrderInvoiceStockEquipmentListBinding.inflate(layoutInflater)
@@ -75,8 +73,7 @@ class TaxInvoiceProductList : Fragment() {
 
 
     private fun getProductCategory() {
-        val filter =
-            if (binding.filter.isChecked) FilterRequest.on() else FilterRequest.off()
+        val filter = if (binding.filter.isChecked) FilterRequest.on() else FilterRequest.off()
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Category List"))
             .setCallback(object : OnNetworkResponse {
@@ -116,35 +113,30 @@ class TaxInvoiceProductList : Fragment() {
         var filteredList = ArrayList<Product>()
         filteredList.addAll(productList.filter { it.categoryName == categoryItem.name })
 
-        if (categoryItem.name.equals("ALL", true))
-            categories.forEach { cat ->
-                filteredList.addAll(productList.filter { it.categoryName == cat.name })
-            }
+        if (categoryItem.name.equals("ALL", true)) categories.forEach { cat ->
+            filteredList.addAll(productList.filter { it.categoryName == cat.name })
+        }
 
-        filteredList =
-            filteredList.filter {
-                isFilterCandidate(
-                    it,
-                    query.split(" ").toSet()
-                )
-            } as ArrayList<Product>
+        filteredList = filteredList.filter {
+            isFilterCandidate(
+                it, query.split(" ").toSet()
+            )
+        } as ArrayList<Product>
 
         updateEquipmentListView(filteredList)
     }
 
     private fun isFilterCandidate(
-        product: Product,
-        query: Set<String>
+        product: Product, query: Set<String>
     ): Boolean {
-        if (query.isEmpty())
-            return true
+        if (query.isEmpty()) return true
         var contains = true
         query.forEach {
-            contains =
-                contains && (product.productName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.categoryName?.lowercase()?.contains(it.lowercase()) == true
-                        || product.inventoryCode?.lowercase()?.contains(it.lowercase()) == true
-                        || product.unitName?.lowercase()?.contains(it.lowercase()) == true)
+            contains = contains && (product.productName?.lowercase()
+                ?.contains(it.lowercase()) == true || product.categoryName?.lowercase()
+                ?.contains(it.lowercase()) == true || product.inventoryCode?.lowercase()
+                ?.contains(it.lowercase()) == true || product.unitName?.lowercase()
+                ?.contains(it.lowercase()) == true)
         }
         return contains
     }
@@ -173,10 +165,8 @@ class TaxInvoiceProductList : Fragment() {
     }
 
     private fun getEquipmentList() {
-        val filter =
-            if (binding.filter.isChecked) "SR" else null
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading products"))
+        val filter = if (binding.filter.isChecked) "SR" else null
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Loading products"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     (response?.body() as RetailResponse<EquipmentListResult>).result?.items?.toList()
@@ -188,11 +178,9 @@ class TaxInvoiceProductList : Fragment() {
                     Notify.toastLong("Unable to get equipment list")
                 }
             }).enque(
-                Network.api()
-                    ?.getEquipmentList(
+                Network.api()?.getEquipmentList(
                         ProductListRB(
-                            Main.app.getSession().defaultLocationId,
-                            filter
+                            Main.app.getSession().defaultLocationId, filter, true
                         )
                     )
             ).execute()
@@ -205,7 +193,10 @@ class TaxInvoiceProductList : Fragment() {
             override fun onProductClick(product: Product) {
                 findNavController().navigate(
                     R.id.action_navigation_tax_invoice_equipment_list_to_navigation_tax_invoice_add_product_to_cart,
-                    bundleOf(Constants.Product to Gson().toJson(product))
+                    bundleOf(
+                        Constants.Product to Gson().toJson(product),
+                        Constants.isTaxInclusive to customer.isTaxInclusive
+                    )
                 )
             }
         })

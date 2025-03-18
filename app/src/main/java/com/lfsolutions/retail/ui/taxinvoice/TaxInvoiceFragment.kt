@@ -67,6 +67,12 @@ class TaxInvoiceFragment : Fragment() {
                 Main.app.getSession().defaultLocationId
             Main.app.getTaxInvoice()?.salesInvoice?.salespersonId =
                 Main.app.getSession().salesPersonId
+            Main.app.getTaxInvoice()?.salesInvoice?.isTaxInclusive = customer.isTaxInclusive
+            if (customer.isTaxInclusive == true) {
+                Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
+            } else {
+                Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
+            }
             Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
@@ -178,8 +184,10 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.serializeItems()
             Main.app.getTaxInvoice()?.salesInvoice?.customerName =
                 binding.inputCustomerName.text.toString()
-            Main.app.getTaxInvoice()?.salesInvoice?.paymentTermId = customer.paymentTermId
-            Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName = customer.paymentTerm
+            if (Main.app.getTaxInvoice()?.salesInvoice?.paymentTermId == null) Main.app.getTaxInvoice()?.salesInvoice?.paymentTermId =
+                customer.paymentTermId
+            if (Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName == null) Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName =
+                customer.paymentTerm
             uploadSignature()
         }
     }
@@ -216,44 +224,45 @@ class TaxInvoiceFragment : Fragment() {
             val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
             val netTotal = (subTotal - discount) + taxAmount
             val total = (subTotal + taxAmount)
-            Main.app.getTaxInvoice()?.addEquipment(SalesInvoiceDetail(
-                productId = product.productId?.toInt() ?: 0,
-                inventoryCode = product.inventoryCode,
-                productName = product.productName,
-                productImage = product.imagePath,
-                unitId = product.unitId,
-                unitName = product.unitName,
-                qty = qty,
-                qtyStock = product.qtyOnHand,
-                price = subTotal,
-                netCost = total,
-                costWithoutTax = product.cost ?: 0.0,
-                taxRate = product.getApplicableTaxRate().toDouble(),
-                departmentId = 0,
-                lastPurchasePrice = 0.0,
-                sellingPrice = 0.0,
-                mrp = 0,
-                isBatch = false,
-                itemDiscount = 0.0,
-                itemDiscountPerc = 0.0,
-                averageCost = 0.0,
-                netDiscount = 0.0,
-                subTotal = subTotal,
-                netTotal = netTotal,
-                tax = taxAmount,
-                totalValue = subTotal,
-                isFOC = false,
-                isExchange = false,
-                isExpire = false,
-                creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                    .replace(" ", "T").plus("Z"),
-                creatorUserId = Main.app.getSession().userId.toString()
-            ).apply {
-                product.applicableTaxes?.let {
-                    applicableTaxes = it
-                    taxForProduct = it
-                }
-            })
+            Main.app.getTaxInvoice()?.addEquipment(
+                SalesInvoiceDetail(
+                    productId = product.productId?.toInt() ?: 0,
+                    inventoryCode = product.inventoryCode,
+                    productName = product.productName,
+                    productImage = product.imagePath,
+                    unitId = product.unitId,
+                    unitName = product.unitName,
+                    qty = qty,
+                    qtyStock = product.qtyOnHand,
+                    price = subTotal,
+                    netCost = total,
+                    costWithoutTax = product.cost ?: 0.0,
+                    taxRate = product.getApplicableTaxRate().toDouble(),
+                    departmentId = 0,
+                    lastPurchasePrice = 0.0,
+                    sellingPrice = 0.0,
+                    mrp = 0,
+                    isBatch = false,
+                    itemDiscount = 0.0,
+                    itemDiscountPerc = 0.0,
+                    averageCost = 0.0,
+                    netDiscount = 0.0,
+                    subTotal = subTotal,
+                    netTotal = netTotal,
+                    tax = taxAmount,
+                    totalValue = subTotal,
+                    isFOC = false,
+                    isExchange = false,
+                    isExpire = false,
+                    creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                        .replace(" ", "T").plus("Z"),
+                    creatorUserId = Main.app.getSession().userId.toString()
+                ).apply {
+                    product.applicableTaxes?.let {
+                        applicableTaxes = it
+                        taxForProduct = it
+                    }
+                })
         }
     }
 

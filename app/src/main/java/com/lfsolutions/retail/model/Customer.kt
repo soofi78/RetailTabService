@@ -40,7 +40,7 @@ data class Customer(
     @SerializedName("salespersonName") var salespersonName: String? = null,
     @SerializedName("priceGroup") var priceGroup: String? = null,
     @SerializedName("type") var type: String? = null,
-    @SerializedName("isTaxInclusive") var isTaxInclusive: String? = null,
+    @SerializedName("isTaxInclusive") var isTaxInclusive: Boolean? = null,
     @SerializedName("isWalkIn") var isWalkIn: String? = null,
     @SerializedName("isVisited") var IsVisited: Boolean? = null,
     @SerializedName("thirdPartyId") var thirdPartyId: String? = null,
