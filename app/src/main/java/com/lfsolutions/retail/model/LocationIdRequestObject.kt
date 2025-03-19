@@ -11,10 +11,12 @@ data class LocationTenantIdRequestObject(
 data class ProductListRB(
     val locationId: Int? = null,
     val type: String? = null,
-    val isSaleInvoice: Boolean = false
+    val isSalesInvoice: Boolean = false,
+    var customerId: Int? = null
 )
 
 data class LocationIdCustomerIdRequestObject(
     val locationId: Int? = null,
-    val customerId: Int? = null
+    val customerId: Int? = null,
+    val isSalesInvoice: Boolean = false
 )

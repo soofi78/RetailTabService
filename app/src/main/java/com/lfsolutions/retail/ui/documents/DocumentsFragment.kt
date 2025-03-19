@@ -36,7 +36,8 @@ class DocumentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = DocumentAdapter(getDocumentsMenuList(),
+        mAdapter = DocumentAdapter(
+            getDocumentsMenuList(),
             object : DocumentAdapter.OnDocumentClickedListener {
                 override fun onDocumentClicked(documents: DocumentType) {
                     openDocument(documents)
@@ -115,15 +116,30 @@ class DocumentsFragment : Fragment() {
                 R.string.label_daily_sales_record,
                 R.drawable.daily_sales_record
             ),
-            DocumentType.Payment(
-                R.string.label_payment,
-                R.drawable.ic_payment
-            ),
             DocumentType.History(
                 R.string.label_history,
                 R.drawable.ic_history
             )
         )
+
+
+        if (Main.app.getSession().hideCurrentStockTab.not()) {
+            docs.add(
+                DocumentType.CurrentStock(
+                    R.string.label_current_stock,
+                    R.drawable.outgoing_stock_record
+                )
+            )
+        }
+
+        if (Main.app.getSession().hidePaymentsTab.not()) {
+            docs.add(
+                DocumentType.Payment(
+                    R.string.label_payment,
+                    R.drawable.ic_payment
+                )
+            )
+        }
 
         if (Main.app.getSession().isSuperVisor == true) {
             docs.add(
@@ -134,12 +150,6 @@ class DocumentsFragment : Fragment() {
             )
         }
 
-        docs.add(
-            DocumentType.CurrentStock(
-                R.string.label_current_stock,
-                R.drawable.outgoing_stock_record
-            )
-        )
 
         return docs
     }

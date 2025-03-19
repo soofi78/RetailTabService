@@ -55,6 +55,7 @@ data class SaleInvoiceObject(
                     ?.minus(it.netDiscount ?: 0.0)?.minus(discountValueBasedOnPercentage)
                 if (salesInvoice?.isTaxInclusive == true) {
                     it.tax = (it.subTotal ?: 0.0) * it.taxRate / (it.taxRate + 100)
+                    it.subTotal = it.subTotal?.minus(it.tax ?: 0.0)
                 } else {
                     it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
                 }

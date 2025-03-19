@@ -210,7 +210,8 @@ class TaxInvoiceFragment : Fragment() {
             }).enque(
                 Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
-                        Main.app.getSession().defaultLocationId, customer.id
+                        Main.app.getSession().defaultLocationId, customer.id,
+                        true
                     )
                 )
             ).execute()

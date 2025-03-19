@@ -41,7 +41,7 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
                 """${Main.app.getSession().currencySymbol}0"""
         else
             holder.binding.txtPrice.text =
-                """${Main.app.getSession().currencySymbol}${salveInvoiceDetails?.get(position)?.subTotal?.formatDecimalSeparator()}"""
+                """${Main.app.getSession().currencySymbol}${salveInvoiceDetails?.get(position)?.totalValue?.formatDecimalSeparator()}"""
         holder.binding.txtProductName.text = salveInvoiceDetails?.get(position)?.productName
         Glide.with(holder.binding.imgProduct.context)
             .load(Main.app.getBaseUrl() + salveInvoiceDetails?.get(position)?.productImage)

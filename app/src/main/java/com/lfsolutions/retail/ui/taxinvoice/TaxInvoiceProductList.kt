@@ -179,15 +179,18 @@ class TaxInvoiceProductList : Fragment() {
                 }
             }).enque(
                 Network.api()?.getEquipmentList(
-                        ProductListRB(
-                            Main.app.getSession().defaultLocationId, filter, true
-                        )
+                    ProductListRB(
+                        Main.app.getSession().defaultLocationId,
+                        filter,
+                        true,
+                        customer.id
                     )
+                )
             ).execute()
     }
 
     private fun updateEquipmentListView(products: List<Product>) {
-        //products.filter { it.isAsset == false }
+        val taxInclusive = if (customer.isTaxInclusive == null) false else customer.isTaxInclusive
         mAdapter = ProductListAdapter(products)
         mAdapter.setListener(object : ProductListAdapter.OnProductClickListener {
             override fun onProductClick(product: Product) {
@@ -195,7 +198,7 @@ class TaxInvoiceProductList : Fragment() {
                     R.id.action_navigation_tax_invoice_equipment_list_to_navigation_tax_invoice_add_product_to_cart,
                     bundleOf(
                         Constants.Product to Gson().toJson(product),
-                        Constants.isTaxInclusive to customer.isTaxInclusive
+                        Constants.isTaxInclusive to taxInclusive
                     )
                 )
             }

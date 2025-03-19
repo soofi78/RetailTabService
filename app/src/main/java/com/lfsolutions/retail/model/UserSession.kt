@@ -29,5 +29,9 @@ data class UserSession(
     @SerializedName("wareHouseLocationName") var wareHouseLocationName: String? = null,
     @SerializedName("isEditPrice") var isEditPrice: Boolean = false,
     @SerializedName("hideDeliveryOrder") var hideDeliveryOrder: Boolean = false,
-    @SerializedName("hideScheduleTabWSSAppForDriver") var hideScheduleTabWSSAppForDriver: Boolean = false
+    @SerializedName("hideScheduleTabWSSAppForDriver") var hideScheduleTabWSSAppForDriver: Boolean = false,
+    @SerializedName("hideCurrentStockTab") var hideCurrentStockTab: Boolean = false,
+    @SerializedName("hidePaymentsTab") var hidePaymentsTab: Boolean = false,
+    @SerializedName("hideReceiptTab") var hideReceiptTab: Boolean = false,
+    @SerializedName("hideSalesOrderTab") var hideSalesOrderTab: Boolean = false
 )

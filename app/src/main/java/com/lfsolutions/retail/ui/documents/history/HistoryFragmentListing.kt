@@ -197,11 +197,19 @@ class HistoryFragmentListing : Fragment() {
 
     private fun getHistoryTypeList(selectedType: HistoryType?): java.util.ArrayList<HistoryType> {
         val historyList = arrayListOf(
-            HistoryType.Order, HistoryType.Invoices, HistoryType.Receipts
+            HistoryType.Invoices,
         )
 
+        if (Main.app.getSession().hideSalesOrderTab.not()) {
+            historyList.add(0, HistoryType.Order)
+        }
+
+        if (Main.app.getSession().hideReceiptTab.not()) {
+            historyList.add(HistoryType.Receipts)
+        }
+
         if (Main.app.getSession().hideDeliveryOrder.not()) {
-            historyList.add(1, HistoryType.DeliveryOrder)
+            historyList.add(HistoryType.DeliveryOrder)
         }
 
         if (Main.app.getSession().isSuperVisor == true) {
