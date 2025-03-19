@@ -127,7 +127,7 @@ class HistoryFragmentListing : Fragment() {
         setCustomerData()
         setHistoryTabAdapter()
         if (selectedType != null) getHistory(selectedType!!, true)
-        else getHistory(HistoryType.Order)
+        else getHistory(getHistoryTypeList(null)[0])
 
         if (isCustomerSpecificHistory.not()) {
             binding.customerView.visibility = View.GONE
