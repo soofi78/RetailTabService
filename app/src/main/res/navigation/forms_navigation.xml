@@ -57,6 +57,16 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+
+
+        <action
+            android:id="@+id/action_navigation_tax_invoice_to_invoice_details_payment"
+            app:destination="@id/navigation_invoice_detail"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
     </fragment>
 
     <fragment
@@ -156,8 +166,14 @@
         android:label="Customers"
         tools:layout="@layout/fragment_invoice_details">
         <argument
-            android:name="item"
+            android:name="id"
             app:argType="string"
+            app:nullable="false" />
+
+        <argument
+            android:name="pay"
+            android:defaultValue="false"
+            app:argType="boolean"
             app:nullable="false" />
     </fragment>
 
@@ -253,6 +269,14 @@
         <action
             android:id="@+id/action_navigation_tax_invoice_to_open_products_summary"
             app:destination="@id/navigation_tax_invoice_summary"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_tax_invoice_to_invoice_details_payment"
+            app:destination="@id/navigation_invoice_detail"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"

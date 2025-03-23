@@ -210,8 +210,7 @@ class TaxInvoiceFragment : Fragment() {
             }).enque(
                 Network.api()?.getCustomerProduct(
                     LocationIdCustomerIdRequestObject(
-                        Main.app.getSession().defaultLocationId, customer.id,
-                        true
+                        Main.app.getSession().defaultLocationId, customer.id, true
                     )
                 )
             ).execute()
@@ -319,6 +318,10 @@ class TaxInvoiceFragment : Fragment() {
                     val invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
                     Printer.printInvoice(requireActivity(), invoice)
                     findNavController().popBackStack()
+                    findNavController().navigate(
+                        R.id.action_navigation_tax_invoice_to_invoice_details_payment,
+                        bundleOf("id" to invoice?.salesInvoice?.id.toString(), "pay" to true)
+                    )
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {

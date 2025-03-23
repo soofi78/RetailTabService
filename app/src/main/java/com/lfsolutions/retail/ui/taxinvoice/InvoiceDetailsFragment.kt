@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
@@ -21,7 +20,6 @@ import com.lfsolutions.retail.model.PaymentType
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SaleTransactionRequestBody
 import com.lfsolutions.retail.model.sale.SaleReceipt
-import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceListItem
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
@@ -52,7 +50,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
     private val paymentTypes = ArrayList<PaymentType>()
     private var invoice: SaleInvoiceObject? = null
     private lateinit var binding: FragmentInvoiceDetailsBinding
-    private lateinit var item: SaleInvoiceListItem
+    private var id: Int? = null
     private val args by navArgs<InvoiceDetailsFragmentArgs>()
 
     override fun onCreateView(
@@ -60,7 +58,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentInvoiceDetailsBinding.inflate(inflater)
-            item = Gson().fromJson(args.item, SaleInvoiceListItem::class.java)
+            id = args.id.toInt()
         }
         return binding.root
     }
@@ -121,6 +119,8 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
             }
             binding.balance.text = """${Main.app.getSession().currencySymbol}0"""
+        } else if (args.pay) {
+            payFor()
         }
 
         if (invoice?.salesInvoice?.balance == 0.0) {
@@ -263,7 +263,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
                     Notify.toastLong("Download Failed")
                 }
             }).enque(
-                Network.api()?.getSaleInvoicePDF(IdRequest(id = item.id))
+                Network.api()?.getSaleInvoicePDF(IdRequest(id = id))
             ).execute()
     }
 
@@ -281,7 +281,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
                     Notify.toastLong("Unable to get invoice detail")
                 }
             }).enque(
-                Network.api()?.getSaleInvoiceDetail(IdRequest(id = item.id))
+                Network.api()?.getSaleInvoiceDetail(IdRequest(id = id))
             ).execute()
     }
 
