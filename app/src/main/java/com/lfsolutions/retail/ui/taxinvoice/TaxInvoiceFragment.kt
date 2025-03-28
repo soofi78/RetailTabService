@@ -298,6 +298,10 @@ class TaxInvoiceFragment : Fragment() {
                             result.result?.id?.let { getSaleInvoiceDetail(it) }
                         }, {
                             findNavController().popBackStack()
+                            findNavController().navigate(
+                                R.id.action_navigation_tax_invoice_to_invoice_details_payment,
+                                bundleOf("id" to result.result?.id.toString(), "pay" to true)
+                            )
                         })
                     } else {
                         Notify.toastLong("Unable create Sale invoice: ${result.result}")

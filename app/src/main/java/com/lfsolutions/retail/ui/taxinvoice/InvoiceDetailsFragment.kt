@@ -65,7 +65,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getSaleInvoiceDetail()
+        getSaleInvoiceDetail(id)
     }
 
 
@@ -87,8 +87,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
             items.add(it)
         }
         binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
-            items,
-            object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
+            items, object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
@@ -210,6 +209,8 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
                         result.result?.id?.let { getReceiptDetail(it) }
                     }, {
                         findNavController().popBackStack()
+                    }, "Print Sale Invoice", {
+                        getSaleInvoiceDetail(invoice?.salesInvoice?.id, true)
                     })
                 } else {
                     Notify.toastLong("Payment Failed")
@@ -267,11 +268,18 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
             ).execute()
     }
 
-    private fun getSaleInvoiceDetail() {
+    private fun getSaleInvoiceDetail(invoiceId: Int?, print: Boolean = false) {
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Invoice Details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    if (print) {
+                        Printer.printInvoice(
+                            requireActivity(),
+                            (response?.body() as BaseResponse<SaleInvoiceObject>).result
+                        )
+                        return
+                    }
                     invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
                     setData()
                     getTransactionReference()
@@ -281,7 +289,7 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
                     Notify.toastLong("Unable to get invoice detail")
                 }
             }).enque(
-                Network.api()?.getSaleInvoiceDetail(IdRequest(id = id))
+                Network.api()?.getSaleInvoiceDetail(IdRequest(id = invoiceId))
             ).execute()
     }
 

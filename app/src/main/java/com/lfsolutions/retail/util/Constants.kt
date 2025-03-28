@@ -8,6 +8,7 @@ object Constants {
         const val InvoiceTax = "{{invoice.tax}}"
         const val InvoiceNetTotal = "{{invoice.netTotal}}"
         const val InvoiceBalanceAmount = "{{customer.balanceAmount}}"
+        const val InvoicePaidAmount = "{{customer.paidAmount}}"
         const val InvoiceSignature = "@#@{{&invoice.signature}}"
         const val InvoiceQR = "###{{invoice.qrUrl}}"
         const val Qty = "{{qty}}"
@@ -85,6 +86,7 @@ object Constants {
     }
 
 
+    const val PrivacyPolicy = "Privacy Policy"
     const val OrderId: String = "order_id"
     const val FormType: String = "FormType"
     const val QRTagStart = "<qrcode>"

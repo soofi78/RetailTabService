@@ -35,6 +35,27 @@ object Printer {
             }.show(false)
     }
 
+    fun askForPrint(
+        activity: Activity,
+        print: () -> Unit,
+        cancel: () -> Unit,
+        thirdButtonText: String,
+        thirdButtonClick: () -> Unit
+    ) {
+        Alert.make(activity).setTitle("Confirm!")
+            .setDescription("Do you want to print the current item you just created?")
+            .setButtonOrientation(LinearLayout.HORIZONTAL).addButton("No") {
+                it.dismiss()
+                cancel.invoke()
+            }.addButton("Yes") {
+                print.invoke()
+                it.dismiss()
+            }.addButton(thirdButtonText) {
+                thirdButtonClick.invoke()
+                it.dismiss()
+            }.show(false)
+    }
+
     private fun updateTemplateforInvoiceAndPrint(
         template: PrintTemplate?, invoice: SaleInvoiceObject?
     ) {
@@ -124,10 +145,18 @@ object Printer {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount, "FOC"
             )
+            templateText = templateText?.replace(
+                Constants.Invoice.InvoicePaidAmount, "FOC"
+            )
         } else {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount,
                 invoice?.salesInvoice?.BalanceFormatted().toString()
+            )
+
+            templateText = templateText?.replace(
+                Constants.Invoice.InvoicePaidAmount,
+                invoice?.salesInvoice?.PaidAmountFormatted().toString()
             )
         }
 

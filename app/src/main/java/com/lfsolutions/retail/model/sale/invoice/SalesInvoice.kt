@@ -13,7 +13,7 @@ data class SalesInvoice(
         "InvoiceDate",
         alternate = arrayOf("invoiceDate")
     ) var invoiceDate: String? = null,
-    @SerializedName("PoNo", alternate = arrayOf("poNo")) var poNo: String? = null,
+    @SerializedName("poNo", alternate = arrayOf("PoNo")) var poNo: String? = null,
     @SerializedName("LocationId", alternate = arrayOf("locationId")) var locationId: Int? = null,
     @SerializedName("CustomerId", alternate = arrayOf("customerId")) var customerId: Int? = null,
     @SerializedName(
@@ -240,6 +240,10 @@ data class SalesInvoice(
 
     fun BalanceFormatted(): String {
         return Main.app.getSession().currencySymbol + balance?.formatDecimalSeparator()
+    }
+
+    fun PaidAmountFormatted(): String {
+        return Main.app.getSession().currencySymbol + paidAmount?.formatDecimalSeparator()
     }
 
     fun signatureUrl(): String {

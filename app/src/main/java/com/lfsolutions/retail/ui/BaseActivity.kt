@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -117,31 +118,41 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     var optionsClick = View.OnClickListener {
-        Dialogs.optionsDialog(context = this@BaseActivity, options = arrayOf(
-            Constants.ViewProfile,
-            Constants.PrinterSettings,
-            Constants.AppTheme,
-            Constants.Version,
-            Constants.Logout,
-        ), onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
-            override fun onClick(option: String) {
-                when (option) {
-                    Constants.Logout -> Main.app.sessionExpired()
-                    Constants.ViewProfile -> openProfile()
-                    Constants.PrinterSettings -> selectPrinter()
-                    Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
-                    Constants.AppTheme -> ThemeSelectionSheet.show(
-                        supportFragmentManager,
-                        object : OnThemeSelected {
-                            override fun onThemeSelected(theme: RetailThemes) {
-                                AppSession.put(Constants.AppTheme, theme.themeName)
-                                recreateSmoothly()
-                                finishAffinity()
-                            }
-                        })
+        Dialogs.optionsDialog(
+            context = this@BaseActivity, options = arrayOf(
+                Constants.ViewProfile,
+                Constants.PrinterSettings,
+                Constants.AppTheme,
+                Constants.Version,
+                Constants.PrivacyPolicy,
+                Constants.Logout,
+            ), onOptionDialogItemClicked = object : OnOptionDialogItemClicked {
+                override fun onClick(option: String) {
+                    when (option) {
+                        Constants.Logout -> Main.app.sessionExpired()
+                        Constants.ViewProfile -> openProfile()
+                        Constants.PrinterSettings -> selectPrinter()
+                        Constants.PrivacyPolicy -> openPrivacyPolicy()
+                        Constants.Version -> Notify.toastLong("Version: " + BuildConfig.VERSION_NAME + " / " + BuildConfig.VERSION_CODE)
+                        Constants.AppTheme -> ThemeSelectionSheet.show(
+                            supportFragmentManager,
+                            object : OnThemeSelected {
+                                override fun onThemeSelected(theme: RetailThemes) {
+                                    AppSession.put(Constants.AppTheme, theme.themeName)
+                                    recreateSmoothly()
+                                    finishAffinity()
+                                }
+                            })
+                    }
                 }
-            }
-        })
+            })
+    }
+
+    private fun openPrivacyPolicy() {
+        val url = "https://hashmato.com/privacy-policy-wss-retail/"
+        val i = Intent(Intent.ACTION_VIEW)
+        i.setData(Uri.parse(url))
+        startActivity(i)
     }
 
     override fun onDestroy() {
