@@ -152,22 +152,28 @@ object PrinterManager {
                 var printText = printableText
                 val urls = extractUrls(printText)
 
-                val foreignTextRegex =
-                    "(?<=<a>)(.*?)(?=</a>)".toRegex()  // Regex to find text inside <a></a>
-                val printableText = "<a>111</a><a>222</a><a>333</a>"  // Sample input text
-
+                val foreignTextRegex = Regex("<a>(.*?)</a>")
 
                 // Use findAll to get all matches
-                val matchResults = foreignTextRegex.findAll(printText)
+                val matchResults = foreignTextRegex.findAll(printText).toList()
                 if (matchResults != null) {
                     matchResults.forEach { matchResult ->
                         // Replace each matched text inside <a></a> with an <img> tag
-                        val imgTag = "[C]<img>${
-                            PrinterTextParserImg.bitmapToHexadecimalString(
-                                printer, getMultiLangTextAsImage(matchResult.value)
-                            )
-                        }</img>"
-                        // Replace the matched text with the <img> tag in printText
+                        val contentInsideATags = matchResult.groupValues[1] // Extract text inside <a></a>
+                        val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "").trim()
+
+                        val direction = when {
+                            contentInsideATags.startsWith("[C]") -> "C"
+                            contentInsideATags.startsWith("[R]") -> "R"
+                            else -> "L"
+                        }
+
+                        val imgTag = if (isEnglishOnly(cleanedText)) {
+                            "[$direction]$cleanedText"
+                        }else{
+                            "[$direction]<img>${PrinterTextParserImg.bitmapToHexadecimalString(printer, getMultiLangTextAsImage(cleanedText,direction))}</img>"
+
+                        }// Replace the matched text with the <img> tag in printText
                         printText = printText.replace(matchResult.value, imgTag)
                     }
                     // Finally, remove the <a></a> tags
@@ -222,10 +228,17 @@ object PrinterManager {
 
     fun getMultiLangTextAsImage(
         text: String,
-        align: Paint.Align = Paint.Align.CENTER,
-        textSize: Float = 32f,
-        typeface: Typeface? = Typeface.SERIF
+        direction:String,
+        textSize: Float = 28f,
+        typeface: Typeface? = Typeface.MONOSPACE
     ): Bitmap {
+        val align =
+            if (direction.contentEquals("R"))
+                Paint.Align.RIGHT
+            else if (direction.contentEquals("C"))
+                Paint.Align.CENTER
+            else Paint.Align.LEFT
+
         val paint = Paint()
         paint.isAntiAlias = true
         paint.color = Color.BLACK
@@ -356,5 +369,22 @@ object PrinterManager {
             this.yPos = yPos
         }
     }
+
+    private fun isEnglishOnly(s: String): Boolean {
+        for (character in s) {
+            val block = Character.UnicodeBlock.of(character)
+            if (block !in setOf(
+                    Character.UnicodeBlock.BASIC_LATIN,
+                    Character.UnicodeBlock.LATIN_1_SUPPLEMENT,
+                    Character.UnicodeBlock.LATIN_EXTENDED_A,
+                    Character.UnicodeBlock.GENERAL_PUNCTUATION
+                )
+            ) {
+                return false // Found a non-English character
+            }
+        }
+        return true // All characters are English
+    }
+
 
 }
