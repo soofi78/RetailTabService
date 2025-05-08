@@ -193,7 +193,7 @@ class SaleOrderEquipmentListFragment : Fragment() {
     }
 
     private fun updateEquipmentListView(products: List<Product>) {
-        mAdapter = SaleOrderEquipmentAdapter(products)
+        mAdapter = SaleOrderEquipmentAdapter(products, true)
         mAdapter.setListener(object : SaleOrderEquipmentAdapter.OnEquipmentClickListener {
             override fun onEquipmentClick(product: Product) {
                 findNavController()

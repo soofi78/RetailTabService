@@ -84,8 +84,13 @@ class OrderDetailsFragment : Fragment() {
             })
 
         binding.pdf.setDebouncedClickListener {
-            getPDFLink()
+            if (Main.app.getSession().enableCrystalReportForSalesOrder) {
+                getCrystalReport()
+            } else {
+                getPDFLink()
+            }
         }
+
         binding.print.setDebouncedClickListener {
             Printer.printSaleOrder(requireActivity(), order)
         }
@@ -124,6 +129,23 @@ class OrderDetailsFragment : Fragment() {
         binding.deliveryOrder.setDebouncedClickListener {
             convertToDeliveryOrder()
         }
+    }
+
+    private fun getCrystalReport() {
+        val name =
+            "SaleOrder-CrystalReport-" + order?.salesOrder?.soNo.toString() + "-" + DateTime.getCurrentDateTime(
+                DateTime.DateFormatWithDayNameMonthNameAndTime
+            )
+        DocumentDownloader.download(
+            name, AppSession[Constants.baseUrl] + Constants.getCrystalReportEndPoint(
+                order?.salesOrder?.id,
+                order?.salesOrder?.soNo,
+                order?.salesOrder?.reportName,
+                "SalesOrder",
+                "SO"
+            ), requireActivity()
+        )
+        Notify.toastLong("Download Started")
     }
 
     private fun convertToSaleInvoice() {

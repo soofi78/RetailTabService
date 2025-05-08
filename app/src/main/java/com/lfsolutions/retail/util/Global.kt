@@ -5,6 +5,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
+import com.lfsolutions.retail.Main
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
@@ -30,22 +31,27 @@ fun String?.formatToDate(): String? {
     )
 }
 
-fun String.formatDecimalSeparator(): String {
+fun String.formatDecimalSeparator(applyDecimalSettings: Boolean = false): String {
     if (this == null) return "0"
     else {
         val fmt = NumberFormat.getCurrencyInstance(Locale.getDefault())
-        fmt.maximumFractionDigits = 2
+        fmt.minimumFractionDigits =
+            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule
+                ?: 2 else 2
+        fmt.maximumFractionDigits =
+            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule
+                ?: 2 else 2
         fmt.roundingMode = RoundingMode.HALF_UP
         return fmt.format(this.toDouble()).replace(fmt.currency.symbol, "")
     }
 }
 
-fun Int.formatDecimalSeparator(): String {
-    return this.toString().formatDecimalSeparator()
+fun Int.formatDecimalSeparator(applyDecimalSettings: Boolean = false): String {
+    return this.toString().formatDecimalSeparator(applyDecimalSettings)
 }
 
-fun Double.formatDecimalSeparator(): String {
-    return this.toString().formatDecimalSeparator()
+fun Double.formatDecimalSeparator(applyDecimalSettings: Boolean = false): String {
+    return this.toString().formatDecimalSeparator(applyDecimalSettings)
 }
 
 fun View.setDebouncedClickListener(onClick: (View) -> Unit) {

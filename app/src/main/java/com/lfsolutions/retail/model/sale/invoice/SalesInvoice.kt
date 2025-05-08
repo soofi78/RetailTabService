@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.model.sale.invoice
 
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.DateTime
@@ -39,6 +40,8 @@ data class SalesInvoice(
         alternate = arrayOf("companyRemarks")
     ) var companyRemarks: String? = null,
     @SerializedName("Balance", alternate = arrayOf("balance")) var balance: Double? = 0.0,
+    @SerializedName("outStandingBalance") var outStandingBalance: Double? = 0.0,
+    @SerializedName("outstandingAmount") var outstandingAmount: Double? = 0.0,
     @SerializedName(
         "InvoiceItemDiscount",
         alternate = arrayOf("invoiceItemDiscount")
@@ -147,7 +150,7 @@ data class SalesInvoice(
     @SerializedName(
         "DeliveryOrderList",
         alternate = arrayOf("deliveryOrderList")
-    ) var deliveryOrderList: ArrayList<String> = arrayListOf(),
+    ) var deliveryOrderList: ArrayList<JsonObject> = arrayListOf(),
     @SerializedName(
         "DeliveryOrdered",
         alternate = arrayOf("deliveryOrdered")
@@ -202,6 +205,9 @@ data class SalesInvoice(
         "CreatorUserId",
         alternate = arrayOf("creatorUserId")
     ) var creatorUserId: Int? = null,
+    @SerializedName(
+        "reportName",
+    ) var reportName: String? = null,
 
     ) {
     fun InvoiceDateFormatted(): String {
@@ -240,6 +246,10 @@ data class SalesInvoice(
 
     fun BalanceFormatted(): String {
         return Main.app.getSession().currencySymbol + balance?.formatDecimalSeparator()
+    }
+
+    fun OutstandingBalanceFormatted(): String {
+        return Main.app.getSession().currencySymbol + outStandingBalance?.formatDecimalSeparator()
     }
 
     fun PaidAmountFormatted(): String {

@@ -77,7 +77,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator(true)
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility =
@@ -264,7 +264,7 @@ class AddProductToTaxInvoiceFragment : Fragment() {
                 unitName = product.unitName,
                 qty = qty,
                 qtyStock = product.qtyOnHand,
-                price = subTotal,
+                price = product.cost ?: 0.0,
                 netCost = total,
                 costWithoutTax = product.cost ?: 0.0,
                 taxRate = product.getApplicableTaxRate().toDouble(),

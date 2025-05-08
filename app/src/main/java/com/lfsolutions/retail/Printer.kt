@@ -145,6 +145,10 @@ object Printer {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount, "FOC"
             )
+
+            templateText = templateText?.replace(
+                Constants.Invoice.InvoiceOuStandingBalanceAmount, "FOC"
+            )
             templateText = templateText?.replace(
                 Constants.Invoice.InvoicePaidAmount, "FOC"
             )
@@ -152,6 +156,12 @@ object Printer {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount,
                 invoice?.salesInvoice?.BalanceFormatted().toString()
+            )
+
+
+            templateText = templateText?.replace(
+                Constants.Invoice.InvoiceOuStandingBalanceAmount,
+                invoice?.salesInvoice?.OutstandingBalanceFormatted().toString()
             )
 
             templateText = templateText?.replace(

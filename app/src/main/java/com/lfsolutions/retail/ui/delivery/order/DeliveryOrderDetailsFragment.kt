@@ -40,8 +40,7 @@ class DeliveryOrderDetailsFragment : Fragment() {
     private lateinit var binding: FragmentDeliveryOrderDetailsBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         if (::binding.isInitialized.not()) {
             binding = FragmentDeliveryOrderDetailsBinding.inflate(inflater)
@@ -71,26 +70,45 @@ class DeliveryOrderDetailsFragment : Fragment() {
         order?.deliveryOrderDetail?.forEach {
             items.add(it)
         }
-        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(items,
-            object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
+        binding.invoiceItems.adapter = SaleOrderInvoiceDetailsListAdapter(
+            items, object : SaleOrderInvoiceDetailsListAdapter.OnItemClickedListener {
                 override fun onItemClickedListener(saleOrderInvoiceItem: HistoryItemInterface) {
                     Notify.toastLong(saleOrderInvoiceItem.getTitle())
                 }
             })
 
         binding.pdf.setDebouncedClickListener {
-            getPDFLink()
+            if (Main.app.getSession().enableCrystalReportForDeliveryOrder) {
+                getCrystalReport()
+            } else {
+                getPDFLink()
+            }
         }
 
         binding.print.setDebouncedClickListener {
             Printer.printDeliveryOrder(requireActivity(), order)
         }
+    }
 
+    private fun getCrystalReport() {
+        val name =
+            "DeliveryOrder-CrystalReport-" + order?.deliveryOrder?.deliveryNo.toString() + "-" + DateTime.getCurrentDateTime(
+                DateTime.DateFormatWithDayNameMonthNameAndTime
+            )
+        DocumentDownloader.download(
+            name, AppSession[Constants.baseUrl] + Constants.getCrystalReportEndPoint(
+                order?.deliveryOrder?.id,
+                order?.deliveryOrder?.deliveryNo,
+                order?.deliveryOrder?.reportName,
+                "DeliveryOrder",
+                "DO"
+            ), requireActivity()
+        )
+        Notify.toastLong("Download Started")
     }
 
     private fun getPDFLink() {
-        NetworkCall.make()
-            .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
+        NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val downloadPath =
@@ -101,9 +119,7 @@ class DeliveryOrderDetailsFragment : Fragment() {
                             "Upload/"
                         )?.last().toString()
                     DocumentDownloader.download(
-                        name,
-                        AppSession[Constants.baseUrl] + downloadPath,
-                        requireActivity()
+                        name, AppSession[Constants.baseUrl] + downloadPath, requireActivity()
                     )
                     Notify.toastLong("Downloading Started")
                 }

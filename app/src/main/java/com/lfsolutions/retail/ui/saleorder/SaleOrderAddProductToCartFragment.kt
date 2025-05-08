@@ -85,7 +85,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
         mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator(true)
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialheader.visibility =
@@ -200,9 +200,9 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 UnitName = product.unitName,
                 Qty = qty,
                 QtyStock = product.qtyOnHand,
-                Price = subTotal,
+                Price = product.cost ?: 0.0,
                 NetCost = total,
-                CostWithoutTax = product.cost?.toDouble() ?: 0.0,
+                CostWithoutTax = product.cost ?: 0.0,
                 TaxRate = product.getApplicableTaxRate().toDouble(),
                 DepartmentId = 0,
                 IsBatch = false,

@@ -71,5 +71,6 @@ data class SalesOrder(
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
     @SerializedName("Signature") var Signature: String? = null,
+    @SerializedName("reportName") var reportName: String? = null,
 
     )

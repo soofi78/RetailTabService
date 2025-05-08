@@ -102,15 +102,15 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
             binding.cardUrgent.visibility = View.GONE
         }
 
-        if (Main.app.getSession().isSuperVisor == true) {
-            binding.scheduleDate.visibility = View.GONE
-            binding.dateText.visibility = View.GONE
-        }
+//        if (Main.app.getSession().isSuperVisor == true) {
+//            binding.scheduleDate.visibility = View.GONE
+//            binding.dateText.visibility = View.GONE
+//        }
 
         addVerticalItemDecoration(binding.recyclerViewToVisit, requireContext())
         addVerticalItemDecoration(binding.recyclerViewUrgent, requireContext())
         addVerticalItemDecoration(binding.recyclerViewSchedule, requireContext())
-        binding.fabStockRecord.setDebouncedClickListener { generateOutStock(mScheduleAdapter.getCheckedItemList()) }
+        binding.fabStockRecord.setDebouncedClickListener { generateInStock(mScheduleAdapter.getCheckedItemList()) }
 
 
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener {
@@ -175,17 +175,21 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
         return contains
     }
 
-    private fun generateOutStock(scheduledList: ArrayList<Customer>) {
-        if (scheduledList.isEmpty()) {
-            Notify.toastLong("Please select schedule customer!")
-            return
+    private fun generateInStock(scheduledList: ArrayList<Customer>) {
+        if (Main.app.getSession().isSuperVisor == true && scheduledList.isEmpty()) {
+            openInStockProductSummaryActivity(arrayListOf(), arrayListOf())
+        } else {
+            if (Main.app.getSession().isSuperVisor == false && scheduledList.isEmpty()) {
+                Notify.toastLong("Please select schedule customer!")
+                return
+            }
+            val modal = GenerateInComingStockBottomSheet()
+            modal.setOnConfirmClickListener {
+                inComingStockConfirmClicked(scheduledList)
+            }
+            modal.setList(scheduledList)
+            requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
         }
-        val modal = GenerateInComingStockBottomSheet()
-        modal.setOnConfirmClickListener {
-            inComingStockConfirmClicked(scheduledList)
-        }
-        modal.setList(scheduledList)
-        requireActivity().supportFragmentManager.let { modal.show(it, NewFormsBottomSheet.TAG) }
     }
 
     private fun inComingStockConfirmClicked(scheduledCustomersList: ArrayList<Customer>) {

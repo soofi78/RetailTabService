@@ -95,7 +95,11 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
 
         binding.pdf.setDebouncedClickListener {
-            getPDFLink()
+            if (Main.app.getSession().enableCrystalReportForSalesInvoice) {
+                getCrystalReport()
+            } else {
+                getPDFLink()
+            }
         }
         binding.pay.setDebouncedClickListener {
             payFor()
@@ -125,6 +129,23 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
         if (invoice?.salesInvoice?.balance == 0.0) {
             binding.pay.visibility = View.GONE
         }
+    }
+
+    private fun getCrystalReport() {
+        val name =
+            "SaleInvoice-CrystalReport-" + invoice?.salesInvoice?.invoiceNo.toString() + "-" + DateTime.getCurrentDateTime(
+                DateTime.DateFormatWithDayNameMonthNameAndTime
+            )
+        DocumentDownloader.download(
+            name, AppSession[Constants.baseUrl] + Constants.getCrystalReportEndPoint(
+                invoice?.salesInvoice?.id,
+                invoice?.salesInvoice?.invoiceNo,
+                invoice?.salesInvoice?.reportName,
+                "SalesInvoice",
+                "SI"
+            ), requireActivity()
+        )
+        Notify.toastLong("Download Started")
     }
 
     private fun getTransactionReference() {

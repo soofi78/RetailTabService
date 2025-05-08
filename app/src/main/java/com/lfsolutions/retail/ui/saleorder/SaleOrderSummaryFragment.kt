@@ -80,7 +80,7 @@ class SaleOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
                         val netTotal = subTotal + taxAmount
                         val total = subTotal + taxAmount
                         Qty = quantity
-                        Price = subTotal
+                        Price = CostWithoutTax
                         NetCost = total
                         SubTotal = subTotal
                         NetTotal = netTotal

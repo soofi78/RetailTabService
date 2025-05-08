@@ -191,7 +191,7 @@ class TaxInvoiceProductList : Fragment() {
 
     private fun updateEquipmentListView(products: List<Product>) {
         val taxInclusive = if (customer.isTaxInclusive == null) false else customer.isTaxInclusive
-        mAdapter = ProductListAdapter(products)
+        mAdapter = ProductListAdapter(products, true)
         mAdapter.setListener(object : ProductListAdapter.OnProductClickListener {
             override fun onProductClick(product: Product) {
                 findNavController().navigate(

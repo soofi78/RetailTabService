@@ -44,6 +44,7 @@ data class DeliveryOrder(
     var address1: String? = null,
     var address2: String? = null,
     var zatcaQRCode: String? = null,
+    var reportName: String? = null,
 ) {
 
 
