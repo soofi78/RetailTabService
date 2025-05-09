@@ -4,6 +4,11 @@ interface HistoryItemInterface {
     fun getTitle(): String
     fun getDescription(): String
     fun getAmount(): String
+
+    fun getMinQty(): String {
+        return ""
+    }
+
     fun getId(): Int {
         return -1
     }

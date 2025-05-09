@@ -58,9 +58,9 @@ class NewAgreementMemoFragment : Fragment() {
             Main.app.getAgreementMemo()
             Main.app.getAgreementMemo()?.AgreementMemo?.LocationId =
                 Main.app.getSession().defaultLocationId
-            Main.app.getAgreementMemo()?.AgreementMemo?.CreationTime =
+           /* Main.app.getAgreementMemo()?.AgreementMemo?.CreationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")
+                    .plus("Z")*/
             Main.app.getAgreementMemo()?.AgreementMemo?.CreatorUserId = Main.app.getSession().userId
         }
         return mBinding.root

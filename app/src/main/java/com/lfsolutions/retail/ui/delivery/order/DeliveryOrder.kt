@@ -46,7 +46,6 @@ data class DeliveryOrder(
     var zatcaQRCode: String? = null,
 ) {
 
-
     fun signatureUrl(): String {
         return Main.app.getBaseUrl() + signature
     }

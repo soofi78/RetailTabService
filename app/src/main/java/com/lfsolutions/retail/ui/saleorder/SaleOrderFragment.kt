@@ -61,9 +61,9 @@ class SaleOrderFragment : Fragment() {
             Main.app.getSaleOrder()?.SalesOrder?.LocationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getSaleOrder()?.SalesOrder?.SalespersonId = Main.app.getSession().salesPersonId
-            Main.app.getSaleOrder()?.SalesOrder?.CreationTime =
+            /*Main.app.getSaleOrder()?.SalesOrder?.CreationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")
+                    .plus("Z")*/
             Main.app.getSaleOrder()?.SalesOrder?.DeliveryDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")

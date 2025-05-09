@@ -67,9 +67,9 @@ class DeliveryOrderFragment : Fragment() {
                 Main.app.getSession().defaultLocationId
             Main.app.getDeliveryOrder()?.deliveryOrder?.salesPersonId =
                 Main.app.getSession().salesPersonId
-            Main.app.getDeliveryOrder()?.deliveryOrder?.creationTime =
+            /*Main.app.getDeliveryOrder()?.deliveryOrder?.creationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")
+                    .plus("Z")*/
             Main.app.getDeliveryOrder()?.deliveryOrder?.deliveryDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
@@ -211,8 +211,8 @@ class DeliveryOrderFragment : Fragment() {
                     qty = 0.0,
                     cost = product.cost,
                     costWithoutTax = product.cost ?: 0.0,
-                    creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                        .replace(" ", "T").plus("Z"),
+                    /*creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                        .replace(" ", "T").plus("Z"),*/
                     creatorUserId = Main.app.getSession().userId
                 )
             )

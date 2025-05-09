@@ -74,6 +74,7 @@ data class AgreementMemoDetail(
         return Main.app.getSession().currencySymbol + TotalCost
     }
 
+
     fun getSerialNumbers(): String {
         var serials = ""
         ProductBatchList?.forEach {

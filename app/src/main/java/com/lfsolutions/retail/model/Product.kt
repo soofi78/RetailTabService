@@ -20,7 +20,9 @@ data class Product(
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
-    @SerializedName("type") var type: String? = null
+    @SerializedName("type") var type: String? = null,
+    @SerializedName("minimumQty") var minimumQty: Double? = null,
+    @SerializedName("maximumQty") var maximumQty: Double? = null
 ) : HistoryItemInterface {
     override fun isSerialEquipment(): Boolean {
         return type.equals("S", true)
@@ -46,6 +48,10 @@ data class Product(
 
     override fun getAmount(): String {
         return Main.app.getSession().currencySymbol + price?.formatDecimalSeparator().toString()
+    }
+
+    override fun getMinQty(): String {
+        return "Min. Qty: ${minimumQty?.formatDecimalSeparator().toString()}"
     }
 
     override fun getImageUrl(): String {

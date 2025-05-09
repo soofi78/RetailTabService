@@ -73,9 +73,9 @@ class TaxInvoiceFragment : Fragment() {
             } else {
                 Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
             }
-            Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
+           /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")
+                    .plus("Z")*/
             Main.app.getTaxInvoice()?.salesInvoice?.deliveryOrderDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")

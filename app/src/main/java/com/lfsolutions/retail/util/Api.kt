@@ -10,8 +10,6 @@ object Api {
     const val DeliveryOrder = "deliveryOrder/"
 
     object Name {
-
-
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"
         const val CREATE_UPDATE_SALE_INVOICE = "CreateOrUpdateSalesInvoice"
         const val CREATE_UPDATE_DELIVERY_ORDER = "CreateOrUpdateDeliveryOrder"

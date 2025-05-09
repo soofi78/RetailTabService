@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
+import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
 
 class HistoryListAdapter(
@@ -36,6 +38,14 @@ class HistoryListAdapter(
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
+        //set minimum qty
+        if (item is Product){
+            holder.binding.minimumQty.visibility=View.VISIBLE
+            holder.binding.minimumQty.text=item.getMinQty()
+        }else{
+            holder.binding.minimumQty.visibility=View.GONE
+        }
+
         if (item is SaleOrderListItem) {
             holder.binding.check.visibility = View.VISIBLE
         } else {

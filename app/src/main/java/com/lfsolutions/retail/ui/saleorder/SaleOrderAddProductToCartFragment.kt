@@ -213,8 +213,8 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 NetTotal = netTotal,
                 Tax = taxAmount,
                 TotalValue = subTotal,
-                CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                    .replace(" ", "T").plus("Z"),
+                /*CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                    .replace(" ", "T").plus("Z"),*/
                 CreatorUserId = Main.app.getSession().userId,
                 ProductBatchList = batchList
             ).apply {

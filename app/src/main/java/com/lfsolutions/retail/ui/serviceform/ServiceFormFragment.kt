@@ -77,13 +77,14 @@ class ServiceFormFragment : Fragment() {
             Main.app.getComplaintService()
             Main.app.getComplaintService()?.complaintService?.locationId =
                 Main.app.getSession().defaultLocationId
-            Main.app.getComplaintService()?.complaintService?.creationTime =
+            /*Main.app.getComplaintService()?.complaintService?.creationTime =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")
+                    .plus("Z")*/
             Main.app.getComplaintService()?.complaintService?.creatorUserId =
                 Main.app.getSession().userId.toString()
             Main.app.getComplaintService()?.complaintService?.csDate =
-                Main.app.getComplaintService()?.complaintService?.creationTime
+               DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                .plus("Z") /* Main.app.getComplaintService()?.complaintService?.creationTime*/
             binding.txtRcpntName.text = Main.app.getSession().userName
         }
         return binding.root

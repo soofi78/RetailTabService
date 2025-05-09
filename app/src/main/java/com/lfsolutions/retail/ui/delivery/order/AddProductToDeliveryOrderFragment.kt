@@ -259,8 +259,8 @@ class AddProductToDeliveryOrderFragment : Fragment() {
 //            IsFOC = mBinding.checkboxFOC.isChecked,
 //            IsExchange = mBinding.checkboxExchange.isChecked,
 //            IsExpire = mBinding.checkboxIsExpired.isChecked,
-                creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
-                    .replace(" ", "T").plus("Z"),
+                /*creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
+                    .replace(" ", "T").plus("Z"),*/ //by nisha
                 creatorUserId = Main.app.getSession().userId,
             )
         )

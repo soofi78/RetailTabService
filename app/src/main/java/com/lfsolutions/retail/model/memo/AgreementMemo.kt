@@ -67,6 +67,10 @@ data class AgreementMemo(
         return "Qty: " + AgreementQty.toString()
     }
 
+    override fun getMinQty(): String {
+        return ""
+    }
+
     fun totalFormatted(): String {
         return Main.app.getSession().currencySymbol + "" + AgreementTotal?.formatDecimalSeparator()
     }

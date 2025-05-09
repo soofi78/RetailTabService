@@ -65,4 +65,5 @@ data class DeliveryOrderHistoryItem(
     override fun getAmount(): String {
         return status.toString()
     }
+
 }

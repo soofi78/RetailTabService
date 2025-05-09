@@ -87,10 +87,7 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_ALL_CUSTOMERS))
     fun getAllCustomers(@Body location: LocationTenantIdRequestObject): Call<BaseResponse<AllCustomersResult>>?
 
-    @POST(
-        Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup)
-            .plus(Api.Name.GET_ALL_CUSTOMERS_WORK_AREA)
-    )
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ALL_CUSTOMERS_WORK_AREA))
     fun getAllCustomerWorkAreas(): Call<BaseResponse<CustomerWorkAreaTypeResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_CUSTOMERS_FORMS))
@@ -162,16 +159,13 @@ interface ApiServices {
     )
     fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Order>>?
 
-    @POST(
-        Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
-            .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE)
-    )
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
+            .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE))
+
     fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<Invoice>>?
 
-    @POST(
-        Api.Base.plus(Api.ServicesApp).plus(Api.DeliveryOrder)
-            .plus(Api.Name.CREATE_UPDATE_DELIVERY_ORDER)
-    )
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.DeliveryOrder)
+            .plus(Api.Name.CREATE_UPDATE_DELIVERY_ORDER))
     fun createDeliveryOrder(@Body deliveryOrderDTO: DeliveryOrderDTO): Call<BaseResponse<DeliverOrderDetail>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_IN_COMING_STOCK_TRANSFER))

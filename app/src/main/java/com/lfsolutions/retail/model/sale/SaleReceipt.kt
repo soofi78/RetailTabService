@@ -63,6 +63,7 @@ data class SaleReceipt(
             ?: "0.00")
     }
 
+
     fun discountFormatted(): String {
         return Main.app.getSession().currencySymbol + (discount?.formatDecimalSeparator() ?: "0.00")
     }
