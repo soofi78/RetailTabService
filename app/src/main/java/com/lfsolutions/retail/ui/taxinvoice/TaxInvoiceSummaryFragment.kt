@@ -81,7 +81,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
                         val netTotal = subTotal + taxAmount
                         val total = subTotal + taxAmount
                         this.qty = quantity
-                        this.price = subTotal
+                        this.price = costWithoutTax
                         this.netCost = total
                         this.subTotal = subTotal
                         this.netTotal = netTotal

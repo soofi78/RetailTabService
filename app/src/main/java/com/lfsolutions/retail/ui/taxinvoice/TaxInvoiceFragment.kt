@@ -234,7 +234,7 @@ class TaxInvoiceFragment : Fragment() {
                     unitName = product.unitName,
                     qty = qty,
                     qtyStock = product.qtyOnHand,
-                    price = subTotal,
+                    price = product.cost ?: 0.0,
                     netCost = total,
                     costWithoutTax = product.cost ?: 0.0,
                     taxRate = product.getApplicableTaxRate().toDouble(),

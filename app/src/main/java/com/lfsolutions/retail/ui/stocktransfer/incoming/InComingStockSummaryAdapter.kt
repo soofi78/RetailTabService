@@ -131,7 +131,7 @@ class InComingStockSummaryAdapter(
             product?.imagePath.toString(),
             product?.productName.toString(),
             product?.qty ?: 0.0,
-            product?.subTotal ?: 0.0,
+            product?.price ?: 0.0,
             product?.unitName.toString()
         )
         modal.setOnProductDetailsChangedListener(object :

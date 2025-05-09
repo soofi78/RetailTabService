@@ -8,6 +8,7 @@ object Constants {
         const val InvoiceTax = "{{invoice.tax}}"
         const val InvoiceNetTotal = "{{invoice.netTotal}}"
         const val InvoiceBalanceAmount = "{{customer.balanceAmount}}"
+        const val InvoiceOuStandingBalanceAmount = "{{invoice.outStandingBalance}}"
         const val InvoicePaidAmount = "{{customer.paidAmount}}"
         const val InvoiceSignature = "@#@{{&invoice.signature}}"
         const val InvoiceQR = "###{{invoice.qrUrl}}"
@@ -115,4 +116,14 @@ object Constants {
     const val SESSION: String = "session"
     const val IS_LOGGED_IN: String = "is_logged_in"
     const val baseUrl: String = "base_url"
+
+    fun getCrystalReportEndPoint(
+        id: Int?,
+        invoiceNo: String?,
+        fileName: String?,
+        tag: String?,
+        type: String?
+    ): String {
+        return "ReportsView/ReportViewer.aspx?Id=$id&InvoiceNo=$invoiceNo&ReportTag=$tag&filePath=$fileName&type=$type"
+    }
 }

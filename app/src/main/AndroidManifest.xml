@@ -37,10 +37,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.delivery.order.OrderDetailsFlowActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.documents.history.HistoryFlowActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

@@ -28,10 +28,15 @@ data class UserSession(
     @SerializedName("wareHouseLocationId") var wareHouseLocationId: Int? = null,
     @SerializedName("wareHouseLocationName") var wareHouseLocationName: String? = null,
     @SerializedName("isEditPrice") var isEditPrice: Boolean = false,
+    @SerializedName("decimalDigitsForPriceInSalesModule") var decimalDigitsForPriceInSalesModule: Int? = 0,
     @SerializedName("hideDeliveryOrder") var hideDeliveryOrder: Boolean = false,
     @SerializedName("hideScheduleTabWSSAppForDriver") var hideScheduleTabWSSAppForDriver: Boolean = false,
     @SerializedName("hideCurrentStockTab") var hideCurrentStockTab: Boolean = false,
     @SerializedName("hidePaymentsTab") var hidePaymentsTab: Boolean = false,
     @SerializedName("hideReceiptTab") var hideReceiptTab: Boolean = false,
-    @SerializedName("hideSalesOrderTab") var hideSalesOrderTab: Boolean = false
+    @SerializedName("hideSalesOrderTab") var hideSalesOrderTab: Boolean = false,
+    @SerializedName("enableCrystalReportForSalesInvoice") var enableCrystalReportForSalesInvoice: Boolean = false,
+    @SerializedName("enableCrystalReportForSalesOrder") var enableCrystalReportForSalesOrder: Boolean = false,
+    @SerializedName("enableCrystalReportForDeliveryOrder") var enableCrystalReportForDeliveryOrder: Boolean = false
+
 )

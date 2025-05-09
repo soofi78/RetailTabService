@@ -81,7 +81,8 @@ data class SalesOrderRes(
     @SerializedName("address2") var address2: String? = null,
     @SerializedName("paymentTermName") var paymentTermName: String? = null,
     @SerializedName("zatcaQRCode") var zatcaQRCode: String? = null,
-    @SerializedName("isStockTransfer") var isStockTransfer: Boolean? = null
+    @SerializedName("isStockTransfer") var isStockTransfer: Boolean? = null,
+    @SerializedName("reportName") var reportName: String? = null
 ) {
 
     fun InvoiceDateFormatted(): String {
