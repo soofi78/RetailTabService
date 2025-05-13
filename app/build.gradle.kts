@@ -35,7 +35,11 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"http://rtlconnect.net/MyBossTest/\"")
+        }
+        getByName("release"){
+            buildConfigField("String", "BASE_URL", "\"http://myboss.rtlconnect.net/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

@@ -19,6 +19,7 @@ import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.HomeActivity
+import com.lfsolutions.retail.util.Api.APP_BASE_URL
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Loading
@@ -41,10 +42,10 @@ class LoginActivity : BaseActivity(), OnNetworkResponse {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             _binding?.inputServerAddress?.setText("http://rtlconnect.net/MyBossTest/")
-        }
+        }*/
+        _binding?.inputServerAddress?.setText(APP_BASE_URL)
         _binding?.buttonSignin?.setDebouncedClickListener {
             signIn()
         }
