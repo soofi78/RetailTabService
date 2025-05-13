@@ -49,6 +49,7 @@ class DeliveryOrderFragment : Fragment() {
     private lateinit var binding: FragmentDeliveryOrderBinding
     private val args by navArgs<DeliveryOrderFragmentArgs>()
     private lateinit var customer: Customer
+    private var isSaveBtnClicked=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,6 +151,7 @@ class DeliveryOrderFragment : Fragment() {
         }
 
         binding.btnSave.setDebouncedClickListener {
+
             if (Main.app.getDeliveryOrder()?.deliveryOrderDetail?.size == 0) {
                 Notify.toastLong("Please add products")
                 return@setDebouncedClickListener
@@ -159,11 +161,13 @@ class DeliveryOrderFragment : Fragment() {
                 Notify.toastLong("Please add your signature")
                 return@setDebouncedClickListener
             }
-
-            Main.app.getDeliveryOrder()?.serializeItems()
-            Main.app.getDeliveryOrder()?.deliveryOrder?.customerName =
-                binding.inputCustomerName.text.toString()
-            uploadSignature()
+             if(!isSaveBtnClicked){
+                 isSaveBtnClicked=true
+                 Main.app.getDeliveryOrder()?.serializeItems()
+                 Main.app.getDeliveryOrder()?.deliveryOrder?.customerName =
+                     binding.inputCustomerName.text.toString()
+                 uploadSignature()
+             }
         }
     }
 
