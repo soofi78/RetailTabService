@@ -40,6 +40,9 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
+import com.lfsolutions.retail.util.DateTime.extractOnlyDate
+import com.lfsolutions.retail.util.DateTime.getDateFromString
+import com.lfsolutions.retail.util.DateTime.getFormattedDisplayDateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
@@ -82,9 +85,7 @@ class ServiceFormFragment : Fragment() {
                     .plus("Z")*/
             Main.app.getComplaintService()?.complaintService?.creatorUserId =
                 Main.app.getSession().userId.toString()
-            Main.app.getComplaintService()?.complaintService?.csDate =
-               DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                .plus("Z") /* Main.app.getComplaintService()?.complaintService?.creationTime*/
+
             binding.txtRcpntName.text = Main.app.getSession().userName
         }
         return binding.root
@@ -98,6 +99,48 @@ class ServiceFormFragment : Fragment() {
         setClickListener()
         getFeedbackTypeData()
         getAllocatedAssets()
+    }
+
+    private fun setData() {
+        setHeaderData()
+        setCustomerData()
+
+        val currentDateTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T").plus("Z")
+        val complaintService = Main.app.getComplaintService()?.complaintService
+        val checkInTime = complaintService?.timeIn
+        if (!checkInTime.isNullOrEmpty()) {
+            binding.checkinTime.text = checkInTime.getFormattedDisplayDateTime()
+            binding.checkinTime.tag = checkInTime
+        } else {
+            Main.app.getComplaintService()?.complaintService?.timeIn = currentDateTime
+            binding.checkinTime.text = currentDateTime.getFormattedDisplayDateTime()
+            binding.checkinTime.tag = currentDateTime
+
+        }
+
+        val checkOutTime = complaintService?.timeOut
+        if (!checkOutTime.isNullOrEmpty()) {
+            binding.checkoutTime.text = checkOutTime.getFormattedDisplayDateTime()
+            binding.checkoutTime.tag = checkOutTime
+        } else {
+            Main.app.getComplaintService()?.complaintService?.timeOut = currentDateTime
+            binding.checkoutTime.text = currentDateTime.getFormattedDisplayDateTime()
+            binding.checkoutTime.tag = currentDateTime
+
+        }
+        val csDateTime = complaintService?.csDateTime
+        //Main.app.getComplaintService()?.complaintService?.csDate=DateTime.getCurrentDateTime(DateTime.DateRetailApiFormate)
+        if (!csDateTime.isNullOrEmpty()) {
+            Main.app.getComplaintService()?.complaintService?.csDate=csDateTime.extractOnlyDate()
+            binding.complaintDateTimeText.text = csDateTime.getFormattedDisplayDateTime()
+            binding.complaintDateTimeText.tag = csDateTime.extractOnlyDate()
+        } else {
+            Main.app.getComplaintService()?.complaintService?.csDateTime = currentDateTime
+            Main.app.getComplaintService()?.complaintService?.csDate = currentDateTime.extractOnlyDate() /*DateTime.getCurrentDateTime(DateTime.DateRetailApiFormate)*/
+            binding.complaintDateTimeText.text = currentDateTime.getFormattedDisplayDateTime()
+            binding.complaintDateTimeText.tag = currentDateTime.extractOnlyDate()
+        }
+
     }
 
     private fun getFeedbackTypeData() {
@@ -212,20 +255,63 @@ class ServiceFormFragment : Fragment() {
     }
 
     private fun setClickListener() {
+
         binding.btnCheckIn.setDebouncedClickListener {
-            val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                .plus("Z")
+            DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+                override fun onDateTimeSelected(
+                    isoDateTime: String,
+                    displayDateTime: String,
+                    date: String
+                ) {
+                    binding.checkinTime.text = displayDateTime
+                    binding.checkinTime.tag = isoDateTime
+                    Main.app.getComplaintService()?.complaintService?.timeIn = isoDateTime
+                    //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+                }
+            })
+        }
+
+        binding.btnCheckOut.setDebouncedClickListener {
+            DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+                override fun onDateTimeSelected(
+                    isoDateTime: String,
+                    displayDateTime: String,
+                    date: String
+                ) {
+                    binding.checkoutTime.text = displayDateTime
+                    binding.checkoutTime.tag = isoDateTime
+                    Main.app.getComplaintService()?.complaintService?.timeOut = isoDateTime
+                    //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+                }
+            })
+        }
+
+        binding.complaintDateTimeText.setDebouncedClickListener {
+            DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
+                override fun onDateTimeSelected(
+                    isoDateTime: String,
+                    displayDateTime: String,
+                    date: String
+                ) {
+                    binding.complaintDateTimeText.text = displayDateTime
+                    binding.complaintDateTimeText.tag = isoDateTime
+                    Main.app.getComplaintService()?.complaintService?.csDateTime = isoDateTime
+                    Main.app.getComplaintService()?.complaintService?.csDate = isoDateTime.extractOnlyDate()
+                    println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+                }
+            })
+        }
+
+       /* binding.btnCheckIn.setDebouncedClickListener {
+            val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T").plus("Z")
             val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
-            val formattedDateTime =
-                DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
+            val formattedDateTime = DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkinTime.text = formattedDateTime
             binding.checkinTime.tag = time
             Main.app.getComplaintService()?.complaintService?.timeIn = time
+        }*/
 
-        }
-
-
-        binding.btnCheckOut.setDebouncedClickListener {
+        /*binding.btnCheckOut.setDebouncedClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
             val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
@@ -233,7 +319,7 @@ class ServiceFormFragment : Fragment() {
                 DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkoutTime.text = formattedDateTime
             binding.checkoutTime.tag = time
-        }
+        }*/
 
         binding.complainantCard.setDebouncedClickListener {
             ComplainantInformationDialog.make(
@@ -369,15 +455,7 @@ class ServiceFormFragment : Fragment() {
         return feedbackSelected
     }
 
-    private fun setData() {
-        setHeaderData()
-        setCustomerData()
-        val currentDateTime = DateTime.getCurrentDateTime(DateTime.DateTimeRetailFrontEndFormate)
-        binding.checkinTime.text = currentDateTime
-        binding.checkoutTime.text = currentDateTime
-        binding.complaintDateTimeText.text = currentDateTime
 
-    }
 
     private fun setFeedbackData() {
         feedbacksTypes.forEach { feedbackType ->

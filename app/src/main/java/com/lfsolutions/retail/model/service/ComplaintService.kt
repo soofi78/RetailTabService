@@ -22,8 +22,8 @@ data class ComplaintService(
     @SerializedName("tenantId") var tenantId: Int? = null,
     @SerializedName("totalQty") var totalQty: Double? = 0.0,
     @SerializedName("totalPrice") var totalPrice: Double = 0.0,
-    @SerializedName("timeIn") var timeIn: String? = null,
-    @SerializedName("timeOut") var timeOut: String? = null,
+    @SerializedName("TimeIn", alternate = arrayOf("time in","timeIn","Time In")) var timeIn: String? = null,
+    @SerializedName("TimeOut", alternate = arrayOf("time out","timeOut" ,"Time Out")) var timeOut: String? = null,
     @SerializedName("complaintBy") var complaintBy: String? = null,
     @SerializedName("designation") var designation: String? = null,
     @SerializedName("mobileNo") var mobileNo: String? = null,
@@ -38,7 +38,8 @@ data class ComplaintService(
     @SerializedName("lastModifierUserId") var lastModifierUserId: String? = null,
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null,
-    @SerializedName("date") var date: String? = null
+    @SerializedName("date") var date: String? = null,
+    var csDateTime: String? = null,
 ) : HistoryItemInterface {
     override fun getTitle(): String {
         return csNo + " / " + serviceDateFormatted()

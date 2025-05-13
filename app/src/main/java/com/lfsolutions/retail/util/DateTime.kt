@@ -3,11 +3,16 @@ package com.lfsolutions.retail.util
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.whiteelephant.monthpicker.MonthPickerDialog
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 
 /**
@@ -18,6 +23,7 @@ object DateTime {
     const val DateFormatRetail = "yyyy-MM-dd"
     const val DateTimetRetailFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimeRetailFrontEndFormate = "dd MMM yyyy, hh:mm a"
+    const val DateRetailApiFormate = "dd MMM yyyy"
     const val TimeFormat = "hh:mm a"
     const val TimeFormat24 = "HH:mm:ss"
     const val DateTimeFormat = "MMM dd, yyyy - hh:mm a"
@@ -28,6 +34,8 @@ object DateTime {
     const val DateFormatWithDayNameMonthNameAndYear = "EEEE, dd MMM yyyy"
     const val SimpleDateFormat = "dd-MM-yyyy"
     const val ServerDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+    const val DateTimePickerFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
     fun format(STAMP: Date?, FORMAT: String?): String? {
         val from = SimpleDateFormat(FORMAT)
         var formattedDate: String? = null
@@ -183,6 +191,36 @@ object DateTime {
         builder.build().show()
     }
 
+    fun String.getFormattedDisplayDateTime(): String {
+        val dateTimeObject = getDateFromString(this, DateTimePickerFormat)
+        return DateTime.format(dateTimeObject, DateTimeRetailFrontEndFormate)?: getCurrentDateTime(DateTimeRetailFrontEndFormate)
+    }
+
+    fun String.extractOnlyDate(): String {
+        return try {
+            val inputFormat = SimpleDateFormat(DateTimePickerFormat, Locale.getDefault())
+            val outputFormat = SimpleDateFormat(DateRetailApiFormate, Locale.getDefault())
+            val parsedDate = inputFormat.parse(this)
+            outputFormat.format(parsedDate)
+        } catch (e: Exception) {
+            // If parsing fails, fallback to current date
+            SimpleDateFormat(DateRetailApiFormate, Locale.getDefault()).format(Date())
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun String.getDateFromString():String{
+         // Define formatter matching the input pattern
+        val inputFormatter = DateTimeFormatter.ofPattern(DateTimePickerFormat)
+        val dateTime = ZonedDateTime.parse(this, inputFormatter)
+
+        // Format only date
+        val outputDate = dateTime.toLocalDate().format(DateTimeFormatter.ofPattern(DateRetailApiFormate))
+        println("outputDate: $outputDate") // Output: 12-05-2025
+        return  outputDate
+    }
+
     fun showDatePicker(activity: Activity?, callback: OnDatePickedCallback?) {
         val yy: Int
         val mm: Int
@@ -211,6 +249,49 @@ object DateTime {
         }
         dialog.show()
     }
+
+    fun showDateTimePicker(activity: Activity?, callback: OnDatePickedCallback?) {
+        if (activity == null) return
+
+        showDatePicker(activity, object : OnDatePickedCallback {
+            override fun onDateSelected(year: String, month: String, day: String) {
+                if (year.isEmpty()) {
+                    val time = getCurrentDateTime(ServerDateTimeFormat).replace(" ", "T").plus("Z")
+                    val dateTimeObject = getDateFromString(time, DateTimePickerFormat)
+                    val formattedDateTime =format(dateTimeObject, DateTimeRetailFrontEndFormate)
+                    if (formattedDateTime != null) {
+                        callback?.onDateTimeSelected(time, formattedDateTime,"$year-$month-$day")
+                    }
+                    return
+                }
+
+                showTimePicker(activity, object : OnDatePickedCallback {
+                    override fun onTimeSelected(hour: String, minute: String, second: String) {
+                        // Combine date and time
+                        // Combine into raw date time string like: "yyyy-MM-dd HH:mm:ss"
+                        val rawDateTime = "$year-$month-$day $hour:$minute:$second"
+
+                        // Apply your custom DateTime class logic
+                        val time = rawDateTime.replace(" ", "T") + "Z"
+                        //println("time $time")
+                        val dateTimeObject = getDateFromString(time, DateTimePickerFormat)
+                        val displayDateTime = format(dateTimeObject, DateTimeRetailFrontEndFormate)
+                         println("formattedDateTime2 $displayDateTime")
+                        if (displayDateTime != null) {
+                            callback?.onDateTimeSelected(time, displayDateTime,"$year-$month-$day")
+                        }else{
+                            callback?.onDateTimeSelected(time, time,"$year-$month-$day")
+                        }
+                    }
+
+                    override fun onDateSelected(year: String, month: String, day: String) {}
+                }, is24HourView = true)
+            }
+
+            override fun onTimeSelected(hours: String, minutes: String, seconds: String) {}
+        })
+    }
+
 
     fun showTimePicker(
         activity: Activity?,
@@ -326,5 +407,6 @@ object DateTime {
     interface OnDatePickedCallback {
         fun onDateSelected(year: String, month: String, day: String) {}
         fun onTimeSelected(hours: String, minutes: String, seconds: String) {}
+        fun onDateTimeSelected(isoDateTime: String, displayDateTime: String,date:String) {}
     }
 }
