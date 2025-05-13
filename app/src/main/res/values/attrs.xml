@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--You can add your own colors but I strongly suggest using Material Design library and its colors.
+    Thanks to that you will have a lot of color swapping for free. Of course wait for stable release!-->
+    <attr name="primary" format="color" />
+    <attr name="secondary" format="color" />
+    <attr name="tertiary" format="color" />
+    <attr name="primaryTextColor" format="color" />
+    <attr name="secondaryTextColor" format="color" />
+</resources>

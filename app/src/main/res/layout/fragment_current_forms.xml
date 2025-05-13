@@ -5,161 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardHeader"
+    <com.lfsolutions.retail.ui.widgets.HeaderView
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
-        app:layout_constraintTop_toTopOf="parent">
+        app:cardBackgroundColor="?attr/primary"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_back_black" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_back"
-                android:textSize="18sp" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="icoBack,txtBack"
-                app:flow_horizontalGap="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/account_circle_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Area Supervisor"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtVehicleNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/prefix_vehicle_no"
-                android:textSize="14sp" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
-                app:flow_horizontalAlign="end"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/icoAccount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardCustomerInfo"
+    <com.lfsolutions.retail.ui.customer.CustomerView
+        android:id="@+id/customerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="20dp"
-        app:cardBackgroundColor="@color/sandal"
-        app:layout_constraintTop_toBottomOf="@+id/cardHeader">
+        app:layout_constraintTop_toBottomOf="@+id/header" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoCustomer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/person_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="txtCustomerName,txtAddress"
-                app:flow_horizontalAlign="start"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/icoCustomer"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtCustomerName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="BKE Coffeeshop 1"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtAddress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="12 Tai Seng St, LEVEL 5 LUXASIA Building, Singapore 53411"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/cardCustomerInfo"
         android:layout_marginTop="15dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/customerView"
         tools:itemCount="3"
         tools:listitem="@layout/item_form" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addNewForms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/yellow"
+        android:backgroundTint="?attr/primary"
+        android:contentDescription="@string/label_add"
         android:src="@drawable/add_black"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

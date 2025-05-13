@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="10dp"
-        app:cardBackgroundColor="@color/sandal"
+        app:cardBackgroundColor="?attr/secondary"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,9 +29,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dateFilter"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_white_background"
+                android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
@@ -46,9 +48,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
-                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toStartOf="@+id/sort"
                 app:layout_constraintTop_toBottomOf="@+id/txtVisitationSchedule"
                 app:queryHint="Search" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sort"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_sort"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/searchView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -57,11 +68,29 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewVisitationSchedule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/space"
         app:layout_constraintTop_toBottomOf="@+id/cardSearch"
         tools:itemCount="3"
         tools:layout_editor_absoluteX="-16dp"
         tools:listitem="@layout/item_delivery" />
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddToScheduled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:backgroundTint="?attr/primary"
+        android:text="@string/add_to_visit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

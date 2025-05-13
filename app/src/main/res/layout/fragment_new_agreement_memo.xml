@@ -1,99 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardHeader"
+    <com.lfsolutions.retail.ui.widgets.HeaderView
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_back_black" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_new_agreement_memo"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="icoBack,txtBack"
-                app:flow_horizontalGap="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/account_circle_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Area Supervisor"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtVehicleNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/prefix_vehicle_no"
-                android:textSize="14sp" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
-                app:flow_horizontalAlign="end"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/icoAccount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardHeader">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -121,11 +44,13 @@
                         android:weightSum="2">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:id="@+id/serialViewHolder"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
@@ -152,12 +77,13 @@
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/inputCustomerName"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/serialNumber"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="50dp"
                                 android:layout_marginTop="5dp"
                                 android:background="@drawable/rounded_corner_light_gray_background"
+                                android:gravity="center_vertical"
                                 android:inputType="text"
                                 android:maxLines="1"
                                 android:padding="15dp"
@@ -166,7 +92,7 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
@@ -177,7 +103,7 @@
                                 android:layout_height="wrap_content">
 
                                 <androidx.appcompat.widget.AppCompatTextView
-                                    android:id="@+id/lblDate"
+                                    android:id="@+id/lblOutlet"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/label_date"
@@ -192,20 +118,20 @@
                                     android:text="*"
                                     android:textColor="@color/red"
                                     android:textSize="16sp"
-                                    app:layout_constraintStart_toEndOf="@id/lblDate"
-                                    app:layout_constraintTop_toTopOf="@id/lblDate" />
+                                    app:layout_constraintStart_toEndOf="@id/lblOutlet"
+                                    app:layout_constraintTop_toTopOf="@id/lblOutlet" />
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/inputEmail"
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/dateText"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="50dp"
                                 android:layout_marginTop="5dp"
                                 android:background="@drawable/rounded_corner_light_gray_background"
                                 android:drawableEnd="@drawable/arrow_down_black"
-                                android:editable="false"
-                                android:focusable="false"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
                                 android:padding="15dp" />
 
                         </LinearLayout>
@@ -217,7 +143,7 @@
                         android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblCompanyName"
+                            android:id="@+id/lblDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -233,13 +159,13 @@
                             android:text="*"
                             android:textColor="@color/red"
                             android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblCompanyName"
-                            app:layout_constraintTop_toTopOf="@id/lblCompanyName" />
+                            app:layout_constraintStart_toEndOf="@id/lblDate"
+                            app:layout_constraintTop_toTopOf="@id/lblDate" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/inputDesignation"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/customerName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -254,7 +180,7 @@
                         android:layout_height="wrap_content">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/lblAddress"
+                            android:id="@+id/lblDeliveryDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -270,13 +196,13 @@
                             android:text="*"
                             android:textColor="@color/red"
                             android:textSize="16sp"
-                            app:layout_constraintStart_toEndOf="@id/lblAddress"
-                            app:layout_constraintTop_toTopOf="@id/lblAddress" />
+                            app:layout_constraintStart_toEndOf="@id/lblDeliveryDate"
+                            app:layout_constraintTop_toTopOf="@id/lblDeliveryDate" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/inputMobileNumber"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -289,47 +215,46 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardEquipment"
+                android:id="@+id/cardFeedbackViewHandler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 app:cardCornerRadius="30dp"
                 app:layout_constraintTop_toBottomOf="@+id/cardCustomerUserInfo">
 
+                <LinearLayout
+                    android:id="@+id/feedbackViewHandler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:id="@+id/labelFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="Customer Feedback"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardEquipment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardFeedbackViewHandler">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblEquipment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_equipment"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toEndOf="@id/lblEquipment"
-                        app:layout_constraintTop_toTopOf="@id/lblEquipment" />
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinnerEquipmentType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/rounded_corner_light_gray_background"
-                        android:entries="@array/equipment_type"
-                        android:padding="15dp"
-                        android:textAlignment="center"
-                        app:layout_constraintTop_toBottomOf="@id/lblEquipment" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnOpenEquipmentList"
@@ -338,7 +263,7 @@
                         android:layout_marginTop="15dp"
                         android:background="@drawable/rounded_corner_yellow_background"
                         android:text="@string/label_open_equipment_list"
-                        app:layout_constraintTop_toBottomOf="@+id/spinnerEquipmentType" />
+                        tools:ignore="MissingConstraints" />
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnViewOrder"
@@ -347,7 +272,7 @@
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/rounded_corner_yellow_background"
-                        android:text="@string/label_view_order"
+                        android:text="@string/label_view_agreement_memo"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/btnOpenEquipmentList" />
 
@@ -363,9 +288,11 @@
                 app:cardCornerRadius="30dp"
                 app:layout_constraintTop_toBottomOf="@+id/cardEquipment">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
                     android:padding="15dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -389,29 +316,28 @@
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/lblTermsAndConditions" />
 
-                    <CheckBox
-                        android:id="@+id/checkbox"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:scaleX="2"
-                        android:scaleY="2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txtTermsAndConditions" />
+                        android:gravity="center_vertical">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txtCheckBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="@string/click_check_box_to_accept"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/checkbox"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/checkbox" />
+                        <CheckBox
+                            android:id="@+id/agressTermsAndService"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleX="2"
+                            android:scaleY="2" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txtCheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/click_check_box_to_accept"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -434,7 +360,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="350dp"
                         android:layout_margin="10dp"
-                        android:background="@color/sandal"
+                        android:background="?attr/secondary"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -444,6 +370,7 @@
                         android:layout_margin="10dp"
                         android:background="@drawable/rounded_corner_yellow_background"
                         android:text="@string/label_sign_off"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/signaturePad" />
@@ -473,6 +400,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardSignature">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -481,6 +409,7 @@
                     android:text="@string/label_cancel" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -489,6 +418,7 @@
                     android:text="@string/label_save" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpload"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -498,6 +428,7 @@
                     android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPrint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"

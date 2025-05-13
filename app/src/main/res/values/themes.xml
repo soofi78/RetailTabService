@@ -1,15 +1,58 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Retail" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@color/black</item>
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.Retail.Yellow" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="primary">#FEF400</item>
+        <item name="secondary">#FEF1AB</item>
+        <item name="tertiary">#FF9800</item>
+        <item name="colorPrimary">#FEF400</item>
+        <item name="colorPrimaryDark">#FEF400</item>
+        <item name="colorAccent">#FEF400</item>
+        <item name="primaryTextColor">#212121</item>
+        <item name="secondaryTextColor">#757575</item>
     </style>
 
-    <style name="Theme.Retail" parent="Base.Theme.Retail" />
-    
+    <style name="Base.Theme.Retail.Blue" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="primary">#03A9F4</item>
+        <item name="secondary">#B3E5FC</item>
+        <item name="tertiary">#536DFE</item>
+        <item name="colorPrimary">#03A9F4</item>
+        <item name="colorPrimaryDark">#03A9F4</item>
+        <item name="colorAccent">#03A9F4</item>
+        <item name="primaryTextColor">#212121</item>
+        <item name="secondaryTextColor">#757575</item>
+    </style>
+
+    <style name="Base.Theme.Retail.Green" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="primary">#8BC34A</item>
+        <item name="secondary">#DCEDC8</item>
+        <item name="tertiary">#009688</item>
+        <item name="colorPrimary">#8BC34A</item>
+        <item name="colorPrimaryDark">#8BC34A</item>
+        <item name="colorAccent">#8BC34A</item>
+        <item name="primaryTextColor">#212121</item>
+        <item name="secondaryTextColor">#757575</item>
+    </style>
+
+    <style name="Base.Theme.Retail.Brown" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="primary">#795548</item>
+        <item name="secondary">#D7CCC8</item>
+        <item name="tertiary">#607D8B</item>
+        <item name="colorPrimary">#795548</item>
+        <item name="colorPrimaryDark">#795548</item>
+        <item name="colorAccent">#795548</item>
+        <item name="primaryTextColor">#212121</item>
+        <item name="secondaryTextColor">#757575</item>
+    </style>
+
+    <style name="Theme.Retail" parent="Base.Theme.Retail.Yellow" />
+
     <style name="Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/yellow</item>
+        <item name="android:color">?attr/primary</item>
+    </style>
+
+    <style name="CustomAnimations">
+        <item name="android:windowEnterAnimation">@anim/zoomin</item>
+        <item name="android:windowExitAnimation">@anim/zoomout</item>
     </style>
 
 </resources>

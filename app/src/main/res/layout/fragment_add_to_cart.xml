@@ -1,94 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardHeader"
+    <com.lfsolutions.retail.ui.widgets.HeaderView
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="20dp"
-        app:cardBackgroundColor="@color/yellow"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_back_black" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_add_to_cart"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flowBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="icoBack,txtBack"
-                app:flow_horizontalGap="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icoAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/account_circle_black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Area Supervisor"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtVehicleNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/prefix_vehicle_no"
-                android:textSize="14sp" />
-
-            <androidx.constraintlayout.helper.widget.Flow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical"
-                app:constraint_referenced_ids="txtName,txtRole,txtVehicleNo"
-                app:flow_horizontalAlign="end"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/icoAccount"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:cardBackgroundColor="?attr/primary"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgProduct"
@@ -97,7 +21,7 @@
         android:layout_margin="15dp"
         android:src="@drawable/no_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtProductName"
@@ -118,7 +42,19 @@
         android:id="@+id/txtPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="$10"
+        android:text="$10 / Pcs"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txtQtyAvailable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/qty_black"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Qty Available : 20"
+        android:textAlignment="center"
         android:textSize="16sp" />
 
     <androidx.constraintlayout.helper.widget.Flow
@@ -128,7 +64,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:orientation="vertical"
-        app:constraint_referenced_ids="txtProductName,txtCategory,txtPrice"
+        app:constraint_referenced_ids="txtProductName,txtCategory,txtPrice,txtQtyAvailable"
         app:flow_horizontalAlign="start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgProduct"
@@ -180,21 +116,59 @@
         app:constraint_referenced_ids="imgProduct,qtyLayout" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblApplicableTax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="15dp"
+        android:text="Applicable Tax"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/barrier"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/lblTaxAsterik"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="*"
+        android:textColor="@color/red"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/lblApplicableTax"
+        app:layout_constraintTop_toTopOf="@id/lblApplicableTax" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerApplicableTax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/equipment_type"
+        android:padding="3dp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/lblApplicableTax" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtSaleOption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="Sale Option"
+        android:text="@string/label_sale_option"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barrier" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerApplicableTax" />
 
     <LinearLayout
+        android:id="@+id/saleOptionTypeViewHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layoutDirection="rtl"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/txtSaleOption">
@@ -206,26 +180,216 @@
             android:text="@string/label_foc" />
 
         <CheckBox
-            android:id="@+id/checkboxRent"
+            android:id="@+id/checkbox_is_expired"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_rent" />
+            android:text="@string/label_expired" />
 
         <CheckBox
             android:id="@+id/checkboxExchange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_exchange" />
+            android:text="@string/label_rent" />
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnSave"
+    <LinearLayout
+        android:id="@+id/serialNumberViewHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/saleOptionTypeViewHolder">
+
+        <RelativeLayout
+            android:id="@+id/serialheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtSerialNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_serial_number"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/addSerialNumber"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/round_red_background"
+                android:src="@drawable/add_white" />
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/serialNumberRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/serialheader"
+            tools:itemCount="1"
+            tools:listitem="@layout/multi_select_recycler_item" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardPriceInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblTotalAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Total Value"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtTotalAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flowTotalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="lblTotalAmount,txtTotalAmount"
+                    app:layout_constraintBaseline_toTopOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblDiscounts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Discount"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtDiscounts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flowDiscount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="lblDiscounts,txtDiscounts"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintTop_toBottomOf="@+id/flowTotalAmount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblSubTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sub Total"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtSubTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flowSubTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="lblSubTotal,txtSubTotal"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintTop_toBottomOf="@+id/flowDiscount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblTaxAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Tax Amount"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtTaxAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flowTaxAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="lblTaxAmount,txtTaxAmount"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintTop_toBottomOf="@+id/flowSubTotal" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_total"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textAlignment="textEnd"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flowTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:constraint_referenced_ids="lblTotal,txtTotal"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintTop_toBottomOf="@+id/flowTaxAmount" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/rounded_corner_yellow_background"
         android:text="@string/label_add"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

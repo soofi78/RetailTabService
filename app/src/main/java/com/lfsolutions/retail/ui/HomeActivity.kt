@@ -5,16 +5,19 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
+import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.util.AppSession
+import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.setDebouncedClickListener
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private var _binding: ActivityHomeBinding? = null
 
@@ -30,46 +33,47 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = mBinding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
-
-       /* val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_delivery, R.id.navigation_documents, R.id.navigation_schedule, R.id.navigation_all_records
-            )
-        )*/
-
-        //setupActionBarWithNavController(navController, appBarConfiguration)
-
         navView.setupWithNavController(navController)
+        Main.app.getSession().isSuperVisor?.let {
+            navView.menu.findItem(R.id.navigation_schedule)
+                .setVisible(it)
+        }
+        setData()
+        setClickListener()
+    }
 
-        mBinding.txtLocation.text =
-            makeTextBold(
-                text = getString(R.string.prefix_location, "WH"),
-                startIndex = 10
-            )
+    private fun setClickListener() {
+        mBinding.icoAccount.setDebouncedClickListener({
+            optionsClick.onClick(it)
+        })
+        mBinding.detailsFlow.setDebouncedClickListener({
+            optionsClick.onClick(it)
+        })
+    }
 
-        mBinding.txtVehicleNo.text =
-            makeTextBold(
-                text = getString(R.string.prefix_vehicle_no, "SBC 1234"),
-                startIndex = 12
-            )
-
+    private fun setData() {
+        val userSession =
+            Gson().fromJson(AppSession[Constants.SESSION], UserSession::class.java)
+        mBinding.txtName.text = userSession.userName
+        mBinding.txtLocation.text = makeTextBold(
+            text = getString(R.string.prefix_location, userSession.locationCode.toString()),
+            startIndex = 10
+        )
+        mBinding.txtVehicleNo.text = makeTextBold(
+            text = getString(R.string.prefix_vehicle_no, "SBC 1234"), startIndex = 12
+        )
     }
 
     private fun makeTextBold(
-        text: String,
-        startIndex: Int
-    ): SpannableStringBuilder =
-        SpannableStringBuilder(text).let { spannable ->
+        text: String, startIndex: Int
+    ): SpannableStringBuilder = SpannableStringBuilder(text).let { spannable ->
 
-            spannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                startIndex,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD), startIndex, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-            spannable
+        spannable
 
-        }
+    }
 
 }

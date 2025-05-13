@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:orientation="horizontal"
+    android:padding="15dp"
+    android:tag="Agreement Memo">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/agreement_memo" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:drawableEnd="@drawable/arrow_right_gray"
+        android:gravity="center_vertical"
+        android:text="Option"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</LinearLayout>

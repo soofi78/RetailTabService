@@ -1,80 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_delete"
+            android:drawableEnd="@drawable/ic_delete"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="Swipe to delete"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/swipeAble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:foreground="?selectableItemBackground"
+        android:padding="10dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="BKE Coffee Shop 3"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/productInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:foreground="?selectableItemBackground"
+            android:src="@drawable/ic_info"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 Tai Seng st, Level 5 Luxasia Building, Singapore"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/txtName"
+            app:layout_constraintTop_toBottomOf="@id/txtName" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtPincode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PinCode"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/txtName"
+            app:layout_constraintTop_toBottomOf="@id/txtAddress" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Group - BKE"
+            android:textSize="15sp"
+            app:layout_constraintHorizontal_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtAccountNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="A/C No. AZ0001"
+            android:textSize="15sp"
+            app:layout_constraintHorizontal_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtArea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Area - -"
+            android:textSize="15sp"
+            app:layout_constraintHorizontal_weight="1" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flowInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:constraint_referenced_ids="txtGroup,txtAccountNo,txtArea"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/txtName"
+            app:layout_constraintTop_toBottomOf="@+id/txtPincode" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_right_gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtName"
+        android:id="@+id/saleOrderLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="BKE Coffee Shop 3"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_gravity="end"
+        android:background="@drawable/bottom_left_round_corner_yellow_banner"
+        android:padding="5dp"
+        android:text="Sale Order"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="12 Tai Seng st, Level 5 Luxasia Building, Singapore"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/txtName"
-        app:layout_constraintTop_toBottomOf="@id/txtName" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtPincode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="534118"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@id/txtName"
-        app:layout_constraintTop_toBottomOf="@id/txtAddress" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtGroup"
-        android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="1"
-        android:layout_height="wrap_content"
-        android:text="Group - BKE"
-        android:textSize="15sp" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtAccountNo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
-        android:text="A/C No. AZ0001"
-        android:textSize="15sp" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txtArea"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
-        android:text="Area - W"
-        android:textSize="15sp" />
-
-    <androidx.constraintlayout.helper.widget.Flow
-        app:layout_constraintStart_toStartOf="@id/txtName"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/flowInfo"
-        android:layout_width="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="txtGroup,txtAccountNo,txtArea"
-        app:layout_constraintTop_toBottomOf="@+id/txtPincode" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/arrow_right_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

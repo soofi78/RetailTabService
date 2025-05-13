@@ -1,10 +1,24 @@
 package com.lfsolutions.retail.ui.forms
 
-sealed class FormType {
+import java.io.Serializable
 
-    data object AgreementMemo : FormType()
+enum class FormType(val typeName: String) : Serializable {
+    AgreementMemo("Agreement Memo"),
+    ServiceForm("Service Form"),
+    InvoiceForm("Sale Invoice"),
+    SaleOrder("Sale Order"),
+    DeliveryOrder("Delivery Order");
 
-    data object ServiceForm : FormType()
+    companion object {
+        fun find(title: String): FormType? {
+            var type: FormType? = null
+            entries.forEach {
+                if (it.typeName == title) {
+                    type = it
+                }
+            }
 
-    data object InvoiceForm : FormType()
+            return type
+        }
+    }
 }

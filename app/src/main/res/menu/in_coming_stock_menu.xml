@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_incoming_summary_menu"
+        android:icon="@drawable/order"
+        android:title="@string/label_summary" />
+    <item
+        android:id="@+id/navigation_incoming_equipment_list_menu"
+        android:icon="@drawable/equipment"
+        android:title="@string/label_equipment" />
+
+</menu>

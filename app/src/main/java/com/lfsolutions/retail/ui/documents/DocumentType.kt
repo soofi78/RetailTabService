@@ -1,7 +1,5 @@
 package com.lfsolutions.retail.ui.documents
 
-import com.lfsolutions.retail.model.Models
-
 
 sealed class DocumentType {
 
@@ -9,10 +7,15 @@ sealed class DocumentType {
 
     abstract val iconResId: Int
 
-    data class OutGoingStockRecord(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class OutGoingStockRecord(override val label: Int, override val iconResId: Int) :
+        DocumentType()
 
-    data class DailySalesRecord(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class DailySalesRecord(override val label: Int, override val iconResId: Int) :
+        DocumentType()
 
     data class DriverMemo(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class CurrentStock(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class Payment(override val label: Int, override val iconResId: Int) : DocumentType()
+    data class History(override val label: Int, override val iconResId: Int) : DocumentType()
 
 }

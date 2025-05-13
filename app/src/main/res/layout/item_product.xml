@@ -27,10 +27,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txtCategory"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Category"
         android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/txtPrice"
         app:layout_constraintStart_toStartOf="@+id/txtProductName"
         app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
 
@@ -38,11 +39,11 @@
         android:id="@+id/txtPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:text="$10"
         android:textSize="14sp"
-        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

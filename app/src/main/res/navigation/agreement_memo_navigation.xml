@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/agreement_navigation"
+    app:startDestination="@id/navigation_agreement_memo_equipment">
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_equipment"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoEquipmentListFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/product_list" />
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_summary"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AgreementMemoSummaryFragment"
+        android:label="Agreement Memo"
+        tools:layout="@layout/fragment_agreement_memo_summary">
+        <action
+            android:id="@+id/action_navigation_order_to_navigation_add_equipment"
+            app:destination="@id/navigation_agreement_memo_add_equipment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agreement_memo_add_equipment"
+        android:name="com.lfsolutions.retail.ui.agreementmemo.AddAgreementMemoEquipmentFragment"
+        android:label="Add Equipment"
+        tools:layout="@layout/fragment_agreement_memo_add_equipment">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+
+</navigation>

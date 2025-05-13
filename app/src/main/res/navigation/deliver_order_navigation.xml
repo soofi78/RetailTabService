@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/deliver_order_navigation.xml"
+    app:startDestination="@id/navigation_delivery_order">
+
+    <fragment
+        android:id="@+id/navigation_delivery_order"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderFragment"
+        android:label="Sale Invoice"
+        tools:layout="@layout/fragment_sale_order_tax_invoice">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_to_delivery_order_product_list"
+            app:destination="@id/navigation_delivery_order_product_list"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_to_open_products_summary"
+            app:destination="@id/navigation_delivery_order_summary"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_product_list"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderProductList"
+        android:label="Product"
+        tools:layout="@layout/fragment_sale_order_invoice_stock_equipment_list">
+        <argument
+            android:name="customer"
+            app:argType="string"
+            app:nullable="false" />
+
+        <action
+            android:id="@+id/action_navigation_delivery_order_equipment_list_to_navigation_delivery_order_add_product_to_cart"
+            app:destination="@id/navigation_add_product_to_delivery_order"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_add_product_to_delivery_order"
+        android:name="com.lfsolutions.retail.ui.delivery.order.AddProductToDeliveryOrderFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_delivery_order_summary"
+        android:name="com.lfsolutions.retail.ui.delivery.order.DeliveryOrderSummaryFragment"
+        android:label="Product"
+        tools:layout="@layout/fragment_delivery_order_summary" />
+
+</navigation>

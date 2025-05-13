@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Retail</string>
+    <string name="app_name">WSS Retail</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_delivery">Delivery</string>
     <string name="title_Documents">Documents</string>
@@ -13,11 +13,12 @@
     <string name="prefix_group">Group - %s</string>
     <string name="prefix_account_no">A/C No. %s</string>
     <string name="prefix_area">Area - %s</string>
+    <string name="prefix_balance">Balance. %s</string>
 
     <string name="label_visitation_schedule">Visitation Schedule</string>
     <string name="label_all_customer">All Customers</string>
     <string name="label_documents">Documents</string>
-    <string name="label_outgoing_stock_record">Outgoing Stock Record</string>
+    <string name="label_outgoing_stock_record">Stock Transfer</string>
     <string name="label_daily_sales_record">Daily Sales Record</string>
     <string name="label_driver_memo">Driver\'s Memo</string>
     <string name="title_activity_item_details">ItemDetails</string>
@@ -29,10 +30,12 @@
     <string name="label_foc">FOC</string>
     <string name="label_rent">Rent</string>
     <string name="label_exchange">Exchange</string>
-    <string name="label_add">Add</string>
+    <string name="label_return">Return</string>
+    <string name="label_add">Add Item</string>
+    <string name="label_add_to_order">Add to Order</string>
     <string name="label_sale_option">Sale Option</string>
     <string name="label_sign_on">Sign On</string>
-    <string name="label_sign_off">Sign_Off</string>
+    <string name="label_sign_off">Sign Off</string>
     <string name="label_clear">Clear</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_save">Save</string>
@@ -56,6 +59,13 @@
     <string name="label_open_equipment_list">Open Equipment List</string>
     <string name="label_view_order">View Order</string>
     <string name="label_terms_and_conditions"><u>Term\'s and Condition</u></string>
+    <string name="label_equipment_list">Equipment List</string>
+    <string name="label_complete">Complete</string>
+    <string name="label_order_summary">Order Summary</string>
+    <string name="label_order">Order</string>
+    <string name="label_total_price">Total price</string>
+    <string name="label_service_form">Service Form</string>
+
     <string name="terms_and_conditions"> <b>•</b> The user shall bear the cost of the loan equipment in case of loss or misplacement \n\n
         <b>•</b> In case of out of order, the user is to request for a free replacement \n\n
         <b>•</b> Free exchange of filter (with ring and bag) is given on a fixed period \n\n
@@ -78,5 +88,68 @@
         <item>Exchange</item>
         <item>Rent</item>
     </string-array>
+
+    <string-array name="printers">
+        <item>Bluetooth Printer</item>
+    </string-array>
+    <string-array name="paperWidth">
+        <item>48 mm</item>
+        <item>58 mm</item>
+        <item>80 mm</item>
+        <item>110 mm</item>
+    </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="key">klmcldksmcklsdmlkcmlsdmclcdlkcmdsklmcklsdmclsdmkcmdsklmclkdmlc</string>
+    <string name="salt">lsdmfklsdmkldmclksdmckjdnvhjkfnsvkjndvjkdnkjsmcd</string>
+    <string name="lbl_add_serial_number">Add Serial#</string>
+    <string name="lbl_add_complaint">Add Complaint</string>
+    <string name="dialog_done_text">DONE</string>
+    <string name="dialog_cancel_text">CANCEL</string>
+    <string name="list_empty">No items to display</string>
+    <string name="select_entry">Select Entries</string>
+    <string name="validation_text">Please select atleast one option</string>
+    <string name="please_select_atleast">Please select atleast </string>
+    <string name="you_can_only_select_upto">You can only select upto </string>
+    <string name="option"> option</string>
+    <string name="options"> options</string>
+    <string name="select_all">select all</string>
+    <string name="de_select_all">deselect all</string>
+    <string name="label_view_agreement_memo">View Agreement Memo</string>
+    <string name="label_quantity">Quantity</string>
+    <string name="label_view_service_from">View Service Form</string>
+    <string name="label_complainant_name">Complainant Name</string>
+    <string name="label_mobile_number">Mobile Number</string>
+    <string name="label_action_type">Action Type</string>
+    <string name="label_complaint_types">Complaint Type</string>
+    <string name="label_expired">Sale</string>
+    <string name="label_view_sale_invoice">View Sale Invoice</string>
+    <string name="label_payment">Payment</string>
+    <string name="label_history">History</string>
+    <string name="stock_receive">Stock Receive</string>
+    <string name="add_to_visit">Add to schedule</string>
+    <string name="label_summary">Summary</string>
+    <string name="label_current_stock">Current Stock</string>
+    <string name="label_load_current_stock">Load Current Stock</string>
+    <string name="tenant">Tenant</string>
+    <string name="slc">slc</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="save_amp_approve"><![CDATA[Save & Approve]]></string>
+    <string name="submit_for_approval">SUBMIT FOR APPROVAL</string>
+    <string name="label_confirm">Confirm</string>
+    <string name="confirm_selection">Confirm Selection</string>
+    <string name="select_printer">Select Printer</string>
+    <string name="paper_width">Paper Width</string>
+    <string name="character_per_line">Character Per Line</string>
+    <string name="test_print">Save &amp; Test Print</string>
+    <string name="po_no">PO No</string>
+    <string name="order_date">Order Date</string>
+    <string name="remarks_action"><![CDATA[Remarks & Action]]></string>
+    <string name="customer_basic_details">Customer Basic Details</string>
+    <string name="product_name">Product Name:</string>
+    <string name="allocated_assets">Allocated Assets</string>
+    <string name="foc">FOC</string>
 
 </resources>

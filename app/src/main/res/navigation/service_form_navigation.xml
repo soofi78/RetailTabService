@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/service_navigation"
+    app:startDestination="@id/navigation_service_form_equipment">
+
+    <fragment
+        android:id="@+id/navigation_service_form_equipment"
+        android:name="com.lfsolutions.retail.ui.serviceform.ServiceFormEquipmentListFragment"
+        android:label="Service Form"
+        tools:layout="@layout/fragment_service_form_equipment_list" />
+
+    <fragment
+        android:id="@+id/navigation_service_form_summary"
+        android:name="com.lfsolutions.retail.ui.serviceform.ServiceFormSummaryFragment"
+        android:label="Service Form Summary"
+        tools:layout="@layout/fragment_service_form_summary">
+        <action
+            android:id="@+id/action_navigation_service_from_summary_to_navigation_service_form_add_equipment"
+            app:destination="@id/navigation_service_form_add_equipment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_service_form_add_equipment"
+        android:name="com.lfsolutions.retail.ui.serviceform.AddServiceFormEquipmentFragment"
+        android:label="Add Equipment"
+        tools:layout="@layout/fragment_service_form_add_equipment">
+        <argument
+            android:name="product"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
+
+
+</navigation>

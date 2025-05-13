@@ -30,7 +30,7 @@ class AllRecordsFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
 
-        mBinding.recyclerViewAllCustomers.adapter = DeliveryItemAdapter(10)
+        mBinding.recyclerViewAllCustomers.adapter = DeliveryItemAdapter(ArrayList(),DeliveryItemAdapter.CustomerItemType.All)
 
         mBinding.recyclerViewAllCustomers.addItemDecoration(
             DividerItemDecoration(
