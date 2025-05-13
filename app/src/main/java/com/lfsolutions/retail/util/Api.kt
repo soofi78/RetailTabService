@@ -1,6 +1,9 @@
 package com.lfsolutions.retail.util
 
+import com.lfsolutions.retail.BuildConfig
+
 object Api {
+    const val APP_BASE_URL :String =  BuildConfig.BASE_URL
     const val Base = "api/"
     const val ServicesApp = "services/app/"
     const val CommonLookup = "CommonLookup/"
@@ -8,6 +11,7 @@ object Api {
     const val SaleInvoice = "salesInvoice/"
     const val SaleOrder = "salesOrder/"
     const val DeliveryOrder = "deliveryOrder/"
+
 
     object Name {
         const val CREATE_UPDATE_SALE_ORDER = "CreateOrUpdateSalesOrder"
