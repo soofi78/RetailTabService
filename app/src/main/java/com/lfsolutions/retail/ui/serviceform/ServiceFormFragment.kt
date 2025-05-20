@@ -66,6 +66,7 @@ class ServiceFormFragment : Fragment() {
     private lateinit var binding: FragmentServiceFormBinding
     private var serviceTypes = ArrayList<ServiceTypes>()
     private var reportTypes = ArrayList<ReportTypes>()
+    private var isCheckOutClick:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -256,7 +257,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun setClickListener() {
 
-        binding.btnCheckIn.setDebouncedClickListener {
+        /*binding.btnCheckIn.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateTimeSelected(
                     isoDateTime: String,
@@ -269,9 +270,9 @@ class ServiceFormFragment : Fragment() {
                     //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
                 }
             })
-        }
+        }*/
 
-        binding.btnCheckOut.setDebouncedClickListener {
+        /*binding.btnCheckOut.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateTimeSelected(
                     isoDateTime: String,
@@ -284,7 +285,7 @@ class ServiceFormFragment : Fragment() {
                     //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
                 }
             })
-        }
+        }*/
 
         binding.complaintDateTimeText.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
@@ -302,24 +303,28 @@ class ServiceFormFragment : Fragment() {
             })
         }
 
-       /* binding.btnCheckIn.setDebouncedClickListener {
+        binding.btnCheckIn.setDebouncedClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T").plus("Z")
-            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime = DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkinTime.text = formattedDateTime
             binding.checkinTime.tag = time
             Main.app.getComplaintService()?.complaintService?.timeIn = time
-        }*/
+            println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+        }
 
-        /*binding.btnCheckOut.setDebouncedClickListener {
+        binding.btnCheckOut.setDebouncedClickListener {
+            isCheckOutClick=true
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
-            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime =
                 DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkoutTime.text = formattedDateTime
             binding.checkoutTime.tag = time
-        }*/
+            Main.app.getComplaintService()?.complaintService?.timeOut = time
+            println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+        }
 
         binding.complainantCard.setDebouncedClickListener {
             ComplainantInformationDialog.make(
@@ -373,6 +378,9 @@ class ServiceFormFragment : Fragment() {
             Notify.toastLong("Please add your signature")
             return
         }
+        if(!isCheckOutClick)
+            Main.app.getComplaintService()?.complaintService?.timeOut = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+            .plus("Z")
 
         Main.app.getComplaintService()?.complaintService?.remarks = binding.remarks.text.toString()
         uploadSignature()

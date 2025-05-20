@@ -48,6 +48,10 @@ data class ReceiptItemDetails(
         return Main.app.getSession().currencySymbol + (amount?.formatDecimalSeparator() ?: "0.00")
     }
 
+    override fun getAppliedAmount(): String {
+        return Main.app.getSession().currencySymbol + (appliedAmount?.formatDecimalSeparator() ?: "0.00")
+    }
+
     override fun getSerializedNumber(): String {
         return slNo.toString()
     }

@@ -24,6 +24,7 @@ object Constants {
         const val InvoiceDate = "{{invoice.invoiceDate}}"
         const val InvoiceNo = "{{invoice.invoiceNo}}"
         const val InvoiceQty = "{{invoice.qty}}"
+        const val TotalAmount = "{{receipt.amount}}"
     }
 
     object Common {

@@ -249,6 +249,9 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     private fun displayItemDetails(customer: Customer) {
         startActivity(FormsActivity.getInstance(context = requireContext()).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra(Constants.Customer, Gson().toJson(customer))
         })
     }

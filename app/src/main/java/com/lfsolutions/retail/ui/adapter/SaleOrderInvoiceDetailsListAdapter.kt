@@ -32,7 +32,7 @@ class SaleOrderInvoiceDetailsListAdapter(
         holder.binding.serial.text = item.getSerializedNumber()
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
-        holder.binding.amount.text = item.getAmount()
+        holder.binding.amount.text = item.getAppliedAmount()
         holder.itemView.setDebouncedClickListener {
             mListener.onItemClickedListener(it.tag as HistoryItemInterface)
         }

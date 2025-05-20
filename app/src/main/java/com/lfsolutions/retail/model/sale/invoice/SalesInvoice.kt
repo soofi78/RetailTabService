@@ -256,6 +256,7 @@ data class SalesInvoice(
         return Main.app.getSession().currencySymbol + paidAmount?.formatDecimalSeparator()
     }
 
+
     fun signatureUrl(): String {
         return Main.app.getBaseUrl() + signature?.replace("\\\\", "\\").toString()
     }

@@ -88,7 +88,6 @@ object Printer {
             Constants.Invoice.InvoiceAddress2, invoice?.salesInvoice?.address2 ?: ""
         )
 
-
         val itemTemplate = try {
             templateText?.substring(
                 templateText.indexOf(Constants.Common.ItemsStart),
@@ -450,6 +449,11 @@ object Printer {
         )
 
 
+        templateText = templateText?.replace(
+            Constants.Invoice.TotalAmount, "${receipt?.getAmount()?:0.0}"
+        )
+
+
         val itemTemplate = templateText?.substring(
             templateText.indexOf(Constants.Common.ItemsStart),
             templateText.indexOf(Constants.Common.ItemsEnd) + 10
@@ -464,7 +468,7 @@ object Printer {
             items += itemTemplateClean?.replace(Constants.Common.Index, count.toString())
                 ?.replace(Constants.Receipt.TransactionNo, it.transactionNo.toString())
                 ?.replace(Constants.Receipt.TransactionDate, it.transactionDate.toString())
-                ?.replace(Constants.Receipt.TransactionAmount, it.getAmount().toString())
+                ?.replace(Constants.Receipt.TransactionAmount, it.getAppliedAmount())
             count += 1
             if (count < (receipt.items?.size ?: 0)) {
                 items += "\n"

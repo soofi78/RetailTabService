@@ -188,6 +188,8 @@ class TaxInvoiceFragment : Fragment() {
                 customer.paymentTermId
             if (Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName == null) Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName =
                 customer.paymentTerm
+
+            Main.app.getTaxInvoice()?.salesInvoice?.remarks = binding.remarks.text.toString()
             uploadSignature()
         }
     }
