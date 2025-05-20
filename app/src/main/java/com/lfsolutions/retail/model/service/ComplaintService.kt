@@ -2,6 +2,7 @@ package com.lfsolutions.retail.model.service
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.model.product.Asset
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
@@ -31,6 +32,7 @@ data class ComplaintService(
     @SerializedName("customerFeedback") var customerFeedback: String? = null,
     @SerializedName("signature") var signature: String? = null,
     @SerializedName("customerFeedbackList") var customerFeedbackList: ArrayList<Feedback> = arrayListOf(),
+    @SerializedName("CustomerAssetsAllocationList", alternate = arrayOf("customerAssetsAllocationList")) var customerAssetsAllocationList: ArrayList<Asset> = arrayListOf(),
     @SerializedName("isDeleted") var isDeleted: Boolean? = null,
     @SerializedName("deleterUserId") var deleterUserId: String? = null,
     @SerializedName("deletionTime") var deletionTime: String? = null,

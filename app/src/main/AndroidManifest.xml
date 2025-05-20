@@ -25,7 +25,6 @@
 
         <activity
             android:name=".ui.forms.FormsActivity"
-            android:launchMode="singleTask"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 

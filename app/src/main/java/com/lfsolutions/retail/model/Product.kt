@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import kotlin.time.Duration.Companion.minutes
 
 
 data class Product(
@@ -53,6 +54,11 @@ data class Product(
     override fun getMinQty(): String {
         return "Min. Qty: ${minimumQty?.formatDecimalSeparator().toString()}"
     }
+
+    override fun getVarianceQty(): String {
+        return "Variance Qty: ${qtyOnHand?.minus(minimumQty?:0.0)?.formatDecimalSeparator().toString()}"
+    }
+
 
     override fun getImageUrl(): String {
         return (Main.app.getBaseUrl() + imagePath)

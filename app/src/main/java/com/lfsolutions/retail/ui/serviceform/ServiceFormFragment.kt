@@ -61,12 +61,14 @@ class ServiceFormFragment : Fragment() {
     private val allocatedAssets = ArrayList<Asset>()
     private val args by navArgs<ServiceFormFragmentArgs>()
     private lateinit var customer: Customer
+    private val assets = ArrayList<Asset>()
     private val feedbacks = ArrayList<Feedback>()
     private val feedbacksTypes = ArrayList<FeedbackTypes>()
     private lateinit var binding: FragmentServiceFormBinding
     private var serviceTypes = ArrayList<ServiceTypes>()
     private var reportTypes = ArrayList<ReportTypes>()
     private var isCheckOutClick:Boolean=false
+    private lateinit var mAllocatedAssetsAdapter:AllocatedAssetsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,7 +203,8 @@ class ServiceFormFragment : Fragment() {
     private fun setAssetData() {
         binding.allocatedAssets.visibility =
             if (allocatedAssets.isEmpty()) View.GONE else View.VISIBLE
-        binding.allocatedAssetsList.adapter = AllocatedAssetsAdapter(allocatedAssets)
+        mAllocatedAssetsAdapter=AllocatedAssetsAdapter(allocatedAssets)
+        binding.allocatedAssetsList.adapter = mAllocatedAssetsAdapter
     }
 
     private fun getServiceTypeData() {
@@ -409,6 +412,10 @@ class ServiceFormFragment : Fragment() {
     private fun saveComplaint() {
         Main.app.getComplaintService()?.serializeItems()
         Main.app.getComplaintService()?.complaintService?.customerFeedbackList = feedbacks
+
+        val selectedAssets: ArrayList<Asset> = mAllocatedAssetsAdapter.getSelectedAssets()
+        Main.app.getComplaintService()?.complaintService?.customerAssetsAllocationList = selectedAssets
+
         if (binding.spinnerType.selectedItemPosition > -1) {
             Main.app.getComplaintService()?.complaintService?.type =
                 serviceTypes.get(binding.spinnerType.selectedItemPosition).value

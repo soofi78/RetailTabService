@@ -31,6 +31,8 @@ data class Asset(
     @SerializedName("lastModificationTime") var lastModificationTime: String? = null,
     @SerializedName("lastModifierUserId") var lastModifierUserId: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null,
-    @SerializedName("id") var id: Int? = null
+    @SerializedName("id") var id: Int? = null,
 
+    @Transient
+    var isProductChecked: Boolean = false
 )

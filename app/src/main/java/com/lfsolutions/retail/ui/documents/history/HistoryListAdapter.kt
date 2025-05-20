@@ -41,9 +41,12 @@ class HistoryListAdapter(
         //set minimum qty
         if (item is Product){
             holder.binding.minimumQty.visibility=View.VISIBLE
+            holder.binding.varianceQty.visibility=View.VISIBLE
             holder.binding.minimumQty.text=item.getMinQty()
+            holder.binding.varianceQty.text=item.getVarianceQty()
         }else{
             holder.binding.minimumQty.visibility=View.GONE
+            holder.binding.varianceQty.visibility=View.GONE
         }
 
         if (item is SaleOrderListItem) {

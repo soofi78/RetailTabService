@@ -32,29 +32,31 @@ class FormsActivity : BaseActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_item_details)
 
         // ✅ Restore NavController state
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             navState = savedInstanceState.getBundle("nav_state")
             navState?.let {
                 navController.restoreState(it)
             }
-        }
+        }*/
         // ✅ Set up Bottom NavBar visibility
-        mBinding.navView.setupWithNavController(navController)
+        navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_current_forms, R.id.navigation_history -> showBottomNavigationBar()
                 else -> hideBottomNavigationBar()
             }
         }
-        //navView.setupWithNavController(navController)
-
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
+    /*override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         val navController = findNavController(R.id.nav_host_fragment_activity_item_details)
         outState.putBundle("nav_state", navController.saveState())
+    }*/
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     private fun setCustomer() {

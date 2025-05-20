@@ -13,6 +13,10 @@ interface HistoryItemInterface {
         return ""
     }
 
+    fun getVarianceQty(): String{
+        return ""
+    }
+
     fun getId(): Int {
         return -1
     }
