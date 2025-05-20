@@ -163,9 +163,9 @@ object PrinterManager {
                         val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "").trim()
 
                         val direction = when {
-                            contentInsideATags.startsWith("[C]") -> "C"
+                            contentInsideATags.startsWith("[L]") -> "L"
                             contentInsideATags.startsWith("[R]") -> "R"
-                            else -> "L"
+                            else -> "C"
                         }
 
                         val imgTag = if (isEnglishOnly(cleanedText)) {
@@ -235,9 +235,9 @@ object PrinterManager {
         val align =
             if (direction.contentEquals("R"))
                 Paint.Align.RIGHT
-            else if (direction.contentEquals("C"))
-                Paint.Align.CENTER
-            else Paint.Align.LEFT
+            else if (direction.contentEquals("L"))
+                Paint.Align.LEFT
+            else Paint.Align.CENTER
 
         val paint = Paint()
         paint.isAntiAlias = true
@@ -246,7 +246,7 @@ object PrinterManager {
         if (typeface != null) paint.typeface = typeface
 
         // A real printlabel width (pixel)
-        val xWidth = 385f
+        val xWidth = 576f
 
         // A height per text line (pixel)
         var xHeight = textSize + 5
