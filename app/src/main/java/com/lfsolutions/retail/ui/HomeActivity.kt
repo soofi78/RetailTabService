@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.ui
 
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -13,6 +14,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ActivityHomeBinding
 import com.lfsolutions.retail.model.UserSession
+import com.lfsolutions.retail.ui.forms.FormsActivity
 import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.setDebouncedClickListener
@@ -25,9 +27,19 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prefs = getSharedPreferences("nav_state", Context.MODE_PRIVATE)
+        if (prefs.getBoolean("wasInFormsActivity", false)) {
+            val customerJson = prefs.getString("customer_json", null)
+            prefs.edit().clear().apply() // Clear the flag
 
+            if (customerJson != null) {
+                startActivity(FormsActivity.getInstance(this).apply {
+                    putExtra(Constants.Customer, customerJson)
+                })
+                return
+            }
+        }
         _binding = ActivityHomeBinding.inflate(layoutInflater)
-
         setContentView(mBinding.root)
 
         val navView: BottomNavigationView = mBinding.navView

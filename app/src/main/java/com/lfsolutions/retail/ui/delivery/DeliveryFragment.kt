@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -249,11 +250,23 @@ class DeliveryFragment : Fragment(), OnNetworkResponse {
 
     private fun displayItemDetails(customer: Customer) {
         startActivity(FormsActivity.getInstance(context = requireContext()).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra(Constants.Customer, Gson().toJson(customer))
         })
+
+        val prefs = requireContext().getSharedPreferences("nav_state", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putBoolean("wasInFormsActivity", true)
+            .putString("customer_json", Gson().toJson(customer))
+            .apply()
+
+        /*override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+
+    val navController = findNavController(R.id.nav_host_fragment_activity_item_details)
+    val state = navController.saveState()
+    outState.putBundle("nav_state", state)
+}
+*/
     }
 
     override fun onResume() {

@@ -10,6 +10,7 @@
         android:name="com.lfsolutions.retail.ui.forms.currentforms.CurrentFormsFragment"
         android:label="@string/title_current_forms"
         tools:layout="@layout/fragment_current_forms">
+
         <action
             android:id="@+id/action_navigation_current_forms_to_navigation_product_list"
             app:destination="@id/navigation_tax_invoice_product_list"
