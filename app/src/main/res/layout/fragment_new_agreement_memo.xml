@@ -361,7 +361,8 @@
                         android:layout_height="350dp"
                         android:layout_margin="10dp"
                         android:background="?attr/secondary"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:saveEnabled="false"/>
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSignOn"

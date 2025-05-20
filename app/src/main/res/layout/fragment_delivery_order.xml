@@ -296,6 +296,7 @@
                         android:layout_height="350dp"
                         android:layout_margin="10dp"
                         android:background="?attr/secondary"
+                        android:saveEnabled="false"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatButton
