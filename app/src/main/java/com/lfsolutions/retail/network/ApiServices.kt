@@ -141,6 +141,13 @@ interface ApiServices {
         @Query("isSold") isSold: Boolean = false
     ): Call<RetailResponse<ArrayList<SerialNumber>>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SOLD_PRODUCTS_SERIAL_NUMBERS))
+    fun getSoldProductSerialNumbers(
+        @Query("productId") productId: Long?,
+        @Query("locationId") locationId: Long?,
+        @Query("isSold") isSold: Boolean = false
+    ): Call<RetailResponse<ArrayList<SerialNumber>>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS_RETURN))
     fun getSerialNumbersReturn(
         @Query("productId") productId: Long?,

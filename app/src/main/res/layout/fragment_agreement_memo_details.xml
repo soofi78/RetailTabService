@@ -168,6 +168,7 @@
                 android:layout_height="match_parent"
                 android:nestedScrollingEnabled="true"
                 android:orientation="vertical"
+                tools:itemCount="2"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/sale_order_invoice_product_list_item" />
 
