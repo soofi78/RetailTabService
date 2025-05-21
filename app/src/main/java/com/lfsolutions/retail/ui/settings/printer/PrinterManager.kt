@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.provider.Settings
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
@@ -139,14 +140,12 @@ object PrinterManager {
             try {
                 if (printer == null || connection == null) {
                     this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
-                    val printerWidth =
-                        AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()
-                            ?.toFloat() ?: 48f
+                    val printerWidth = AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 48f
                     this@PrinterManager.printer = EscPosPrinter(
                         connection,
                         203,
                         printerWidth,
-                        AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
+                       48
                     )
                 }
                 var printText = printableText
@@ -163,9 +162,9 @@ object PrinterManager {
                         val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "").trim()
 
                         val direction = when {
-                            contentInsideATags.startsWith("[L]") -> "L"
+                            contentInsideATags.startsWith("[C]") -> "C"
                             contentInsideATags.startsWith("[R]") -> "R"
-                            else -> "C"
+                            else -> "L"
                         }
 
                         val imgTag = if (isEnglishOnly(cleanedText)) {
@@ -203,8 +202,10 @@ object PrinterManager {
                         printText = printText.replace("@@@$it", "")
                     }
                 }
+
+                Log.i("PrintManger",printText)
                 printer?.printFormattedTextAndCut(printText, 40f)
-                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
+//                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Notify.toastLong("Unable to print please check connection")
@@ -229,15 +230,15 @@ object PrinterManager {
     fun getMultiLangTextAsImage(
         text: String,
         direction:String,
-        textSize: Float = 28f,
+        textSize: Float = 32f,
         typeface: Typeface? = Typeface.MONOSPACE
     ): Bitmap {
         val align =
             if (direction.contentEquals("R"))
                 Paint.Align.RIGHT
-            else if (direction.contentEquals("L"))
-                Paint.Align.LEFT
-            else Paint.Align.CENTER
+            else if (direction.contentEquals("C"))
+                Paint.Align.CENTER
+            else Paint.Align.LEFT
 
         val paint = Paint()
         paint.isAntiAlias = true
