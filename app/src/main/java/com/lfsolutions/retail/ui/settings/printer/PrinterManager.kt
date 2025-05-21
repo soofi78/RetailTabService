@@ -135,11 +135,12 @@ object PrinterManager {
     @Synchronized
     fun print(printableText: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            val printerWidth = AppSession[Constants.PRINTER_WIDTH, "80 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 80f
-            val charactersPerLine =   AppSession.getInt(Constants.CHARACTER_PER_LINE, 48)
-            Log.i("PrinterManager","print printerWidth $printerWidth")
-            Log.i("PrinterManager","print charactersPerLine $charactersPerLine")
             try {
+                val printerWidth = AppSession[Constants.PRINTER_WIDTH, "80 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 80f
+                val charactersPerLine =   AppSession.getInt(Constants.CHARACTER_PER_LINE, 48)
+                Log.i("PrinterManager","print printerWidth $printerWidth")
+                Log.i("PrinterManager","print charactersPerLine $charactersPerLine")
+
                 if (printer == null || connection == null) {
                     this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
                     this@PrinterManager.printer = EscPosPrinter(
