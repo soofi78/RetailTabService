@@ -93,9 +93,9 @@
         <item>Bluetooth Printer</item>
     </string-array>
     <string-array name="paperWidth">
-        <item>48 mm</item>
-        <item>58 mm</item>
         <item>80 mm</item>
+        <item>58 mm</item>
+        <item>48 mm</item>
         <item>110 mm</item>
     </string-array>
 

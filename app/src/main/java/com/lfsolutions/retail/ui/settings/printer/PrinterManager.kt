@@ -56,13 +56,12 @@ object PrinterManager {
             }
             return false
         }
-        val printerWidth =
-            AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()?.toFloat()
-                ?: 48f
+        val printerWidth = AppSession[Constants.PRINTER_WIDTH, "80 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 80f
+        val charactersPerLine =   AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
+        Log.e("PrinterManager","sendConnectionPrint printerWidth $printerWidth")
+        Log.e("PrinterManager","sendConnectionPrint charactersPerLine $charactersPerLine")
         val dpi = (203 / 48) * printerWidth
-        this.printer = EscPosPrinter(
-            connection, 300, printerWidth, AppSession.getInt(Constants.CHARACTER_PER_LINE, 32)
-        )
+        this.printer = EscPosPrinter(connection, 203, printerWidth, charactersPerLine)
 
         val rawText = """  
         [C]<b><font size='big'>Test Print</font></b>
@@ -72,7 +71,7 @@ object PrinterManager {
         [C]<b>Connection Successful</b>
         [C]================================
         """.trimIndent()
-        this.printer?.printFormattedText(rawText)
+        this.printer?.printFormattedTextAndCut(rawText)
         return true
     }
 
@@ -133,19 +132,21 @@ object PrinterManager {
             return null
         }
     }
-
     @Synchronized
     fun print(printableText: String) {
         GlobalScope.launch(Dispatchers.IO) {
+            val printerWidth = AppSession[Constants.PRINTER_WIDTH, "80 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 80f
+            val charactersPerLine =   AppSession.getInt(Constants.CHARACTER_PER_LINE, 48)
+            Log.i("PrinterManager","print printerWidth $printerWidth")
+            Log.i("PrinterManager","print charactersPerLine $charactersPerLine")
             try {
                 if (printer == null || connection == null) {
                     this@PrinterManager.connection = getDefaultPrinterBluetoothConnection()
-                    val printerWidth = AppSession[Constants.PRINTER_WIDTH, "48 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 48f
                     this@PrinterManager.printer = EscPosPrinter(
                         connection,
                         203,
                         printerWidth,
-                       48
+                        charactersPerLine
                     )
                 }
                 var printText = printableText
@@ -204,8 +205,9 @@ object PrinterManager {
                 }
 
                 Log.i("PrintManger",printText)
-                printer?.printFormattedTextAndCut(printText, 40f)
+                printer?.printFormattedTextAndCut(printText, 100f)
 //                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
+//                printer?.disconnectPrinter()
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Notify.toastLong("Unable to print please check connection")
@@ -227,11 +229,14 @@ object PrinterManager {
         return containedUrls
     }
 
+
     fun getMultiLangTextAsImage(
         text: String,
-        direction:String,
+        direction: String,
         textSize: Float = 32f,
-        typeface: Typeface? = Typeface.MONOSPACE
+        typeface: Typeface? = Typeface.MONOSPACE,
+        paperWidthMm: Float = 80f,
+        dpi: Int = 203,
     ): Bitmap {
         val align =
             if (direction.contentEquals("R"))
@@ -247,7 +252,7 @@ object PrinterManager {
         if (typeface != null) paint.typeface = typeface
 
         // A real printlabel width (pixel)
-        val xWidth = 576f
+        val xWidth = (paperWidthMm / 25.4f) * dpi
 
         // A height per text line (pixel)
         var xHeight = textSize + 5
