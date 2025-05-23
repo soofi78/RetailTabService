@@ -47,6 +47,23 @@ data class Product(
         return "Quantity: $qtyOnHand / $unitName"
     }
 
+    fun getPrintQty(): String {
+        return qtyOnHand?.formatDecimalSeparator().toString()
+    }
+
+    fun getPrintUOM(): String {
+        return unitName?:""
+    }
+
+    fun getPrintMinQty(): String {
+        return minimumQty?.formatDecimalSeparator().toString()
+    }
+
+    fun getPrintVarianceQty(): String {
+        val varianceQty=qtyOnHand?.minus(minimumQty?:0.0)
+        return varianceQty?.formatDecimalSeparator().toString()
+    }
+
     override fun getAmount(): String {
         return Main.app.getSession().currencySymbol + price?.formatDecimalSeparator().toString()
     }

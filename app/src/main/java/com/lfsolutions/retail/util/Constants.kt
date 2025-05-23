@@ -88,6 +88,16 @@ object Constants {
     }
 
 
+    object CurrentStock {
+        const val ProductName = "{{productName}}"
+        const val Price = "{{price}}"
+        const val QTY = "{{qty}}"
+        const val UOM = "{{uom}}"
+        const val MinQty = "{{minQty}}"
+        const val VarQty = "{{varQty}}"
+    }
+
+
     const val PrivacyPolicy = "Privacy Policy"
     const val OrderId: String = "order_id"
     const val FormType: String = "FormType"
@@ -117,6 +127,8 @@ object Constants {
     const val SESSION: String = "session"
     const val IS_LOGGED_IN: String = "is_logged_in"
     const val baseUrl: String = "base_url"
+
+    const val PRINT_TYPE_CURRENT_STOCK: Int = 15
 
     fun getCrystalReportEndPoint(
         id: Int?,
