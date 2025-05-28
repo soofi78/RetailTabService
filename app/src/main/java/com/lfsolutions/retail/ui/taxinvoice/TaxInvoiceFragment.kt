@@ -68,14 +68,28 @@ class TaxInvoiceFragment : Fragment() {
             Main.app.getTaxInvoice()?.salesInvoice?.salespersonId =
                 Main.app.getSession().salesPersonId
             Main.app.getTaxInvoice()?.salesInvoice?.isTaxInclusive = customer.isTaxInclusive
-            if (customer.isTaxInclusive == true) {
+            if(Main.app.getTaxInvoice()?.salesInvoice?.type!="F" && customer.isTaxInclusive == true){
+                Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
+            }
+            /*if (customer.isTaxInclusive == true) {
                 Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
             } else {
                 Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
+            }*/
+
+            val currentType = Main.app.getTaxInvoice()?.salesInvoice?.type
+            if (currentType != "F") {
+                if (customer.isTaxInclusive == true) {
+                    Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
+                } else {
+                    Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
+                }
             }
-           /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
-                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")*/
+
+
+            /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
+                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                     .plus("Z")*/
             Main.app.getTaxInvoice()?.salesInvoice?.deliveryOrderDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
