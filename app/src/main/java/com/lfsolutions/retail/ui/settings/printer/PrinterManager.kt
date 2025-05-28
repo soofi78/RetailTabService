@@ -161,7 +161,7 @@ object PrinterManager {
                     matchResults.forEach { matchResult ->
                         // Replace each matched text inside <a></a> with an <img> tag
                         val contentInsideATags = matchResult.groupValues[1] // Extract text inside <a></a>
-                        val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "").trim()
+                        val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "")
 
                         val direction = when {
                             contentInsideATags.startsWith("[C]") -> "C"
