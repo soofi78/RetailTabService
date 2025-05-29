@@ -96,7 +96,6 @@ interface ApiServices {
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_EQUIPMENT_TYPE))
     fun getEquipmentType(): Call<RetailResponse<EquipmentTypeResult>>
 
-
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ACTION_TYPES))
     fun getActionTypes(): Call<RetailResponse<ActionTypeResult>>
 
@@ -166,8 +165,7 @@ interface ApiServices {
     )
     fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Order>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
-            .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE))
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_INVOICE))
 
     fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<Invoice>>?
 

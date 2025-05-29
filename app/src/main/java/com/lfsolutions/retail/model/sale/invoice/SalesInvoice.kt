@@ -209,6 +209,9 @@ data class SalesInvoice(
         "reportName",
     ) var reportName: String? = null,
 
+    @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId"))
+    var customerServiceToVisitId: Long= 0,
+
     ) {
     fun InvoiceDateFormatted(): String {
         val date = DateTime.getDateFromString(

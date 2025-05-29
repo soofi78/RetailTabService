@@ -63,6 +63,7 @@ class TaxInvoiceFragment : Fragment() {
             if (Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId == null) Main.app.clearTaxInvoice()
             Main.app.getTaxInvoice()?.salesInvoice?.creatorUserId = Main.app.getSession().userId
             Main.app.getTaxInvoice()?.salesInvoice?.customerId = customer.id
+            Main.app.getTaxInvoice()?.salesInvoice?.customerServiceToVisitId = customer.customerServiceToVisitId
             Main.app.getTaxInvoice()?.salesInvoice?.locationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getTaxInvoice()?.salesInvoice?.salespersonId =

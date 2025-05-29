@@ -41,6 +41,7 @@ data class ComplaintService(
     @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("creatorUserId") var creatorUserId: String? = null,
     @SerializedName("date") var date: String? = null,
+    @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId")) var customerServiceToVisitId: Long= 0,
     var csDateTime: String? = null,
 ) : HistoryItemInterface {
     override fun getTitle(): String {

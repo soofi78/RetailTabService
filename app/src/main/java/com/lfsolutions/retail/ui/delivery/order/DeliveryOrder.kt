@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.ui.delivery.order
 
+import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.DateTime
 
@@ -45,6 +46,7 @@ data class DeliveryOrder(
     var address2: String? = null,
     var zatcaQRCode: String? = null,
     var reportName: String? = null,
+    @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId")) var customerServiceToVisitId: Long= 0,
 ) {
 
     fun signatureUrl(): String {

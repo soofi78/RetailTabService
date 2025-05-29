@@ -97,6 +97,7 @@ class ServiceFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Main.app.getComplaintService()?.complaintService?.customerId = customer.id
+        Main.app.getComplaintService()?.complaintService?.customerServiceToVisitId = customer.customerServiceToVisitId
         setData()
         getServiceTypeData()
         setClickListener()
