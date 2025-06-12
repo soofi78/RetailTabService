@@ -55,6 +55,7 @@ class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment
         mBinding.recyclerView.adapter = mAdapter
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Back")
+        mBinding.summaryTitle.text = "Summary for Stock Transfer"
         mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
         Main.app.getSession().userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
@@ -66,7 +67,7 @@ class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment
         mBinding.txtQTY.text = getQty().toString()
         mBinding.txtTotal.text =
             Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
-        mBinding.btnComplete.isEnabled = getQty() != 0.0
+        mBinding.btnComplete.isEnabled = Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.isNotEmpty()
     }
 
     private fun getTotal(): Double {

@@ -121,7 +121,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
     private fun updateSummaryAmountAndQty() {
         Main.app.getTaxInvoice()?.updatePriceAndQty(discount)
         Main.app.getTaxInvoice()?.serializeItems()
-        println("Summery: ${Main.app.getTaxInvoice()?.salesInvoice}")
+        //println("Summery: ${Main.app.getTaxInvoice()?.salesInvoice}")
         val currency = Main.app.getSession().currencySymbol
         mBinding.txtQTY.text = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty.toString()
         mBinding.txtTotalAmount.text =
@@ -140,7 +140,8 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString()
                 .formatDecimalSeparator()
         mBinding.checkboxFOC.isChecked = Main.app.getTaxInvoice()?.salesInvoice?.type=="F"
-        mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty != 0.0
+        //mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty != 0.0
+        mBinding.btnComplete.isEnabled = !Main.app.getTaxInvoice()?.salesInvoiceDetail.isNullOrEmpty()
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {

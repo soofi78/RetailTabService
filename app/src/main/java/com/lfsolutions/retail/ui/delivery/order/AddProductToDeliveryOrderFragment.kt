@@ -82,8 +82,10 @@ class AddProductToDeliveryOrderFragment : Fragment() {
             Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility = View.GONE
-        mBinding.serialNumberRecyclerView.visibility = View.GONE
+        mBinding.serialheader.visibility = View.VISIBLE
+        mBinding.serialNumberRecyclerView.visibility = View.VISIBLE
+
+
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
@@ -223,21 +225,38 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun addToCart() {
+        /*val batchList = arrayListOf<ProductBatchList>()
+        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
+            selectedSerialNumbers.forEach { serialItem ->
+                batchList.add(
+                    ProductBatchList(
+                        Id = serialItem.getId().toInt(),
+                        SerialNumber = serialItem.getText(),
+                        Price = 0,
+                        ProductId = 0,
+                        TenantId = 0,
+                        UnitCost = 0
+                    )
+                )
+            }
+        }*/
+
         val batchList = arrayListOf<ProductBatchList>()
-//        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
-//            selectedSerialNumbers.forEach { serialItem ->
-//                batchList.add(
-//                    ProductBatchList(
-//                        Id = serialItem.getId().toInt(),
-//                        SerialNumber = serialItem.getText(),
-//                        Price = 0,
-//                        ProductId = 0,
-//                        TenantId = 0,
-//                        UnitCost = 0
-//                    )
-//                )
-//            }
-//        }
+        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
+            selectedSerialNumbers.forEach { serialItem ->
+                batchList.add(
+                    ProductBatchList(
+                        Id = serialItem.getId().toInt(),
+                        SerialNumber = serialItem.getText(),
+                        Price = 0,
+                        ProductId = 0,
+                        TenantId = 0,
+                        UnitCost = 0
+                    )
+                )
+            }
+        }
+
 
         val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
@@ -262,6 +281,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 /*creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                     .replace(" ", "T").plus("Z"),*/ //by nisha
                 creatorUserId = Main.app.getSession().userId,
+                productBatchList = batchList
             )
         )
     }
