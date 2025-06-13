@@ -153,16 +153,18 @@ object PrinterManager {
                 var printText = printableText
                 val urls = extractUrls(printText)
 
-                val foreignTextRegex = Regex("<a>(.*?)</a>")
+                val foreignTextRegex = Regex("<a(?:\\s+size=(\\d+))?>(.*?)</a>")
 
-                // Use findAll to get all matches
                 val matchResults = foreignTextRegex.findAll(printText).toList()
-                if (matchResults != null) {
-                    matchResults.forEach { matchResult ->
-                        // Replace each matched text inside <a></a> with an <img> tag
-                        val contentInsideATags = matchResult.groupValues[1] // Extract text inside <a></a>
-                        val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "")
 
+                if (matchResults.isNotEmpty()) {
+                    matchResults.forEach { matchResult ->
+                        val sizeText = matchResult.groupValues[1]
+                        val contentInsideATags = matchResult.groupValues[2]
+
+                        val fontSize = sizeText.toIntOrNull() ?: 32  // default font size
+
+                        val cleanedText = contentInsideATags.replace(Regex("^\\[.[^]]*]"), "")
                         val direction = when {
                             contentInsideATags.startsWith("[C]") -> "C"
                             contentInsideATags.startsWith("[R]") -> "R"
@@ -171,16 +173,18 @@ object PrinterManager {
 
                         val imgTag = if (isEnglishOnly(cleanedText)) {
                             "[$direction]$cleanedText"
-                        }else{
-                            "[$direction]<img>${PrinterTextParserImg.bitmapToHexadecimalString(printer, getMultiLangTextAsImage(cleanedText,direction))}</img>"
+                        } else {
+                            val imgHex = PrinterTextParserImg.bitmapToHexadecimalString(
+                                printer,
+                                getMultiLangTextAsImage(cleanedText, direction, fontSize.toFloat())
+                            )
+                            "[$direction]<img>$imgHex</img>"
+                        }
 
-                        }// Replace the matched text with the <img> tag in printText
                         printText = printText.replace(matchResult.value, imgTag)
                     }
-                    // Finally, remove the <a></a> tags
-                    printText = printText.replace("<a>", "").replace("</a>", "")
-
                 }
+
 
                 urls.forEach {
                     try {
@@ -234,148 +238,70 @@ object PrinterManager {
     fun getMultiLangTextAsImage(
         text: String,
         direction: String,
-        textSize: Float = 32f,
+        textSize: Float,
         typeface: Typeface? = Typeface.MONOSPACE,
         paperWidthMm: Float = 80f,
         dpi: Int = 203,
+        lineHeightPx: Int = 30 // ESC/POS line height
     ): Bitmap {
-        val align =
-            if (direction.contentEquals("R"))
-                Paint.Align.RIGHT
-            else if (direction.contentEquals("C"))
-                Paint.Align.CENTER
-            else Paint.Align.LEFT
+        val align = when (direction) {
+            "R" -> Paint.Align.RIGHT
+            "C" -> Paint.Align.CENTER
+            else -> Paint.Align.LEFT
+        }
 
-        val paint = Paint()
-        paint.isAntiAlias = true
-        paint.color = Color.BLACK
-        paint.textSize = textSize
-        if (typeface != null) paint.typeface = typeface
+        val paint = Paint().apply {
+            isAntiAlias = true
+            color = Color.BLACK
+            this.textSize = textSize
+            textAlign = align
+            if (typeface != null) this.typeface = typeface
+        }
 
-        // A real printlabel width (pixel)
+        val fontMetrics = paint.fontMetrics
+        val textBaselineOffset = (lineHeightPx / 2f) - ((fontMetrics.ascent + fontMetrics.descent) / 2f)
+
         val xWidth = (paperWidthMm / 25.4f) * dpi
+        val printDataList = mutableListOf<PrintData>()
+        var yPos = lineHeightPx.toFloat()
 
-        // A height per text line (pixel)
-        var xHeight = textSize + 5
-
-        // it can be changed if the align's value is CENTER or RIGHT
-        var xPos = 0f
-
-        // If the original string data's length is over the width of print label,
-        // or '\n' character included,
-        // it will be increased per line gerneating.
-        var yPos = 27f
-
-        // If the original string data's length is over the width of print label,
-        // or '\n' character included,
-        // each lines splitted from the original string are added in this list
-        // 'PrintData' class has 3 members, x, y, and splitted string data.
-        val printDataList: MutableList<PrintData> = java.util.ArrayList()
-
-        // if '\n' character included in the original string
-        val tmpSplitList = text.split("\\n".toRegex()).toTypedArray()
-        for (i in 0..tmpSplitList.size - 1) {
-            val tmpString = tmpSplitList[i]
-
-            // calculate a width in each split string item.
-            var widthOfString = paint.measureText(tmpString)
-
-            // If the each split string item's length is over the width of print label,
-            if (widthOfString > xWidth) {
-                var lastString = tmpString
-                while (!lastString.isEmpty()) {
-                    var tmpSubString = ""
-
-                    // retrieve repeatedly until each split string item's length is
-                    // under the width of print label
-                    while (widthOfString > xWidth) {
-                        tmpSubString = if (tmpSubString.isEmpty()) lastString.substring(
-                            0, lastString.length - 1
-                        ) else tmpSubString.substring(0, tmpSubString.length - 1)
-                        widthOfString = paint.measureText(tmpSubString)
-                    }
-
-                    // this each split string item is finally done.
-                    if (tmpSubString.isEmpty()) {
-                        // this last string to print is need to adjust align
-                        if (align == Paint.Align.CENTER) {
-                            if (widthOfString < xWidth) {
-                                xPos = (xWidth - widthOfString) / 2
-                            }
-                        } else if (align == Paint.Align.RIGHT) {
-                            if (widthOfString < xWidth) {
-                                xPos = xWidth - widthOfString
-                            }
-                        }
-                        printDataList.add(PrintData(xPos, yPos, lastString))
-                        lastString = ""
-                    } else {
-                        // When this logic is reached out here, it means,
-                        // it's not necessary to calculate the x position
-                        // 'cause this string line's width is almost the same
-                        // with the width of print label
-                        printDataList.add(PrintData(0f, yPos, tmpSubString))
-
-                        // It means line is needed to increase
-                        yPos += 27f
-                        xHeight += 30f
-                        lastString = lastString.replaceFirst(tmpSubString.toRegex(), "")
-                        widthOfString = paint.measureText(lastString)
-                    }
+        val splitLines = text.split("\\n".toRegex())
+        for ((index, line) in splitLines.withIndex()) {
+            var remaining = line
+            while (remaining.isNotEmpty()) {
+                var sub = remaining
+                while (paint.measureText(sub) > xWidth && sub.length > 1) {
+                    sub = sub.dropLast(1)
                 }
-            } else {
-                // This split string item's length is
-                // under the width of print label already at first.
-                if (align == Paint.Align.CENTER) {
-                    if (widthOfString < xWidth) {
-                        xPos = (xWidth - widthOfString) / 2
-                    }
-                } else if (align == Paint.Align.RIGHT) {
-                    if (widthOfString < xWidth) {
-                        xPos = xWidth - widthOfString
-                    }
+
+                val xPos = when (align) {
+                    Paint.Align.CENTER -> xWidth / 2f
+                    Paint.Align.RIGHT -> xWidth
+                    else -> 0f
                 }
-                printDataList.add(PrintData(xPos, yPos, tmpString))
+
+                printDataList.add(PrintData(xPos, yPos, sub))
+                yPos += lineHeightPx
+                remaining = remaining.removePrefix(sub)
             }
-            if (i != tmpSplitList.size - 1) {
-                // It means the line is needed to increase
-                yPos += 27f
-                xHeight += 30f
+
+            if (index != splitLines.lastIndex) {
+                yPos += lineHeightPx
             }
         }
 
-        // If you want to print the text bold
-        //paint.setTypeface(Typeface.create(null as String?, Typeface.BOLD))
-
-        // create bitmap by calculated width and height as upper.
-        val bm: Bitmap =
-            Bitmap.createBitmap(xWidth.toInt(), xHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bm)
+        val bitmapHeight = (printDataList.size * lineHeightPx).coerceAtLeast(lineHeightPx)
+        val bitmap = Bitmap.createBitmap(xWidth.toInt(), bitmapHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE)
-        for (tmpItem in printDataList) canvas.drawText(
-            tmpItem.text, tmpItem.xPos, tmpItem.yPos, paint
-        )
-        return bm
+
+        for (data in printDataList) {
+            canvas.drawText(data.text, data.xPos, data.yPos - (lineHeightPx - textBaselineOffset), paint)
+        }
+
+        return bitmap
     }
-
-    internal class PrintData(var xPos: Float, var yPos: Float, var text: String) {
-
-        fun getxPos(): Float {
-            return xPos
-        }
-
-        fun setxPos(xPos: Float) {
-            this.xPos = xPos
-        }
-
-        fun getyPos(): Float {
-            return yPos
-        }
-
-        fun setyPos(yPos: Float) {
-            this.yPos = yPos
-        }
-    }
+    data class PrintData(val xPos: Float, val yPos: Float, val text: String)
 
     private fun isEnglishOnly(s: String): Boolean {
         for (character in s) {

@@ -28,8 +28,8 @@ android {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 34
-        versionCode = 162
-        versionName = "0.2.162"
+        versionCode = 163
+        versionName = "0.2.163"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
