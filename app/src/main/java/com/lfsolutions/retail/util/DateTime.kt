@@ -372,6 +372,22 @@ object DateTime {
         }
     }
 
+    fun getTimeFromDateString(date: String?): String {
+        return try {
+            // Parse the ISO 8601 format string
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
+            inputFormat.timeZone = TimeZone.getTimeZone("UTC") // input is in UTC
+
+            val outputFormat = SimpleDateFormat("hh:mm:ss a", Locale.ENGLISH)
+            outputFormat.timeZone = TimeZone.getTimeZone("UTC") // output also in UTC
+
+            val time = inputFormat.parse(date)
+            return outputFormat.format(time!!)
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
     fun formatJourneyTime(stamp: String?): String? {
         return if (stamp != null) {
             val from = SimpleDateFormat("dd/mm/yyyy hh:mm:ss")

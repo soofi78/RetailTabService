@@ -244,7 +244,6 @@ class OutGoingStockFragment : Fragment() {
                         Notify.toastLong("Out Going Stock Transfer Failed: ${result.result}")
                     }
                 }
-
                 override fun onFailure(
                     call: Call<*>?, response: BaseResponse<*>?, tag: Any?
                 ) {

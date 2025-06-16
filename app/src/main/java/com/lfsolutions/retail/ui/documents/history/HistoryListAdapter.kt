@@ -10,6 +10,7 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.SaleOrderInvoiceListItemBinding
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.sale.order.SaleOrderListItem
+import com.lfsolutions.retail.model.service.ComplaintService
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
 
@@ -38,6 +39,12 @@ class HistoryListAdapter(
         holder.binding.title.text = item.getTitle()
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
+
+        if(item is ComplaintService){
+            holder.binding.checkInOutTimeView.visibility=View.VISIBLE
+            holder.binding.checkInTimeTv.text=item.getCheckInTime()
+            holder.binding.checkOutTimeTv.text=item.getCheckOutTime()
+        }
         //set minimum qty
         if (item is Product){
             holder.binding.minimumQty.visibility=View.VISIBLE
