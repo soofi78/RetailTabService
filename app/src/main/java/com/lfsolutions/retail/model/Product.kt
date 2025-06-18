@@ -2,6 +2,7 @@ package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import kotlin.time.Duration.Companion.minutes
@@ -21,6 +22,7 @@ data class Product(
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
+    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
     @SerializedName("type") var type: String? = null,
     @SerializedName("minimumQty") var minimumQty: Double? = null,
     @SerializedName("maximumQty") var maximumQty: Double? = null

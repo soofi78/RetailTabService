@@ -67,7 +67,10 @@ class InComingStockSummaryAdapter(
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.price?.formatDecimalSeparator()
         holder.binding.txtProductName.text = stockTransferProducts?.get(position)?.productName
-        holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
+        if(stockTransferProducts?.get(position)?.isAsset==true){
+            holder.binding.txtSerials.visibility=View.VISIBLE
+            holder.binding.txtSerials.text = stockTransferProducts[position].getSerialNumbers()
+        }
         holder.itemView.setDebouncedClickListener {
             mListener?.onOutGoingStockItemClick()
         }

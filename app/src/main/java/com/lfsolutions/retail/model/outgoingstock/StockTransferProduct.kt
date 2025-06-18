@@ -28,7 +28,7 @@ data class StockTransferProduct(
     @SerializedName("qty") var qty: Double = 0.0,
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes> = arrayListOf(),
-    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
+    @SerializedName("productBatchList") var productBatchList: List<ProductBatchList>? = mutableListOf(),
     @SerializedName("unit") var unit: String? = null,
     @SerializedName("totalPrice") var totalPrice: Double? = null,
     @SerializedName("id") var id: Int? = null,
@@ -81,6 +81,16 @@ data class StockTransferProduct(
             serials += if (serials.equals("")) it.SerialNumber.toString() else "\n" + it.SerialNumber
         }
         return serials
+    }
+
+    fun getQty():String{
+        var productQty=1.0
+        productQty = if(isAsset==true){
+            productBatchList?.sumOf { it.Qty } ?:1.0
+        }else{
+            qty
+        }
+        return productQty.toString()
     }
 
     fun getPreSelectedSerialNumbers(serialNumbersList: ArrayList<SerialNumber>): ArrayList<out MultiSelectModelInterface> {

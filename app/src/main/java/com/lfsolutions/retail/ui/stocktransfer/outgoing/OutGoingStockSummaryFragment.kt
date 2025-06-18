@@ -40,6 +40,7 @@ class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment
 
 
     private fun initiateView() {
+        println("StockTransferDetails: ${Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails}")
         mAdapter = OutGoingStockSummaryAdapter(
             requireActivity(),
             Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails
@@ -49,7 +50,6 @@ class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment
                 updateSummaryAmountAndQty()
             }
         })
-
         itemSwipeHelper = ItemTouchHelper(getSwipeToDeleteListener())
         itemSwipeHelper?.attachToRecyclerView(mBinding.recyclerView)
         mBinding.recyclerView.adapter = mAdapter
@@ -65,8 +65,7 @@ class OutGoingStockSummaryFragment(val openEquipmentList: () -> Unit) : Fragment
 
     private fun updateSummaryAmountAndQty() {
         mBinding.txtQTY.text = getQty().toString()
-        mBinding.txtTotal.text =
-            Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
+        mBinding.txtTotal.text = Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
         mBinding.btnComplete.isEnabled = Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.isNotEmpty()
     }
 

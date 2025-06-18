@@ -1,8 +1,11 @@
 package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -37,6 +40,7 @@ class OutGoingStockSummaryAdapter(
     private lateinit var onItemUpdate: OnItemUpdated
     private lateinit var serialNumbers: ArrayList<SerialNumber>
     private var mListener: OutGoingStockItemClick? = null
+    private var mRemoveSerialNumberClick: RemoveSerialNumberClick? = null
 
     class ViewHolder(val binding: ItemOutStockSummaryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -57,23 +61,96 @@ class OutGoingStockSummaryAdapter(
     override fun getItemCount(): Int = stockTransferProducts?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val products=stockTransferProducts?.get(position)
         Glide.with(holder.itemView)
             .load(Main.app.getBaseUrl() + stockTransferProducts?.get(position)?.imagePath)
             .centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
-        holder.binding.txtQty.text = stockTransferProducts?.get(position)?.qty.toString()
-        holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.subTotal?.formatDecimalSeparator()
+        holder.binding.txtPrice.text = Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.subTotal?.formatDecimalSeparator()
         holder.binding.txtProductName.text = stockTransferProducts?.get(position)?.productName
-        holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
-        holder.itemView.setOnClickListener {
-            mListener?.onOutGoingStockItemClick()
-        }
+        //holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
+        holder.binding.txtQty.text =  products?.getQty()
 
         holder.binding.btnAdd.tag = position
         holder.binding.btnSub.tag = position
         holder.binding.txtQty.tag = position
+
+        if(products?.isAsset==true || !products?.productBatchList.isNullOrEmpty()){
+            holder.binding.txtQty.text=products?.productBatchList?.sumOf { it.Qty }.toString()
+            holder.binding.txtQty.apply {
+                isEnabled = false
+                isClickable = false
+                isFocusable = false
+                isFocusableInTouchMode = false
+            }
+            holder.binding.btnSub.apply {
+                isEnabled = false
+                isClickable = false
+                isFocusable = false
+                isFocusableInTouchMode = false
+                setBackgroundResource(R.drawable.oval_disable_bg)
+            }
+
+            holder.binding.btnAdd.apply {
+                isEnabled = false
+                isClickable = false
+                isFocusable = false
+                isFocusableInTouchMode = false
+                setBackgroundResource(R.drawable.oval_disable_bg)
+            }
+
+            val container = holder.binding.serialNumberContainer
+            container.removeAllViews() // Clear previous views (important for recycling)
+            // Copy to mutable list if you want to remove later
+            val batchSerialNumberList = products?.productBatchList?.toMutableList()?: mutableListOf()
+
+            batchSerialNumberList.forEachIndexed { index, batch ->
+                val serialView = LayoutInflater.from(holder.itemView.context)
+                    .inflate(R.layout.serial_number_item_view, container, false)
+
+                val txtSerial = serialView.findViewById<TextView>(R.id.txtSerials)
+                val btnClose = serialView.findViewById<ImageView>(R.id.btnClose)
+                btnClose.tag=index
+
+                Log.d("Serial: ", batch.SerialNumber.toString())
+                txtSerial.text = batch.SerialNumber
+
+                btnClose.setOnClickListener {
+                    batchSerialNumberList.removeAt(index)
+                    println("RemoveBatchList: $batchSerialNumberList")
+
+                    products?.productBatchList = batchSerialNumberList // update in your model if needed
+
+                    // Recalculate qty from remaining batch list
+                    val newQty = batchSerialNumberList.sumOf { it.Qty }
+
+                    // Update qty in your data list
+                    stockTransferProducts?.get(holder.adapterPosition)?.qty = newQty
+                    // Update totals
+                    stockTransferProducts?.get(holder.adapterPosition)?.updateTotal()
+
+                    // Notify listener
+                    if (::onItemUpdate.isInitialized) {
+                        stockTransferProducts?.get(holder.adapterPosition)?.let {
+                            onItemUpdate.OnItemUpdated(it)
+                        }
+                    }
+
+                    // Refresh view
+                    notifyItemChanged(holder.adapterPosition)
+                }
+                container.addView(serialView)
+            }
+        }
+        else{
+            holder.binding.txtQty.text=products?.qty.toString()
+        }
+
+        holder.itemView.setOnClickListener {
+            // if(products?.isAsset==false)
+            mListener?.onOutGoingStockItemClick()
+        }
 
         holder.binding.btnSub.setOnClickListener {
             if (holder.binding.txtQty.text.toString().toDouble() <= 0) {
@@ -105,7 +182,7 @@ class OutGoingStockSummaryAdapter(
             if (stockTransferProducts?.get(position)?.type.equals("S") || stockTransferProducts?.get(
                     position
                 )?.isAsset == true
-            ) View.VISIBLE else View.GONE
+            ) View.GONE else View.GONE //View.Visible when isAsset is true
 
         holder.binding.btnAddSerial.tag = position
         holder.binding.btnAddSerial.setOnClickListener {
@@ -117,6 +194,8 @@ class OutGoingStockSummaryAdapter(
                 R.drawable.round_green_background else R.drawable.round_red_background
         )
     }
+
+
 
     private fun openQuantityUpdateDialog(position: Int) {
         val modal = ProductQuantityUpdateSheet()
@@ -222,6 +301,10 @@ class OutGoingStockSummaryAdapter(
     fun remove(position: Int) {
         stockTransferProducts?.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    interface RemoveSerialNumberClick{
+        fun onRemoveSerialNumber()
     }
 
     interface OutGoingStockItemClick {
