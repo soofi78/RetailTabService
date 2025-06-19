@@ -29,6 +29,7 @@ import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -75,7 +76,13 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
     private fun updateSerialNumbersAdapter() {
         mAdapter = MultiSelectListAdapter(selectedSerialNumbers)
         mBinding.recyclerView.adapter = mAdapter
+        selectedSerialNumbers.disableQtyFields(
+            mBinding.txtQty,
+            mBinding.btnSub,
+            mBinding.btnAdd
+        )
     }
+
 
     private fun addSerialNumberClick() {
         mBinding.addSerialNumber.setDebouncedClickListener {

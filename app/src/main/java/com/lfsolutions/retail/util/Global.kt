@@ -5,7 +5,14 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import androidx.appcompat.widget.AppCompatTextView
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.R
+import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
+import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
@@ -61,3 +68,52 @@ fun View.setDebouncedClickListener(onClick: (View) -> Unit) {
         }
     }
 }
+
+fun <T> List<T>.disableQtyFields(
+    qtyView: View,
+    subButton: View,
+    addButton: View,
+    disableBgRes: Int = R.drawable.oval_disable_bg
+) {
+    if (this.isNotEmpty()) {
+        qtyView.apply {
+            isEnabled = false
+            isClickable = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+        }
+        subButton.apply {
+            isEnabled = false
+            isClickable = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+            setBackgroundResource(disableBgRes)
+        }
+        addButton.apply {
+            isEnabled = false
+            isClickable = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+            setBackgroundResource(disableBgRes)
+        }
+    }
+}
+
+fun List<ProductBatchList>.toSerialNumberAdapter(): MultiSelectListAdapter {
+    val serialItems = this.map { batch ->
+        object : MultiSelectModelInterface {
+            override fun getText(): String = batch.SerialNumber.toString()
+            override fun setSelected(selected: Boolean) {
+                // Optional: store state if needed
+            }
+        }
+    }
+    return MultiSelectListAdapter(ArrayList(serialItems))
+
+}
+
+fun View.toAddVisibility(batchList:List<ProductBatchList>){
+    visibility = if (batchList.isNotEmpty()) View.VISIBLE else View.GONE
+}
+
+

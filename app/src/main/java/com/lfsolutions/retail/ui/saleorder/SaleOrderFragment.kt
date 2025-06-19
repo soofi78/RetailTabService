@@ -189,6 +189,7 @@ class SaleOrderFragment : Fragment() {
     }
 
     private fun saveSaleOrder() {
+       // println("SalesOrderPayload: ${Main.app.getSaleOrder()}")
         NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {

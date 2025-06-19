@@ -100,7 +100,7 @@ class OutGoingStockSummaryAdapter(
                 setBackgroundResource(R.drawable.oval_disable_bg)
             }
 
-            val container = holder.binding.serialNumberContainer
+            val container = holder.binding.outgoingSerialNumberContainer
             container.removeAllViews() // Clear previous views (important for recycling)
             // Copy to mutable list if you want to remove later
             val batchSerialNumberList = products?.productBatchList?.toMutableList()?: mutableListOf()

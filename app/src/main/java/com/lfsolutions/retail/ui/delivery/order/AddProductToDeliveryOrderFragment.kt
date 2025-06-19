@@ -30,6 +30,7 @@ import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -312,6 +313,11 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        selectedSerialNumbers.disableQtyFields(
+                            mBinding.txtQty,
+                            mBinding.btnSub,
+                            mBinding.btnAdd
+                        )
                         updateTotal()
                         updateAddButtonForSerialNumber()
                     }

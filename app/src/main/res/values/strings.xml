@@ -153,5 +153,6 @@
     <string name="foc">FOC</string>
     <string name="time_in_colon">Time In:</string>
     <string name="time_out_colon">Time Out:</string>
+    <string name="serial_numbers_colon">Serial Numbers:</string>
 
 </resources>

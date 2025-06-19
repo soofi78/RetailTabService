@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
@@ -20,18 +21,21 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.lfsolutions.retail.util.toAddVisibility
+import com.lfsolutions.retail.util.toSerialNumberAdapter
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
 class InComingStockSummaryAdapter(
     val activity: FragmentActivity,
-    val stockTransferProducts: ArrayList<StockTransferProduct>?
+    val stockReceiveProducts: ArrayList<StockTransferProduct>?
 ) :
     RecyclerView.Adapter<InComingStockSummaryAdapter.ViewHolder>() {
 
@@ -55,22 +59,21 @@ class InComingStockSummaryAdapter(
         )
     )
 
-    override fun getItemCount(): Int = stockTransferProducts?.size ?: 0
+    override fun getItemCount(): Int = stockReceiveProducts?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Glide.with(holder.itemView)
-            .load(Main.app.getBaseUrl() + stockTransferProducts?.get(position)?.imagePath)
+            .load(Main.app.getBaseUrl() + stockReceiveProducts?.get(position)?.imagePath)
             .centerCrop()
             .placeholder(R.drawable.no_image).into(holder.binding.imgProduct)
 
-        holder.binding.txtQty.text = stockTransferProducts?.get(position)?.qty.toString()
-        holder.binding.txtPrice.text =
-            Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.price?.formatDecimalSeparator()
-        holder.binding.txtProductName.text = stockTransferProducts?.get(position)?.productName
-        if(stockTransferProducts?.get(position)?.isAsset==true){
+        holder.binding.txtQty.text = stockReceiveProducts?.get(position)?.qty.toString()
+        holder.binding.txtPrice.text = Main.app.getSession().currencySymbol + stockReceiveProducts?.get(position)?.price?.formatDecimalSeparator()
+        holder.binding.txtProductName.text = stockReceiveProducts?.get(position)?.productName
+       /* if(stockReceiveProducts?.get(position)?.isAsset==true){
             holder.binding.txtSerials.visibility=View.VISIBLE
-            holder.binding.txtSerials.text = stockTransferProducts[position].getSerialNumbers()
-        }
+            holder.binding.txtSerials.text = stockReceiveProducts[position].getSerialNumbers()
+        }*/
         holder.itemView.setDebouncedClickListener {
             mListener?.onOutGoingStockItemClick()
         }
@@ -79,6 +82,17 @@ class InComingStockSummaryAdapter(
         holder.binding.btnSub.tag = position
         holder.binding.txtQty.tag = position
 
+        val batchList = stockReceiveProducts?.get(position)?.productBatchList ?: emptyList()
+        batchList.disableQtyFields(
+            holder.binding.txtQty,
+            holder.binding.btnSub,
+            holder.binding.btnAdd
+        )
+
+        holder.binding.inComingSerialNumberContainer.toAddVisibility(batchList)
+        holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 2)
+        holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+
         holder.binding.btnSub.setOnClickListener {
             if (holder.binding.txtQty.text.toString().toDouble() <= 0) {
                 holder.binding.txtQty.text = "1"
@@ -86,10 +100,10 @@ class InComingStockSummaryAdapter(
             }
             holder.binding.txtQty.text =
                 holder.binding.txtQty.text.toString().toDouble().minus(1).toString()
-            stockTransferProducts?.get(it.tag as Int)?.qty =
+            stockReceiveProducts?.get(it.tag as Int)?.qty =
                 holder.binding.txtQty.text.toString().toDouble()
-            stockTransferProducts?.get(it.tag as Int)?.updateTotal()
-            if (::onItemUpdate.isInitialized) stockTransferProducts?.get(it.tag as Int)
+            stockReceiveProducts?.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) stockReceiveProducts?.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
             notifyItemChanged(it.tag as Int)
         }
@@ -97,10 +111,10 @@ class InComingStockSummaryAdapter(
         holder.binding.btnAdd.setOnClickListener {
             holder.binding.txtQty.text =
                 holder.binding.txtQty.text.toString().toDouble().plus(1).toString()
-            stockTransferProducts?.get(it.tag as Int)?.qty =
+            stockReceiveProducts?.get(it.tag as Int)?.qty =
                 holder.binding.txtQty.text.toString().toDouble()
-            stockTransferProducts?.get(it.tag as Int)?.updateTotal()
-            if (::onItemUpdate.isInitialized) stockTransferProducts?.get(it.tag as Int)
+            stockReceiveProducts?.get(it.tag as Int)?.updateTotal()
+            if (::onItemUpdate.isInitialized) stockReceiveProducts?.get(it.tag as Int)
                 ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
             notifyItemChanged(it.tag as Int)
         }
@@ -111,7 +125,7 @@ class InComingStockSummaryAdapter(
 
 
         holder.binding.btnAddSerial.visibility =
-            if (stockTransferProducts?.get(position)?.type.equals("S") || stockTransferProducts?.get(
+            if (stockReceiveProducts?.get(position)?.type.equals("S") || stockReceiveProducts?.get(
                     position
                 )?.isAsset == true
             ) View.VISIBLE else View.GONE
@@ -122,14 +136,14 @@ class InComingStockSummaryAdapter(
         }
 
         holder.binding.btnAddSerial.setBackgroundResource(
-            if ((stockTransferProducts?.get(position)?.productBatchList?.size ?: 0) > 0)
+            if ((stockReceiveProducts?.get(position)?.productBatchList?.size ?: 0) > 0)
                 R.drawable.round_green_background else R.drawable.round_red_background
         )
     }
 
     private fun openQuantityUpdateDialog(position: Int) {
         val modal = ProductQuantityUpdateSheet()
-        val product = stockTransferProducts?.get(position)
+        val product = stockReceiveProducts?.get(position)
         modal.setProductDetails(
             product?.imagePath.toString(),
             product?.productName.toString(),
@@ -140,17 +154,17 @@ class InComingStockSummaryAdapter(
         modal.setOnProductDetailsChangedListener(object :
             ProductQuantityUpdateSheet.OnProductDetailsChangeListener {
             override fun onQuantityChanged(quantity: Double) {
-                stockTransferProducts?.get(position)?.qty = quantity
-                stockTransferProducts?.get(position)?.updateTotal()
-                if (::onItemUpdate.isInitialized) stockTransferProducts?.get(position)
+                stockReceiveProducts?.get(position)?.qty = quantity
+                stockReceiveProducts?.get(position)?.updateTotal()
+                if (::onItemUpdate.isInitialized) stockReceiveProducts?.get(position)
                     ?.let { it1 -> onItemUpdate.OnItemUpdated(it1) }
                 notifyItemChanged(position)
             }
 
             override fun onPriceChanged(price: Double) {
-                stockTransferProducts?.get(position)?.cost = price
-                stockTransferProducts?.get(position)?.price = price
-                stockTransferProducts?.get(position)?.updateTotal()
+                stockReceiveProducts?.get(position)?.cost = price
+                stockReceiveProducts?.get(position)?.price = price
+                stockReceiveProducts?.get(position)?.updateTotal()
                 notifyItemChanged(position)
             }
         })
@@ -174,7 +188,7 @@ class InComingStockSummaryAdapter(
                 }
             }).enque(
                 Network.api()?.getSerialNumbers(
-                    stockTransferProducts?.get(position)?.productId,
+                    stockReceiveProducts?.get(position)?.productId,
                     Main.app.getSession().wareHouseLocationId?.toLong()
                 )
             ).execute()
@@ -188,7 +202,7 @@ class InComingStockSummaryAdapter(
                 .setMinSelectionLimit(1)
                 .setMaxSelectionLimit(serialNumbers.size)
                 .preSelectIDsList(
-                    stockTransferProducts?.get(position)?.getPreSelectedSerialNumbers(serialNumbers)
+                    stockReceiveProducts?.get(position)?.getPreSelectedSerialNumbers(serialNumbers)
                 )
                 .multiSelectList(serialNumbers)
                 .onSubmit(object : SubmitCallbackListener {
@@ -208,11 +222,11 @@ class InComingStockSummaryAdapter(
                                 )
                             }
                         }
-                        stockTransferProducts?.get(position)?.productBatchList = batchList
-                        stockTransferProducts?.get(position)?.qty = batchList.size.toDouble()
+                        stockReceiveProducts?.get(position)?.productBatchList = batchList
+                        stockReceiveProducts?.get(position)?.qty = batchList.size.toDouble()
                         notifyItemChanged(position)
                         if (::onItemUpdate.isInitialized) {
-                            stockTransferProducts?.get(position)
+                            stockReceiveProducts?.get(position)
                                 ?.let { onItemUpdate.OnItemUpdated(it) }
                         }
                     }
@@ -230,7 +244,7 @@ class InComingStockSummaryAdapter(
     }
 
     fun remove(position: Int) {
-        stockTransferProducts?.removeAt(position)
+        stockReceiveProducts?.removeAt(position)
         notifyItemRemoved(position)
     }
 

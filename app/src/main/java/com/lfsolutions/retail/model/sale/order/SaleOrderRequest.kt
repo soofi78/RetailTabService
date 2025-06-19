@@ -39,10 +39,14 @@ data class SaleOrderRequest(
         SalesOrder?.SoGrandTotal = netTotal.minus(discount)
         SalesOrder?.Balance = netTotal.minus(discount)
         SalesOrder?.SoNetDiscount = discount
-        SalesOrder?.SoNetDiscountPerc =
-            SalesOrder?.SoGrandTotal?.let { discount.div(it).times(100) }
-
-
+      /*  SalesOrder?.SoNetDiscountPerc =
+            SalesOrder?.SoGrandTotal?.let { discount.div(it).times(100) }*/
+        val grandTotal = SalesOrder?.SoGrandTotal
+        SalesOrder?.SoNetDiscountPerc = if (grandTotal != null && grandTotal != 0.0) {
+            discount / grandTotal * 100
+        } else {
+            0.0
+        }
     }
 
     fun serializeItems() {

@@ -3,14 +3,17 @@ package com.lfsolutions.retail.ui.delivery.order
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.lfsolutions.retail.util.toAddVisibility
+import com.lfsolutions.retail.util.toSerialNumberAdapter
 
-class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
+class DeliveryOrderSummaryAdapter(val deliveryOrder: ArrayList<DeliveryOrderDetails>?) :
     RecyclerView.Adapter<DeliveryOrderSummaryAdapter.ViewHolder>() {
 
     private var mListener: OnOrderSummarySelectListener? = null
@@ -30,29 +33,35 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
         )
     )
 
-    override fun getItemCount(): Int = items?.size ?: 0
+    override fun getItemCount(): Int = deliveryOrder?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.txtQty.text = items?.get(position)?.deliverQty.toString()
+        holder.binding.txtQty.text = deliveryOrder?.get(position)?.deliverQty.toString()
         holder.binding.txtPrice.visibility = View.GONE
-        holder.binding.txtProductName.text = items?.get(position)?.productName
+        holder.binding.txtProductName.text = deliveryOrder?.get(position)?.productName
         Glide.with(holder.binding.imgProduct.context)
-            .load(Main.app.getBaseUrl() + items?.get(position)?.productImage)
+            .load(Main.app.getBaseUrl() + deliveryOrder?.get(position)?.productImage)
             .centerCrop()
             .placeholder(R.drawable.no_image)
             .into(holder.binding.imgProduct)
         holder.binding.txtSerials.visibility = View.GONE
         holder.binding.txtTag.visibility = View.GONE
 //        holder.binding.txtTag.text =
-//            if (items?.get(position)?.IsFOC == true) "FOC" else if (items?.get(
+//            if (deliveryOrder?.get(position)?.IsFOC == true) "FOC" else if (deliveryOrder?.get(
 //                    position
 //                )?.IsExchange == true
-//            ) "Exchange" else if (items?.get(position)?.IsExpire == true) "Expire" else "None"
+//            ) "Exchange" else if (deliveryOrder?.get(position)?.IsExpire == true) "Expire" else "None"
 
 //        holder.binding.txtTag.visibility =
 //            if (holder.binding.txtTag.text.equals("None")) View.GONE else View.VISIBLE
 
-        holder.itemView.tag = items?.get(position)
+        //holder.binding.txtSerials.text = salesOrderDetails?.get(position)?.getSerialNumbers()
+        val batchList = deliveryOrder?.get(position)?.productBatchList ?: emptyList()
+        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
+        holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+
+        holder.itemView.tag = deliveryOrder?.get(position)
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as DeliveryOrderDetails)
         }
@@ -64,7 +73,7 @@ class DeliveryOrderSummaryAdapter(val items: ArrayList<DeliveryOrderDetails>?) :
     }
 
     fun remove(position: Int) {
-        items?.removeAt(position)
+        deliveryOrder?.removeAt(position)
         notifyItemRemoved(position)
     }
 
