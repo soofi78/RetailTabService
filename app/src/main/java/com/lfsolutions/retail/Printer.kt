@@ -294,8 +294,10 @@ object Printer {
             Constants.QRTagStart + order?.deliveryOrder?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
-        templateText?.let { PrinterManager.print(it) }
-
+        templateText?.let {
+            PrinterManager.print(it)
+            PrinterManager.print(it)
+        }
         Log.d("Print", templateText.toString())
     }
 
