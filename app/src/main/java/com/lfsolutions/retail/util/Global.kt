@@ -99,6 +99,28 @@ fun <T> List<T>.disableQtyFields(
     }
 }
 
+fun <T> List<T>.disableQtyBox(
+    qtyView: View,
+    itemView: View,
+    disableBgRes: Int = R.drawable.round_disable_stroke
+) {
+    if (this.isNotEmpty()) {
+        itemView.apply {
+            isEnabled=false
+            isClickable=false
+            isFocusable=false
+            isFocusableInTouchMode = false
+        }
+        qtyView.apply {
+            isEnabled = false
+            isClickable = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+            setBackgroundResource(disableBgRes)
+        }
+    }
+}
+
 fun List<ProductBatchList>.toSerialNumberAdapter(): MultiSelectListAdapter {
     val serialItems = this.map { batch ->
         object : MultiSelectModelInterface {

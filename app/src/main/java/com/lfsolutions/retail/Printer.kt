@@ -212,7 +212,10 @@ object Printer {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
                 if ((res.result?.size ?: 0) > 0) {
-                    prepareDeliveryOrderTemplateAndPrint(res.result?.get(0), order)
+                    for (item in 0 until res.result?.get(0)?.printDefault!!) {
+                        prepareDeliveryOrderTemplateAndPrint(res.result?.get(0), order)
+                    }
+
                 }
             }
 
@@ -295,7 +298,6 @@ object Printer {
         )
 
         templateText?.let {
-            PrinterManager.print(it)
             PrinterManager.print(it)
         }
         Log.d("Print", templateText.toString())

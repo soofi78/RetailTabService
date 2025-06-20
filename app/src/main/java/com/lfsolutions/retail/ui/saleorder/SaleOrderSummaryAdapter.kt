@@ -10,6 +10,7 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
+import com.lfsolutions.retail.util.disableQtyBox
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.lfsolutions.retail.util.toAddVisibility
@@ -55,6 +56,10 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
         holder.binding.txtSerials.toAddVisibility(batchList)
         holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
         holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+        batchList.disableQtyBox(
+            holder.binding.txtQty,
+            holder.itemView
+        )
 
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesOrderDetail)

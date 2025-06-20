@@ -27,8 +27,9 @@ data class Product(
     @SerializedName("minimumQty") var minimumQty: Double? = null,
     @SerializedName("maximumQty") var maximumQty: Double? = null
 ) : HistoryItemInterface {
+
     override fun isSerialEquipment(): Boolean {
-        return type.equals("S", true)
+        return type.equals("S", true) || isAsset==true
     }
 
     fun getApplicableTaxRate(): Int {

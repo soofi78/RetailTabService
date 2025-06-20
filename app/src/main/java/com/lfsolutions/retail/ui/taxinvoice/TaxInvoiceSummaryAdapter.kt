@@ -10,6 +10,8 @@ import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
+import com.lfsolutions.retail.util.disableQtyBox
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.lfsolutions.retail.util.toAddVisibility
@@ -64,12 +66,15 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesInvoiceDetail)
         }
-        //holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
         val batchList = salveInvoiceDetails?.get(position)?.productBatchList ?: emptyList()
+        //holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtSerials.toAddVisibility(batchList)
         holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
         holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
-
+        batchList.disableQtyBox(
+            holder.binding.txtQty,
+            holder.itemView
+        )
     }
 
     fun setListener(listener: OnOrderSummarySelectListener) {

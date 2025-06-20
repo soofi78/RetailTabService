@@ -23,6 +23,7 @@ import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -69,37 +70,20 @@ class OutGoingStockSummaryAdapter(
 
         holder.binding.txtPrice.text = Main.app.getSession().currencySymbol + stockTransferProducts?.get(position)?.subTotal?.formatDecimalSeparator()
         holder.binding.txtProductName.text = stockTransferProducts?.get(position)?.productName
-        //holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
         holder.binding.txtQty.text =  products?.getQty()
-
+        holder.binding.txtQty.text = stockTransferProducts?.get(position)?.qty.toString()
         holder.binding.btnAdd.tag = position
         holder.binding.btnSub.tag = position
         holder.binding.txtQty.tag = position
 
-        if(products?.isAsset==true || !products?.productBatchList.isNullOrEmpty()){
-            holder.binding.txtQty.text=products?.productBatchList?.sumOf { it.Qty }.toString()
-            holder.binding.txtQty.apply {
-                isEnabled = false
-                isClickable = false
-                isFocusable = false
-                isFocusableInTouchMode = false
-            }
-            holder.binding.btnSub.apply {
-                isEnabled = false
-                isClickable = false
-                isFocusable = false
-                isFocusableInTouchMode = false
-                setBackgroundResource(R.drawable.oval_disable_bg)
-            }
-
-            holder.binding.btnAdd.apply {
-                isEnabled = false
-                isClickable = false
-                isFocusable = false
-                isFocusableInTouchMode = false
-                setBackgroundResource(R.drawable.oval_disable_bg)
-            }
-
+        val batchList = stockTransferProducts?.get(position)?.productBatchList ?: emptyList()
+        batchList.disableQtyFields(
+            holder.binding.txtQty,
+            holder.binding.btnSub,
+            holder.binding.btnAdd
+        )
+        //holder.binding.txtSerials.text = stockTransferProducts?.get(position)?.getSerialNumbers()
+        if(batchList.isNotEmpty()){
             val container = holder.binding.outgoingSerialNumberContainer
             container.removeAllViews() // Clear previous views (important for recycling)
             // Copy to mutable list if you want to remove later
@@ -136,15 +120,11 @@ class OutGoingStockSummaryAdapter(
                             onItemUpdate.OnItemUpdated(it)
                         }
                     }
-
                     // Refresh view
                     notifyItemChanged(holder.adapterPosition)
                 }
                 container.addView(serialView)
             }
-        }
-        else{
-            holder.binding.txtQty.text=products?.qty.toString()
         }
 
         holder.itemView.setOnClickListener {

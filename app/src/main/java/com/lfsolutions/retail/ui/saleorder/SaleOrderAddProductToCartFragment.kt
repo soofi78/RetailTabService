@@ -88,10 +88,6 @@ class SaleOrderAddProductToCartFragment : Fragment() {
             Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator(true)
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
-        mBinding.serialNumberRecyclerView.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE

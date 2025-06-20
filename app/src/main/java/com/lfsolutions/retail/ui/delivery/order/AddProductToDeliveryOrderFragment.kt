@@ -73,23 +73,24 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun setData() {
+
         mBinding.txtQty.text = "1"
         product.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
-        mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+        mBinding.txtPrice.text = Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility = View.VISIBLE
-        mBinding.serialNumberRecyclerView.visibility = View.VISIBLE
-
 
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
+        mBinding.serialNumberViewHolder.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+        mBinding.serialNumberRecyclerView.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+
+
     }
 
     private fun setHeaderData() {
@@ -183,17 +184,17 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 return@setDebouncedClickListener
             }
 
-//            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
-//                Notify.toastLong("Please add serial number")
-//                return@setOnClickListener
-//            }
-//
-//            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
-//                    .toInt() != selectedSerialNumbers.size
-//            ) {
-//                Notify.toastLong("Serial Number and quantity should be equal")
-//                return@setOnClickListener
-//            }
+            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
+                Notify.toastLong("Please add serial number")
+                return@setDebouncedClickListener
+            }
+
+            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
+                    .toInt() != selectedSerialNumbers.size
+            ) {
+                Notify.toastLong("Serial Number and quantity should be equal")
+                return@setDebouncedClickListener
+            }
 
             addToCart()
             it.findNavController().popBackStack()
