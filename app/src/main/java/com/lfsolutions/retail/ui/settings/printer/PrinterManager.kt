@@ -22,8 +22,10 @@ import com.lfsolutions.retail.util.AppSession
 import com.lfsolutions.retail.util.Constants
 import com.videotel.digital.util.Notify
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Matcher
@@ -132,8 +134,9 @@ object PrinterManager {
             return null
         }
     }
+
     @Synchronized
-    fun print(printableText: String) {
+    fun print(printableText: String,noOfCopies:Int=1) {
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val printerWidth = AppSession[Constants.PRINTER_WIDTH, "80 mm"]?.replace("mm", "")?.trim()?.toFloat() ?: 80f
@@ -209,8 +212,12 @@ object PrinterManager {
                     }
                 }
 
-                Log.i("PrintManger",printText)
-                printer?.printFormattedTextAndCut(printText, 100f)
+                Log.i("PrinterManager", "noOfCopies = $noOfCopies")
+
+                for (item in 0 until noOfCopies) {
+                    Log.i("PrinterManager", "finalPrint: $printText")
+                    printer?.printFormattedTextAndCut(printText, 100f)
+                }
 //                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
 //                printer?.disconnectPrinter()
             } catch (e: Exception) {
