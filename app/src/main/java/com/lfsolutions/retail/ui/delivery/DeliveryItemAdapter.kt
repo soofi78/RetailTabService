@@ -98,6 +98,13 @@ class DeliveryItemAdapter(
 
         binding.txtName.text = customer?.name
         binding.txtAddress.text = customer?.address1
+        customer?.postalCode?.let {
+            val txtPostalCode= it.ifEmpty { "-" }
+            binding.txtPinCode.text=
+                makeTextBold(text = binding.txtPinCode.context.getString(R.string.prefix_postal_code,txtPostalCode), startIndex = 10)
+        }?:run {
+            binding.txtPinCode.text= makeTextBold(text = binding.txtPinCode.context.getString(R.string.prefix_postal_code,"-"), startIndex = 10)
+        }
         binding.txtAccountNo.text =
             makeTextBold(
                 text = binding.txtAccountNo.context.getString(
@@ -163,6 +170,13 @@ class DeliveryItemAdapter(
 
         binding.txtName.text = customer?.name
         binding.txtAddress.text = customer?.address1
+        customer?.postalCode?.let {
+            val txtPostalCode= it.ifEmpty { "-" }
+            binding.txtPinCode.text=
+                makeTextBold(text = binding.txtPinCode.context.getString(R.string.prefix_postal_code,txtPostalCode), startIndex = 10)
+        }?:run {
+            binding.txtPinCode.text= makeTextBold(text = binding.txtPinCode.context.getString(R.string.prefix_postal_code,"-"), startIndex = 10)
+        }
         binding.txtAccountNo.text =
             makeTextBold(
                 text = binding.txtAccountNo.context.getString(

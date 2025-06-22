@@ -14,6 +14,7 @@
     <string name="prefix_account_no">A/C No. %s</string>
     <string name="prefix_area">Area - %s</string>
     <string name="prefix_balance">Balance. %s</string>
+    <string name="prefix_postal_code">PostalCode: %s</string>
 
     <string name="label_visitation_schedule">Visitation Schedule</string>
     <string name="label_all_customer">All Customers</string>
