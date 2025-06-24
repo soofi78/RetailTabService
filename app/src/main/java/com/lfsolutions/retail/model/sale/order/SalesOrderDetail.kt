@@ -60,13 +60,13 @@ data class SalesOrderDetail(
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
     @SerializedName("CreationTime") var CreationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
-    @SerializedName("ProductBatchList") var ProductBatchList: ArrayList<ProductBatchList> = arrayListOf(),
+    @SerializedName("ProductBatchList") var productBatchList: ArrayList<ProductBatchList>? = null,
 
 
     ) {
     fun getSerialNumbers(): String {
         var serials = ""
-        ProductBatchList?.forEach {
+        productBatchList?.forEach {
             Log.d("Serial", it.SerialNumber.toString())
             serials +=
                 if (serials.equals("")) it.SerialNumber.toString() else " / " + it.SerialNumber

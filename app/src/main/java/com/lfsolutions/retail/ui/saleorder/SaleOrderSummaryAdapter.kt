@@ -3,14 +3,18 @@ package com.lfsolutions.retail.ui.saleorder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.order.SalesOrderDetail
+import com.lfsolutions.retail.util.disableQtyBox
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.lfsolutions.retail.util.toAddVisibility
+import com.lfsolutions.retail.util.toSerialNumberAdapter
 
 class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>?) :
     RecyclerView.Adapter<SaleOrderSummaryAdapter.ViewHolder>() {
@@ -44,9 +48,19 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
             .centerCrop()
             .placeholder(R.drawable.no_image)
             .into(holder.binding.imgProduct)
-        holder.binding.txtSerials.text = salesOrderDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.visibility = View.GONE
         holder.itemView.tag = salesOrderDetails?.get(position)
+
+        //holder.binding.txtSerials.text = salesOrderDetails?.get(position)?.getSerialNumbers()
+        val batchList = salesOrderDetails?.get(position)?.productBatchList ?: emptyList()
+        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
+        holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+        batchList.disableQtyBox(
+            holder.binding.txtQty,
+            holder.itemView
+        )
+
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesOrderDetail)
         }

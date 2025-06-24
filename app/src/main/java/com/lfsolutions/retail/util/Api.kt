@@ -58,6 +58,8 @@ object Api {
         const val GET_CATEGORIES = "category/GetServiceProductCategories"
         const val GET_OUT_GOING_PRODUCT = "Service/GetOutGoingStockTransferProduct"
         const val GET_SERIAL_NUMBERS = "product/GetProductSerialNumbers"
+        const val GET_SOLD_PRODUCTS_SERIAL_NUMBERS = "product/GetApiSoldProductSerialNumbers"
+        const val GET_WEAR_HOUSE_SERIAL_NUMBERS = "product/GetApiWareHouseProductSerialNumbers"
         const val GET_SERIAL_NUMBERS_RETURN = "product/getApiSoldProductSerialNumbers"
         const val CREATE_UPDATE_MEMO = "agreementMemo/CreateOrUpdateAgreementMemo"
         const val CREATE_UPDATE_COMPLAINT_SERVICE =
@@ -94,5 +96,7 @@ object Api {
             "deliveryOrder/GetApiSalesOrderDetailItems"
         const val AssetManagement =
             "AssetManagement/GetAll"
+        const val GET_STOCK_RECEIVED_DETAIL = "stockTransfer/GetStockReceiveForEdit"
+        //http://rtlconnect.net/MyBossTest/api/services/app/stockTransfer/GetStockReceiveForEdit
     }
 }

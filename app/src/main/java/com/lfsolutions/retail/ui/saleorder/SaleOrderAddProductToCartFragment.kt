@@ -26,8 +26,8 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
-import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -88,15 +88,12 @@ class SaleOrderAddProductToCartFragment : Fragment() {
             Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator(true)
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
-        mBinding.serialNumberRecyclerView.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
         mBinding.saleOptionTypeViewHolder.visibility = View.GONE
         mBinding.txtSaleOption.visibility = View.GONE
+        mBinding.serialNumberViewHolder.visibility = View.GONE
     }
 
     private fun addOnClickListener() {
@@ -125,17 +122,17 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 return@setDebouncedClickListener
             }
 
-            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
+            /*if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
                 Notify.toastLong("Please add serial number")
                 return@setDebouncedClickListener
-            }
+            }*/
 
-            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
+            /*if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
                     .toInt() != selectedSerialNumbers.size
             ) {
                 Notify.toastLong("Serial Number and quantity should be equal")
                 return@setDebouncedClickListener
-            }
+            }*/
 
             addToCart()
             it.findNavController().popBackStack()
@@ -168,7 +165,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
 
     private fun addToCart() {
         val batchList = arrayListOf<ProductBatchList>()
-        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
+        if (selectedSerialNumbers.isNotEmpty()) {
             selectedSerialNumbers.forEach { serialItem ->
                 batchList.add(
                     ProductBatchList(
@@ -185,7 +182,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
 
         val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
-            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0)).toDouble()
+            (mBinding.txtQty.text.toString().toDouble() * (product.cost ?: 0.0))
         val discount = 0.0
         val taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
         val netTotal = (subTotal - discount) + taxAmount
@@ -216,7 +213,7 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                 /*CreationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                     .replace(" ", "T").plus("Z"),*/
                 CreatorUserId = Main.app.getSession().userId,
-                ProductBatchList = batchList
+                productBatchList = batchList
             ).apply {
                 product.applicableTaxes?.let {
                     ApplicableTaxes = it
@@ -251,6 +248,11 @@ class SaleOrderAddProductToCartFragment : Fragment() {
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        selectedSerialNumbers.disableQtyFields(
+                            mBinding.txtQty,
+                            mBinding.btnSub,
+                            mBinding.btnAdd
+                        )
                         updateTotal()
                         updateAddButtonForSerialNumber()
                     }

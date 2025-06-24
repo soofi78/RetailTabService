@@ -63,19 +63,34 @@ class TaxInvoiceFragment : Fragment() {
             if (Main.app.getTaxInvoice()?.salesInvoice?.salesOrderId == null) Main.app.clearTaxInvoice()
             Main.app.getTaxInvoice()?.salesInvoice?.creatorUserId = Main.app.getSession().userId
             Main.app.getTaxInvoice()?.salesInvoice?.customerId = customer.id
+            Main.app.getTaxInvoice()?.salesInvoice?.customerServiceToVisitId = customer.customerServiceToVisitId
             Main.app.getTaxInvoice()?.salesInvoice?.locationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getTaxInvoice()?.salesInvoice?.salespersonId =
                 Main.app.getSession().salesPersonId
             Main.app.getTaxInvoice()?.salesInvoice?.isTaxInclusive = customer.isTaxInclusive
-            if (customer.isTaxInclusive == true) {
+            if(Main.app.getTaxInvoice()?.salesInvoice?.type!="F" && customer.isTaxInclusive == true){
+                Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
+            }
+            /*if (customer.isTaxInclusive == true) {
                 Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
             } else {
                 Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
+            }*/
+
+            val currentType = Main.app.getTaxInvoice()?.salesInvoice?.type
+            if (currentType != "F") {
+                if (customer.isTaxInclusive == true) {
+                    Main.app.getTaxInvoice()?.salesInvoice?.type = "I"
+                } else {
+                    Main.app.getTaxInvoice()?.salesInvoice?.type = "N"
+                }
             }
-           /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
-                DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
-                    .plus("Z")*/
+
+
+            /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
+                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+                     .plus("Z")*/
             Main.app.getTaxInvoice()?.salesInvoice?.deliveryOrderDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
@@ -188,6 +203,8 @@ class TaxInvoiceFragment : Fragment() {
                 customer.paymentTermId
             if (Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName == null) Main.app.getTaxInvoice()?.salesInvoice?.paymentTermName =
                 customer.paymentTerm
+
+            Main.app.getTaxInvoice()?.salesInvoice?.remarks = binding.remarks.text.toString()
             uploadSignature()
         }
     }
@@ -304,12 +321,12 @@ class TaxInvoiceFragment : Fragment() {
                             )
                         })
                     } else {
-                        Notify.toastLong("Unable create Sale invoice: ${result.result}")
+                        Notify.toastLong("Unable to create Sale invoice: ${result.result}")
                     }
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable create sale invoice")
+                    Notify.toastLong("Unable to create sale invoice")
                 }
             }).enque(Network.api()?.createUpdateSaleInvoice(Main.app.getTaxInvoice()!!)).execute()
     }

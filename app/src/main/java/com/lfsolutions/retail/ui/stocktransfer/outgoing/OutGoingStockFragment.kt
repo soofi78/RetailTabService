@@ -168,8 +168,7 @@ class OutGoingStockFragment : Fragment() {
                     Main.app.getOutGoingStockTransferRequestObject().stockTransferDetails.clear()
                     res.result?.forEach { product ->
                         val qty = product.qtyOnHand ?: 0.0
-                        val subTotal =
-                            (qty * (product.cost ?: 0.0))
+                        val subTotal = (qty * (product.cost ?: 0.0))
                         val taxAmount =
                             subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
                         val total = (subTotal + taxAmount)
@@ -191,7 +190,8 @@ class OutGoingStockFragment : Fragment() {
                                 cost = product.cost ?: 0.0,
                                 subTotal = total,
                                 customerId = customerId,
-                                productBatchList = arrayListOf()
+                                isAsset = product.isAsset,
+                                productBatchList = product.productBatchList
                             ).apply {
                                 product.applicableTaxes?.let {
                                     applicableTaxes = it
@@ -244,7 +244,6 @@ class OutGoingStockFragment : Fragment() {
                         Notify.toastLong("Out Going Stock Transfer Failed: ${result.result}")
                     }
                 }
-
                 override fun onFailure(
                     call: Call<*>?, response: BaseResponse<*>?, tag: Any?
                 ) {

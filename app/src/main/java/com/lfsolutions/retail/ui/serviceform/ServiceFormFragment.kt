@@ -61,11 +61,14 @@ class ServiceFormFragment : Fragment() {
     private val allocatedAssets = ArrayList<Asset>()
     private val args by navArgs<ServiceFormFragmentArgs>()
     private lateinit var customer: Customer
+    private val assets = ArrayList<Asset>()
     private val feedbacks = ArrayList<Feedback>()
     private val feedbacksTypes = ArrayList<FeedbackTypes>()
     private lateinit var binding: FragmentServiceFormBinding
     private var serviceTypes = ArrayList<ServiceTypes>()
     private var reportTypes = ArrayList<ReportTypes>()
+    private var isCheckOutClick:Boolean=false
+    private lateinit var mAllocatedAssetsAdapter:AllocatedAssetsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +97,7 @@ class ServiceFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Main.app.getComplaintService()?.complaintService?.customerId = customer.id
+        Main.app.getComplaintService()?.complaintService?.customerServiceToVisitId = customer.customerServiceToVisitId
         setData()
         getServiceTypeData()
         setClickListener()
@@ -200,7 +204,8 @@ class ServiceFormFragment : Fragment() {
     private fun setAssetData() {
         binding.allocatedAssets.visibility =
             if (allocatedAssets.isEmpty()) View.GONE else View.VISIBLE
-        binding.allocatedAssetsList.adapter = AllocatedAssetsAdapter(allocatedAssets)
+        mAllocatedAssetsAdapter=AllocatedAssetsAdapter(allocatedAssets)
+        binding.allocatedAssetsList.adapter = mAllocatedAssetsAdapter
     }
 
     private fun getServiceTypeData() {
@@ -256,7 +261,7 @@ class ServiceFormFragment : Fragment() {
 
     private fun setClickListener() {
 
-        binding.btnCheckIn.setDebouncedClickListener {
+        /*binding.btnCheckIn.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateTimeSelected(
                     isoDateTime: String,
@@ -269,9 +274,9 @@ class ServiceFormFragment : Fragment() {
                     //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
                 }
             })
-        }
+        }*/
 
-        binding.btnCheckOut.setDebouncedClickListener {
+        /*binding.btnCheckOut.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
                 override fun onDateTimeSelected(
                     isoDateTime: String,
@@ -284,7 +289,7 @@ class ServiceFormFragment : Fragment() {
                     //println("complaintService:${Main.app.getComplaintService()?.complaintService}")
                 }
             })
-        }
+        }*/
 
         binding.complaintDateTimeText.setDebouncedClickListener {
             DateTime.showDateTimePicker(requireActivity(), object : DateTime.OnDatePickedCallback {
@@ -302,24 +307,28 @@ class ServiceFormFragment : Fragment() {
             })
         }
 
-       /* binding.btnCheckIn.setDebouncedClickListener {
+        binding.btnCheckIn.setDebouncedClickListener {
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T").plus("Z")
-            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime = DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkinTime.text = formattedDateTime
             binding.checkinTime.tag = time
             Main.app.getComplaintService()?.complaintService?.timeIn = time
-        }*/
+            println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+        }
 
-        /*binding.btnCheckOut.setDebouncedClickListener {
+        binding.btnCheckOut.setDebouncedClickListener {
+            isCheckOutClick=true
             val time = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                 .plus("Z")
-            val dateTimeObject = DateTime.getDateFromString(time, DateTime.ServerDateTimeFormat)
+            val dateTimeObject = getDateFromString(time, DateTime.ServerDateTimeFormat)
             val formattedDateTime =
                 DateTime.format(dateTimeObject, DateTime.DateTimeRetailFrontEndFormate)
             binding.checkoutTime.text = formattedDateTime
             binding.checkoutTime.tag = time
-        }*/
+            Main.app.getComplaintService()?.complaintService?.timeOut = time
+            println("complaintService:${Main.app.getComplaintService()?.complaintService}")
+        }
 
         binding.complainantCard.setDebouncedClickListener {
             ComplainantInformationDialog.make(
@@ -373,6 +382,9 @@ class ServiceFormFragment : Fragment() {
             Notify.toastLong("Please add your signature")
             return
         }
+        if(!isCheckOutClick)
+            Main.app.getComplaintService()?.complaintService?.timeOut = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
+            .plus("Z")
 
         Main.app.getComplaintService()?.complaintService?.remarks = binding.remarks.text.toString()
         uploadSignature()
@@ -401,6 +413,10 @@ class ServiceFormFragment : Fragment() {
     private fun saveComplaint() {
         Main.app.getComplaintService()?.serializeItems()
         Main.app.getComplaintService()?.complaintService?.customerFeedbackList = feedbacks
+
+        val selectedAssets: ArrayList<Asset> = mAllocatedAssetsAdapter.getSelectedAssets()
+        Main.app.getComplaintService()?.complaintService?.customerAssetsAllocationList = selectedAssets
+
         if (binding.spinnerType.selectedItemPosition > -1) {
             Main.app.getComplaintService()?.complaintService?.type =
                 serviceTypes.get(binding.spinnerType.selectedItemPosition).value

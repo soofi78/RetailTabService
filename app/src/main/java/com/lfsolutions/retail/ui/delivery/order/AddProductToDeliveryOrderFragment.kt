@@ -30,6 +30,7 @@ import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -72,21 +73,24 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun setData() {
+
         mBinding.txtQty.text = "1"
         product.qtyOnHand?.let {
             mBinding.txtQtyAvailable.text = it.toString()
         }
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
-        mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+        mBinding.txtPrice.text = Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility = View.GONE
-        mBinding.serialNumberRecyclerView.visibility = View.GONE
+
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
+        mBinding.serialNumberViewHolder.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+        mBinding.serialNumberRecyclerView.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+
+
     }
 
     private fun setHeaderData() {
@@ -180,17 +184,17 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 return@setDebouncedClickListener
             }
 
-//            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
-//                Notify.toastLong("Please add serial number")
-//                return@setOnClickListener
-//            }
-//
-//            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
-//                    .toInt() != selectedSerialNumbers.size
-//            ) {
-//                Notify.toastLong("Serial Number and quantity should be equal")
-//                return@setOnClickListener
-//            }
+            if (product.isSerialEquipment() && selectedSerialNumbers.isEmpty()) {
+                Notify.toastLong("Please add serial number")
+                return@setDebouncedClickListener
+            }
+
+            if (product.isSerialEquipment() && mBinding.txtQty.text.toString()
+                    .toInt() != selectedSerialNumbers.size
+            ) {
+                Notify.toastLong("Serial Number and quantity should be equal")
+                return@setDebouncedClickListener
+            }
 
             addToCart()
             it.findNavController().popBackStack()
@@ -223,21 +227,38 @@ class AddProductToDeliveryOrderFragment : Fragment() {
     }
 
     private fun addToCart() {
+        /*val batchList = arrayListOf<ProductBatchList>()
+        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
+            selectedSerialNumbers.forEach { serialItem ->
+                batchList.add(
+                    ProductBatchList(
+                        Id = serialItem.getId().toInt(),
+                        SerialNumber = serialItem.getText(),
+                        Price = 0,
+                        ProductId = 0,
+                        TenantId = 0,
+                        UnitCost = 0
+                    )
+                )
+            }
+        }*/
+
         val batchList = arrayListOf<ProductBatchList>()
-//        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
-//            selectedSerialNumbers.forEach { serialItem ->
-//                batchList.add(
-//                    ProductBatchList(
-//                        Id = serialItem.getId().toInt(),
-//                        SerialNumber = serialItem.getText(),
-//                        Price = 0,
-//                        ProductId = 0,
-//                        TenantId = 0,
-//                        UnitCost = 0
-//                    )
-//                )
-//            }
-//        }
+        if (selectedSerialNumbers != null && selectedSerialNumbers.size > 0) {
+            selectedSerialNumbers.forEach { serialItem ->
+                batchList.add(
+                    ProductBatchList(
+                        Id = serialItem.getId().toInt(),
+                        SerialNumber = serialItem.getText(),
+                        Price = 0,
+                        ProductId = 0,
+                        TenantId = 0,
+                        UnitCost = 0
+                    )
+                )
+            }
+        }
+
 
         val qty = mBinding.txtQty.text.toString().toDouble()
         val subTotal =
@@ -262,6 +283,7 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 /*creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                     .replace(" ", "T").plus("Z"),*/ //by nisha
                 creatorUserId = Main.app.getSession().userId,
+                productBatchList = batchList
             )
         )
     }
@@ -292,6 +314,11 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        selectedSerialNumbers.disableQtyFields(
+                            mBinding.txtQty,
+                            mBinding.btnSub,
+                            mBinding.btnAdd
+                        )
                         updateTotal()
                         updateAddButtonForSerialNumber()
                     }

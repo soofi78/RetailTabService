@@ -1,4 +1,4 @@
-package com.lfsolutions.retail.ui.stocktransfer
+package com.lfsolutions.retail.ui.stocktransfer.outgoing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -114,11 +114,9 @@ class StockTransferDetailsFragment : Fragment() {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    stockTransfer =
-                        (response?.body() as BaseResponse<StockTransferDetailItem>).result
+                    stockTransfer = (response?.body() as BaseResponse<StockTransferDetailItem>).result
                     setData()
                 }
-
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
                     Notify.toastLong("Unable to get stock transfer details")
                 }

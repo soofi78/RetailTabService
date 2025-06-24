@@ -209,6 +209,9 @@ data class SalesInvoice(
         "reportName",
     ) var reportName: String? = null,
 
+    @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId"))
+    var customerServiceToVisitId: Long= 0,
+
     ) {
     fun InvoiceDateFormatted(): String {
         val date = DateTime.getDateFromString(
@@ -255,6 +258,7 @@ data class SalesInvoice(
     fun PaidAmountFormatted(): String {
         return Main.app.getSession().currencySymbol + paidAmount?.formatDecimalSeparator()
     }
+
 
     fun signatureUrl(): String {
         return Main.app.getBaseUrl() + signature?.replace("\\\\", "\\").toString()

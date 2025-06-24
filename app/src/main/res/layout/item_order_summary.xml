@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/gray">
 
     <FrameLayout
@@ -30,81 +31,119 @@
             android:id="@+id/swipeAble"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp">
+            android:background="@color/gray">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imgProduct"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/no_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="10dp"
+                android:layout_marginBottom="2dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@color/red"
-                android:padding="3dp"
-                android:text="FOC"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/imgProduct"
-                app:layout_constraintTop_toTopOf="parent" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgProduct"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/no_image"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtProductName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="Product Name"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/txtQty"
-                app:layout_constraintStart_toEndOf="@+id/imgProduct"
-                app:layout_constraintTop_toBottomOf="@+id/txtTag" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/productDescView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imgProduct"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtSerials"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="S1232345/2344/23232"
-                android:textColor="@color/red"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/txtProductName"
-                app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@color/red"
+                        android:padding="3dp"
+                        android:text="FOC"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtQty"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/round_yellow_stroke"
-                android:gravity="center"
-                android:text="22.0"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/txtPrice"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtProductName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/product_name"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/txtQty"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtTag" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtPrice"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:gravity="end"
-                android:text=""
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtSerials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/serial_numbers_colon"
+                        android:textColor="@color/red"
+                        android:textSize="16sp"
+                        style="@style/TextAppearance.AppCompat.Title"
+                        app:layout_constraintStart_toStartOf="@+id/txtProductName"
+                        app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtQty"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="@drawable/round_yellow_stroke"
+                        android:gravity="center"
+                        android:text="1.0"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/txtPrice"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="end"
+                        android:text="20$"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/serialNumberRV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:itemCount="4"
+                    app:spanCount="3"
+                    tools:listitem="@layout/multi_select_recycler_item"
+                    app:layout_constraintStart_toStartOf="@+id/productDescView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/productDescView"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 

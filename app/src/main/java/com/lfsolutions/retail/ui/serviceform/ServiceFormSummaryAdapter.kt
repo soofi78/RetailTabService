@@ -3,12 +3,16 @@ package com.lfsolutions.retail.ui.serviceform
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.service.ComplaintServiceDetails
+import com.lfsolutions.retail.util.disableQtyBox
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.lfsolutions.retail.util.toAddVisibility
+import com.lfsolutions.retail.util.toSerialNumberAdapter
 
 class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDetails>?) :
     RecyclerView.Adapter<ServiceFormSummaryAdapter.ViewHolder>() {
@@ -37,8 +41,18 @@ class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDe
         holder.binding.txtPrice.text =
             Main.app.getSession().currencySymbol + serviceDetails?.get(position)?.price?.formatDecimalSeparator()
         holder.binding.txtProductName.text = serviceDetails?.get(position)?.productName
-        holder.binding.txtSerials.text = serviceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text = serviceDetails?.get(position)?.transTypeDisplayText
+
+        val batchList = serviceDetails?.get(position)?.productBatchList ?: emptyList()
+        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
+        holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+
+        batchList.disableQtyBox(
+            holder.binding.txtQty,
+            holder.itemView
+        )
+
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect()
         }

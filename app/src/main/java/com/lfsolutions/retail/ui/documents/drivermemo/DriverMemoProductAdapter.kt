@@ -11,7 +11,6 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemDriverDetailsBinding
 import com.lfsolutions.retail.model.memo.DriverMemoDetail
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
-import com.lfsolutions.retail.ui.stocktransfer.outgoing.OutGoingStockSummaryAdapter.OnItemUpdated
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.setDebouncedClickListener
 

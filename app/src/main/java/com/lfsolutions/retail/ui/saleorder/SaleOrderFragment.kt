@@ -58,6 +58,7 @@ class SaleOrderFragment : Fragment() {
             Main.app.getSaleOrder()
             Main.app.getSaleOrder()?.SalesOrder?.CreatorUserId = Main.app.getSession().userId
             Main.app.getSaleOrder()?.SalesOrder?.CustomerId = customer.id
+            Main.app.getTaxInvoice()?.salesInvoice?.customerServiceToVisitId = customer.customerServiceToVisitId
             Main.app.getSaleOrder()?.SalesOrder?.LocationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getSaleOrder()?.SalesOrder?.SalespersonId = Main.app.getSession().salesPersonId
@@ -188,6 +189,7 @@ class SaleOrderFragment : Fragment() {
     }
 
     private fun saveSaleOrder() {
+       // println("SalesOrderPayload: ${Main.app.getSaleOrder()}")
         NetworkCall.make().autoLoadigCancel(Loading().forApi(requireActivity(), "Please wait..."))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {

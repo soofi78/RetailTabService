@@ -49,22 +49,13 @@
             app:layout_constraintStart_toStartOf="@id/txtName"
             app:layout_constraintTop_toBottomOf="@id/txtName" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtPincode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PinCode"
-            android:textSize="14sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/txtName"
-            app:layout_constraintTop_toBottomOf="@id/txtAddress" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txtGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Group - BKE"
-            android:textSize="15sp"
+            android:textSize="14sp"
             app:layout_constraintHorizontal_weight="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -72,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="A/C No. AZ0001"
-            android:textSize="15sp"
+            android:textSize="14sp"
             app:layout_constraintHorizontal_weight="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -80,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Area - -"
-            android:textSize="15sp"
+            android:textSize="14sp"
             app:layout_constraintHorizontal_weight="1" />
 
         <androidx.constraintlayout.helper.widget.Flow
@@ -91,7 +82,16 @@
             app:constraint_referenced_ids="txtGroup,txtAccountNo,txtArea"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/txtName"
-            app:layout_constraintTop_toBottomOf="@+id/txtPincode" />
+            app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtPinCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/prefix_postal_code"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txtGroup"
+            app:layout_constraintTop_toBottomOf="@id/flowInfo" />
 
         <CheckBox
             android:id="@+id/selected"

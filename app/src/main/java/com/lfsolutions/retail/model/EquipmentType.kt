@@ -13,4 +13,5 @@ data class EquipmentType(
     override fun toString(): String {
         return displayText.toString()
     }
+
 }

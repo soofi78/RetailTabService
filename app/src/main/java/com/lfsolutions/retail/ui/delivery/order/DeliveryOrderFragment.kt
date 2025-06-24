@@ -64,6 +64,7 @@ class DeliveryOrderFragment : Fragment() {
             if (Main.app.getDeliveryOrder()?.deliveryOrder?.salesOrderId == null) Main.app.clearDeliveryOrder()
             Main.app.getDeliveryOrder()?.deliveryOrder?.creatorUserId = Main.app.getSession().userId
             Main.app.getDeliveryOrder()?.deliveryOrder?.customerId = customer.id
+            Main.app.getDeliveryOrder()?.deliveryOrder?.customerServiceToVisitId = customer.customerServiceToVisitId
             Main.app.getDeliveryOrder()?.deliveryOrder?.locationId =
                 Main.app.getSession().defaultLocationId
             Main.app.getDeliveryOrder()?.deliveryOrder?.salesPersonId =
@@ -74,6 +75,8 @@ class DeliveryOrderFragment : Fragment() {
             Main.app.getDeliveryOrder()?.deliveryOrder?.deliveryDate =
                 DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                     .plus("Z")
+
+            //println("DeliveryOrder: ${Main.app.getDeliveryOrder()?.deliveryOrder}")
         }
         return binding.root
 
@@ -180,7 +183,6 @@ class DeliveryOrderFragment : Fragment() {
                     Notify.toastLong("Product List Updated")
                     result.result?.items?.let { mapProduct(it) }
                 }
-
                 override fun onFailure(
                     call: Call<*>?, response: BaseResponse<*>?, tag: Any?
                 ) {

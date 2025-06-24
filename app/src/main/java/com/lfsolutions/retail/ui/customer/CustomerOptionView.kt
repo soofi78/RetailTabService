@@ -97,7 +97,6 @@ class CustomerOptionView : BottomSheetDialogFragment() {
             ) {
                 getCustomerDetails()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
@@ -172,6 +171,7 @@ class CustomerOptionView : BottomSheetDialogFragment() {
         query.split(" ").toSet().forEach {
             contains = contains && (customer.name?.lowercase()
                 ?.contains(it.lowercase()) == true || customer.customerCode?.lowercase()
+                ?.contains(it.lowercase()) == true || customer.postalCode?.lowercase()
                 ?.contains(it.lowercase()) == true || customer.group?.lowercase()
                 ?.contains(it.lowercase()) == true || customer.customerWorkArea?.lowercase()
                 ?.contains(it.lowercase()) == true || customer.area?.lowercase()

@@ -51,7 +51,8 @@ data class Customer(
     @SerializedName("customerWorkArea") var customerWorkArea: String? = null,
     @SerializedName("isVisitationSchedule") var isVisitationSchedule: Boolean? = null,
     @SerializedName("salesOrderId") var saleOrderId: Int? = null,
-    @SerializedName("visitDate") var visitDate: String? = null
+    @SerializedName("visitDate") var visitDate: String? = null,
+    @SerializedName("customerServiceToVisitId") var customerServiceToVisitId: Long = 0,
 
 ) : Serializable
 

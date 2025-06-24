@@ -155,6 +155,15 @@ data class SalesInvoiceDetail(
         return serials
     }
 
+    fun getSerialNumberText():String{
+        var serials = ""
+        productBatchList?.forEach {
+            Log.d("Serial", it.SerialNumber.toString())
+            serials=it.SerialNumber ?:""
+        }
+        return ""
+    }
+
     override fun equals(other: Any?): Boolean {
         if (localId == (other as SalesInvoiceDetail).localId) return true
         return super.equals(other)

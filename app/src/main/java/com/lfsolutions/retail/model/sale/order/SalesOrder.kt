@@ -72,5 +72,5 @@ data class SalesOrder(
     @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
     @SerializedName("Signature") var Signature: String? = null,
     @SerializedName("reportName") var reportName: String? = null,
-
+    @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId")) var customerServiceToVisitId: Long= 0,
     )

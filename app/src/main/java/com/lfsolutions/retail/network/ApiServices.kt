@@ -67,6 +67,7 @@ import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.saleorder.Order
+import com.lfsolutions.retail.ui.stocktransfer.incoming.StockReceived
 import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.util.Api
 import okhttp3.MultipartBody
@@ -95,7 +96,6 @@ interface ApiServices {
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_EQUIPMENT_TYPE))
     fun getEquipmentType(): Call<RetailResponse<EquipmentTypeResult>>
-
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.CommonLookup).plus(Api.Name.GET_ACTION_TYPES))
     fun getActionTypes(): Call<RetailResponse<ActionTypeResult>>
@@ -141,6 +141,13 @@ interface ApiServices {
         @Query("isSold") isSold: Boolean = false
     ): Call<RetailResponse<ArrayList<SerialNumber>>>?
 
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_WEAR_HOUSE_SERIAL_NUMBERS))
+    fun getSoldProductSerialNumbers(
+        @Query("productId") productId: Long?,
+        @Query("locationId") locationId: Long?,
+        @Query("isSold") isSold: Boolean = false
+    ): Call<RetailResponse<ArrayList<SerialNumber>>>?
+
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_SERIAL_NUMBERS_RETURN))
     fun getSerialNumbersReturn(
         @Query("productId") productId: Long?,
@@ -159,8 +166,7 @@ interface ApiServices {
     )
     fun createUpdateSaleOrder(@Body saleOrderRequest: SaleOrderRequest): Call<BaseResponse<Order>>?
 
-    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice)
-            .plus(Api.Name.CREATE_UPDATE_SALE_INVOICE))
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.SaleInvoice).plus(Api.Name.CREATE_UPDATE_SALE_INVOICE))
 
     fun createUpdateSaleInvoice(@Body saleInvoiceObject: SaleInvoiceObject): Call<BaseResponse<Invoice>>?
 
@@ -169,7 +175,10 @@ interface ApiServices {
     fun createDeliveryOrder(@Body deliveryOrderDTO: DeliveryOrderDTO): Call<BaseResponse<DeliverOrderDetail>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_IN_COMING_STOCK_TRANSFER))
-    fun createUpdateInComingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<Any>>?
+    fun createUpdateInComingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<StockReceived>>?
+
+    @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.GET_STOCK_RECEIVED_DETAIL))
+    fun getStockReceivedDetails(@Body idRequest: IdRequest): Call<BaseResponse<StockTransferDetailItem>>
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_OUT_GOING_STOCK_TRANSFER))
     fun createUpdateOutGoingStockTransfer(@Body stockTransferRequestBody: StockTransferRequestBody): Call<BaseResponse<String>>?

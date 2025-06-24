@@ -179,7 +179,7 @@
 
     <fragment
         android:id="@+id/navigation_transfer_detail"
-        android:name="com.lfsolutions.retail.ui.stocktransfer.StockTransferDetailsFragment"
+        android:name="com.lfsolutions.retail.ui.stocktransfer.outgoing.StockTransferDetailsFragment"
         android:label="Customers"
         tools:layout="@layout/fragment_stock_transfer_details">
         <argument

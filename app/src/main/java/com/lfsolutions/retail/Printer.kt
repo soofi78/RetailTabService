@@ -4,8 +4,10 @@ import android.app.Activity
 import android.util.Log
 import android.widget.LinearLayout
 import com.lfsolutions.retail.model.PrintTemplate
+import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.TypeRequest
+import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
@@ -14,15 +16,20 @@ import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
+import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.util.Alert
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_CURRENT_STOCK
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
 
 object Printer {
+    private val templateCache = mutableMapOf<Int, PrintTemplate?>()
+
     fun askForPrint(activity: Activity, print: () -> Unit, cancel: () -> Unit) {
         Alert.make(activity).setTitle("Confirm!")
             .setDescription("Do you want to print the current item you just created?")
@@ -87,7 +94,6 @@ object Printer {
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceAddress2, invoice?.salesInvoice?.address2 ?: ""
         )
-
 
         val itemTemplate = try {
             templateText?.substring(
@@ -289,8 +295,9 @@ object Printer {
             Constants.QRTagStart + order?.deliveryOrder?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
-        templateText?.let { PrinterManager.print(it) }
-
+        templateText?.let {
+            PrinterManager.print(it,noOfCopies=template?.printDefault?:1)
+        }
         Log.d("Print", templateText.toString())
     }
 
@@ -450,6 +457,11 @@ object Printer {
         )
 
 
+        templateText = templateText?.replace(
+            Constants.Invoice.TotalAmount, "${receipt?.getAmount()?:0.0}"
+        )
+
+
         val itemTemplate = templateText?.substring(
             templateText.indexOf(Constants.Common.ItemsStart),
             templateText.indexOf(Constants.Common.ItemsEnd) + 10
@@ -464,7 +476,7 @@ object Printer {
             items += itemTemplateClean?.replace(Constants.Common.Index, count.toString())
                 ?.replace(Constants.Receipt.TransactionNo, it.transactionNo.toString())
                 ?.replace(Constants.Receipt.TransactionDate, it.transactionDate.toString())
-                ?.replace(Constants.Receipt.TransactionAmount, it.getAmount().toString())
+                ?.replace(Constants.Receipt.TransactionAmount, it.getAppliedAmount())
             count += 1
             if (count < (receipt.items?.size ?: 0)) {
                 items += "\n"
@@ -489,5 +501,96 @@ object Printer {
         Log.d("Print", templateText.toString())
     }
 
+    /*-------------Print current stocks-----------------*/
 
+    fun printInComingStock(activity: Activity, stockReceived: StockTransferDetailItem?){
+        getTemplate(activity, PRINT_TYPE_INCOMMING_STOCK) { template ->
+            template?.let {
+                prepareInComingStockTemplateAndPrint(it, stockReceived)
+            }
+        }
+    }
+
+    private fun prepareInComingStockTemplateAndPrint(
+        template: PrintTemplate?,
+        stockReceived: StockTransferDetailItem?){
+        val templateText = template?.template
+        templateText?.let { PrinterManager.print(printableText=it, noOfCopies = template.printDefault ) }
+
+        Log.d("Print", templateText.toString())
+    }
+
+    fun printCurrentStock(activity: Activity, currentStocks: ArrayList<HistoryItemInterface>) {
+        getTemplate(activity, PRINT_TYPE_CURRENT_STOCK) { template ->
+            template?.let {
+                prepareStockTemplateAndPrint(it, currentStocks)
+            }
+        }
+    }
+
+    private fun prepareStockTemplateAndPrint(template: PrintTemplate?,currentStocks: ArrayList<HistoryItemInterface>) {
+        var templateText = template?.template
+        var items = ""
+        //var count = 0
+
+        val itemTemplate = templateText?.substring(
+            templateText.indexOf(Constants.Common.ItemsStart),
+            templateText.indexOf(Constants.Common.ItemsEnd) + 10
+        )
+
+        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
+            ?.replace(Constants.Common.ItemsEnd, "")
+
+        currentStocks.forEachIndexed { index, historyItemInterface ->
+            val stock = historyItemInterface as Product
+            items += itemTemplateClean?.replace(Constants.Common.Index, "${index+1}")
+                ?.replace(Constants.CurrentStock.ProductName, stock.getTitle())
+                ?.replace(Constants.CurrentStock.Price, stock.getAmount())
+                ?.replace(Constants.CurrentStock.QTY, stock.getPrintQty())
+                ?.replace(Constants.CurrentStock.UOM, stock.getPrintUOM())
+                ?.replace(Constants.CurrentStock.MinQty, stock.getPrintMinQty())
+                ?.replace(Constants.CurrentStock.VarQty, stock.getPrintVarianceQty())
+            if (index < currentStocks.size) {
+                items += "\n"
+            }
+        }
+
+        templateText = templateText?.replace(itemTemplate.toString(), items)
+        templateText?.let { PrinterManager.print(it) }
+
+        Log.d("Print", templateText.toString())
+    }
+
+    private fun getTemplate(
+        activity: Activity,
+        typeId: Int,
+        onResult: (PrintTemplate?) -> Unit
+    ) {
+        val cached = templateCache[typeId]
+        if (cached != null) {
+            onResult(cached)
+            return
+        }
+
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
+                val template = res.result?.getOrNull(0)
+                templateCache[typeId] = template
+                onResult(template)
+            }
+
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to get order template")
+                onResult(null)
+            }
+
+        }).autoLoadigCancel(Loading().forApi(activity, "Loading order template..."))
+            .enque(Network.api()?.getReceiptTemplatePrint(TypeRequest(typeId)))
+            .execute()
+    }
+
+    fun clearCache() {
+        templateCache.clear()
+    }
 }

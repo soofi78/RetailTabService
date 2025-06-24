@@ -29,6 +29,7 @@ import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -75,11 +76,18 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
     private fun updateSerialNumbersAdapter() {
         mAdapter = MultiSelectListAdapter(selectedSerialNumbers)
         mBinding.recyclerView.adapter = mAdapter
+        selectedSerialNumbers.disableQtyFields(
+            mBinding.txtQty,
+            mBinding.btnSub,
+            mBinding.btnAdd
+        )
     }
+
 
     private fun addSerialNumberClick() {
         mBinding.addSerialNumber.setDebouncedClickListener {
-            if (serialNumbers == null || serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
+            getSerialNumbersList()
+            //if (serialNumbers.isEmpty()) getSerialNumbersList() else showSerialNumbersList()
         }
     }
 
@@ -97,9 +105,18 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
                     Notify.toastLong("Unable to get serial numbers list")
                 }
             }).enque(
-                Network.api()?.getSerialNumbers(
-                    product?.productId, Main.app.getSession().defaultLocationId?.toLong()
-                )
+                if(getReturnStatus()){
+                    Network.api()?.getSoldProductSerialNumbers(
+                        productId = product?.productId,
+                        locationId=Main.app.getSession().defaultLocationId?.toLong(),
+                        isSold = getReturnStatus()
+                    )
+                }else{
+                    Network.api()?.getSerialNumbers(
+                        productId = product?.productId,
+                        locationId=Main.app.getSession().defaultLocationId?.toLong()
+                    )
+                }
             ).execute()
     }
 
@@ -296,6 +313,12 @@ class AddAgreementMemoEquipmentFragment : Fragment() {
     private fun getAgreementType(): String {
         return equipmentTypes?.get(mBinding.spinnerEquipmentType.selectedItemPosition)?.value ?: ""
     }
+
+    private fun getReturnStatus(): Boolean {
+        return equipmentTypes?.get(mBinding.spinnerEquipmentType.selectedItemPosition)?.value?.equals("RT", ignoreCase = true) == true
+    }
+
+
 
     private fun updateTotal() {
         mBinding.txtTotalPrice.text = product?.cost?.let {

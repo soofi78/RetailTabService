@@ -14,7 +14,7 @@ data class DeliveryOrderDetails(
     var id: Int? = null,
     var inventoryCode: String? = null,
     var isNewItem: Boolean? = true,
-    var productBatchList: List<ProductBatchList> = arrayListOf(),
+    //var productBatchList: List<ProductBatchList> = arrayListOf(),
     var productId: Int? = null,
     var productName: String? = null,
     var productImage: String? = null,
@@ -24,7 +24,9 @@ data class DeliveryOrderDetails(
     var unitId: Int? = null,
     @SerializedName("uom", alternate = arrayOf("unitName")) var uom: String? = "",
     var creationTime: String? = null,
-    var creatorUserId: Int? = null
+    var creatorUserId: Int? = null,
+    @SerializedName("ProductBatchList", alternate = arrayOf("productBatchList"))
+    var productBatchList: ArrayList<ProductBatchList>? = null,
 ) : HistoryItemInterface {
     override fun getTitle(): String {
         return inventoryCode.toString() + " - " + productName.toString()

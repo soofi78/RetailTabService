@@ -22,7 +22,7 @@ class MultiSelectListAdapter(private val serialNumbers: ArrayList<MultiSelectMod
     override fun getItemCount(): Int = serialNumbers.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.serialNumberText.setText(serialNumbers[position].getText())
+        holder.binding.serialNumberText.text = serialNumbers[position].getText()
     }
 
 }

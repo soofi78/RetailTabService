@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.databinding.FragmentCurrentStockBinding
 import com.lfsolutions.retail.model.LocationIdRequestObject
 import com.lfsolutions.retail.model.Product
@@ -23,6 +24,7 @@ import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
@@ -90,6 +92,10 @@ class CurrentStockFragment : Fragment() {
                 return true
             }
         })
+
+        binding.print.setDebouncedClickListener {
+            Printer.printCurrentStock(requireActivity(), currentStock)
+        }
     }
 
 

@@ -3,14 +3,19 @@ package com.lfsolutions.retail.ui.taxinvoice
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.ItemOrderSummaryBinding
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
+import com.lfsolutions.retail.util.disableQtyBox
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.setDebouncedClickListener
+import com.lfsolutions.retail.util.toAddVisibility
+import com.lfsolutions.retail.util.toSerialNumberAdapter
 
 class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDetail>?) :
     RecyclerView.Adapter<TaxInvoiceSummaryAdapter.ViewHolder>() {
@@ -48,7 +53,6 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
             .centerCrop()
             .placeholder(R.drawable.no_image)
             .into(holder.binding.imgProduct)
-        holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
         holder.binding.txtTag.text =
             if (salveInvoiceDetails?.get(position)?.isFOC == true) "FOC" else if (salveInvoiceDetails?.get(
                     position
@@ -62,7 +66,15 @@ class TaxInvoiceSummaryAdapter(val salveInvoiceDetails: ArrayList<SalesInvoiceDe
         holder.itemView.setDebouncedClickListener {
             mListener?.onOrderSummarySelect(it.tag as SalesInvoiceDetail)
         }
-
+        val batchList = salveInvoiceDetails?.get(position)?.productBatchList ?: emptyList()
+        //holder.binding.txtSerials.text = salveInvoiceDetails?.get(position)?.getSerialNumbers()
+        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
+        holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
+        batchList.disableQtyBox(
+            holder.binding.txtQty,
+            holder.itemView
+        )
     }
 
     fun setListener(listener: OnOrderSummarySelectListener) {

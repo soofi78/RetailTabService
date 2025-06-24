@@ -1,0 +1,37 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.lfsolutions.retail",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 161,
+      "versionName": "0.2.161",
+      "outputFile": "Retail_Release_VC161_VN0.2.161_VD20250602-1642.apk"
+    }
+  ],
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/Retail_Release_VC161_VN0.2.161_VD20250602-1642.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/Retail_Release_VC161_VN0.2.161_VD20250602-1642.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 24
+}

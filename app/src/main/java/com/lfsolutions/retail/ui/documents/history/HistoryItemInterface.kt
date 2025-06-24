@@ -5,7 +5,15 @@ interface HistoryItemInterface {
     fun getDescription(): String
     fun getAmount(): String
 
+    fun getAppliedAmount(): String{
+        return ""
+    }
+
     fun getMinQty(): String {
+        return ""
+    }
+
+    fun getVarianceQty(): String{
         return ""
     }
 

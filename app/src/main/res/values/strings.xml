@@ -14,6 +14,7 @@
     <string name="prefix_account_no">A/C No. %s</string>
     <string name="prefix_area">Area - %s</string>
     <string name="prefix_balance">Balance. %s</string>
+    <string name="prefix_postal_code">PostalCode: %s</string>
 
     <string name="label_visitation_schedule">Visitation Schedule</string>
     <string name="label_all_customer">All Customers</string>
@@ -93,9 +94,9 @@
         <item>Bluetooth Printer</item>
     </string-array>
     <string-array name="paperWidth">
-        <item>48 mm</item>
-        <item>58 mm</item>
         <item>80 mm</item>
+        <item>58 mm</item>
+        <item>48 mm</item>
         <item>110 mm</item>
     </string-array>
 
@@ -151,5 +152,8 @@
     <string name="product_name">Product Name:</string>
     <string name="allocated_assets">Allocated Assets</string>
     <string name="foc">FOC</string>
+    <string name="time_in_colon">Time In:</string>
+    <string name="time_out_colon">Time Out:</string>
+    <string name="serial_numbers_colon">Serial Numbers:</string>
 
 </resources>

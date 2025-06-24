@@ -27,6 +27,7 @@ import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -87,7 +88,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
             Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility =
+        mBinding.serialNumberViewHolder.visibility =
             if (product.isSerialEquipment()) View.VISIBLE else View.GONE
         mBinding.serialNumberRecyclerView.visibility =
             if (product.isSerialEquipment()) View.VISIBLE else View.GONE
@@ -216,6 +217,11 @@ class InComingStockAddProductToCartFragment : Fragment() {
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        selectedSerialNumbers.disableQtyFields(
+                            mBinding.txtQty,
+                            mBinding.btnSub,
+                            mBinding.btnAdd
+                        )
                         updateTotal()
                         updateAddButtonForSerialNumber()
                     }

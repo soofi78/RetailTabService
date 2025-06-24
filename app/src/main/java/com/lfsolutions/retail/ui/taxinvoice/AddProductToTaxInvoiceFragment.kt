@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
@@ -31,6 +32,7 @@ import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.disableQtyFields
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog
 import com.lfsolutions.retail.util.multiselect.MultiSelectDialog.SubmitCallbackListener
@@ -80,10 +82,8 @@ class AddProductToTaxInvoiceFragment : Fragment() {
             Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator(true)
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
-        mBinding.serialheader.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
-        mBinding.serialNumberRecyclerView.visibility =
-            if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+        mBinding.serialNumberViewHolder.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
+        mBinding.serialNumberRecyclerView.visibility = if (product.isSerialEquipment()) View.VISIBLE else View.GONE
         mBinding.lblTaxAsterik.visibility = View.GONE
         mBinding.lblApplicableTax.visibility = View.GONE
         mBinding.spinnerApplicableTax.visibility = View.GONE
@@ -322,6 +322,11 @@ class AddProductToTaxInvoiceFragment : Fragment() {
                         selectedIds?.let { selectedSerialNumbers.addAll(it) }
                         updateSerialNumbersAdapter()
                         mBinding.txtQty.text = selectedSerialNumbers.size.toString()
+                        selectedSerialNumbers.disableQtyFields(
+                            mBinding.txtQty,
+                            mBinding.btnSub,
+                            mBinding.btnAdd
+                        )
                         updateTotal()
                         updateAddButtonForSerialNumber()
                     }

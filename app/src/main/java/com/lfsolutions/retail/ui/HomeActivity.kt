@@ -22,6 +22,7 @@ class HomeActivity : BaseActivity() {
     private var _binding: ActivityHomeBinding? = null
 
     private val mBinding get() = _binding!!
+    private var navState: Bundle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +34,29 @@ class HomeActivity : BaseActivity() {
         val navView: BottomNavigationView = mBinding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
+        if (savedInstanceState != null) {
+            navState = savedInstanceState.getBundle("nav_state")
+            navState?.let {
+                navController.restoreState(it)
+            }
+        }
         navView.setupWithNavController(navController)
+
         Main.app.getSession().isSuperVisor?.let {
             navView.menu.findItem(R.id.navigation_schedule)
                 .setVisible(it)
         }
+
         setData()
         setClickListener()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        println("onSaveInstanceState")
+        val navController = findNavController(R.id.nav_host_fragment_activity_home)
+        outState.putBundle("nav_state", navController.saveState())
     }
 
     private fun setClickListener() {

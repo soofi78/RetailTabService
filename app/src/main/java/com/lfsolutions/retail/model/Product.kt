@@ -2,8 +2,10 @@ package com.lfsolutions.retail.model
 
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import kotlin.time.Duration.Companion.minutes
 
 
 data class Product(
@@ -20,12 +22,14 @@ data class Product(
     @SerializedName("imagePath") var imagePath: String? = null,
     @SerializedName("isAsset") var isAsset: Boolean? = null,
     @SerializedName("applicableTaxes") var applicableTaxes: ArrayList<ApplicableTaxes>? = arrayListOf(),
+    @SerializedName("productBatchList") var productBatchList: ArrayList<ProductBatchList>? = arrayListOf(),
     @SerializedName("type") var type: String? = null,
     @SerializedName("minimumQty") var minimumQty: Double? = null,
     @SerializedName("maximumQty") var maximumQty: Double? = null
 ) : HistoryItemInterface {
+
     override fun isSerialEquipment(): Boolean {
-        return type.equals("S", true)
+        return type.equals("S", true) || isAsset==true
     }
 
     fun getApplicableTaxRate(): Int {
@@ -46,6 +50,23 @@ data class Product(
         return "Quantity: $qtyOnHand / $unitName"
     }
 
+    fun getPrintQty(): String {
+        return qtyOnHand?.formatDecimalSeparator().toString()
+    }
+
+    fun getPrintUOM(): String {
+        return unitName?:""
+    }
+
+    fun getPrintMinQty(): String {
+        return minimumQty?.formatDecimalSeparator().toString()
+    }
+
+    fun getPrintVarianceQty(): String {
+        val varianceQty=qtyOnHand?.minus(minimumQty?:0.0)
+        return varianceQty?.formatDecimalSeparator().toString()
+    }
+
     override fun getAmount(): String {
         return Main.app.getSession().currencySymbol + price?.formatDecimalSeparator().toString()
     }
@@ -53,6 +74,11 @@ data class Product(
     override fun getMinQty(): String {
         return "Min. Qty: ${minimumQty?.formatDecimalSeparator().toString()}"
     }
+
+    override fun getVarianceQty(): String {
+        return "Variance Qty: ${qtyOnHand?.minus(minimumQty?:0.0)?.formatDecimalSeparator().toString()}"
+    }
+
 
     override fun getImageUrl(): String {
         return (Main.app.getBaseUrl() + imagePath)

@@ -8,7 +8,7 @@ data class ProductBatchList(
     @SerializedName("ProductId", alternate = arrayOf("productId")) var ProductId: Int? = null,
     @SerializedName("SerialNumber", alternate = arrayOf("serialNumber")) var SerialNumber: String? = null,
     @SerializedName("BatchCode", alternate = arrayOf("batchCode")) var BatchCode: String? = null,
-    @SerializedName("Qty", alternate = arrayOf("qty")) var Qty: Int = 1,
+    @SerializedName("Qty", alternate = arrayOf("qty")) var Qty: Double = 1.0,
     @SerializedName("ExpiryDate", alternate = arrayOf("expiryDate")) var ExpiryDate: String? = null,
     @SerializedName("UnitCost", alternate = arrayOf("unitCost")) var UnitCost: Int? = null,
     @SerializedName("Price", alternate = arrayOf("price")) var Price: Int? = null,
