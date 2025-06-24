@@ -96,5 +96,7 @@ object Api {
             "deliveryOrder/GetApiSalesOrderDetailItems"
         const val AssetManagement =
             "AssetManagement/GetAll"
+        const val GET_STOCK_RECEIVED_DETAIL = "stockTransfer/GetStockReceiveForEdit"
+        //http://rtlconnect.net/MyBossTest/api/services/app/stockTransfer/GetStockReceiveForEdit
     }
 }

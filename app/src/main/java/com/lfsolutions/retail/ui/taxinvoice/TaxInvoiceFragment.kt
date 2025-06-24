@@ -321,12 +321,12 @@ class TaxInvoiceFragment : Fragment() {
                             )
                         })
                     } else {
-                        Notify.toastLong("Unable create Sale invoice: ${result.result}")
+                        Notify.toastLong("Unable to create Sale invoice: ${result.result}")
                     }
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable create sale invoice")
+                    Notify.toastLong("Unable to create sale invoice")
                 }
             }).enque(Network.api()?.createUpdateSaleInvoice(Main.app.getTaxInvoice()!!)).execute()
     }

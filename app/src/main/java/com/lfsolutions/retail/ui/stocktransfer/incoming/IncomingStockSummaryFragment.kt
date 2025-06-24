@@ -10,14 +10,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentIncomingStockSummaryBinding
+import com.lfsolutions.retail.model.IdRequest
+import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.outgoingstock.StockTransferProduct
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
+import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
 import com.lfsolutions.retail.util.formatDecimalSeparator
@@ -219,21 +223,50 @@ class IncomingStockSummaryFragment : Fragment() {
             }
 
             NetworkCall.make()
-                .autoLoadigCancel(Loading().forApi(requireActivity(), "Requesting Stock Transfer"))
+                .autoLoadigCancel(Loading().forApi(requireActivity(), "Requesting Stock Receive"))
                 .setCallback(object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        Notify.toastLong("Success")
-                        requireActivity().finish()
+                        val result = response?.body() as BaseResponse<StockReceived>
+                        if (result.success == true) {
+                            Main.app.clearInComingStockTransfer()
+                            Notify.toastLong("In Coming Stock Received :" + result.result?.transactionNo)
+                            Printer.askForPrint(requireActivity(), {
+                                result.result?.id?.let {
+                                    getStockReceivedDetails(it)
+                                }
+                            }, {
+                                requireActivity().finish()
+                            })
+                        } else {
+                            Notify.toastLong("In Coming Stock Received Failed: ${result.result?.transactionNo}")
+                        }
                     }
-
                     override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                        Notify.toastLong("Stock transfer failed")
+                        Notify.toastLong("In Coming Stock Received Failed")
                     }
                 }).enque(
                     Network.api()
                         ?.createUpdateInComingStockTransfer(Main.app.getInComingStockTransferRequestObject())
                 ).execute()
         }
+    }
+
+    private fun getStockReceivedDetails(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading In Coming Stock Details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val stockReceived= (response?.body() as BaseResponse<StockTransferDetailItem>).result
+                    Printer.printInComingStock(requireActivity(), stockReceived)
+                    requireActivity().finish()
+                }
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to print received stock")
+                    requireActivity().finish()
+                }
+            }).enque(
+                Network.api()?.getStockReceivedDetails(IdRequest(id))
+            ).execute()
     }
 
     private fun serialBatchVerified(): Boolean {

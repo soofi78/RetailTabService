@@ -46,6 +46,11 @@ import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import retrofit2.Call
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 class HistoryFragmentListing : Fragment() {
 
@@ -81,6 +86,7 @@ class HistoryFragmentListing : Fragment() {
         if (::binding.isInitialized.not()) {
             binding = FragmentHistoryListingBinding.inflate(inflater)
         }
+        setInitialDate()
         binding.filterView.setDebouncedClickListener {
             val filterSheet = HistoryFilterSheet()
             filterSheet.setFilteredData(customer, startDate, endDate)
@@ -238,9 +244,20 @@ class HistoryFragmentListing : Fragment() {
         }
     }
 
+    private fun setInitialDate(){
+        // Initialize dates if they are null
+        if (startDate === null || endDate == null){
+            val(start,end) = DateTime.getStartAndEndDate()
+            startDate=start
+            endDate=end
+        }
+    }
+
     fun setDateFilterData() {
+        // Initialize dates if they are null
         if (startDate === null || endDate == null) {
             binding.dateFilter.text = "All Dates"
+
         } else {
             val start = DateTime.getDateFromString(
                 startDate?.replace("T", " ")?.replace("Z", ""), DateTime.DateTimetRetailFormat

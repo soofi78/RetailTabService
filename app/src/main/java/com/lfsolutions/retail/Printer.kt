@@ -2,12 +2,12 @@ package com.lfsolutions.retail
 
 import android.app.Activity
 import android.util.Log
-import android.view.View
 import android.widget.LinearLayout
 import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.TypeRequest
+import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
@@ -21,6 +21,7 @@ import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.util.Alert
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_CURRENT_STOCK
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -501,6 +502,23 @@ object Printer {
     }
 
     /*-------------Print current stocks-----------------*/
+
+    fun printInComingStock(activity: Activity, stockReceived: StockTransferDetailItem?){
+        getTemplate(activity, PRINT_TYPE_INCOMMING_STOCK) { template ->
+            template?.let {
+                prepareInComingStockTemplateAndPrint(it, stockReceived)
+            }
+        }
+    }
+
+    private fun prepareInComingStockTemplateAndPrint(
+        template: PrintTemplate?,
+        stockReceived: StockTransferDetailItem?){
+        val templateText = template?.template
+        templateText?.let { PrinterManager.print(printableText=it, noOfCopies = template.printDefault ) }
+
+        Log.d("Print", templateText.toString())
+    }
 
     fun printCurrentStock(activity: Activity, currentStocks: ArrayList<HistoryItemInterface>) {
         getTemplate(activity, PRINT_TYPE_CURRENT_STOCK) { template ->

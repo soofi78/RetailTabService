@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class HistoryRequest(
     @SerializedName("skipCount") var skipCount: Int = 0,
-    @SerializedName("maxResultCount") var maxResultCount: Int = 50,
+    @SerializedName("maxResultCount") var maxResultCount: Int = 999, //50
     @SerializedName("sorting") var sorting: String = "id Desc",
     @SerializedName("locationId") var locationId: Int? = null,
     @SerializedName("startDate") var startDate: String? = null,

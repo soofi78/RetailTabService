@@ -129,6 +129,7 @@ object Constants {
     const val baseUrl: String = "base_url"
 
     const val PRINT_TYPE_CURRENT_STOCK: Int = 15
+    const val PRINT_TYPE_INCOMMING_STOCK: Int = 16
 
     fun getCrystalReportEndPoint(
         id: Int?,
