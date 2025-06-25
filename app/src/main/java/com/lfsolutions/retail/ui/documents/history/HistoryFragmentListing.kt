@@ -247,9 +247,9 @@ class HistoryFragmentListing : Fragment() {
     private fun setInitialDate(){
         // Initialize dates if they are null
         if (startDate === null || endDate == null){
-            val(start,end) = DateTime.getStartAndEndDate()
-            startDate=start
-            endDate=end
+            val(currentDate,oneMonthBackDate) = DateTime.getStartAndEndDate()
+            startDate=oneMonthBackDate
+            endDate=currentDate
         }
     }
 

@@ -29,7 +29,7 @@ data class Product(
 ) : HistoryItemInterface {
 
     override fun isSerialEquipment(): Boolean {
-        return type.equals("S", true) || isAsset==true
+        return type=="S" && isAsset==true
     }
 
     fun getApplicableTaxRate(): Int {

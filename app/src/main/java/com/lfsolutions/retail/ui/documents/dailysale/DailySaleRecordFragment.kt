@@ -233,7 +233,7 @@ class DailySaleRecordFragment : Fragment() {
             Constants.Common.TotalAmount,
             Main.app.getSession().currencySymbol + saleRecord?.netTotal?.formatDecimalSeparator()
         )
-        templateText?.let { PrinterManager.print(it) }
+        templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
         Log.d("Print", templateText.toString())
     }
 }
