@@ -128,6 +128,8 @@ object Constants {
     const val IS_LOGGED_IN: String = "is_logged_in"
     const val baseUrl: String = "base_url"
 
+    const val PRINT_TYPE_RECEIPT: Int = 4
+    const val PRINT_TYPE_SALE_ORDER: Int = 13
     const val PRINT_TYPE_CURRENT_STOCK: Int = 15
     const val PRINT_TYPE_INCOMMING_STOCK: Int = 16
 

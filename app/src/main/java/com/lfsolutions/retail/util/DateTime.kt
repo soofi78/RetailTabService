@@ -117,14 +117,14 @@ object DateTime {
 
         // Current date
         val currentCalendar = Calendar.getInstance()
-        val startDate = isoFormat.format(currentCalendar.time)
+        val currentDate = isoFormat.format(currentCalendar.time)
 
         // One month back
         val pastCalendar = Calendar.getInstance()
         pastCalendar.add(Calendar.MONTH, -1)
-        val endDate = isoFormat.format(pastCalendar.time)
+        val oneMonthBack = isoFormat.format(pastCalendar.time)
 
-        return Pair(startDate, endDate)
+        return Pair(currentDate, oneMonthBack)
     }
 
     @JvmStatic

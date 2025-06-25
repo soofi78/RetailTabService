@@ -22,6 +22,8 @@ import com.lfsolutions.retail.util.Alert
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_CURRENT_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -187,7 +189,7 @@ object Printer {
             Constants.QRTagStart + invoice?.salesInvoice?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
-        templateText?.let { PrinterManager.print(it) }
+        templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
 
         Log.d("Sale Invoice Print", templateText.toString())
     }
@@ -303,7 +305,13 @@ object Printer {
 
 
     fun printSaleOrder(activity: Activity, order: SaleOrderResponse?) {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
+        getTemplate(activity, PRINT_TYPE_SALE_ORDER) { template ->
+            template?.let {
+                prepareOrderTemplateAndPrint(it, order)
+            }
+        }
+
+        /*NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
                 if ((res.result?.size ?: 0) > 0) {
@@ -316,7 +324,7 @@ object Printer {
             }
         }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
             Network.api()?.getReceiptTemplatePrint(TypeRequest(13))
-        ).execute()
+        ).execute()*/
     }
 
     private fun prepareOrderTemplateAndPrint(template: PrintTemplate?, order: SaleOrderResponse?) {
@@ -404,13 +412,18 @@ object Printer {
             Constants.QRTagStart + order?.salesOrder?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
-        templateText?.let { PrinterManager.print(it) }
+        templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
 
         Log.d("Print", templateText.toString())
     }
 
     fun printReceipt(activity: Activity, saleReceipt: SaleReceipt?) {
-        NetworkCall.make().setCallback(object : OnNetworkResponse {
+        getTemplate(activity, PRINT_TYPE_RECEIPT) { template ->
+            template?.let {
+                prepareReceiptTemplateAndPrint(it, saleReceipt)
+            }
+        }
+        /*NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
                 if ((res.result?.size ?: 0) > 0) {
@@ -423,8 +436,9 @@ object Printer {
             }
         }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
             Network.api()?.getReceiptTemplatePrint(TypeRequest(4))
-        ).execute()
+        ).execute()*/
     }
+
 
     private fun prepareReceiptTemplateAndPrint(template: PrintTemplate?, receipt: SaleReceipt?) {
         var templateText = template?.template
@@ -496,7 +510,7 @@ object Printer {
             Constants.QRTagStart + receipt?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
 
-        templateText?.let { PrinterManager.print(it) }
+        templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
 
         Log.d("Print", templateText.toString())
     }
@@ -516,7 +530,6 @@ object Printer {
         stockReceived: StockTransferDetailItem?){
         val templateText = template?.template
         templateText?.let { PrinterManager.print(printableText=it, noOfCopies = template.printDefault ) }
-
         Log.d("Print", templateText.toString())
     }
 
@@ -556,7 +569,7 @@ object Printer {
         }
 
         templateText = templateText?.replace(itemTemplate.toString(), items)
-        templateText?.let { PrinterManager.print(it) }
+        templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
 
         Log.d("Print", templateText.toString())
     }
@@ -575,17 +588,22 @@ object Printer {
         NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
-                val template = res.result?.getOrNull(0)
-                templateCache[typeId] = template
-                onResult(template)
+                if ((res.result?.size ?: 0) > 0) {
+                    val template = res.result?.getOrNull(0)
+                    templateCache[typeId] = template
+                    onResult(template)
+                }else{
+                    Notify.toastLong("Unable to get print template")
+                    onResult(null)
+                }
             }
 
             override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get order template")
+                Notify.toastLong("Unable to get print template")
                 onResult(null)
             }
 
-        }).autoLoadigCancel(Loading().forApi(activity, "Loading order template..."))
+        }).autoLoadigCancel(Loading().forApi(activity, "Loading print template..."))
             .enque(Network.api()?.getReceiptTemplatePrint(TypeRequest(typeId)))
             .execute()
     }
