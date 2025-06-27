@@ -7,10 +7,12 @@ import com.lfsolutions.retail.model.PrintTemplate
 import com.lfsolutions.retail.model.Product
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.TypeRequest
+import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.outgoingstock.StockTransferDetailItem
 import com.lfsolutions.retail.model.sale.SaleReceipt
 import com.lfsolutions.retail.model.sale.invoice.SaleInvoiceObject
 import com.lfsolutions.retail.model.sale.order.response.SaleOrderResponse
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
@@ -20,10 +22,13 @@ import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.ui.settings.printer.PrinterManager
 import com.lfsolutions.retail.util.Alert
 import com.lfsolutions.retail.util.Constants
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_AGREEMENT_MEMO
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_CURRENT_STOCK
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_DELIVERY_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
+import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -223,7 +228,7 @@ object Printer {
                 Notify.toastLong("Unable to get order template")
             }
         }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
-            Network.api()?.getReceiptTemplatePrint(TypeRequest(14))
+            Network.api()?.getReceiptTemplatePrint(TypeRequest(PRINT_TYPE_DELIVERY_ORDER))
         ).execute()
     }
 
@@ -233,6 +238,10 @@ object Printer {
         var templateText = template?.template
         templateText = templateText?.replace(
             Constants.Delivery.OrderNo, order?.deliveryOrder?.deliveryNo.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Delivery.ReferenceNo, order?.deliveryOrder?.referenceNo.toString()
         )
 
         templateText = templateText?.replace(
@@ -303,19 +312,12 @@ object Printer {
         Log.d("Print", templateText.toString())
     }
 
-
-    fun printSaleOrder(activity: Activity, order: SaleOrderResponse?) {
-        getTemplate(activity, PRINT_TYPE_SALE_ORDER) { template ->
-            template?.let {
-                prepareOrderTemplateAndPrint(it, order)
-            }
-        }
-
-        /*NetworkCall.make().setCallback(object : OnNetworkResponse {
+    fun printAgreementMemo(activity: Activity, memo: CreateUpdateAgreementMemoRequestBody?) {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
             override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                 val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
                 if ((res.result?.size ?: 0) > 0) {
-                    prepareOrderTemplateAndPrint(res.result?.get(0), order)
+                    prepareAgreementMemoTemplateAndPrint(res.result?.get(0), memo)
                 }
             }
 
@@ -323,8 +325,175 @@ object Printer {
                 Notify.toastLong("Unable to get order template")
             }
         }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
-            Network.api()?.getReceiptTemplatePrint(TypeRequest(13))
-        ).execute()*/
+            Network.api()?.getReceiptTemplatePrint(TypeRequest(PRINT_TYPE_AGREEMENT_MEMO))
+        ).execute()
+    }
+
+    private fun prepareAgreementMemoTemplateAndPrint(template: PrintTemplate?, memo: CreateUpdateAgreementMemoRequestBody?){
+        var templateText = template?.template
+        val printDefaultNo = template?.printDefault
+
+        val agreementMemo=memo?.AgreementMemo
+
+        templateText = templateText?.replace(
+            Constants.AgreementMemo.AgreementMemoNo, agreementMemo?.AgreementNo.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.AgreementMemo.AgreementMemoDate, agreementMemo?.AgreementDate.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.AgreementMemo.AgreementMemoQty, agreementMemo?.AgreementQty.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.AgreementMemo.AgreementMemoSignature, "@@@" + agreementMemo?.signatureUrl().toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Customers.CustomerName, agreementMemo?.CustomerName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerCustomerCode, agreementMemo?.customerCode.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerAddress1, agreementMemo?.address1 ?: ""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerAddress2, agreementMemo?.address2 ?: ""
+        )
+
+        val itemTemplate = templateText?.substring(
+            templateText.indexOf(Constants.Common.ItemsStart),
+            templateText.indexOf(Constants.Common.ItemsEnd) + 10
+        )
+
+        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
+            ?.replace(Constants.Common.ItemsEnd, "")
+
+        var items = ""
+        memo?.AgreementMemoDetail?.forEachIndexed{count,item->
+            items += itemTemplateClean?.replace(Constants.Common.Index, "${count+1}")
+                ?.replace(Constants.Common.ProductName, item.ProductName.toString())
+                ?.replace(Constants.Common.Qty, item.Qty.toString())
+                ?.replace(Constants.Common.UOM, item.UnitName.toString())
+                ?.replace(Constants.AgreementMemo.AgreementMemoType, item.AgreementTypeDisplayText.toString()).toString()
+            if (count <memo.AgreementMemoDetail.size) {
+                items += "\n"
+            }
+        }
+
+        templateText = templateText?.replace(itemTemplate.toString(), items)
+
+        templateText?.let { printableText -> PrinterManager.print(printableText = printableText, noOfCopies = printDefaultNo?.takeIf { it>0 }?:1) }
+        Log.d("Print", templateText.toString())
+    }
+
+    fun printServiceForm(activity: Activity, service:ServiceFormBody?) {
+        NetworkCall.make().setCallback(object : OnNetworkResponse {
+            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
+                if ((res.result?.size ?: 0) > 0) {
+                    prepareServiceFormTemplateAndPrint(res.result?.get(0), service)
+                }
+            }
+
+            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                Notify.toastLong("Unable to get order template")
+            }
+        }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
+            Network.api()?.getReceiptTemplatePrint(TypeRequest(PRINT_TYPE_SERVICE_FORM))
+        ).execute()
+    }
+
+    private fun prepareServiceFormTemplateAndPrint(
+        template: PrintTemplate?, service: ServiceFormBody?
+    ) {
+        var templateText = template?.template
+        val printDefaultNo = template?.printDefault
+
+        val complaintService=service?.complaintService
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSNo, complaintService?.csNo.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSDate, complaintService?.csDate.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSDeliveryDate, complaintService?.type.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSReportTypeDeliveryDate, complaintService?.reportType.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSQty, complaintService?.totalQty.toString()
+        )
+
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSSignature, "@@@" + complaintService?.signatureUrl().toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Customers.CustomerName, complaintService?.customerName.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerCustomerCode, complaintService?.customerCode.toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerAddress1, complaintService?.address1 ?: ""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Order.CustomerAddress2, complaintService?.address2 ?: ""
+        )
+
+        val itemTemplate = templateText?.substring(
+            templateText.indexOf(Constants.Common.ItemsStart),
+            templateText.indexOf(Constants.Common.ItemsEnd) + 10
+        )
+
+        val itemTemplateClean = itemTemplate?.replace(Constants.Common.ItemsStart, "")
+            ?.replace(Constants.Common.ItemsEnd, "")
+
+        var items = ""
+        service?.complaintServiceDetails?.forEachIndexed{count,item->
+            items += itemTemplateClean?.replace(Constants.Common.Index, "${count+1}")
+                ?.replace(Constants.Common.ProductName, item.productName.toString())
+                ?.replace(Constants.Common.Qty, item.qty.toString())
+                ?.replace(Constants.Common.UOM, item.unitName.toString())
+                ?.replace(Constants.ComplaintService.CSTransTypeString, item.transType.toString())
+                ?.replace(Constants.ComplaintService.CSActionTypeString, item.actionTypeString.toString())
+                .toString()
+            if (count <service.complaintServiceDetails.size) {
+                items += "\n"
+            }
+        }
+
+        templateText = templateText?.replace(itemTemplate.toString(), items)
+
+        templateText?.let { printableText -> PrinterManager.print(printableText = printableText, noOfCopies = printDefaultNo?.takeIf { it>0 }?:1) }
+        Log.d("Print", templateText.toString())
+    }
+
+
+    fun printSaleOrder(activity: Activity, order: SaleOrderResponse?) {
+        getTemplate(activity, PRINT_TYPE_SALE_ORDER) { template ->
+            template?.let {
+                prepareOrderTemplateAndPrint(it, order)
+            }
+        }
     }
 
     private fun prepareOrderTemplateAndPrint(template: PrintTemplate?, order: SaleOrderResponse?) {
@@ -573,6 +742,7 @@ object Printer {
 
         Log.d("Print", templateText.toString())
     }
+
 
     private fun getTemplate(
         activity: Activity,

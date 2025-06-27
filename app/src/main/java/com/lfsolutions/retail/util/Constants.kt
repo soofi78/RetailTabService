@@ -27,12 +27,23 @@ object Constants {
         const val TotalAmount = "{{receipt.amount}}"
     }
 
+    object Customers{
+        const val CustomerName = "{{customer.name}}"
+        const val CustomerCode = "{{customer.code}}"
+        const val CustomerAddress1 = "{{customer.address1}}"
+        const val CustomerAddress2 = "{{customer.address2}}"
+    }
+
     object Common {
         const val Date = "{{date}}"
         const val Index = "{{index}}"
+        const val Qty = "{{qty}}"
+        const val Price = "{{price}}"
+        const val UOM = "{{uom}}"
         const val ItemsStart = "{{#items}}"
         const val ItemsEnd = "{{/items}}"
         const val TotalAmount = "{{totalAmount}}"
+        const val ProductName = "{{productName}}"
     }
 
     object Payment {
@@ -78,7 +89,27 @@ object Constants {
         const val Term = "{{order.terms}}"
         const val Date = "{{delivery.date}}"
         const val OrderNo = "{{delivery.No}}"
+        const val ReferenceNo = "{{delivery.referenceNo}}"
         const val OrderQty = "{{order.qty}}"
+    }
+
+    object AgreementMemo {
+        const val AgreementMemoDate = "{{agreementMemo.date}}"
+        const val AgreementMemoNo = "{{agreementMemo.No}}"
+        const val AgreementMemoType = "{{agreementTypeString}}"
+        const val AgreementMemoQty = "{{agreementMemo.qty}}"
+        const val AgreementMemoSignature = "@#@{{&agreementMemo.signature}}"
+    }
+
+    object ComplaintService {
+        const val CSDate = "{{complaintService.date}}"
+        const val CSNo = "{{complaintService.No}}"
+        const val CSDeliveryDate = "{{complaintService.typeString}}"
+        const val CSReportTypeDeliveryDate = "{{complaintService.reportTypeString}}"
+        const val CSActionTypeString = "{{actionTypeString}}"
+        const val CSTransTypeString = "{{transTypeString}}"
+        const val CSQty = "{{complaintService.qty}}"
+        const val CSSignature = "@#@{{&complaintService.signature}}"
     }
 
     object Receipt {
@@ -128,10 +159,14 @@ object Constants {
     const val IS_LOGGED_IN: String = "is_logged_in"
     const val baseUrl: String = "base_url"
 
+    const val PRINT_TYPE_TAX_INVOICE: Int = 2
     const val PRINT_TYPE_RECEIPT: Int = 4
     const val PRINT_TYPE_SALE_ORDER: Int = 13
+    const val PRINT_TYPE_DELIVERY_ORDER: Int = 14
     const val PRINT_TYPE_CURRENT_STOCK: Int = 15
     const val PRINT_TYPE_INCOMMING_STOCK: Int = 16
+    const val PRINT_TYPE_AGREEMENT_MEMO: Int = 17
+    const val PRINT_TYPE_SERVICE_FORM: Int = 18
 
     fun getCrystalReportEndPoint(
         id: Int?,
