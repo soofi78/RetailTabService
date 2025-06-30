@@ -222,6 +222,7 @@ object PrinterManager {
 //                printer?.disconnectPrinter()
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    println("ErrorP: ${e.message}")
                     Notify.toastLong("Unable to print please check connection")
                 }
             }

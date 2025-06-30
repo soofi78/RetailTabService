@@ -1,8 +1,8 @@
-package com.lfsolutions.retail.model
+package com.lfsolutions.retail.ui.agreementmemo
 
 import com.google.gson.annotations.SerializedName
 
-class ComplaintServiceResponse(
+data class AgreementMemoResult(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("transactionNo") var transactionNo: String? = null
 )

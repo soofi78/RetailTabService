@@ -226,11 +226,11 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
                 val result = response?.body() as BaseResponse<Invoice>
                 if (result.success == true) {
                     Notify.toastLong("Payment Successful: ${result.result}")
-                    Printer.askForPrint(requireActivity(), {
+                    Printer.askForPrint(activity = requireActivity(), print = {
                         result.result?.id?.let { getReceiptDetail(it) }
-                    }, {
+                    }, cancel =  {
                         findNavController().popBackStack()
-                    }, "Print Sale Invoice", {
+                    }, thirdButtonText =  "Print Sale Invoice", thirdButtonClick =  {
                         getSaleInvoiceDetail(invoice?.salesInvoice?.id, true)
                     })
                 } else {
@@ -294,16 +294,18 @@ class InvoiceDetailsFragment : Fragment(), CalcDialog.CalcDialogCallback {
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading Invoice Details"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
                     if (print) {
                         Printer.printInvoice(
                             requireActivity(),
-                            (response?.body() as BaseResponse<SaleInvoiceObject>).result
+                            invoice
                         )
-                        return
+                        findNavController().popBackStack()
+                    }else{
+                        setData()
+                        getTransactionReference()
                     }
-                    invoice = (response?.body() as BaseResponse<SaleInvoiceObject>).result
-                    setData()
-                    getTransactionReference()
+
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentComplaintServiceDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
@@ -80,6 +81,10 @@ class ComplaintServiceDetailsFragment : Fragment() {
 
         binding.pdf.setDebouncedClickListener {
             getPDFLink()
+        }
+
+        binding.print.setDebouncedClickListener {
+            Printer.printServiceForm(requireActivity(),service)
         }
     }
 

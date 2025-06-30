@@ -64,12 +64,14 @@ import com.lfsolutions.retail.model.service.FeedbackTypeResult
 import com.lfsolutions.retail.model.service.ReportTypeResult
 import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ServiceTypeResult
+import com.lfsolutions.retail.ui.agreementmemo.AgreementMemoResult
 import com.lfsolutions.retail.ui.delivery.order.DeliverOrderDetail
 import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDTO
 import com.lfsolutions.retail.ui.saleorder.Order
 import com.lfsolutions.retail.ui.stocktransfer.incoming.StockReceived
 import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.util.Api
+import com.lfsolutions.retail.util.Constants
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -156,7 +158,7 @@ interface ApiServices {
     ): Call<RetailResponse<ArrayList<SerialNumber>>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_MEMO))
-    fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<RetailResponse<Any>>?
+    fun createUpdateMemo(@Body createUpdateAgreementMemoRequestBody: CreateUpdateAgreementMemoRequestBody): Call<BaseResponse<AgreementMemoResult>>?
 
     @POST(Api.Base.plus(Api.ServicesApp).plus(Api.Name.CREATE_UPDATE_COMPLAINT_SERVICE))
     fun createUpdateComplaintService(@Body serviceFormBody: ServiceFormBody): Call<BaseResponse<ComplaintServiceResponse>>?

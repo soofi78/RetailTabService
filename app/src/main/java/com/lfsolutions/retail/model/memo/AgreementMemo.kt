@@ -32,10 +32,10 @@ data class AgreementMemo(
     @SerializedName("TenantId", alternate = ["tenantId"]) var TenantId: Int? = 0,
     @SerializedName("Status", alternate = ["status"]) var Status: String = "C",
     @SerializedName("CustomerId", alternate = ["customerId"]) var CustomerId: Int? = null,
-    @SerializedName(
-        "CustomerName",
-        alternate = arrayOf("customerName")
-    ) var CustomerName: String? = null,
+    @SerializedName("CustomerName", alternate = arrayOf("customerName")) var CustomerName: String? = null,
+    @SerializedName("CustomerCode", alternate = arrayOf("customerCode")) var customerCode: String? = null,
+    @SerializedName("address1") var address1: String? = null,
+    @SerializedName("address2") var address2: String? = null,
     @SerializedName("IsDeleted") var IsDeleted: Boolean = false,
     @SerializedName("DeleterUserId") var DeleterUserId: String? = null,
     @SerializedName("DeletionTime") var DeletionTime: String? = null,

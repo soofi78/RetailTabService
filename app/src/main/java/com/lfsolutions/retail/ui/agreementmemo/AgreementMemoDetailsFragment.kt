@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentAgreementMemoDetailsBinding
 import com.lfsolutions.retail.model.IdRequest
@@ -52,7 +53,7 @@ class AgreementMemoDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getSaleInvoiceDetail()
+        getMemoDetails()
     }
 
     private fun setData() {
@@ -80,6 +81,10 @@ class AgreementMemoDetailsFragment : Fragment() {
 
         binding.pdf.setDebouncedClickListener {
             getPDFLink()
+        }
+
+        binding.print.setDebouncedClickListener {
+            Printer.printAgreementMemo(requireActivity(), memo)
         }
     }
 
@@ -111,18 +116,17 @@ class AgreementMemoDetailsFragment : Fragment() {
             ).execute()
     }
 
-    private fun getSaleInvoiceDetail() {
+    private fun getMemoDetails() {
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
             .setCallback(object : OnNetworkResponse {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                    memo =
-                        (response?.body() as BaseResponse<CreateUpdateAgreementMemoRequestBody>).result
+                    memo = (response?.body() as BaseResponse<CreateUpdateAgreementMemoRequestBody>).result
                     setData()
                 }
 
                 override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                    Notify.toastLong("Unable to get order detail")
+                    Notify.toastLong("Unable to get order details")
                 }
             }).enque(
                 Network.api()?.getAgreementMemoDetails(IdRequest(id = item.Id))
