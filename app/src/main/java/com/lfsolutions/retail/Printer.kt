@@ -340,7 +340,7 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.AgreementMemo.AgreementMemoDate, agreementMemo?.AgreementDate.toString()
+            Constants.AgreementMemo.AgreementMemoDate, agreementMemo?.agreementDateFormatted()?:""
         )
 
         templateText = templateText?.replace(
@@ -356,15 +356,15 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerCustomerCode, agreementMemo?.customerCode.toString()
+            Constants.Customers.CustomerCode, agreementMemo?.customerCode.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress1, agreementMemo?.address1 ?: ""
+            Constants.Customers.CustomerAddress1, agreementMemo?.address1 ?: ""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress2, agreementMemo?.address2 ?: ""
+            Constants.Customers.CustomerAddress2, agreementMemo?.address2 ?: ""
         )
 
         val itemTemplate = templateText?.substring(
@@ -438,6 +438,14 @@ object Printer {
             Constants.ComplaintService.CSQty, complaintService?.totalQty.toString()
         )
 
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSTimeIn, complaintService?.getCheckInTime().toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSTimeOut, complaintService?.getCheckOutTime().toString()
+        )
+
 
         templateText = templateText?.replace(
             Constants.ComplaintService.CSSignature, "@@@" + complaintService?.signatureUrl().toString()
@@ -448,15 +456,15 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerCustomerCode, complaintService?.customerCode.toString()
+            Constants.Customers.CustomerCode, complaintService?.customerCode.toString()
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress1, complaintService?.address1 ?: ""
+            Constants.Customers.CustomerAddress1, complaintService?.address1 ?: ""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerAddress2, complaintService?.address2 ?: ""
+            Constants.Customers.CustomerAddress2, complaintService?.address2 ?: ""
         )
 
         val itemTemplate = templateText?.substring(
@@ -473,7 +481,7 @@ object Printer {
                 ?.replace(Constants.Common.ProductName, item.productName.toString())
                 ?.replace(Constants.Common.Qty, item.qty.toString())
                 ?.replace(Constants.Common.UOM, item.unitName.toString())
-                ?.replace(Constants.ComplaintService.CSTransTypeString, item.transType.toString())
+                ?.replace(Constants.ComplaintService.CSTransTypeString, item.transTypeDisplayText.toString())
                 ?.replace(Constants.ComplaintService.CSActionTypeString, item.actionTypeString.toString())
                 .toString()
             if (count <service.complaintServiceDetails.size) {

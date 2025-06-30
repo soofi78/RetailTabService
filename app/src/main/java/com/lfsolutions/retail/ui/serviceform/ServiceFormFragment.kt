@@ -15,11 +15,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentServiceFormBinding
 import com.lfsolutions.retail.model.ComplaintServiceResponse
 import com.lfsolutions.retail.model.Customer
 import com.lfsolutions.retail.model.HistoryRequest
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
 import com.lfsolutions.retail.model.product.Asset
@@ -29,6 +31,7 @@ import com.lfsolutions.retail.model.service.FeedbackTypeResult
 import com.lfsolutions.retail.model.service.FeedbackTypes
 import com.lfsolutions.retail.model.service.ReportTypeResult
 import com.lfsolutions.retail.model.service.ReportTypes
+import com.lfsolutions.retail.model.service.ServiceFormBody
 import com.lfsolutions.retail.model.service.ServiceTypeResult
 import com.lfsolutions.retail.model.service.ServiceTypes
 import com.lfsolutions.retail.network.BaseResponse
@@ -432,18 +435,24 @@ class ServiceFormFragment : Fragment() {
                 override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
                     val result = response?.body() as BaseResponse<ComplaintServiceResponse>
                     if (result.success == true) {
-                        Notify.toastLong("Service Form Created: ${result.result?.id}")
-                        findNavController().popBackStack()
+                        Notify.toastLong("Service Form Created: ${result.result?.transactionNo}")
+                        Printer.askForPrint(requireActivity(), {
+                            result.result?.id?.let {
+                                getFormDetails(it)
+                            }
+                        }, {
+                            findNavController().popBackStack()
+                        })
                         Main.app.clearComplaintService()
                     } else {
-                        Notify.toastLong("Unable create or update memo")
+                        Notify.toastLong("Unable create or update form")
                     }
                 }
 
                 override fun onFailure(
                     call: Call<*>?, response: BaseResponse<*>?, tag: Any?
                 ) {
-                    Notify.toastLong("Unable create or update memo")
+                    Notify.toastLong("Unable create or update form")
                 }
             }).enque(Network.api()?.createUpdateComplaintService(Main.app.getComplaintService()!!))
             .execute()
@@ -531,6 +540,24 @@ class ServiceFormFragment : Fragment() {
             findNavController().popBackStack()
             Main.app.clearComplaintService()
         }
+    }
+
+    private fun getFormDetails(id:Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading service details"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val service = (response?.body() as BaseResponse<ServiceFormBody>).result
+                    Printer.printServiceForm(requireActivity(), service)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get service detail")
+                }
+            }).enque(
+                Network.api()?.getComplaintServiceDetails(IdRequest(id = id))
+            ).execute()
     }
 
     override fun onDestroy() {

@@ -12,17 +12,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.lfsolutions.retail.Main
+import com.lfsolutions.retail.Printer
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.databinding.FragmentNewAgreementMemoBinding
 import com.lfsolutions.retail.model.Customer
+import com.lfsolutions.retail.model.IdRequest
 import com.lfsolutions.retail.model.RetailResponse
 import com.lfsolutions.retail.model.SignatureUploadResult
+import com.lfsolutions.retail.model.memo.CreateUpdateAgreementMemoRequestBody
 import com.lfsolutions.retail.model.service.Feedback
 import com.lfsolutions.retail.network.BaseResponse
 import com.lfsolutions.retail.network.Network
 import com.lfsolutions.retail.network.NetworkCall
 import com.lfsolutions.retail.network.OnNetworkResponse
 import com.lfsolutions.retail.ui.BaseActivity
+import com.lfsolutions.retail.ui.taxinvoice.Invoice
 import com.lfsolutions.retail.ui.widgets.FeedbackItemView
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
@@ -235,9 +239,20 @@ class NewAgreementMemoFragment : Fragment() {
             .setCallback(
                 object : OnNetworkResponse {
                     override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                        Notify.toastLong("success")
-                        Main.app.clearAgreementMemo()
-                        findNavController().popBackStack()
+                        val result = response?.body() as BaseResponse<AgreementMemoResult>
+                        if (result.success == true){
+                            Notify.toastLong("Successfully Created Agreement Memo : " + result.result?.transactionNo)
+                            Main.app.clearAgreementMemo()
+                            Printer.askForPrint(requireActivity(), {
+                                result.result?.id?.let {
+                                    getMemoDetails(it)
+                                }
+                            }, {
+                                findNavController().popBackStack()
+                            })
+                        }else{
+                            Notify.toastLong("Unable to create Agreement Memo: ${result.result}")
+                        }
                     }
 
                     override fun onFailure(
@@ -261,6 +276,24 @@ class NewAgreementMemoFragment : Fragment() {
             )
         )
         return filePart
+    }
+
+    private fun getMemoDetails(id: Int) {
+        NetworkCall.make()
+            .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
+            .setCallback(object : OnNetworkResponse {
+                override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
+                    val memo = (response?.body() as BaseResponse<CreateUpdateAgreementMemoRequestBody>).result
+                    Printer.printAgreementMemo(requireActivity(), memo)
+                    findNavController().popBackStack()
+                }
+
+                override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
+                    Notify.toastLong("Unable to get order details")
+                }
+            }).enque(
+                Network.api()?.getAgreementMemoDetails(IdRequest(id = id))
+            ).execute()
     }
 
     override fun onDestroy() {

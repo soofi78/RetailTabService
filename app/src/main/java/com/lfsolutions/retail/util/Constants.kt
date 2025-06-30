@@ -109,6 +109,8 @@ object Constants {
         const val CSActionTypeString = "{{actionTypeString}}"
         const val CSTransTypeString = "{{transTypeString}}"
         const val CSQty = "{{complaintService.qty}}"
+        const val CSTimeIn = "{{complaintService.timein}}"
+        const val CSTimeOut = "{{complaintService.timeout}}"
         const val CSSignature = "@#@{{&complaintService.signature}}"
     }
 

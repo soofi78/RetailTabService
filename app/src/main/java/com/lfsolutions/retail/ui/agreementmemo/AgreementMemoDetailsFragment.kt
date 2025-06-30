@@ -53,7 +53,7 @@ class AgreementMemoDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getSaleInvoiceDetail()
+        getMemoDetails()
     }
 
     private fun setData() {
@@ -116,7 +116,7 @@ class AgreementMemoDetailsFragment : Fragment() {
             ).execute()
     }
 
-    private fun getSaleInvoiceDetail() {
+    private fun getMemoDetails() {
         NetworkCall.make()
             .autoLoadigCancel(Loading().forApi(requireActivity(), "Loading agreement memo"))
             .setCallback(object : OnNetworkResponse {
