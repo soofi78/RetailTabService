@@ -111,6 +111,7 @@ object Constants {
         const val CSQty = "{{complaintService.qty}}"
         const val CSTimeIn = "{{complaintService.timein}}"
         const val CSTimeOut = "{{complaintService.timeout}}"
+        const val CSRemarks = "{{complaintService.remark}}"
         const val CSSignature = "@#@{{&complaintService.signature}}"
     }
 

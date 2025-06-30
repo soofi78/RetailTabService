@@ -347,6 +347,7 @@ object Printer {
             Constants.AgreementMemo.AgreementMemoQty, agreementMemo?.AgreementQty.toString()
         )
 
+
         templateText = templateText?.replace(
             Constants.AgreementMemo.AgreementMemoSignature, "@@@" + agreementMemo?.signatureUrl().toString()
         )
@@ -444,6 +445,10 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.ComplaintService.CSTimeOut, complaintService?.getCheckOutTime().toString()
+        )
+
+        templateText = templateText?.replace(
+            Constants.ComplaintService.CSRemarks, complaintService?.remarks.toString()
         )
 
 
