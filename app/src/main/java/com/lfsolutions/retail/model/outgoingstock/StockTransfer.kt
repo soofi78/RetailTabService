@@ -35,6 +35,11 @@ data class StockTransfer(
         return transferNo + " / " + transferDateFormatted()
     }
 
+    override fun getFormattedCreationTime():String{
+        val formatted = DateTime.getFormattedSGTTime(creationTime)
+        return formatted
+    }
+
     fun transferDateFormatted(): String {
         val date = DateTime.getDateFromString(
             transferDate?.replace("T", " ")?.replace("Z", ""),

@@ -162,7 +162,7 @@ class Main : Application() {
             AgreementMemo?.Id = null
             AgreementMemo?.AgreementDate = null
             AgreementMemo?.AgreementNo = null
-            AgreementMemo?.CreationTime = null
+            AgreementMemo?.creationTime = null
             AgreementMemo?.LastModificationTime = null
             AgreementMemo?.CreatorUserId = null
             AgreementMemo?.DeletionTime = null

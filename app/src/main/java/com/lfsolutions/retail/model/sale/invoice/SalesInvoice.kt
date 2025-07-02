@@ -213,6 +213,10 @@ data class SalesInvoice(
     var customerServiceToVisitId: Long= 0,
 
     ) {
+    fun getPONo(): String {
+        return poNo?:""
+    }
+
     fun InvoiceDateFormatted(): String {
         val date = DateTime.getDateFromString(
             invoiceDate,

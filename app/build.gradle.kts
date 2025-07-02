@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace = "com.lfsolutions.retail"
-    compileSdk = 34
+    compileSdk = 35
 
     signingConfigs {
         create("releaseConfig") {
@@ -28,8 +28,8 @@ android {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
         targetSdk = 34
-        versionCode = 176
-        versionName = "0.2.176"
+        versionCode = 178
+        versionName = "0.2.178"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

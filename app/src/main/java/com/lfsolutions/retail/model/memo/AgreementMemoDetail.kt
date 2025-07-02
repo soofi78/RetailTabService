@@ -88,4 +88,13 @@ data class AgreementMemoDetail(
     override fun getSerializedNumber(): String {
         return SlNo.toString()
     }
+
+    override fun getFormattedCreationTime():String{
+        val date = DateTime.getDateFromString(
+            CreationTime?.replace("T", " ")?.replace("Z", ""),
+            DateTime.DateTimetRetailFormat
+        )
+        val formatted = DateTime.format(date, DateTime.DateTimetRetailFormat)
+        return formatted ?: CreationTime ?: ""
+    }
 }

@@ -121,12 +121,15 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
         transactions.forEach {
             if (it.applied == true) {
                 amount += if (it.appliedAmount == null || it.appliedAmount == 0.0) {
-                    it.amount ?: 0.0
+                    println("amount=${it.balanceAmount}")
+                    it.balanceAmount ?: 0.0
                 } else {
+                    println("AppliedaAmount=${it.appliedAmount}")
                     it.appliedAmount ?: 0.0
                 }
             }
         }
+        println("FinalAmount=$amount")
         return amount
     }
 
@@ -220,6 +223,7 @@ class CustomerSaleTransactionsFragment : Fragment(), OnNetworkResponse,
     private fun setAdapters() {
         saleTransactionAdapter = CustomerTransactionAdapter(transactions)
         binding.customers.adapter = saleTransactionAdapter
+
         saleTransactionAdapter.setListener(object :
             CustomerTransactionAdapter.OnTransactionCallback {
             override fun onAmountEdit(transaction: CustomerSaleTransaction) {

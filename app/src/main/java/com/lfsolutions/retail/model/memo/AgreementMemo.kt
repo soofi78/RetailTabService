@@ -41,13 +41,18 @@ data class AgreementMemo(
     @SerializedName("DeletionTime") var DeletionTime: String? = null,
     @SerializedName("LastModificationTime") var LastModificationTime: String? = null,
     @SerializedName("LastModifierUserId") var LastModifierUserId: String? = null,
-    @SerializedName("CreationTime") var CreationTime: String? = null,
+    @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName("CreatorUserId") var CreatorUserId: Int? = null,
     @SerializedName("Signature", alternate = arrayOf("signature")) var Signature: String? = null,
     @SerializedName("customerFeedbackList") var customerFeedbackList: ArrayList<Feedback> = arrayListOf(),
 ) : HistoryItemInterface {
     override fun getTitle(): String {
         return AgreementNo + " / " + agreementDateFormatted()
+    }
+
+    override fun getFormattedCreationTime():String{
+        val formatted = DateTime.getFormattedSGTTime(creationTime)
+        return formatted
     }
 
     fun agreementDateFormatted(): String {

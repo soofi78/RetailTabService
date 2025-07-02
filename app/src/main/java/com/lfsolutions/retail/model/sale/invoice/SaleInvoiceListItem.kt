@@ -60,12 +60,17 @@ data class SaleInvoiceListItem(
         return (invoiceNo ?: "") + " / " + (getFormattedDate())
     }
 
+    override fun getFormattedCreationTime():String{
+        val formatted = DateTime.getFormattedSGTTime(creationTime)
+        return formatted
+    }
+
     private fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
             invoiceDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: invoiceDate ?: ""
     }
 
