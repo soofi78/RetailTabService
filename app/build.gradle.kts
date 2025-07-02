@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 178
         versionName = "0.2.178"
 
