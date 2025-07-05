@@ -32,4 +32,6 @@ interface HistoryItemInterface {
     fun getImageUrl(): String {
         return ""
     }
+
+    fun getFormattedCreationTime(): String{return ""}
 }

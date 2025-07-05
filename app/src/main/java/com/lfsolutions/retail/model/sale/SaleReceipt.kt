@@ -12,6 +12,7 @@ data class SaleReceipt(
     @SerializedName("customerId") var customerId: Int? = null,
     @SerializedName("receiptNo") var receiptNo: String? = null,
     @SerializedName("receiptDate") var receiptDate: String? = null,
+    @SerializedName("creationTime") var creationTime: String? = null,
     @SerializedName(
         "paymentTypeName",
         alternate = arrayOf("paymentType")
@@ -45,12 +46,17 @@ data class SaleReceipt(
         return receiptNo + " / " + getFormattedDate()
     }
 
+    override fun getFormattedCreationTime():String{
+        val formatted = DateTime.getFormattedSGTTime(creationTime)
+        return formatted
+    }
+
     fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
             receiptDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: receiptDate ?: ""
     }
 

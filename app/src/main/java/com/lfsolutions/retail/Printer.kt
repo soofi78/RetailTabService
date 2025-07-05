@@ -29,6 +29,8 @@ import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
+import com.lfsolutions.retail.util.DateTime.getFormattedSGTDate
+import com.lfsolutions.retail.util.DateTime.getFormattedSGTTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -79,7 +81,7 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, invoice?.salesInvoice?.invoiceDate.toString()
+            Constants.Invoice.InvoiceDate, getFormattedSGTDate(invoice?.salesInvoice?.invoiceDate)
         )
 
         templateText = templateText?.replace(
@@ -100,6 +102,10 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceAddress2, invoice?.salesInvoice?.address2 ?: ""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoicePONumber, invoice?.salesInvoice?.getPONo()?:""
         )
 
         val itemTemplate = try {
@@ -241,11 +247,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.ReferenceNo, order?.deliveryOrder?.referenceNo.toString()
+            Constants.Delivery.ReferenceNo, order?.deliveryOrder?.getPONo()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.Date, order?.deliveryOrder?.deliveryDate.toString()
+            Constants.Delivery.Date, order?.deliveryOrder?.DeliveryDateFormatted().toString()
         )
 
         templateText = templateText?.replace(

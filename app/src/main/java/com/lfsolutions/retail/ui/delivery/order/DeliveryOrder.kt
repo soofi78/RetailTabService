@@ -53,6 +53,10 @@ data class DeliveryOrder(
         return Main.app.getBaseUrl() + signature
     }
 
+    fun getPONo(): String {
+        return referenceNo?:""
+    }
+
     fun DeliveryDateFormatted(): String {
         val date = DateTime.getDateFromString(
             deliveryDate,

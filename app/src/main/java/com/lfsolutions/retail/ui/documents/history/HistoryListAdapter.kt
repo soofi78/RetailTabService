@@ -37,6 +37,7 @@ class HistoryListAdapter(
         holder.itemView.tag = item
         holder.binding.clone.tag = item
         holder.binding.title.text = item.getTitle()
+        holder.binding.creationTime.text = holder.itemView.context.getString(R.string.creation_time, item.getFormattedCreationTime())
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
 

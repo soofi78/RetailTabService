@@ -45,12 +45,17 @@ data class DeliveryOrderHistoryItem(
         return deliveryNo.toString() + " / " + (getFormattedDate())
     }
 
+    override fun getFormattedCreationTime():String{
+        val formatted = DateTime.getFormattedSGTTime(creationTime)
+        return formatted
+    }
+
     private fun getFormattedDate(): String {
         val date = DateTime.getDateFromString(
             deliveryDate?.replace("T", " ")?.replace("Z", ""),
             DateTime.DateTimetRetailFormat
         )
-        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndTime)
+        val formatted = DateTime.format(date, DateTime.DateFormatWithDayNameMonthNameAndYear)
         return formatted ?: deliveryDate ?: ""
     }
 

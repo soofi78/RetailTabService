@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
+import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import kotlin.time.Duration.Companion.minutes
 
@@ -87,4 +88,6 @@ data class Product(
     override fun getId(): Int {
         return productId?.toInt() ?: -1
     }
+
+
 }

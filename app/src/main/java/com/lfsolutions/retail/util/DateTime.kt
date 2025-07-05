@@ -22,6 +22,7 @@ object DateTime {
     const val DateFormat = "MMM dd, yyyy"
     const val DateFormatRetail = "yyyy-MM-dd"
     const val DateTimetRetailFormat = "yyyy-MM-dd HH:mm:ss"
+    const val DateTimetRetailGSTFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimeRetailFrontEndFormate = "dd MMM yyyy, hh:mm a"
     const val DateRetailApiFormate = "dd MMM yyyy"
     const val TimeFormat = "hh:mm a"
@@ -35,6 +36,41 @@ object DateTime {
     const val SimpleDateFormat = "dd-MM-yyyy"
     const val ServerDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimePickerFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+    fun getFormattedSGTDate(input: String?): String {
+        if (input == null) return ""
+        val date = getDateFromString(
+            input.replace("T", " ").replace("Z", ""),
+            DateTimetRetailFormat
+        )
+        val formatted = format(date, DateFormatRetail)
+        return formatted?:""
+    }
+    fun getFormattedSGTTime(input: String?): String {
+        if (input == null) return ""
+
+        // 👉 Pad fractional seconds if needed
+        val paddedInput = input.replace(
+            Regex("""\.(\d{1,2})Z$""")
+        ) { matchResult ->
+            val fraction = matchResult.groupValues[1]
+            ".${fraction.padEnd(3, '0')}Z"
+        }
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val date = inputFormat.parse(paddedInput) ?: return ""
+
+        //val mTime: Calendar = Calendar. getInstance()
+        //val timeZone = TimeZone. getDefault()
+
+        val outputFormat = SimpleDateFormat(DateTimetRetailGSTFormat, Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getTimeZone("Asia/Singapore")
+
+        return outputFormat.format(date)
+    }
+
 
 
     fun format(STAMP: Date?, FORMAT: String?): String? {
@@ -75,7 +111,7 @@ object DateTime {
     }
 
     fun formatServerTime(serverFormat: String): String {
-        val sdf = SimpleDateFormat(ServerDateTimeFormat)
+        val sdf = SimpleDateFormat(DateTimetRetailFormat)
         sdf.timeZone = TimeZone.getTimeZone("UTC")
         return try {
             val date = sdf.parse(serverFormat)

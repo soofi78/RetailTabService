@@ -34,7 +34,7 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val transaction = transactions.get(position)
         val binding = (holder as TransactionHolder).binding
-        transaction?.let { setData(binding, it) }
+        setData(binding, transaction)
     }
 
     private fun setData(binding: ItemSaleTransactionBinding, transaction: CustomerSaleTransaction) {
