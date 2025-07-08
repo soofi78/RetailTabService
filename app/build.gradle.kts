@@ -27,9 +27,9 @@ android {
     defaultConfig {
         applicationId = "com.lfsolutions.retail"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 178
-        versionName = "0.2.178"
+        targetSdk = 35
+        versionCode = 179
+        versionName = "0.2.179"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
