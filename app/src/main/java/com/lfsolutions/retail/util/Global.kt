@@ -13,9 +13,12 @@ import com.lfsolutions.retail.R
 import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.floor
+import kotlin.math.round
 
 
 fun makeTextBold(
@@ -43,11 +46,10 @@ fun String.formatDecimalSeparator(applyDecimalSettings: Boolean = false): String
     else {
         val fmt = NumberFormat.getCurrencyInstance(Locale.getDefault())
         fmt.minimumFractionDigits =
-            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule
-                ?: 2 else 2
+            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule?.takeIf { it>0 }?:2 else 2
         fmt.maximumFractionDigits =
-            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule
-                ?: 2 else 2
+            if (applyDecimalSettings) Main.app.getSession().decimalDigitsForPriceInSalesModule?.takeIf { it>0 }?:2 else 2
+
         fmt.roundingMode = RoundingMode.HALF_UP
         return fmt.format(this.toDouble()).replace(fmt.currency.symbol, "")
     }
@@ -137,5 +139,90 @@ fun List<ProductBatchList>.toSerialNumberAdapter(): MultiSelectListAdapter {
 fun View.toAddVisibility(batchList:List<ProductBatchList>){
     visibility = if (batchList.isNotEmpty()) View.VISIBLE else View.GONE
 }
+
+
+fun Double.getRoundOffValue(dRounding: BigDecimal, roundDown: Boolean): Double {
+    println("startingTotal:$this, dRounding:$dRounding, roundDown:$roundDown")
+
+    if (dRounding.compareTo(BigDecimal.ZERO) == 0) {
+        return this
+    }
+
+    val total = this.toBigDecimal()
+
+    val rounded = if (roundDown) {//true
+        total.divide(dRounding, 0, RoundingMode.FLOOR).multiply(dRounding)
+    } else {
+        total.divide(dRounding, 0, RoundingMode.CEILING).multiply(dRounding)
+    }
+
+    return rounded.toDouble()
+}
+
+
+fun getRoundOffValue(totalPrice: Double, roundOff: Double, roundDown: Boolean): Pair<Double,Double> {
+    return when (roundDown) {
+        false -> {
+            getRoundUpValue(totalPrice, roundOff) //Always Round +
+        }
+        true -> {
+            getRoundDownValue(totalPrice, roundOff) //Always Round -
+        }
+    }
+}
+
+
+private fun getRoundUpValue(totalPrice: Double, roundOff: Double): Pair<Double,Double>  {
+    val roundedPrice = if (roundOff > 0) {
+        println("totalPrice: $totalPrice")
+        val rounded = (totalPrice / roundOff).toInt() * roundOff
+        println("rounded: $rounded")
+        val remainder = totalPrice - rounded
+        println("remainder: $remainder")
+        if (remainder > 0) {
+            println("rounded: ${rounded + roundOff}")
+            rounded + roundOff
+        } else {
+            rounded
+        }
+    } else {
+        totalPrice
+    }
+    println("roundedPrice: $roundedPrice")
+    return Pair(roundedPrice,roundOff)
+}
+
+private fun getRoundDownValue(totalPrice: Double, roundOff: Double): Pair<Double,Double> {
+    var finalRoundDownValue=0.0
+    val roundedPrice = if (roundOff > 0) {
+        val epsilon = 0.00001 // Adjust epsilon as needed
+        val rounded = floor((totalPrice + epsilon) / roundOff) * roundOff
+        rounded
+    } else {
+        totalPrice
+    }
+    finalRoundDownValue=(totalPrice-roundedPrice).times(-1)
+    return Pair(roundedPrice,finalRoundDownValue)
+}
+
+private fun getRoundOffDefaultValue(totalPrice: Double, roundOff: Double): Double {
+    val roundedPrice = if (roundOff > 0) {
+        val epsilon = 0.00001 // Adjust epsilon as needed
+        val rounded = round((totalPrice + epsilon) / roundOff) * roundOff
+        rounded
+    } else {
+        totalPrice
+    }
+    return roundedPrice
+}
+
+fun Double.formatPriceForApi(applyDecimalSettings: Boolean = false): Double {
+    val decimals = if(applyDecimalSettings)Main.app.getSession().decimalDigitsForPriceInSalesModule?.takeIf { it > 0 } ?: 2 else 2
+    return this.toBigDecimal()
+        .setScale(decimals, RoundingMode.HALF_UP)
+        .toDouble()
+}
+
+
 
 

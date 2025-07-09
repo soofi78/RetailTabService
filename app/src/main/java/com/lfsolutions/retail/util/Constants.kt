@@ -7,6 +7,8 @@ object Constants {
         const val InvoiceDiscount = "{{invoice.invoiceDiscount}}"
         const val InvoiceTax = "{{invoice.tax}}"
         const val InvoiceNetTotal = "{{invoice.netTotal}}"
+        const val InvoiceRoundingAmount = "{{invoice.roundingAmount}}"
+        const val InvoiceGrandTotal = "{{invoice.grandTotal}}"
         const val InvoiceBalanceAmount = "{{customer.balanceAmount}}"
         const val InvoiceOuStandingBalanceAmount = "{{invoice.outStandingBalance}}"
         const val InvoicePaidAmount = "{{customer.paidAmount}}"

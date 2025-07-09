@@ -158,7 +158,17 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceNetTotal,
-            invoice?.salesInvoice?.InvoiceGrandTotalFromatted().toString()
+            invoice?.salesInvoice?.InvoiceNetTotalFromatted()?:""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceRoundingAmount,
+            invoice?.salesInvoice?.InvoiceRoundingAmountFromatted()?:""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceGrandTotal,
+            invoice?.salesInvoice?.InvoiceGrandTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(

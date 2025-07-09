@@ -1,6 +1,8 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.util.formatPriceForApi
+
 
 
 data class SaleInvoiceObject(
@@ -71,21 +73,20 @@ data class SaleInvoiceObject(
             index++
         }
         salesInvoice?.invoiceQty = qty
-        salesInvoice?.invoiceTotalValue = total
-        salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount)
-        salesInvoice?.invoiceSubTotal = subTotal
-        salesInvoice?.invoiceTax = taxAmount
-        salesInvoice?.netDiscount = netDiscount
-        salesInvoice?.invoiceNetDiscount = netDiscount
-        salesInvoice?.invoiceItemDiscount = itemDiscounts
-        salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount)
-        salesInvoice?.balance = salesInvoice?.invoiceGrandTotal
+        salesInvoice?.invoiceTotalValue = total.formatPriceForApi()
+        salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount).formatPriceForApi()
+        salesInvoice?.invoiceSubTotal = subTotal.formatPriceForApi()
+        salesInvoice?.invoiceTax = taxAmount.formatPriceForApi()
+        salesInvoice?.netDiscount = netDiscount.formatPriceForApi()
+        salesInvoice?.invoiceNetDiscount = netDiscount.formatPriceForApi()
+        salesInvoice?.invoiceItemDiscount = itemDiscounts.formatPriceForApi()
+        salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount).formatPriceForApi()
+        salesInvoice?.balance = salesInvoice?.invoiceGrandTotal?.formatPriceForApi()
 
         if (netDiscount == 0.0) salesInvoice?.invoiceNetDiscountPerc = 0.0
         else salesInvoice?.invoiceNetDiscountPerc = (salesInvoice?.invoiceGrandTotal?.let {
             netDiscount.div(it)
         })?.times(100)
-
 
     }
 

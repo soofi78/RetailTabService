@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.databinding.FragmentTaxInvoiceSummaryBinding
+import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.formatPriceForApi
+import com.lfsolutions.retail.util.getRoundOffValue
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
 
@@ -28,9 +31,11 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
     private var discount: Double = 0.0
     private var itemSwipeHelper: ItemTouchHelper? = null
+    private var userSession: UserSession? = null
     private var _binding: FragmentTaxInvoiceSummaryBinding? = null
     private val mBinding get() = _binding!!
     private lateinit var mAdapter: TaxInvoiceSummaryAdapter
+    private var roundingAmountClickCount= 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -41,6 +46,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        userSession=Main.app.getSession()
         mAdapter = TaxInvoiceSummaryAdapter(Main.app.getTaxInvoice()?.salesInvoiceDetail)
         mAdapter.setListener(object : TaxInvoiceSummaryAdapter.OnOrderSummarySelectListener {
             override fun onOrderSummarySelect(salesInvoiceDetail: SalesInvoiceDetail) {
@@ -54,9 +60,14 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         updateSummaryAmountAndQty()
         mBinding.header.setBackText("Sale Invoice Summary")
         mBinding.header.setAccountClick((requireActivity() as BaseActivity).optionsClick)
-        Main.app.getSession().userName?.let { mBinding.header.setName(it) }
+        userSession?.userName?.let { mBinding.header.setName(it) }
         addOnClickListener()
         mBinding.checkboxFOC.isChecked = Main.app.getTaxInvoice()?.salesInvoice?.type.equals("F")
+        mBinding.flowRoundingAmount.visibility =
+            userSession?.roundingAmount?.takeIf { it > 0.0 }?.let { View.VISIBLE } ?: View.GONE
+
+        mBinding.flowNetTotal.visibility =
+            userSession?.roundingAmount?.takeIf { it > 0.0 }?.let { View.VISIBLE } ?: View.GONE
     }
 
     private fun openQuantityUpdateDialog(salesInvoiceDetail: SalesInvoiceDetail) {
@@ -121,7 +132,7 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
     private fun updateSummaryAmountAndQty() {
         Main.app.getTaxInvoice()?.updatePriceAndQty(discount)
         Main.app.getTaxInvoice()?.serializeItems()
-        //println("Summery: ${Main.app.getTaxInvoice()?.salesInvoice}")
+        println("Summery: ${Main.app.getTaxInvoice()?.salesInvoice}")
         val currency = Main.app.getSession().currencySymbol
         mBinding.txtQTY.text = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty.toString()
         mBinding.txtTotalAmount.text =
@@ -135,6 +146,9 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
                 .formatDecimalSeparator()
         mBinding.txtTaxAmount.text =
             "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceTax.toString()
+                .formatDecimalSeparator()
+        mBinding.txtNetTotal.text =
+            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceNetTotal.toString()
                 .formatDecimalSeparator()
         mBinding.txtTotal.text =
             "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString()
@@ -232,6 +246,24 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         }
         mBinding.flowDiscount.setDebouncedClickListener {
             Calculator.show(this)
+        }
+        mBinding.btnRoundingAmount.setDebouncedClickListener {
+           /* val roundedAmount = Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal?.getRoundOffValue(dRounding = BigDecimal(userSession?.roundingAmount?:0.0), roundDown = userSession?.roundDown?:false)*/
+            if(roundingAmountClickCount>1){
+                return@setDebouncedClickListener
+            }
+            roundingAmountClickCount++
+            val roundedAmount = getRoundOffValue(totalPrice = Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal?:0.0, roundOff = userSession?.roundingAmount?:0.0, roundDown = userSession?.roundDown?:false)
+            println("RoundedTotal: $roundedAmount")
+            //Notify.toastLong("RoundedTotal:$roundedAmount")
+            Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal=roundedAmount.first
+            Main.app.getTaxInvoice()?.salesInvoice?.balance=roundedAmount.first
+            Main.app.getTaxInvoice()?.salesInvoice?.invoiceRoundingAmount=roundedAmount.second.formatPriceForApi()
+            val currency = userSession?.currencySymbol
+            mBinding.txtTotal.text = "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString().formatDecimalSeparator()
+            mBinding.btnRoundingAmount.text = "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceRoundingAmount.toString()
+                    .formatDecimalSeparator()
+
         }
         mBinding.btnCancel.setDebouncedClickListener {
             Notify.toastLong("Cleared all items")

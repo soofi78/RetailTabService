@@ -83,6 +83,7 @@ data class SalesInvoice(
         "InvoiceGrandTotal",
         alternate = arrayOf("invoiceGrandTotal")
     ) var invoiceGrandTotal: Double? = 0.0,
+
     @SerializedName(
         "InvoiceTotalValue",
         alternate = arrayOf("invoiceTotalValue")
@@ -245,6 +246,14 @@ data class SalesInvoice(
 
     fun InvoiceTaxFromatted(): String {
         return Main.app.getSession().currencySymbol + invoiceTax?.formatDecimalSeparator()
+    }
+
+    fun InvoiceNetTotalFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceNetTotal?.formatDecimalSeparator()
+    }
+
+    fun InvoiceRoundingAmountFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceRoundingAmount?.formatDecimalSeparator()
     }
 
     fun InvoiceGrandTotalFromatted(): String {

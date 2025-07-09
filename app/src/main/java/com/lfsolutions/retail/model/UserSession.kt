@@ -37,6 +37,8 @@ data class UserSession(
     @SerializedName("hideSalesOrderTab") var hideSalesOrderTab: Boolean = false,
     @SerializedName("enableCrystalReportForSalesInvoice") var enableCrystalReportForSalesInvoice: Boolean = false,
     @SerializedName("enableCrystalReportForSalesOrder") var enableCrystalReportForSalesOrder: Boolean = false,
-    @SerializedName("enableCrystalReportForDeliveryOrder") var enableCrystalReportForDeliveryOrder: Boolean = false
+    @SerializedName("enableCrystalReportForDeliveryOrder") var enableCrystalReportForDeliveryOrder: Boolean = false,
+    @SerializedName("roundDown") var roundDown: Boolean = false,
+    @SerializedName("roundingAmount") var roundingAmount: Double? = null,
 
 )
