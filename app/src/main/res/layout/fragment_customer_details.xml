@@ -316,10 +316,28 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/address"
+                        android:id="@+id/address1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:background="@drawable/rounded_corner_light_gray_background"
+                        android:inputType="number"
+                        android:padding="10dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/address2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/rounded_corner_light_gray_background"
+                        android:inputType="number"
+                        android:padding="10dp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/address3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/rounded_corner_light_gray_background"
                         android:inputType="number"
                         android:padding="10dp" />

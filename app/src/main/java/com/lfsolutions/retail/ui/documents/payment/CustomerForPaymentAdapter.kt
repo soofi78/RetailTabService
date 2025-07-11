@@ -1,6 +1,7 @@
 package com.lfsolutions.retail.ui.documents.payment
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lfsolutions.retail.R
@@ -46,7 +47,11 @@ class CustomerForPaymentAdapter(var customers: List<Customer>? = ArrayList()) :
                 ), startIndex = 8
             )
         binding.txtName.text = customer?.name
-        binding.txtAddress.text = customer?.address1
+        binding.txtAddress1.text = customer?.address1
+        binding.txtAddress2.text = customer?.address2
+        binding.txtAddress3.text = customer?.address3
+        binding.txtAddress2.visibility = if (customer?.address2.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.txtAddress3.visibility = if (customer?.address3.isNullOrEmpty()) View.GONE else View.VISIBLE
         binding.txtAccountNo.text =
             makeTextBold(
                 text = binding.txtAccountNo.context.getString(

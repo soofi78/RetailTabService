@@ -35,7 +35,13 @@ class CustomerDetailsBottomSheet() : BottomSheetDialogFragment() {
         binding.acNumber.text = customer?.customerCode
         binding.area.text = customer?.customerWorkArea
         binding.term.text = customer?.paymentTerm
-        binding.address.text = customer?.address1
+        binding.address1.text = customer?.address1
+        binding.address2.text = customer?.address2
+        binding.address3.text = customer?.address3
+
+        binding.address2.visibility = if (customer?.address2.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.address3.visibility = if (customer?.address3.isNullOrEmpty()) View.GONE else View.VISIBLE
+
     }
 
     private fun getFormattedDate(officialOpen: String?): String {

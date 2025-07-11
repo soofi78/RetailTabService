@@ -169,7 +169,11 @@ class DeliveryItemAdapter(
         }
 
         binding.txtName.text = customer?.name
-        binding.txtAddress.text = customer?.address1
+        binding.txtAddress1.text = customer?.address1
+        binding.txtAddress2.text = customer?.address2
+        binding.txtAddress3.text = customer?.address3
+        binding.txtAddress2.visibility = if (customer?.address2.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.txtAddress3.visibility = if (customer?.address3.isNullOrEmpty()) View.GONE else View.VISIBLE
         customer?.postalCode?.let {
             val txtPostalCode= it.ifEmpty { "-" }
             binding.txtPinCode.text=
