@@ -639,11 +639,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, receipt?.paymentTypeName.toString()
+            Constants.Invoice.InvoiceTerm, receipt?.paymentTypeName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, receipt?.customerName.toString()
+            Constants.Invoice.InvoiceCustomerName, receipt?.customerName?:""
         )
 
         templateText = templateText?.replace(
