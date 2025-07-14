@@ -162,10 +162,10 @@ fun Double.getRoundOffValue(dRounding: BigDecimal, roundDown: Boolean): Double {
 
 fun getRoundOffValue(totalPrice: Double, roundOff: Double, roundDown: Boolean): Pair<Double,Double> {
     return when (roundDown) {
-        false -> {
+        false -> { //when values should be round up
             getRoundUpValue(totalPrice, roundOff) //Always Round +
         }
-        true -> {
+        true -> { //when values should be round down
             getRoundDownValue(totalPrice, roundOff) //Always Round -
         }
     }
@@ -188,11 +188,13 @@ private fun getRoundUpValue(totalPrice: Double, roundOff: Double): Pair<Double,D
     } else {
         totalPrice
     }
-    println("roundedPrice: $roundedPrice")
-    return Pair(roundedPrice,roundOff)
+    val finalRoundUpValue=(roundedPrice-totalPrice).times(1)
+    println("roundedPrice: $roundedPrice|finalRoundUpValue: $finalRoundUpValue")
+    return Pair(roundedPrice,finalRoundUpValue)
 }
 
 private fun getRoundDownValue(totalPrice: Double, roundOff: Double): Pair<Double,Double> {
+    println("totalPrice:$totalPrice,roundOff:$roundOff")
     var finalRoundDownValue=0.0
     val roundedPrice = if (roundOff > 0) {
         val epsilon = 0.00001 // Adjust epsilon as needed

@@ -36,6 +36,8 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
     private val mBinding get() = _binding!!
     private lateinit var mAdapter: TaxInvoiceSummaryAdapter
     private var roundingAmountClickCount= 0
+    // Add original grandtotal
+    private var originalGrandTotal: Double? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -150,12 +152,15 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         mBinding.txtNetTotal.text =
             "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceNetTotal.toString()
                 .formatDecimalSeparator()
-        mBinding.txtTotal.text =
-            "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString()
-                .formatDecimalSeparator()
+
+        mBinding.txtTotal.text = "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString().formatDecimalSeparator()
+        mBinding.btnRoundingAmount.text = "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceRoundingAmount.toString().formatDecimalSeparator()
         mBinding.checkboxFOC.isChecked = Main.app.getTaxInvoice()?.salesInvoice?.type=="F"
         //mBinding.btnComplete.isEnabled = Main.app.getTaxInvoice()?.salesInvoice?.invoiceQty != 0.0
         mBinding.btnComplete.isEnabled = !Main.app.getTaxInvoice()?.salesInvoiceDetail.isNullOrEmpty()
+        if (Main.app.getTaxInvoice()?.salesInvoiceDetail.isNullOrEmpty()) {
+            clearAllItems()
+        }
     }
 
     private fun getSwipeToDeleteListener(): ItemTouchHelper.SimpleCallback {
@@ -248,7 +253,64 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             Calculator.show(this)
         }
         mBinding.btnRoundingAmount.setDebouncedClickListener {
-           /* val roundedAmount = Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal?.getRoundOffValue(dRounding = BigDecimal(userSession?.roundingAmount?:0.0), roundDown = userSession?.roundDown?:false)*/
+            val applyRounding = roundingAmountClickCount % 2 == 0
+            Main.app.getTaxInvoice()?.salesInvoice?.isRoundingApplied = applyRounding
+            Main.app.getTaxInvoice()?.salesInvoice?.roundDown = userSession?.roundDown?:false
+            Main.app.getTaxInvoice()?.salesInvoice?.roundingAmount = userSession?.roundingAmount?:0.0
+            updateSummaryAmountAndQty()
+            roundingAmountClickCount++
+        }
+
+        mBinding.btnCancel.setDebouncedClickListener {
+            clearAllItems()
+            findNavController().popBackStack()
+        }
+
+        mBinding.header.setOnBackClick {
+            findNavController().popBackStack()
+        }
+
+        mBinding.btnComplete.setDebouncedClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+
+   fun demoRounding(){
+        /* if (roundingAmountClickCount % 2 == 0) {
+                updateSummaryAmountAndQty(isRoundingApplied = true)
+                */
+        /*val result = getRoundOffValue(
+                totalPrice = Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal ?: 0.0,
+                roundOff = userSession?.roundingAmount ?: 0.0,
+                roundDown = userSession?.roundDown ?: false
+            )
+
+            Main.app.getTaxInvoice()?.updateGrandTotalAndRoundingAmount(invoiceGrandTotal = result.first, invoiceRoundingAmount = result.second)
+
+            Main.app.getTaxInvoice()?.salesInvoice?.apply {
+                invoiceGrandTotal = result.first
+                balance = result.first
+                invoiceRoundingAmount = result.second.formatPriceForApi()
+            }*//*
+            }
+            else {
+                updateSummaryAmountAndQty(isRoundingApplied = false)
+                // Reset to original
+               *//* Main.app.getTaxInvoice()?.salesInvoice?.apply {
+                    invoiceGrandTotal = invoiceNetTotal
+                    balance = originalGrandTotal ?: invoiceNetTotal
+                    invoiceRoundingAmount = 0.0
+                }
+                originalGrandTotal = null*//*
+            }*/
+        //val currency = userSession?.currencySymbol
+        //mBinding.txtTotal.text = "$currency ${Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal.toString().formatDecimalSeparator()}"
+        //mBinding.btnRoundingAmount.text = "$currency ${Main.app.getTaxInvoice()?.salesInvoice?.invoiceRoundingAmount.toString().formatDecimalSeparator()}"
+
+       /*mBinding.btnRoundingAmount.setDebouncedClickListener {
+           */
+       /* val roundedAmount = Main.app.getTaxInvoice()?.salesInvoice?.invoiceGrandTotal?.getRoundOffValue(dRounding = BigDecimal(userSession?.roundingAmount?:0.0), roundDown = userSession?.roundDown?:false)*//*
             if(roundingAmountClickCount>1){
                 return@setDebouncedClickListener
             }
@@ -264,23 +326,14 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
             mBinding.btnRoundingAmount.text = "$currency " + Main.app.getTaxInvoice()?.salesInvoice?.invoiceRoundingAmount.toString()
                     .formatDecimalSeparator()
 
-        }
-        mBinding.btnCancel.setDebouncedClickListener {
-            Notify.toastLong("Cleared all items")
-            Main.app.getTaxInvoice()?.clear()
-            Main.app.getTaxInvoice()?.salesInvoiceDetail?.clear()
-            findNavController().popBackStack()
-        }
-
-        mBinding.header.setOnBackClick {
-            findNavController().popBackStack()
-        }
-
-        mBinding.btnComplete.setDebouncedClickListener {
-            findNavController().popBackStack()
-        }
+        }*/
     }
 
+    private fun clearAllItems() {
+        Notify.toastLong("Cleared all items")
+        Main.app.getTaxInvoice()?.clear()
+        Main.app.getTaxInvoice()?.salesInvoiceDetail?.clear()
+    }
     override fun onValueEntered(requestCode: Int, value: BigDecimal?) {
         discount = value?.toDouble() ?: 0.0
         updateSummaryAmountAndQty()

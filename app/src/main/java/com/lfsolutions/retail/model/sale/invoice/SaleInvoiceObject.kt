@@ -1,8 +1,9 @@
 package com.lfsolutions.retail.model.sale.invoice
 
 import com.google.gson.annotations.SerializedName
+import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.formatPriceForApi
-
+import com.lfsolutions.retail.util.getRoundOffValue
 
 
 data class SaleInvoiceObject(
@@ -17,6 +18,12 @@ data class SaleInvoiceObject(
     fun addEquipment(product: SalesInvoiceDetail) {
         salesInvoiceDetail.add(product)
         salesInvoice?.invoiceNetDiscount?.let { updatePriceAndQty(it) }
+    }
+
+    fun updateGrandTotalAndRoundingAmount(invoiceGrandTotal:Double=0.0,invoiceRoundingAmount:Double=0.0){
+        salesInvoice?.invoiceGrandTotal = invoiceGrandTotal.formatPriceForApi()
+        salesInvoice?.balance = invoiceGrandTotal.formatPriceForApi()
+        salesInvoice?.invoiceRoundingAmount = invoiceRoundingAmount.formatPriceForApi()
     }
 
     fun updatePriceAndQty(discountProvided: Double = 0.0) {
@@ -80,8 +87,21 @@ data class SaleInvoiceObject(
         salesInvoice?.netDiscount = netDiscount.formatPriceForApi()
         salesInvoice?.invoiceNetDiscount = netDiscount.formatPriceForApi()
         salesInvoice?.invoiceItemDiscount = itemDiscounts.formatPriceForApi()
-        salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount).formatPriceForApi()
-        salesInvoice?.balance = salesInvoice?.invoiceGrandTotal?.formatPriceForApi()
+        //salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount).formatPriceForApi()
+        //salesInvoice?.balance = salesInvoice?.invoiceGrandTotal?.formatPriceForApi()
+        val (roundedGrandTotal,roundingAmount) = if(salesInvoice?.isRoundingApplied==true) {
+            getRoundOffValue(
+                totalPrice = subTotal.plus(taxAmount),
+                roundOff =  salesInvoice?.roundingAmount ?: 0.0,
+                roundDown = salesInvoice?.roundDown ?: false
+            )
+        } else {
+            subTotal.plus(taxAmount) to 0.0
+        }
+        println("isRoundingApplied: ${salesInvoice?.isRoundingApplied}|roundedGrandTotal$roundedGrandTotal|roundingAmount$roundingAmount")
+        salesInvoice?.invoiceGrandTotal = roundedGrandTotal.formatPriceForApi()
+        salesInvoice?.balance = roundedGrandTotal.formatPriceForApi()
+        salesInvoice?.invoiceRoundingAmount = roundingAmount.formatPriceForApi()
 
         if (netDiscount == 0.0) salesInvoice?.invoiceNetDiscountPerc = 0.0
         else salesInvoice?.invoiceNetDiscountPerc = (salesInvoice?.invoiceGrandTotal?.let {
@@ -163,7 +183,8 @@ data class SaleInvoiceObject(
         salesInvoice?.invoiceNetDiscount = 0.0
         salesInvoice?.invoiceItemDiscount = 0.0
         salesInvoice?.invoiceGrandTotal = 0.0
-        salesInvoice?.balance = 0.0
+        salesInvoice?.invoiceRoundingAmount = 0.0
+        salesInvoice?.isRoundingApplied = false
     }
 
 }

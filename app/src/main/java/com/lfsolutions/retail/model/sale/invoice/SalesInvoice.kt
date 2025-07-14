@@ -213,6 +213,10 @@ data class SalesInvoice(
     @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId"))
     var customerServiceToVisitId: Long= 0,
 
+    //Important fields for invoice rounding
+    var isRoundingApplied: Boolean = false,
+    var roundDown: Boolean = false,
+    var roundingAmount: Double? = null
     ) {
     fun getPONo(): String {
         return poNo?:""
