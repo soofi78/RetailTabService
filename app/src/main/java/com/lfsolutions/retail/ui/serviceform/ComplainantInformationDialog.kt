@@ -2,7 +2,9 @@ package com.lfsolutions.retail.ui.serviceform
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
 import android.view.LayoutInflater
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.lfsolutions.retail.Main
@@ -28,13 +30,21 @@ class ComplainantInformationDialog(val activity: Activity?) {
         designation: String?,
         mobileNumber: String?
     ): ComplainantInformationDialog {
-        val inflater =
-            activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater = activity!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = ComplainantInformationDialogBinding.inflate(inflater)
         binding!!.complainantName.setText(name)
         binding!!.designation.setText(designation)
         binding!!.mobileNumber.setText(mobileNumber)
         binding!!.cancel.setDebouncedClickListener { dismiss() }
+        binding!!.mobileNumber.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding!!.scrollView.post {
+                    binding!!.scrollView.requestChildRectangleOnScreen(binding!!.mobileNumber,
+                        Rect(0, 0, binding!!.mobileNumber.width, binding!!.mobileNumber.height), true)
+                }
+            }
+        }
+
         binding!!.confirm.setDebouncedClickListener {
             SoftKeyBoard.hide(activity)
             onConfirmListener?.onConfirm(
@@ -55,6 +65,7 @@ class ComplainantInformationDialog(val activity: Activity?) {
                 alertBuilder!!.setView(binding!!.root)
                 alertBuilder!!.setCancelable(false)
                 dialog = alertBuilder!!.create()
+                dialog!!.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
                 dialog!!.window!!.attributes.windowAnimations = R.style.CustomAnimations
                 dialog!!.show()
                 return dialog

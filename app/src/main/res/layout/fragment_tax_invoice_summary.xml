@@ -20,6 +20,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        tools:itemCount="2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/cardPriceInfo"
         app:layout_constraintTop_toBottomOf="@+id/header"
@@ -170,6 +171,61 @@
                 app:layout_constraintTop_toBottomOf="@+id/flowSubTotal" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblNetTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Net Total"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtNetTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowNetTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="lblNetTotal,txtNetTotal"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowTaxAmount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblRoundingAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_rounding_amt"
+                android:textColor="@color/grayDark"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnRoundingAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="60dp"
+                android:minHeight="35dp"
+                android:background="@drawable/card_rounded_serial_number_view"
+                android:text="$0"
+                android:textSize="14sp"
+                android:textColor="@color/white"/>
+
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flowRoundingAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="lblRoundingAmount,btnRoundingAmount"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintTop_toBottomOf="@+id/flowNetTotal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lblTotal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -193,12 +249,14 @@
                 android:layout_marginTop="5dp"
                 app:constraint_referenced_ids="lblTotal,txtTotal"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintTop_toBottomOf="@+id/flowTaxAmount" />
+                app:layout_constraintTop_toBottomOf="@+id/flowRoundingAmount" />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
                 app:layout_constraintTop_toBottomOf="@+id/flowTotal">
@@ -211,6 +269,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corner_white_background"
                     android:text="@string/label_clear" />
+
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnComplete"

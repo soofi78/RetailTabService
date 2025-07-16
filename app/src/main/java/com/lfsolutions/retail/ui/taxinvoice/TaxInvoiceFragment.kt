@@ -32,6 +32,7 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.serialBatchVerified
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
@@ -188,6 +189,11 @@ class TaxInvoiceFragment : Fragment() {
         binding.btnSave.setDebouncedClickListener {
             if (Main.app.getTaxInvoice()?.salesInvoiceDetail?.size == 0) {
                 Notify.toastLong("Please add products")
+                return@setDebouncedClickListener
+            }
+
+            if (serialBatchVerified(Main.app.getTaxInvoice()?.salesInvoiceDetail).not()) {
+                Notify.toastLong("Please add serial numbers")
                 return@setDebouncedClickListener
             }
 

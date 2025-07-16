@@ -53,7 +53,7 @@ class SaleOrderSummaryAdapter(val salesOrderDetails: ArrayList<SalesOrderDetail>
 
         //holder.binding.txtSerials.text = salesOrderDetails?.get(position)?.getSerialNumbers()
         val batchList = salesOrderDetails?.get(position)?.productBatchList ?: emptyList()
-        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNoView.toAddVisibility(batchList)
         holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
         holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
         batchList.disableQtyBox(

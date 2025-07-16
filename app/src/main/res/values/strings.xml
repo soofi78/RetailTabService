@@ -61,6 +61,7 @@
     <string name="label_view_order">View Order</string>
     <string name="label_terms_and_conditions"><u>Term\'s and Condition</u></string>
     <string name="label_equipment_list">Equipment List</string>
+    <string name="label_rounding_amt">Rounding Amount</string>
     <string name="label_complete">Complete</string>
     <string name="label_order_summary">Order Summary</string>
     <string name="label_order">Order</string>

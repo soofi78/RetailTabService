@@ -86,16 +86,36 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtTag" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txtSerials"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/serialNoView"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/serial_numbers_colon"
-                        android:textColor="@color/red"
-                        android:textSize="16sp"
-                        style="@style/TextAppearance.AppCompat.Title"
                         app:layout_constraintStart_toStartOf="@+id/txtProductName"
-                        app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
+                        app:layout_constraintTop_toBottomOf="@+id/txtProductName"
+                        android:visibility="gone">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txtSerials"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/serial_numbers_colon"
+                            android:textColor="@color/red"
+                            android:textSize="16sp"
+                            style="@style/TextAppearance.AppCompat.Title"
+                            />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/btnAddSerialNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/round_red_background"
+                            android:src="@drawable/add_black"
+                            android:tint="@color/white"
+                            android:visibility="gone"
+                            />
+                    </LinearLayout>
+
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/txtQty"

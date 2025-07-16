@@ -41,6 +41,7 @@ class HistoryListAdapter(
         holder.binding.description.text = item.getDescription()
         holder.binding.amount.text = item.getAmount()
 
+
         if(item is ComplaintService){
             holder.binding.checkInOutTimeView.visibility=View.VISIBLE
             holder.binding.checkInTimeTv.text=item.getCheckInTime()
@@ -50,11 +51,13 @@ class HistoryListAdapter(
         if (item is Product){
             holder.binding.minimumQty.visibility=View.VISIBLE
             holder.binding.varianceQty.visibility=View.VISIBLE
+            holder.binding.creationTime.visibility=View.GONE
             holder.binding.minimumQty.text=item.getMinQty()
             holder.binding.varianceQty.text=item.getVarianceQty()
         }else{
             holder.binding.minimumQty.visibility=View.GONE
             holder.binding.varianceQty.visibility=View.GONE
+            holder.binding.creationTime.visibility=View.VISIBLE
         }
 
         if (item is SaleOrderListItem) {

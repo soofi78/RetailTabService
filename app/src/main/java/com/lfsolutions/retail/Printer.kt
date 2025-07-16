@@ -85,6 +85,10 @@ object Printer {
         )
 
         templateText = templateText?.replace(
+            Constants.Invoice.InvoiceCreationTime, getFormattedSGTTime(invoice?.salesInvoice?.creationTime)
+        )
+
+        templateText = templateText?.replace(
             Constants.Invoice.InvoiceTerm, invoice?.salesInvoice?.paymentTermName.toString()
         )
 
@@ -154,7 +158,17 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceNetTotal,
-            invoice?.salesInvoice?.InvoiceGrandTotalFromatted().toString()
+            invoice?.salesInvoice?.InvoiceNetTotalFromatted()?:""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceRoundingAmount,
+            invoice?.salesInvoice?.InvoiceRoundingAmountFromatted()?:""
+        )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceGrandTotal,
+            invoice?.salesInvoice?.InvoiceGrandTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(
@@ -611,20 +625,6 @@ object Printer {
                 prepareReceiptTemplateAndPrint(it, saleReceipt)
             }
         }
-        /*NetworkCall.make().setCallback(object : OnNetworkResponse {
-            override fun onSuccess(call: Call<*>?, response: Response<*>?, tag: Any?) {
-                val res = response?.body() as RetailResponse<ArrayList<PrintTemplate>>
-                if ((res.result?.size ?: 0) > 0) {
-                    prepareReceiptTemplateAndPrint(res.result?.get(0), saleReceipt)
-                }
-            }
-
-            override fun onFailure(call: Call<*>?, response: BaseResponse<*>?, tag: Any?) {
-                Notify.toastLong("Unable to get order template")
-            }
-        }).autoLoadigCancel(Loading().forApi(activity, "Loading order template...")).enque(
-            Network.api()?.getReceiptTemplatePrint(TypeRequest(4))
-        ).execute()*/
     }
 
 
@@ -639,11 +639,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, receipt?.paymentTypeName.toString()
+            Constants.Invoice.InvoiceTerm, receipt?.paymentTypeName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, receipt?.customerName.toString()
+            Constants.Invoice.InvoiceCustomerName, receipt?.customerName?:""
         )
 
         templateText = templateText?.replace(

@@ -83,6 +83,7 @@ data class SalesInvoice(
         "InvoiceGrandTotal",
         alternate = arrayOf("invoiceGrandTotal")
     ) var invoiceGrandTotal: Double? = 0.0,
+
     @SerializedName(
         "InvoiceTotalValue",
         alternate = arrayOf("invoiceTotalValue")
@@ -212,6 +213,10 @@ data class SalesInvoice(
     @SerializedName("CustomerServiceToVisitId", alternate = arrayOf("customerServiceToVisitId"))
     var customerServiceToVisitId: Long= 0,
 
+    //Important fields for invoice rounding
+    var isRoundingApplied: Boolean = false,
+    var roundDown: Boolean = false,
+    var roundingAmount: Double? = null
     ) {
     fun getPONo(): String {
         return poNo?:""
@@ -245,6 +250,14 @@ data class SalesInvoice(
 
     fun InvoiceTaxFromatted(): String {
         return Main.app.getSession().currencySymbol + invoiceTax?.formatDecimalSeparator()
+    }
+
+    fun InvoiceNetTotalFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceNetTotal?.formatDecimalSeparator()
+    }
+
+    fun InvoiceRoundingAmountFromatted(): String {
+        return Main.app.getSession().currencySymbol + invoiceRoundingAmount?.formatDecimalSeparator()
     }
 
     fun InvoiceGrandTotalFromatted(): String {

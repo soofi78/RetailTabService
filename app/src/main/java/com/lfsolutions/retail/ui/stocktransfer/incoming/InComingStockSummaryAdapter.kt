@@ -123,19 +123,23 @@ class InComingStockSummaryAdapter(
             openQuantityUpdateDialog(it.tag as Int)
         }
 
+        if(stockReceiveProducts?.get(position)?.isAddSerialButtonVisible() == true){
+            holder.binding.inComingSerialNumberContainer.visibility=View.VISIBLE
+            holder.binding.btnAddSerialNumber.visibility=View.VISIBLE
+        }
 
-        holder.binding.btnAddSerial.visibility =
+        /*holder.binding.btnAddSerialNumber.visibility =
             if (stockReceiveProducts?.get(position)?.type.equals("S") || stockReceiveProducts?.get(
                     position
                 )?.isAsset == true
-            ) View.VISIBLE else View.GONE
+            ) View.VISIBLE else View.GONE*/
 
-        holder.binding.btnAddSerial.tag = position
-        holder.binding.btnAddSerial.setOnClickListener {
-            getSerialNumbersList(holder.binding.btnAddSerial.tag as Int)
+        holder.binding.btnAddSerialNumber.tag = position
+        holder.binding.btnAddSerialNumber.setOnClickListener {
+            getSerialNumbersList(holder.binding.btnAddSerialNumber.tag as Int)
         }
 
-        holder.binding.btnAddSerial.setBackgroundResource(
+        holder.binding.btnAddSerialNumber.setBackgroundResource(
             if ((stockReceiveProducts?.get(position)?.productBatchList?.size ?: 0) > 0)
                 R.drawable.round_green_background else R.drawable.round_red_background
         )
@@ -193,8 +197,6 @@ class InComingStockSummaryAdapter(
                 )
             ).execute()
     }
-
-
     private fun showSerialNumbersList(position: Int) {
         val multiSelectDialog =
             MultiSelectDialog().title("Select serial numbers")

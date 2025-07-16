@@ -56,7 +56,8 @@
                 android:padding="2dp"
                 android:text="@string/creation_time"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/description"

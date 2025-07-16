@@ -44,7 +44,7 @@ class AgreementMemoSummaryAdapter(val agreementMemoDetail: ArrayList<AgreementMe
         holder.binding.txtTag.text = agreementMemoDetail?.get(position)?.AgreementTypeDisplayText
 
         val batchList = agreementMemoDetail?.get(position)?.ProductBatchList ?: emptyList()
-        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNoView.toAddVisibility(batchList)
         holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
         holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
         batchList.disableQtyBox(

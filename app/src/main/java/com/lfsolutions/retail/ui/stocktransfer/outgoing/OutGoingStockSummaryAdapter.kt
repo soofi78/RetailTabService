@@ -158,18 +158,18 @@ class OutGoingStockSummaryAdapter(
             openQuantityUpdateDialog(it.tag as Int)
         }
 
-        holder.binding.btnAddSerial.visibility =
+        holder.binding.btnAddSerialNumber.visibility =
             if (stockTransferProducts?.get(position)?.type.equals("S") || stockTransferProducts?.get(
                     position
                 )?.isAsset == true
             ) View.GONE else View.GONE //View.Visible when isAsset is true
 
-        holder.binding.btnAddSerial.tag = position
-        holder.binding.btnAddSerial.setOnClickListener {
-            getSerialNumbersList(holder.binding.btnAddSerial.tag as Int)
+        holder.binding.btnAddSerialNumber.tag = position
+        holder.binding.btnAddSerialNumber.setOnClickListener {
+            getSerialNumbersList(holder.binding.btnAddSerialNumber.tag as Int)
         }
 
-        holder.binding.btnAddSerial.setBackgroundResource(
+        holder.binding.btnAddSerialNumber.setBackgroundResource(
             if ((stockTransferProducts?.get(position)?.productBatchList?.size ?: 0) > 0)
                 R.drawable.round_green_background else R.drawable.round_red_background
         )

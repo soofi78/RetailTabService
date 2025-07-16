@@ -283,7 +283,8 @@ class AddProductToDeliveryOrderFragment : Fragment() {
                 /*creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                     .replace(" ", "T").plus("Z"),*/ //by nisha
                 creatorUserId = Main.app.getSession().userId,
-                productBatchList = batchList
+                productBatchList = batchList,
+                isSerialNumberAdeded = true
             )
         )
     }

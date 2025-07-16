@@ -46,31 +46,42 @@ object DateTime {
         val formatted = format(date, DateFormatRetail)
         return formatted?:""
     }
+
     fun getFormattedSGTTime(input: String?): String {
-        if (input == null) return ""
+        try {
+            if (input == null) return ""
 
-        // 👉 Pad fractional seconds if needed
-        val paddedInput = input.replace(
-            Regex("""\.(\d{1,2})Z$""")
-        ) { matchResult ->
-            val fraction = matchResult.groupValues[1]
-            ".${fraction.padEnd(3, '0')}Z"
+            val formats = listOf(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss.SS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            )
+
+            var date: Date? = null
+
+            for (pattern in formats) {
+                val inputFormat = SimpleDateFormat(pattern, Locale.getDefault())
+                inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+                try {
+                    date = inputFormat.parse(input)
+                    if (date != null) break
+                } catch (e: ParseException) {
+                    // Try next format
+                }
+            }
+
+            if (date == null) return ""
+
+            val outputFormat = SimpleDateFormat(DateTimetRetailGSTFormat, Locale.getDefault())
+            outputFormat.timeZone = TimeZone.getTimeZone("Asia/Singapore")
+
+            return outputFormat.format(date)
+        }catch (ex:Exception){
+            println("parsing date:$ex")
+           return "NA"
         }
-
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-        val date = inputFormat.parse(paddedInput) ?: return ""
-
-        //val mTime: Calendar = Calendar. getInstance()
-        //val timeZone = TimeZone. getDefault()
-
-        val outputFormat = SimpleDateFormat(DateTimetRetailGSTFormat, Locale.getDefault())
-        outputFormat.timeZone = TimeZone.getTimeZone("Asia/Singapore")
-
-        return outputFormat.format(date)
     }
-
 
 
     fun format(STAMP: Date?, FORMAT: String?): String? {

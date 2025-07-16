@@ -54,8 +54,13 @@ data class StockTransferProduct(
     @SerializedName("lastModificationTime") var lastModificationTime: String? = null,
     @SerializedName("lastModifierUserId") var lastModifierUserId: String? = null,
     @SerializedName("creationTime") var creationTime: String? = null,
-    @SerializedName("creatorUserId") var creatorUserId: String? = null
+    @SerializedName("creatorUserId") var creatorUserId: String? = null,
+    var isSerialNumberAdeded: Boolean = false
 ) : HistoryItemInterface {
+
+    fun isAddSerialButtonVisible():Boolean{
+      return type=="S" && isAsset==true && !isSerialNumberAdeded
+    }
 
     fun updateTotal() {
         val taxAmount = (qty * price) * (getApplicableTaxRate().toDouble() / 100.0)

@@ -15,6 +15,7 @@ import com.lfsolutions.retail.ui.BaseActivity
 import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
+import com.lfsolutions.retail.util.serialBatchVerified
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
 import com.videotel.digital.util.Notify
@@ -39,7 +40,13 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mAdapter = DeliveryOrderSummaryAdapter(Main.app.getDeliveryOrder()?.deliveryOrderDetail)
+        mAdapter = DeliveryOrderSummaryAdapter(Main.app.getDeliveryOrder()?.deliveryOrderDetail,requireActivity())
+        mAdapter.setOnItemUpdateListener(object : DeliveryOrderSummaryAdapter.OnItemUpdated {
+            override fun OnItemUpdated(deliveryOrderDetails: DeliveryOrderDetails) {
+                updateSummaryAmountAndQty()
+            }
+
+        })
         mAdapter.setListener(object : DeliveryOrderSummaryAdapter.OnOrderSummarySelectListener {
             override fun onOrderSummarySelect(item: DeliveryOrderDetails) {
                 openQuantityUpdateDialog(item)
@@ -220,6 +227,10 @@ class DeliveryOrderSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         }
 
         mBinding.btnComplete.setDebouncedClickListener {
+            if (serialBatchVerified(Main.app.getDeliveryOrder()?.deliveryOrderDetail).not()) {
+                Notify.toastLong("Please add serial numbers.")
+                return@setDebouncedClickListener
+            }
             findNavController().popBackStack()
         }
     }

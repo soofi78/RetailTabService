@@ -41,14 +41,45 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtAddress"
+            android:id="@+id/txtAddress1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12 Tai Seng st, Level 5 Luxasia Building, Singapore"
+            android:text="12 Tai Seng st"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/txtName"
             app:layout_constraintTop_toBottomOf="@id/txtName" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtAddress2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level 5 Luxasia Building"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/txtAddress1"
+            app:layout_constraintTop_toBottomOf="@id/txtAddress1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtAddress3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Singapore"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/txtAddress2"
+            app:layout_constraintTop_toBottomOf="@id/txtAddress2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtPaymentTerms"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Pay Now"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/txtAddress3"
+            app:layout_constraintStart_toStartOf="@+id/txtAddress3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txtGroup"
@@ -82,7 +113,7 @@
             app:constraint_referenced_ids="txtGroup,txtAccountNo,txtArea"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/txtName"
-            app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
+            app:layout_constraintTop_toBottomOf="@+id/txtPaymentTerms" />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txtPinCode"
             android:layout_width="0dp"
