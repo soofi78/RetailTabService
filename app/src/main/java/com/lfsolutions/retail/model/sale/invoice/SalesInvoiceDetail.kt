@@ -4,9 +4,11 @@ import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.model.ApplicableTaxes
+import com.lfsolutions.retail.model.SerialNumber
 import com.lfsolutions.retail.model.memo.ProductBatchList
 import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import java.util.UUID
 
 
@@ -56,7 +58,7 @@ data class SalesInvoiceDetail(
     ) var averageCost: Double? = 0.0,
     @SerializedName("NetCost", alternate = arrayOf("netCost")) var netCost: Double? = 0.0,
     @SerializedName(
-        "DepartmentId", alternate = arrayOf("departmentId")
+        "DepartmentI", alternate = arrayOf("departmentId")
     ) var departmentId: Int? = null,
     @SerializedName(
         "SalesAccountId", alternate = arrayOf("salesAccountId")
@@ -129,7 +131,14 @@ data class SalesInvoiceDetail(
     @SerializedName(
         "CreatorUserId", alternate = arrayOf("creatorUserId")
     ) var creatorUserId: String? = null,
+    @SerializedName("isAsset") var isAsset: Boolean? = false,
+    var isSerialNumberAdeded: Boolean = false
 ) : HistoryItemInterface {
+
+    fun isAddSerialButtonVisible():Boolean{
+        return type=="S" && isAsset==true && !isSerialNumberAdeded
+    }
+
     override fun getTitle(): String {
         return productName.toString()
     }
@@ -178,6 +187,17 @@ data class SalesInvoiceDetail(
             tax += it.taxRate ?: 0
         }
         return tax
+    }
+
+    fun getPreSelectedSerialNumbers(serialNumbersList: ArrayList<SerialNumber>): ArrayList<out MultiSelectModelInterface> {
+        val serials = ArrayList<MultiSelectModelInterface>()
+        productBatchList?.forEach {
+            val index = serialNumbersList.indexOf(SerialNumber(id = it.Id))
+            if (index > -1) {
+                serials.add(serialNumbersList[index])
+            }
+        }
+        return serials
     }
 
 }

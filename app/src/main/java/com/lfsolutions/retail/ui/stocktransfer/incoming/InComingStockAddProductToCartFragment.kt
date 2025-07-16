@@ -84,8 +84,7 @@ class InComingStockAddProductToCartFragment : Fragment() {
         }
         mBinding.txtProductName.text = product.productName
         mBinding.txtCategory.text = product.categoryName
-        mBinding.txtPrice.text =
-            Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
+        mBinding.txtPrice.text = Main.app.getSession().currencySymbol + product.cost?.formatDecimalSeparator()
         Glide.with(this).load(Main.app.getBaseUrl() + product.imagePath).centerCrop()
             .placeholder(R.drawable.no_image).into(mBinding.imgProduct)
         mBinding.serialNumberViewHolder.visibility =
@@ -182,7 +181,8 @@ class InComingStockAddProductToCartFragment : Fragment() {
                 cost = product.cost ?: 0.0,
                 subTotal = total,
                 customerId = customerId,
-                productBatchList = batchList
+                productBatchList = batchList,
+                isSerialNumberAdeded = true
             ).apply {
                 product.applicableTaxes?.let {
                     applicableTaxes = it

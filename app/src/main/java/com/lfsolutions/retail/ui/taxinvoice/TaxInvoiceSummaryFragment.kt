@@ -18,8 +18,7 @@ import com.lfsolutions.retail.ui.forms.NewFormsBottomSheet
 import com.lfsolutions.retail.ui.widgets.ProductQuantityUpdateSheet
 import com.lfsolutions.retail.util.Calculator
 import com.lfsolutions.retail.util.formatDecimalSeparator
-import com.lfsolutions.retail.util.formatPriceForApi
-import com.lfsolutions.retail.util.getRoundOffValue
+import com.lfsolutions.retail.util.serialBatchVerified
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.maltaisn.calcdialog.CalcDialog
 
@@ -49,7 +48,12 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userSession=Main.app.getSession()
-        mAdapter = TaxInvoiceSummaryAdapter(Main.app.getTaxInvoice()?.salesInvoiceDetail)
+        mAdapter = TaxInvoiceSummaryAdapter(Main.app.getTaxInvoice()?.salesInvoiceDetail,requireActivity())
+        mAdapter.setOnItemUpdateListener(object : TaxInvoiceSummaryAdapter.OnItemUpdated {
+            override fun OnItemUpdated(salesInvoiceDetail: SalesInvoiceDetail) {
+                updateSummaryAmountAndQty()
+            }
+        })
         mAdapter.setListener(object : TaxInvoiceSummaryAdapter.OnOrderSummarySelectListener {
             override fun onOrderSummarySelect(salesInvoiceDetail: SalesInvoiceDetail) {
                 openQuantityUpdateDialog(salesInvoiceDetail)
@@ -271,6 +275,11 @@ class TaxInvoiceSummaryFragment : Fragment(), CalcDialog.CalcDialogCallback {
         }
 
         mBinding.btnComplete.setDebouncedClickListener {
+            if (serialBatchVerified(Main.app.getTaxInvoice()?.salesInvoiceDetail).not()) {
+                Notify.toastLong("Please add serial numbers")
+                return@setDebouncedClickListener
+            }
+
             findNavController().popBackStack()
         }
     }

@@ -44,7 +44,7 @@ class ServiceFormSummaryAdapter(val serviceDetails: ArrayList<ComplaintServiceDe
         holder.binding.txtTag.text = serviceDetails?.get(position)?.transTypeDisplayText
 
         val batchList = serviceDetails?.get(position)?.productBatchList ?: emptyList()
-        holder.binding.txtSerials.toAddVisibility(batchList)
+        holder.binding.serialNoView.toAddVisibility(batchList)
         holder.binding.serialNumberRV.layoutManager = GridLayoutManager(holder.itemView.context, 3)
         holder.binding.serialNumberRV.adapter = batchList.toSerialNumberAdapter()
 

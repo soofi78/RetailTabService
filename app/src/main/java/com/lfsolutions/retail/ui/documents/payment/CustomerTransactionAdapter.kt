@@ -38,6 +38,7 @@ class CustomerTransactionAdapter(var transactions: List<CustomerSaleTransaction>
     }
 
     private fun setData(binding: ItemSaleTransactionBinding, transaction: CustomerSaleTransaction) {
+        binding.applied.setOnCheckedChangeListener(null)
         binding.applied.isChecked = transaction.applied == true
         binding.applied.setOnCheckedChangeListener { _, isChecked ->
             val transaction = binding.root.tag as CustomerSaleTransaction

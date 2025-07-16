@@ -32,6 +32,7 @@ import com.lfsolutions.retail.ui.customer.CustomerDetailsBottomSheet
 import com.lfsolutions.retail.util.Constants
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.Loading
+import com.lfsolutions.retail.util.serialBatchVerified
 import com.lfsolutions.retail.util.setDebouncedClickListener
 import com.videotel.digital.util.Notify
 import okhttp3.MediaType
@@ -157,6 +158,11 @@ class DeliveryOrderFragment : Fragment() {
 
             if (Main.app.getDeliveryOrder()?.deliveryOrderDetail?.size == 0) {
                 Notify.toastLong("Please add products")
+                return@setDebouncedClickListener
+            }
+
+            if (serialBatchVerified(Main.app.getDeliveryOrder()?.deliveryOrderDetail).not()) {
+                Notify.toastLong("Please add serial numbers")
                 return@setDebouncedClickListener
             }
 

@@ -287,7 +287,8 @@ class AddProductToTaxInvoiceFragment : Fragment() {
                 creationTime = DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat)
                     .replace(" ", "T").plus("Z"),
                 creatorUserId = Main.app.getSession().userId.toString(),
-                productBatchList = batchList
+                productBatchList = batchList,
+                isSerialNumberAdeded = true
             ).apply {
                 product.applicableTaxes?.let {
                     applicableTaxes = it

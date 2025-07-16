@@ -5,13 +5,12 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import androidx.appcompat.widget.AppCompatTextView
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.R
 import com.lfsolutions.retail.model.memo.ProductBatchList
+import com.lfsolutions.retail.model.sale.invoice.SalesInvoiceDetail
 import com.lfsolutions.retail.ui.adapter.MultiSelectListAdapter
+import com.lfsolutions.retail.ui.delivery.order.DeliveryOrderDetails
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -223,6 +222,34 @@ fun Double.formatPriceForApi(applyDecimalSettings: Boolean = false): Double {
     return this.toBigDecimal()
         .setScale(decimals, RoundingMode.HALF_UP)
         .toDouble()
+}
+
+fun serialBatchVerified(list: List<Any>?): Boolean {
+    var verified = true
+    list?.forEach {
+        when (it) {
+            is SalesInvoiceDetail -> {
+                val serial = it.isAsset == true || it.type.equals("S")
+                val notBatched = it.productBatchList == null || it.productBatchList?.size == 0
+                val batchedAndQtyNotMatch =
+                    it.productBatchList != null && it.qty?.toInt() != it.productBatchList?.size
+                if (serial && (notBatched || batchedAndQtyNotMatch)) {
+                    verified = false
+                }
+            }
+
+            is DeliveryOrderDetails -> {
+                val serial = it.isAsset == true || it.type.equals("S")
+                val notBatched = it.productBatchList.isNullOrEmpty()
+                val batchedAndQtyNotMatch = it.productBatchList != null && it.deliverQty?.toInt() != it.productBatchList?.size
+
+                if (serial && (notBatched || batchedAndQtyNotMatch)) {
+                    verified = false
+                }
+            }
+        }
+    }
+    return verified
 }
 
 

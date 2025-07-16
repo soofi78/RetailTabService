@@ -90,8 +90,7 @@ class IncomingStockSummaryFragment : Fragment() {
 
     private fun updateSummaryAmountAndQty() {
         mBinding.txtQTY.text = getQty().toString()
-        mBinding.txtTotal.text =
-            Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
+        mBinding.txtTotal.text = Main.app.getSession().currencySymbol + getTotal().formatDecimalSeparator()
         mBinding.btnComplete.isEnabled = getQty() != 0.0
     }
 
