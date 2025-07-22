@@ -3,7 +3,11 @@ package com.lfsolutions.retail.model.sale.invoice
 import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.model.UserSession
 import com.lfsolutions.retail.util.formatPriceForApi
+import com.lfsolutions.retail.util.formatToTwoDecimals
 import com.lfsolutions.retail.util.getRoundOffValue
+import com.lfsolutions.retail.util.roundToTwoDecimals
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 
 data class SaleInvoiceObject(
@@ -20,11 +24,7 @@ data class SaleInvoiceObject(
         salesInvoice?.invoiceNetDiscount?.let { updatePriceAndQty(it) }
     }
 
-    fun updateGrandTotalAndRoundingAmount(invoiceGrandTotal:Double=0.0,invoiceRoundingAmount:Double=0.0){
-        salesInvoice?.invoiceGrandTotal = invoiceGrandTotal.formatPriceForApi()
-        salesInvoice?.balance = invoiceGrandTotal.formatPriceForApi()
-        salesInvoice?.invoiceRoundingAmount = invoiceRoundingAmount.formatPriceForApi()
-    }
+
 
     fun updatePriceAndQty(discountProvided: Double = 0.0) {
         var appliedDiscount = discountProvided
@@ -63,32 +63,53 @@ data class SaleInvoiceObject(
                 it.subTotal = it.qty?.times(it.costWithoutTax)?.minus((it.itemDiscount ?: 0.0))
                     ?.minus(it.netDiscount ?: 0.0)?.minus(discountValueBasedOnPercentage)
                 if (salesInvoice?.isTaxInclusive == true) {
-                    it.tax = (it.subTotal ?: 0.0) * it.taxRate / (it.taxRate + 100)
-                    it.subTotal = it.subTotal?.minus(it.tax ?: 0.0)
+                   /* it.tax = (it.subTotal ?: 0.0) * it.taxRate / (it.taxRate + 100)
+                    it.subTotal = it.subTotal?.minus(it.tax ?: 0.0)*/ //old approach
+
+                    val gross = BigDecimal(it.subTotal ?: 0.0)
+                    val taxRate = BigDecimal(it.taxRate)
+
+                    val tax = gross.multiply(taxRate)
+                        .divide(taxRate.plus(BigDecimal(100)), 2, RoundingMode.HALF_UP)
+
+                    val net = gross.subtract(tax).setScale(2,RoundingMode.HALF_UP)
+
+                    it.tax = tax.toDouble()
+                    it.subTotal = net.toDouble()
+
                 } else {
-                    it.tax = (it.subTotal ?: 0.0) * it.taxRate / 100
+                    println("TaxRate:=${it.taxRate}|SubTotal:=${it.subTotal}")
+                    val subTotal = BigDecimal(it.subTotal ?: 0.0)
+                    val taxRate = BigDecimal(it.taxRate)
+                    val percent = taxRate.divide(BigDecimal(100)) // exactly 0.09
+                    println("percent=$percent|subTotal=$subTotal") // 0.09
+                    //it.tax = (it.subTotal ?: 0.0) * (it.taxRate / 100)
+                    val tax = subTotal.multiply(percent).setScale(2, RoundingMode.HALF_UP)
+                    println("Tax:${tax}")
+                    it.tax=tax.toDouble()
                 }
+
                 it.netTotal = it.subTotal
                 it.netTotal = (it.totalValue ?: 0.0)
             }
-            netTotal = netTotal.plus(it.netTotal ?: 0.0)
-            netDiscount = netDiscount.plus(it.netDiscount ?: 0.0)
-            itemDiscounts = itemDiscounts.plus(it.itemDiscount ?: 0.0)
-            subTotal = subTotal.plus(it.subTotal ?: 0.0)
-            taxAmount = taxAmount.plus(it.tax ?: 0.0)
-            total = total.plus(it.totalValue ?: 0.0)
+            netTotal = netTotal.plus(it.netTotal ?: 0.0).roundToTwoDecimals()
+            netDiscount = netDiscount.plus(it.netDiscount ?: 0.0).roundToTwoDecimals()
+            itemDiscounts = itemDiscounts.plus(it.itemDiscount ?: 0.0).roundToTwoDecimals()
+            subTotal = subTotal.plus(it.subTotal ?: 0.0).roundToTwoDecimals()
+            taxAmount = taxAmount.plus(it.tax ?: 0.0).roundToTwoDecimals()
+            total = total.plus(it.totalValue ?: 0.0).roundToTwoDecimals()
             index++
         }
+        println("netTotal:=$netTotal|subTotal:=$subTotal|taxAmount:=$taxAmount|total:=$total")
         salesInvoice?.invoiceQty = qty
-        salesInvoice?.invoiceTotalValue = total.formatPriceForApi()
-        salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount).formatPriceForApi()
-        salesInvoice?.invoiceSubTotal = subTotal.formatPriceForApi()
-        salesInvoice?.invoiceTax = taxAmount.formatPriceForApi()
-        salesInvoice?.netDiscount = netDiscount.formatPriceForApi()
-        salesInvoice?.invoiceNetDiscount = netDiscount.formatPriceForApi()
-        salesInvoice?.invoiceItemDiscount = itemDiscounts.formatPriceForApi()
-        //salesInvoice?.invoiceGrandTotal = subTotal.plus(taxAmount).formatPriceForApi()
-        //salesInvoice?.balance = salesInvoice?.invoiceGrandTotal?.formatPriceForApi()
+        salesInvoice?.invoiceTax = taxAmount
+        salesInvoice?.invoiceTotalValue = total
+        salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount)
+        salesInvoice?.invoiceSubTotal = subTotal
+        salesInvoice?.netDiscount = netDiscount
+        salesInvoice?.invoiceNetDiscount = netDiscount
+        salesInvoice?.invoiceItemDiscount = itemDiscounts
+
         val (roundedGrandTotal,roundingAmount) = if(salesInvoice?.isRoundingApplied==true) {
             getRoundOffValue(
                 totalPrice = subTotal.plus(taxAmount),
@@ -98,10 +119,10 @@ data class SaleInvoiceObject(
         } else {
             subTotal.plus(taxAmount) to 0.0
         }
-        println("isRoundingApplied: ${salesInvoice?.isRoundingApplied}|roundedGrandTotal$roundedGrandTotal|roundingAmount$roundingAmount")
-        salesInvoice?.invoiceGrandTotal = roundedGrandTotal.formatPriceForApi()
-        salesInvoice?.balance = roundedGrandTotal.formatPriceForApi()
-        salesInvoice?.invoiceRoundingAmount = roundingAmount.formatPriceForApi()
+        //println("isRoundingApplied: ${salesInvoice?.isRoundingApplied}|roundedGrandTotal$roundedGrandTotal|roundingAmount$roundingAmount")
+        salesInvoice?.invoiceGrandTotal = roundedGrandTotal.roundToTwoDecimals()
+        salesInvoice?.balance = roundedGrandTotal.roundToTwoDecimals()
+        salesInvoice?.invoiceRoundingAmount = roundingAmount.roundToTwoDecimals()
 
         if (netDiscount == 0.0) salesInvoice?.invoiceNetDiscountPerc = 0.0
         else salesInvoice?.invoiceNetDiscountPerc = (salesInvoice?.invoiceGrandTotal?.let {

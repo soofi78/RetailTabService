@@ -1,5 +1,6 @@
 package com.lfsolutions.retail.util
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -17,6 +18,7 @@ import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.floor
+import kotlin.math.pow
 import kotlin.math.round
 
 
@@ -217,11 +219,37 @@ private fun getRoundOffDefaultValue(totalPrice: Double, roundOff: Double): Doubl
     return roundedPrice
 }
 
-fun Double.formatPriceForApi(applyDecimalSettings: Boolean = false): Double {
+/*fun Double.formatPriceForApi(applyDecimalSettings: Boolean = false): Double {
     val decimals = if(applyDecimalSettings)Main.app.getSession().decimalDigitsForPriceInSalesModule?.takeIf { it > 0 } ?: 2 else 2
     return this.toBigDecimal()
         .setScale(decimals, RoundingMode.HALF_UP)
         .toDouble()
+}*/
+
+fun Double.formatPriceForApi(applyDecimalSettings: Boolean = false): Double {
+    println("ActualValue:$this")
+    val decimals = if (applyDecimalSettings)
+        Main.app.getSession().decimalDigitsForPriceInSalesModule?.takeIf { it > 0 } ?: 2
+    else 2
+
+    // Use String constructor to avoid floating point binary errors
+    /*return BigDecimal.valueOf(this)
+        .setScale(decimals, RoundingMode.HALF_UP)
+        .toDouble()*/
+    val factor = 10.0.pow(decimals)
+    val epsilon = 1e-8 // Only for HALF_UP to fix .69499999 edge
+
+    return  round((this + epsilon) * factor) / factor
+}
+
+fun Double.roundToTwoDecimals(): Double {
+    println("OriginalValue:=$this")
+    return kotlin.math.round(this * 100) / 100.0
+}
+
+@SuppressLint("DefaultLocale")
+fun Double.formatToTwoDecimals(): Double {
+    return String.format("%.2f", this).toDouble()
 }
 
 fun serialBatchVerified(list: List<Any>?): Boolean {

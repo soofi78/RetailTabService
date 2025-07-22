@@ -30,9 +30,9 @@ class Network private constructor() {
         val gson = GsonBuilder().serializeNulls().create()
         val httpClient = OkHttpClient.Builder()
         httpClient.retryOnConnectionFailure(true)
-        httpClient.connectTimeout(60, TimeUnit.SECONDS)
-        httpClient.readTimeout(60, TimeUnit.SECONDS)
-        httpClient.writeTimeout(60, TimeUnit.SECONDS)
+        httpClient.connectTimeout(120, TimeUnit.SECONDS)
+        httpClient.readTimeout(120, TimeUnit.SECONDS)
+        httpClient.writeTimeout(120, TimeUnit.SECONDS)
         httpClient.addInterceptor(loggingIntercept)
         httpClient.addInterceptor { chain ->
             if (Main.app.isLoggedIn().not()) {

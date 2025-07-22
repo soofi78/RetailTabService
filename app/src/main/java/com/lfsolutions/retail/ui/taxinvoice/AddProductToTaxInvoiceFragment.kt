@@ -240,17 +240,21 @@ class AddProductToTaxInvoiceFragment : Fragment() {
         if (mBinding.checkboxIsExpired.isChecked) {
             qty *= -1
         }
-        val subTotal = (qty * (product.cost ?: 0.0))
+       /* val cost=if(product.productId==429L){
+            121.50
+        }else product.cost*/
+
+        val subTotal = (qty * (product.cost ?: 0.0) /*(cost?:0.0)*/)
         val discount = 0.0
 
         var taxAmount = 0.0
         if (args.isTaxInclusive) {
             taxAmount =
-                subTotal * product.getApplicableTaxRate()
-                    .toDouble() / product.getApplicableTaxRate() + 100
+                subTotal * product.getApplicableTaxRate()/ product.getApplicableTaxRate() + 100
         } else {
-            taxAmount = subTotal * (product.getApplicableTaxRate().toDouble() / 100.0)
+            taxAmount = subTotal * (product.getApplicableTaxRate() / 100)
         }
+       // println("TaxAmount:$taxAmount")
         //parseFloat(actualTotal * value.taxRate / (value.taxRate + 100))
         val netTotal = (subTotal - discount) + taxAmount
         val total = (subTotal + taxAmount)
@@ -264,9 +268,9 @@ class AddProductToTaxInvoiceFragment : Fragment() {
                 unitName = product.unitName,
                 qty = qty,
                 qtyStock = product.qtyOnHand,
-                price = product.cost ?: 0.0,
+                price = product.cost ?: 0.0 /*cost?:0.0*/,
                 netCost = total,
-                costWithoutTax = product.cost ?: 0.0,
+                costWithoutTax = product.cost ?: 0.0 /*cost?:0.0*/,
                 taxRate = product.getApplicableTaxRate().toDouble(),
                 departmentId = 0,
                 lastPurchasePrice = 0.0,
