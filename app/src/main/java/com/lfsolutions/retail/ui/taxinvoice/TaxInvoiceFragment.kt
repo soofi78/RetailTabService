@@ -88,7 +88,8 @@ class TaxInvoiceFragment : Fragment() {
                 }
             }
 
-
+            val remarks=Main.app.getTaxInvoice()?.salesInvoice?.remarks?:""
+             binding.remarks.setText(remarks)
             /* Main.app.getTaxInvoice()?.salesInvoice?.creationTime =
                  DateTime.getCurrentDateTime(DateTime.ServerDateTimeFormat).replace(" ", "T")
                      .plus("Z")*/

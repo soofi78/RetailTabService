@@ -174,6 +174,11 @@ object Printer {
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceQty, invoice?.salesInvoice?.invoiceQty?.toString()?:""
         )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceRemark, invoice?.salesInvoice?.remarks?:""
+        )
+
         if (invoice?.salesInvoice?.type == "F") {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount, "FOC"
