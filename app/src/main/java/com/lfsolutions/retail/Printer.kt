@@ -77,7 +77,7 @@ object Printer {
     ) {
         var templateText = template?.template
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNo, invoice?.salesInvoice?.invoiceNo.toString()
+            Constants.Invoice.InvoiceNo, invoice?.salesInvoice?.invoiceNo?:""
         )
 
         templateText = templateText?.replace(
@@ -89,15 +89,15 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTerm, invoice?.salesInvoice?.paymentTermName.toString()
+            Constants.Invoice.InvoiceTerm, invoice?.salesInvoice?.paymentTermName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoice?.customerName.toString()
+            Constants.Invoice.InvoiceCustomerName, invoice?.salesInvoice?.customerName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerCode, invoice?.salesInvoice?.customerCode.toString()
+            Constants.Invoice.InvoiceCustomerCode, invoice?.salesInvoice?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -127,10 +127,10 @@ object Printer {
         var items = ""
         var count = 0
         invoice?.salesInvoiceDetail?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Invoice.ProductName, it.productName.toString())
-                ?.replace(Constants.Invoice.Qty, it.qty.toString())
-                ?.replace(Constants.Invoice.UOM, it.unitName.toString())
+            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo?.toString()?:"")
+                ?.replace(Constants.Invoice.ProductName, it.productName?:"")
+                ?.replace(Constants.Invoice.Qty, it.qty?.toString()?:"")
+                ?.replace(Constants.Invoice.UOM, it.unitName?:"")
                 ?.replace(Constants.Invoice.Price, it.price.toString())?.replace(
                     Constants.Invoice.NetTotal, it.getAmount()
                 ).toString()
@@ -144,16 +144,16 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceSubTotal,
-            invoice?.salesInvoice?.InvoiceSubTotalFromatted().toString()
+            invoice?.salesInvoice?.InvoiceSubTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceDiscount,
-            invoice?.salesInvoice?.InvoiceDiscountFromatted().toString()
+            invoice?.salesInvoice?.InvoiceDiscountFromatted()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.InvoiceTaxFromatted().toString()
+            Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.InvoiceTaxFromatted()?:""
         )
 
         templateText = templateText?.replace(
@@ -172,8 +172,13 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceQty, invoice?.salesInvoice?.invoiceQty.toString()
+            Constants.Invoice.InvoiceQty, invoice?.salesInvoice?.invoiceQty?.toString()?:""
         )
+
+        templateText = templateText?.replace(
+            Constants.Invoice.InvoiceRemark, invoice?.salesInvoice?.remarks?:""
+        )
+
         if (invoice?.salesInvoice?.type == "F") {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount, "FOC"
@@ -188,18 +193,18 @@ object Printer {
         } else {
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceBalanceAmount,
-                invoice?.salesInvoice?.BalanceFormatted().toString()
+                invoice?.salesInvoice?.BalanceFormatted()?:""
             )
 
 
             templateText = templateText?.replace(
                 Constants.Invoice.InvoiceOuStandingBalanceAmount,
-                invoice?.salesInvoice?.OutstandingBalanceFormatted().toString()
+                invoice?.salesInvoice?.OutstandingBalanceFormatted()?:""
             )
 
             templateText = templateText?.replace(
                 Constants.Invoice.InvoicePaidAmount,
-                invoice?.salesInvoice?.PaidAmountFormatted().toString()
+                invoice?.salesInvoice?.PaidAmountFormatted()?:""
             )
         }
 
@@ -257,7 +262,7 @@ object Printer {
     ) {
         var templateText = template?.template
         templateText = templateText?.replace(
-            Constants.Delivery.OrderNo, order?.deliveryOrder?.deliveryNo.toString()
+            Constants.Delivery.OrderNo, order?.deliveryOrder?.deliveryNo?:""
         )
 
         templateText = templateText?.replace(
@@ -265,15 +270,15 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.Date, order?.deliveryOrder?.DeliveryDateFormatted().toString()
+            Constants.Delivery.Date, order?.deliveryOrder?.DeliveryDateFormatted()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.CustomerName, order?.deliveryOrder?.customerName.toString()
+            Constants.Delivery.CustomerName, order?.deliveryOrder?.customerName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Delivery.CustomerCode, order?.deliveryOrder?.customerCode.toString()
+            Constants.Delivery.CustomerCode, order?.deliveryOrder?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -296,10 +301,10 @@ object Printer {
         var items = ""
         var count = 0
         order?.deliveryOrderDetail?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Delivery.ProductName, it.productName.toString())
-                ?.replace(Constants.Delivery.Qty, it.deliveredQty.toString())
-                ?.replace(Constants.Delivery.UOM, it.uom.toString())
+            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo?.toString()?:"")
+                ?.replace(Constants.Delivery.ProductName, it.productName?:"")
+                ?.replace(Constants.Delivery.Qty, it.deliveredQty?.toString()?:"")
+                ?.replace(Constants.Delivery.UOM, it.uom?:"")
             count += 1
             if (count < order.deliveryOrderDetail.size) {
                 items += "\n"
@@ -309,7 +314,7 @@ object Printer {
         templateText = templateText?.replace(itemTemplate.toString(), items)
 
         templateText = templateText?.replace(
-            Constants.Delivery.DeliveredQty, order?.deliveryOrder?.totalDeliveredQty.toString()
+            Constants.Delivery.DeliveredQty, order?.deliveryOrder?.totalDeliveredQty?.toString()?:""
         )
 
 //        templateText = templateText?.replace(
@@ -356,7 +361,7 @@ object Printer {
         val agreementMemo=memo?.AgreementMemo
 
         templateText = templateText?.replace(
-            Constants.AgreementMemo.AgreementMemoNo, agreementMemo?.AgreementNo.toString()
+            Constants.AgreementMemo.AgreementMemoNo, agreementMemo?.AgreementNo?:""
         )
 
         templateText = templateText?.replace(
@@ -364,7 +369,7 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.AgreementMemo.AgreementMemoQty, agreementMemo?.AgreementQty.toString()
+            Constants.AgreementMemo.AgreementMemoQty, agreementMemo?.AgreementQty?.toString()?:""
         )
 
 
@@ -373,11 +378,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Customers.CustomerName, agreementMemo?.CustomerName.toString()
+            Constants.Customers.CustomerName, agreementMemo?.CustomerName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Customers.CustomerCode, agreementMemo?.customerCode.toString()
+            Constants.Customers.CustomerCode, agreementMemo?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -399,10 +404,10 @@ object Printer {
         var items = ""
         memo?.AgreementMemoDetail?.forEachIndexed{count,item->
             items += itemTemplateClean?.replace(Constants.Common.Index, "${count+1}")
-                ?.replace(Constants.Common.ProductName, item.ProductName.toString())
-                ?.replace(Constants.Common.Qty, item.Qty.toString())
-                ?.replace(Constants.Common.UOM, item.UnitName.toString())
-                ?.replace(Constants.AgreementMemo.AgreementMemoType, item.AgreementTypeDisplayText.toString()).toString()
+                ?.replace(Constants.Common.ProductName, item.ProductName?:"")
+                ?.replace(Constants.Common.Qty, item.Qty?.toString()?:"")
+                ?.replace(Constants.Common.UOM, item.UnitName?:"")
+                ?.replace(Constants.AgreementMemo.AgreementMemoType, item.AgreementTypeDisplayText?:"")
             if (count <memo.AgreementMemoDetail.size) {
                 items += "\n"
             }
@@ -440,35 +445,35 @@ object Printer {
         val complaintService=service?.complaintService
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSNo, complaintService?.csNo.toString()
+            Constants.ComplaintService.CSNo, complaintService?.csNo?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSDate, complaintService?.csDate.toString()
+            Constants.ComplaintService.CSDate, complaintService?.csDate?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSDeliveryDate, complaintService?.type.toString()
+            Constants.ComplaintService.CSDeliveryDate, complaintService?.type?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSReportTypeDeliveryDate, complaintService?.reportType.toString()
+            Constants.ComplaintService.CSReportTypeDeliveryDate, complaintService?.reportType?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSQty, complaintService?.totalQty.toString()
+            Constants.ComplaintService.CSQty, complaintService?.totalQty?.toString()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSTimeIn, complaintService?.getCheckInTime().toString()
+            Constants.ComplaintService.CSTimeIn, complaintService?.getCheckInTime()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSTimeOut, complaintService?.getCheckOutTime().toString()
+            Constants.ComplaintService.CSTimeOut, complaintService?.getCheckOutTime()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.ComplaintService.CSRemarks, complaintService?.remarks.toString()
+            Constants.ComplaintService.CSRemarks, complaintService?.remarks?:""
         )
 
 
@@ -477,11 +482,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Customers.CustomerName, complaintService?.customerName.toString()
+            Constants.Customers.CustomerName, complaintService?.customerName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Customers.CustomerCode, complaintService?.customerCode.toString()
+            Constants.Customers.CustomerCode, complaintService?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -503,11 +508,11 @@ object Printer {
         var items = ""
         service?.complaintServiceDetails?.forEachIndexed{count,item->
             items += itemTemplateClean?.replace(Constants.Common.Index, "${count+1}")
-                ?.replace(Constants.Common.ProductName, item.productName.toString())
-                ?.replace(Constants.Common.Qty, item.qty.toString())
-                ?.replace(Constants.Common.UOM, item.unitName.toString())
-                ?.replace(Constants.ComplaintService.CSTransTypeString, item.transTypeDisplayText.toString())
-                ?.replace(Constants.ComplaintService.CSActionTypeString, item.actionTypeString.toString())
+                ?.replace(Constants.Common.ProductName, item.productName?:"")
+                ?.replace(Constants.Common.Qty, item.qty?:"")
+                ?.replace(Constants.Common.UOM, item.unitName?:"")
+                ?.replace(Constants.ComplaintService.CSTransTypeString, item.transTypeDisplayText?:"")
+                ?.replace(Constants.ComplaintService.CSActionTypeString, item.actionTypeString?:"")
                 .toString()
             if (count <service.complaintServiceDetails.size) {
                 items += "\n"
@@ -532,23 +537,23 @@ object Printer {
     private fun prepareOrderTemplateAndPrint(template: PrintTemplate?, order: SaleOrderResponse?) {
         var templateText = template?.template
         templateText = templateText?.replace(
-            Constants.Order.OrderNo, order?.salesOrder?.soNo.toString()
+            Constants.Order.OrderNo, order?.salesOrder?.soNo?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.OrderDate, order?.salesOrder?.soDate.toString()
+            Constants.Order.OrderDate, order?.salesOrder?.soDate?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.OrderTerm, order?.salesOrder?.paymentReference.toString()
+            Constants.Order.OrderTerm, order?.salesOrder?.paymentReference?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerCustomerName, order?.salesOrder?.customerName.toString()
+            Constants.Order.CustomerCustomerName, order?.salesOrder?.customerName?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerCustomerCode, order?.salesOrder?.customerCode.toString()
+            Constants.Order.CustomerCustomerCode, order?.salesOrder?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -571,12 +576,12 @@ object Printer {
         var items = ""
         var count = 0
         order?.salesOrderDetail?.forEach {
-            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo.toString())
-                ?.replace(Constants.Invoice.ProductName, it.productName.toString())
-                ?.replace(Constants.Invoice.Qty, it.qty.toString())
-                ?.replace(Constants.Invoice.UOM, it.unitName.toString())
-                ?.replace(Constants.Invoice.Price, it.price.toString())
-                ?.replace(Constants.Invoice.NetTotal, it.netTotal.toString()).toString()
+            items += itemTemplateClean?.replace(Constants.Common.Index, it.slNo?.toString()?:"")
+                ?.replace(Constants.Invoice.ProductName, it.productName?:"")
+                ?.replace(Constants.Invoice.Qty, it.qty?.toString()?:"")
+                ?.replace(Constants.Invoice.UOM, it.unitName?:"")
+                ?.replace(Constants.Invoice.Price, it.price?.toString()?:"")
+                ?.replace(Constants.Invoice.NetTotal, it.netTotal?.toString()?:"").toString()
             count += 1
             if (count < order.salesOrderDetail.size) {
                 items += "\n"
@@ -586,23 +591,23 @@ object Printer {
         templateText = templateText?.replace(itemTemplate.toString(), items)
 
         templateText = templateText?.replace(
-            Constants.Order.OrderSubTotal, order?.salesOrder?.soSubTotal.toString()
+            Constants.Order.OrderSubTotal, order?.salesOrder?.soSubTotal?.toString()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.OrderTax, order?.salesOrder?.soTax.toString()
+            Constants.Order.OrderTax, order?.salesOrder?.soTax?.toString()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.OrderNetTotal, order?.salesOrder?.soNetTotal.toString()
+            Constants.Order.OrderNetTotal, order?.salesOrder?.soNetTotal?.toString()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.OrderQty, order?.salesOrder?.orderedQty.toString()
+            Constants.Order.OrderQty, order?.salesOrder?.orderedQty?.toString()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Order.CustomerBalanceAmount, order?.salesOrder?.balance.toString()
+            Constants.Order.CustomerBalanceAmount, order?.salesOrder?.balance?.toString()?:""
         )
 
         templateText = templateText?.replace(
@@ -631,11 +636,11 @@ object Printer {
     private fun prepareReceiptTemplateAndPrint(template: PrintTemplate?, receipt: SaleReceipt?) {
         var templateText = template?.template
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceNo, receipt?.receiptNo.toString()
+            Constants.Invoice.InvoiceNo, receipt?.receiptNo?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, receipt?.receiptDate.toString()
+            Constants.Invoice.InvoiceDate, receipt?.receiptDate?:""
         )
 
         templateText = templateText?.replace(
@@ -647,7 +652,7 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCustomerCode, receipt?.customerCode.toString()
+            Constants.Invoice.InvoiceCustomerCode, receipt?.customerCode?:""
         )
 
         templateText = templateText?.replace(
@@ -676,8 +681,8 @@ object Printer {
         var count = 0
         receipt?.items?.forEach {
             items += itemTemplateClean?.replace(Constants.Common.Index, count.toString())
-                ?.replace(Constants.Receipt.TransactionNo, it.transactionNo.toString())
-                ?.replace(Constants.Receipt.TransactionDate, it.transactionDate.toString())
+                ?.replace(Constants.Receipt.TransactionNo, it.transactionNo?:"")
+                ?.replace(Constants.Receipt.TransactionDate, it.transactionDate?:"")
                 ?.replace(Constants.Receipt.TransactionAmount, it.getAppliedAmount())
             count += 1
             if (count < (receipt.items?.size ?: 0)) {

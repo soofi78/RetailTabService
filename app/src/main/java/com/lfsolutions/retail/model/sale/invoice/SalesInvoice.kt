@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 import com.lfsolutions.retail.Main
 import com.lfsolutions.retail.util.DateTime
 import com.lfsolutions.retail.util.formatDecimalSeparator
+import com.lfsolutions.retail.util.formatPriceForApi
+import com.lfsolutions.retail.util.formatToTwoDecimals
 
 
 data class SalesInvoice(
