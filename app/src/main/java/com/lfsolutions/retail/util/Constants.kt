@@ -30,6 +30,7 @@ object Constants {
         const val TotalAmount = "{{receipt.amount}}"
         const val InvoicePONumber = "{{invoice.poNo}}"
         const val InvoiceRemark = "{{invoice.remark}}"
+        const val InvoicePrintDateTime = "{{PrintDateTime}}"
     }
 
     object Customers{

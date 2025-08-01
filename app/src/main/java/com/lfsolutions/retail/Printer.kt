@@ -29,6 +29,7 @@ import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
+import com.lfsolutions.retail.util.DateTime.getCurrentDateTimeSingapore
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTDate
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTTime
 import com.lfsolutions.retail.util.Loading
@@ -210,6 +211,10 @@ object Printer {
 
 
         templateText = templateText?.replace(
+            Constants.Invoice.InvoicePrintDateTime, getCurrentDateTimeSingapore()
+        )
+
+        templateText = templateText?.replace(
             Constants.Invoice.InvoiceSignature,
             "@@@" + invoice?.salesInvoice?.signatureUrl().toString()
         )
@@ -218,6 +223,7 @@ object Printer {
             Constants.Invoice.InvoiceQR,
             Constants.QRTagStart + invoice?.salesInvoice?.zatcaQRCode.toString() + Constants.QRTagEnd
         )
+
 
         templateText?.let { PrinterManager.print(printableText = it, noOfCopies = template?.printDefault?:1) }
 

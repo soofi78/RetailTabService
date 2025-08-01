@@ -212,10 +212,10 @@ object PrinterManager {
                     }
                 }
 
-                Log.i("PrinterManager", "noOfCopies = $noOfCopies")
+                //Log.i("PrinterManager", "noOfCopies = $noOfCopies")
 
                 for (item in 0 until noOfCopies) {
-                    Log.i("PrinterManager", "finalPrint: $printText")
+                    //Log.i("PrinterManager", "finalPrint: $printText")
                     printer?.printFormattedTextAndCut(printText, 100f)
                 }
 //                connection?.write(byteArrayOf(0x1D, 0x56, 0x41, 0x10))
