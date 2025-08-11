@@ -92,11 +92,12 @@ data class SaleInvoiceObject(
                 it.netTotal = it.subTotal
                 it.netTotal = (it.totalValue ?: 0.0)
             }
-            netTotal = netTotal.plus(it.netTotal ?: 0.0).roundToTwoDecimals()
+            //netTotal = netTotal.plus(it.netTotal ?: 0.0).roundToTwoDecimals()
             netDiscount = netDiscount.plus(it.netDiscount ?: 0.0).roundToTwoDecimals()
             itemDiscounts = itemDiscounts.plus(it.itemDiscount ?: 0.0).roundToTwoDecimals()
             subTotal = subTotal.plus(it.subTotal ?: 0.0).roundToTwoDecimals()
             taxAmount = taxAmount.plus(it.tax ?: 0.0).roundToTwoDecimals()
+            netTotal = subTotal.plus(taxAmount).roundToTwoDecimals()
             total = total.plus(it.totalValue ?: 0.0).roundToTwoDecimals()
             index++
         }
@@ -104,7 +105,7 @@ data class SaleInvoiceObject(
         salesInvoice?.invoiceQty = qty
         salesInvoice?.invoiceTax = taxAmount
         salesInvoice?.invoiceTotalValue = total
-        salesInvoice?.invoiceNetTotal = subTotal.plus(taxAmount)
+        salesInvoice?.invoiceNetTotal = netTotal /*subTotal.plus(taxAmount)*/
         salesInvoice?.invoiceSubTotal = subTotal
         salesInvoice?.netDiscount = netDiscount
         salesInvoice?.invoiceNetDiscount = netDiscount

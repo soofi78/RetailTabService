@@ -84,6 +84,7 @@ object DateTime {
     }
 
 
+
     fun format(STAMP: Date?, FORMAT: String?): String? {
         val from = SimpleDateFormat(FORMAT)
         var formattedDate: String? = null
@@ -145,6 +146,13 @@ object DateTime {
             Logger.log(Logger.EXCEPTION, e)
             serverFormat
         }
+    }
+
+    fun getCurrentDateTimeSingapore(): String {
+        val format: String = "dd MMM yyyy, hh:mm a"
+        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("Asia/Singapore")
+        return sdf.format(Date())
     }
 
     fun getCurrentDateTimeUTC(formate: String?): String {
