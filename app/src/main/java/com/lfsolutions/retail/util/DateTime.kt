@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import com.whiteelephant.monthpicker.MonthPickerDialog
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -23,6 +24,7 @@ object DateTime {
     const val DateFormatRetail = "yyyy-MM-dd"
     const val DateTimetRetailFormat = "yyyy-MM-dd HH:mm:ss"
     const val DateTimetRetailGSTFormat = "yyyy-MM-dd HH:mm:ss"
+    const val DateTimetRetailGSTFormat2 = "yyyy-MM-dd HH:mm a"
     const val DateTimeRetailFrontEndFormate = "dd MMM yyyy, hh:mm a"
     const val DateRetailApiFormate = "dd MMM yyyy"
     const val TimeFormat = "hh:mm a"
@@ -47,7 +49,7 @@ object DateTime {
         return formatted?:""
     }
 
-    fun getFormattedSGTTime(input: String?): String {
+    fun getFormattedSGTTime(input: String?,format:String=DateTimetRetailGSTFormat): String {
         try {
             if (input == null) return ""
 
@@ -73,7 +75,7 @@ object DateTime {
 
             if (date == null) return ""
 
-            val outputFormat = SimpleDateFormat(DateTimetRetailGSTFormat, Locale.getDefault())
+            val outputFormat = SimpleDateFormat(format, Locale.getDefault())
             outputFormat.timeZone = TimeZone.getTimeZone("Asia/Singapore")
 
             return outputFormat.format(date)
@@ -82,6 +84,41 @@ object DateTime {
            return "NA"
         }
     }
+
+
+
+    fun getTimeOnlyFromCreationTime(input: String?): String {
+        if (input.isNullOrEmpty()) return ""
+
+        val formats = listOf(
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SS'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        )
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getTimeZone("Asia/Singapore")
+
+        for (pattern in formats) {
+            try {
+                val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+                sdf.timeZone = TimeZone.getTimeZone("UTC") // Input is in UTC
+                val date = sdf.parse(input)
+                if (date != null) {
+                    return outputFormat.format(date)
+                }
+            } catch (_: ParseException) {
+                // Try next pattern
+            }
+        }
+
+        return ""
+    }
+
+    fun main() {
+        println(getTimeOnlyFromCreationTime("2025-08-12T04:15:36.9Z")) // 12:15 PM
+    }
+
 
 
 
@@ -149,7 +186,7 @@ object DateTime {
     }
 
     fun getCurrentDateTimeSingapore(): String {
-        val format: String = "dd MMM yyyy, hh:mm a"
+        val format = "dd MMM yyyy, hh:mm a"
         val sdf = SimpleDateFormat(format, Locale.getDefault())
         sdf.timeZone = TimeZone.getTimeZone("Asia/Singapore")
         return sdf.format(Date())

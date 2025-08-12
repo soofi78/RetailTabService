@@ -29,9 +29,11 @@ import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
+import com.lfsolutions.retail.util.DateTime.DateTimetRetailGSTFormat2
 import com.lfsolutions.retail.util.DateTime.getCurrentDateTimeSingapore
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTDate
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTTime
+import com.lfsolutions.retail.util.DateTime.getTimeOnlyFromCreationTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
 import retrofit2.Call
@@ -82,11 +84,11 @@ object Printer {
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceDate, getFormattedSGTDate(invoice?.salesInvoice?.invoiceDate)
+            Constants.Invoice.InvoiceDate, getFormattedSGTDate(invoice?.salesInvoice?.invoiceDate) //getFormattedSGTDate(invoice?.salesInvoice?.invoiceDate
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceCreationTime, getFormattedSGTTime(invoice?.salesInvoice?.creationTime)
+            Constants.Invoice.InvoiceCreationTime, getTimeOnlyFromCreationTime(invoice?.salesInvoice?.creationTime)
         )
 
         templateText = templateText?.replace(
