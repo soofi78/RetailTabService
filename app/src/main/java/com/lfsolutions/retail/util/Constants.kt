@@ -24,7 +24,7 @@ object Constants {
         const val InvoiceCustomerCode = "{{&invoice.customerCode}}"
         const val InvoiceTerm = "{{invoice.terms}}"
         const val InvoiceDate = "{{invoice.invoiceDate}}"
-        const val InvoiceCreationTime = "{{invoice.creationTime}}"
+        const val InvoiceCreationTime = "{{PrintCreationTime}}"
         const val InvoiceNo = "{{invoice.invoiceNo}}"
         const val InvoiceQty = "{{invoice.qty}}"
         const val TotalAmount = "{{receipt.amount}}"
