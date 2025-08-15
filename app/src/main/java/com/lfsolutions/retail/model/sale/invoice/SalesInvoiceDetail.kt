@@ -10,6 +10,7 @@ import com.lfsolutions.retail.ui.documents.history.HistoryItemInterface
 import com.lfsolutions.retail.util.formatDecimalSeparator
 import com.lfsolutions.retail.util.multiselect.MultiSelectModelInterface
 import java.util.UUID
+import kotlin.math.pow
 
 
 data class SalesInvoiceDetail(
@@ -148,7 +149,7 @@ data class SalesInvoiceDetail(
     }
 
     override fun getAmount(): String {
-        return Main.app.getSession().currencySymbol + netTotal?.formatDecimalSeparator()
+        return Main.app.getSession().currencySymbol + qty?.times((price ?: 0.0))?.formatDecimalSeparator() //net total
     }
 
     override fun getSerializedNumber(): String {
