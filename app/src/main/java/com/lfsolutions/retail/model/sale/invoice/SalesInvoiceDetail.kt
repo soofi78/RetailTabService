@@ -148,7 +148,12 @@ data class SalesInvoiceDetail(
     }
 
     override fun getAmount(): String {
-        return "${Main.app.getSession().currencySymbol} ${qty?.times((price ?: 0.0))?.formatDecimalSeparator()}"
+        val amount=if(isFOC==true)
+          0.0
+        else
+            qty?.times((price ?: 0.0))?.formatDecimalSeparator()
+
+        return "${Main.app.getSession().currencySymbol} $amount"
     }
 
     override fun getSerializedNumber(): String {

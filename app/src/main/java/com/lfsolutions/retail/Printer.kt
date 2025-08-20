@@ -133,7 +133,7 @@ object Printer {
                 ?.replace(Constants.Invoice.Qty, it.qty?.toString()?:"")
                 ?.replace(Constants.Invoice.UOM, it.unitName?:"")
                 ?.replace(Constants.Invoice.Price, it.price.toString())
-                ?.replace(Constants.Invoice.NetTotal, if(invoice.salesInvoice?.type == "F") "${Main.app.getSession().currencySymbol} ${0.0}" else it.getAmount()).toString()
+                ?.replace(Constants.Invoice.NetTotal, it.getAmount()).toString()
             count += 1
             if (count < invoice.salesInvoiceDetail.size) {
                 items += "\n"
