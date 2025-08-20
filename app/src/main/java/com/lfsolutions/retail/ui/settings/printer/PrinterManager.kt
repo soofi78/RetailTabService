@@ -157,7 +157,6 @@ object PrinterManager {
                 val urls = extractUrls(printText)
 
                 val foreignTextRegex = Regex("<a(?:\\s+size=(\\d+))?>(.*?)</a>")
-
                 val matchResults = foreignTextRegex.findAll(printText).toList()
 
                 if (matchResults.isNotEmpty()) {
@@ -309,6 +308,7 @@ object PrinterManager {
 
         return bitmap
     }
+
     data class PrintData(val xPos: Float, val yPos: Float, val text: String)
 
     private fun isEnglishOnly(s: String): Boolean {

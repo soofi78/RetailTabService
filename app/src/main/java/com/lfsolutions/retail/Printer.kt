@@ -29,10 +29,8 @@ import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
-import com.lfsolutions.retail.util.DateTime.DateTimetRetailGSTFormat2
 import com.lfsolutions.retail.util.DateTime.getCurrentDateTimeSingapore
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTDate
-import com.lfsolutions.retail.util.DateTime.getFormattedSGTTime
 import com.lfsolutions.retail.util.DateTime.getTimeOnlyFromCreationTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -134,9 +132,8 @@ object Printer {
                 ?.replace(Constants.Invoice.ProductName, it.productName?:"")
                 ?.replace(Constants.Invoice.Qty, it.qty?.toString()?:"")
                 ?.replace(Constants.Invoice.UOM, it.unitName?:"")
-                ?.replace(Constants.Invoice.Price, it.price.toString())?.replace(
-                    Constants.Invoice.NetTotal, it.getAmount()
-                ).toString()
+                ?.replace(Constants.Invoice.Price, it.price.toString())
+                ?.replace(Constants.Invoice.NetTotal, if(invoice.salesInvoice?.type == "F") "${Main.app.getSession().currencySymbol} ${0.0}" else it.getAmount()).toString()
             count += 1
             if (count < invoice.salesInvoiceDetail.size) {
                 items += "\n"
