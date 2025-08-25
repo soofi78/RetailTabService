@@ -29,10 +29,8 @@ import com.lfsolutions.retail.util.Constants.PRINT_TYPE_INCOMMING_STOCK
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_RECEIPT
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SALE_ORDER
 import com.lfsolutions.retail.util.Constants.PRINT_TYPE_SERVICE_FORM
-import com.lfsolutions.retail.util.DateTime.DateTimetRetailGSTFormat2
 import com.lfsolutions.retail.util.DateTime.getCurrentDateTimeSingapore
 import com.lfsolutions.retail.util.DateTime.getFormattedSGTDate
-import com.lfsolutions.retail.util.DateTime.getFormattedSGTTime
 import com.lfsolutions.retail.util.DateTime.getTimeOnlyFromCreationTime
 import com.lfsolutions.retail.util.Loading
 import com.videotel.digital.util.Notify
@@ -115,6 +113,7 @@ object Printer {
             Constants.Invoice.InvoicePONumber, invoice?.salesInvoice?.getPONo()?:""
         )
 
+
         val itemTemplate = try {
             templateText?.substring(
                 templateText.indexOf(Constants.Common.ItemsStart),
@@ -134,9 +133,8 @@ object Printer {
                 ?.replace(Constants.Invoice.ProductName, it.productName?:"")
                 ?.replace(Constants.Invoice.Qty, it.qty?.toString()?:"")
                 ?.replace(Constants.Invoice.UOM, it.unitName?:"")
-                ?.replace(Constants.Invoice.Price, it.price.toString())?.replace(
-                    Constants.Invoice.NetTotal, it.getAmount()
-                ).toString()
+                ?.replace(Constants.Invoice.Price, it.price.toString())
+                ?.replace(Constants.Invoice.NetTotal,  if(invoice.salesInvoice?.type=="F") getFOCAmount() else it.getAmount()).toString()
             count += 1
             if (count < invoice.salesInvoiceDetail.size) {
                 items += "\n"
@@ -147,31 +145,32 @@ object Printer {
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceSubTotal,
-            invoice?.salesInvoice?.InvoiceSubTotalFromatted()?:""
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceSubTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceDiscount,
-            invoice?.salesInvoice?.InvoiceDiscountFromatted()?:""
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceDiscountFromatted()?:""
         )
 
         templateText = templateText?.replace(
-            Constants.Invoice.InvoiceTax, invoice?.salesInvoice?.InvoiceTaxFromatted()?:""
+            Constants.Invoice.InvoiceTax,
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceTaxFromatted()?:""
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceNetTotal,
-            invoice?.salesInvoice?.InvoiceNetTotalFromatted()?:""
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceNetTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceRoundingAmount,
-            invoice?.salesInvoice?.InvoiceRoundingAmountFromatted()?:""
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceRoundingAmountFromatted()?:""
         )
 
         templateText = templateText?.replace(
             Constants.Invoice.InvoiceGrandTotal,
-            invoice?.salesInvoice?.InvoiceGrandTotalFromatted()?:""
+            if(invoice?.salesInvoice?.type=="F") getFOCAmount() else invoice?.salesInvoice?.InvoiceGrandTotalFromatted()?:""
         )
 
         templateText = templateText?.replace(
@@ -813,4 +812,6 @@ object Printer {
     fun clearCache() {
         templateCache.clear()
     }
+
+    fun getFOCAmount()= "${Main.app.getSession().currencySymbol} ${0.0}"
 }
